@@ -78,6 +78,7 @@ workflows:
   build-and-deploy:
     jobs:
       - build-and-push:
+          context: NightTech Services
           filters:
             branches:
               only: main
