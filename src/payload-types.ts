@@ -24,6 +24,7 @@ export interface Config {
     media: Media;
     styles: Style;
     pages: Page;
+    icons: Icon;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -38,6 +39,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     styles: StylesSelect<false> | StylesSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
+    icons: IconsSelect<false> | IconsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -228,22 +230,28 @@ export interface Style {
 export interface Page {
   id: number;
   title: string;
-  styles?: (number | Style)[] | null;
-  content?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+  layout?:
+    | {
+        enableContainer?: boolean | null;
+        styles?: (number | Style)[] | null;
+        content?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
   meta?: {
     title?: string | null;
     /**
@@ -261,6 +269,16 @@ export interface Page {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "icons".
+ */
+export interface Icon {
+  id: number;
+  name?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -592,6 +610,10 @@ export interface PayloadLockedDocument {
         value: number | Page;
       } | null)
     | ({
+        relationTo: 'icons';
+        value: number | Icon;
+      } | null)
+    | ({
         relationTo: 'redirects';
         value: number | Redirect;
       } | null)
@@ -784,8 +806,14 @@ export interface StylesSelect<T extends boolean = true> {
  */
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
-  styles?: T;
-  content?: T;
+  layout?:
+    | T
+    | {
+        enableContainer?: T;
+        styles?: T;
+        content?: T;
+        id?: T;
+      };
   meta?:
     | T
     | {
@@ -799,6 +827,15 @@ export interface PagesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "icons_select".
+ */
+export interface IconsSelect<T extends boolean = true> {
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1049,15 +1086,55 @@ export interface TaskSchedulePublish {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tagBlock".
+ * via the `definition` "mediaBlock".
  */
-export interface TagBlock {
-  tag: string;
-  location: 'start' | 'end';
-  styles?: (number | Style)[] | null;
+export interface MediaBlock {
+  media: number | Media;
+  wrapperStyles?: (number | Style)[] | null;
+  contentStyles?: (number | Style)[] | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'tagBlock';
+  blockType: 'mediaBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigationBlock".
+ */
+export interface NavigationBlock {
+  nav?: {
+    appearance?: ('link' | 'button' | 'dropdown') | null;
+    styles?: (number | Style)[] | null;
+    label?: string | null;
+    buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+    buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+    dropdownItems?:
+      | {
+          label?: string | null;
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?: {
+            relationTo: 'pages';
+            value: number | Page;
+          } | null;
+          url?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    link?: {
+      label?: string | null;
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?: {
+        relationTo: 'pages';
+        value: number | Page;
+      } | null;
+      url?: string | null;
+      id?: string | null;
+    };
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'navigationBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -1,61 +1,79 @@
 import React from 'react'
-import type { Page } from '@/payload-types'
-import type { TagBlock as TagBlockProps } from '@/payload-types'
+import type { MediaBlock as MediaBlockProps, Style } from '@/payload-types'
 import {
   DefaultNodeTypes,
   DefaultTypedEditorState,
   SerializedBlockNode,
-  SerializedLinkNode,
 } from '@payloadcms/richtext-lexical'
 import {
   JSXConvertersFunction,
-  LinkJSXConverter,
   RichText as ConvertRichText,
 } from '@payloadcms/richtext-lexical/react'
 import { joinStyles } from '@/lib/make-styles'
-import { TagBlock } from '@/blocks/lexical/tag-block'
+import { MediaBlock } from '@/blocks/lexical/media'
+import { Navigation } from './custom-ui/navigation'
 
 interface LexicalRendererProps {
-  collection: Page
+  content?: DefaultTypedEditorState | null
+  styles?: string | null
+  enableContainer?: boolean | null
   searchParams?:
     | Record<string, string | string[] | undefined | null>
     | Promise<Record<string, string | string[] | undefined | null>>
 }
 
-type NodeTypes = DefaultNodeTypes | SerializedBlockNode<TagBlockProps>
-
-const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
-  const { value, relationTo } = linkNode.fields.doc!
-  if (typeof value !== 'object') {
-    throw new Error('Expected value to be an object')
-  }
-  const slug = value.slug
-  return `/${slug}`
-}
+type NodeTypes = DefaultNodeTypes | SerializedBlockNode<MediaBlockProps>
 
 function jsxConverters(
-  searchParams?: LexicalRendererProps['searchParams']
+  searchParams?: LexicalRendererProps['searchParams'],
 ): JSXConvertersFunction<NodeTypes> {
   return function ({ defaultConverters }) {
     return {
       ...defaultConverters,
-      ...LinkJSXConverter({ internalDocToHref }),
+      link: ({ node }) => {
+        const children = node.children as any[]
+        const label = children?.[0]?.text
+        const reconstructedNode = {
+          ...node,
+          fields: {
+            ...node.fields,
+            nav: {
+              ...(node.fields.nav || {}),
+              label: label,
+            },
+          },
+        }
+        return <Navigation {...reconstructedNode.fields } />
+      },
       inlineBlocks: {
         // @ts-expect-error there may be some mismatch between the expected types here
-        tagBlock: ({ node }) => (
-          <TagBlock {...node.fields} searchParams={searchParams} />
-        ),
+        mediaBlock: ({ node }) => <MediaBlock {...node.fields} searchParams={searchParams} />,
+        // @ts-expect-error there may be some mismatch between the expected types here
+        navigationBlock: ({ node }) => <Navigation {...node.fields} />,
       },
-    };
-  };
+      blocks: {
+        // @ts-expect-error there may be some mismatch between the expected types here
+        mediaBlock: ({ node }) => <MediaBlock {...node.fields} searchParams={searchParams} />,
+        // @ts-expect-error there may be some mismatch between the expected types here
+        navigationBlock: ({ node }) => <Navigation {...node.fields} />,
+      },
+    }
+  }
 }
 
-export async function LexicalRenderer({ collection, searchParams }: LexicalRendererProps) {
+export async function LexicalRenderer({
+  styles,
+  content,
+  searchParams,
+  enableContainer,
+}: LexicalRendererProps) {
+  if (!content) return null
+  const container = enableContainer ? 'container mx-auto' : ''
   return (
     <ConvertRichText
       converters={jsxConverters(searchParams)}
-      className={joinStyles(collection.styles)}
-      data={collection.content as DefaultTypedEditorState}
+      className={joinStyles(container, styles)}
+      data={content as DefaultTypedEditorState}
     />
   )
 }

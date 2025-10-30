@@ -17,158 +17,126 @@ import {
   OrderedListFeature,
   ChecklistFeature,
   BlockquoteFeature,
-  UploadFeature,
   HorizontalRuleFeature,
   InlineToolbarFeature,
   FixedToolbarFeature,
   BlocksFeature,
   EXPERIMENTAL_TableFeature,
-  TextStateFeature,
   type LinkFields,
+  type LexicalEditorProps,
 } from '@payloadcms/richtext-lexical'
-import { TagBlock } from '@/blocks/lexical/tag-block/config'
+import deepMerge from '@/lib/deep-merge'
+import { navigation } from './navigation'
 
-export const defaultLexical = lexicalEditor({
-  features: [
-    // Basic text formatting
-    ParagraphFeature(),
-    BoldFeature(),
-    ItalicFeature(),
-    UnderlineFeature(),
-    StrikethroughFeature(),
-    SubscriptFeature(),
-    SuperscriptFeature(),
-    InlineCodeFeature(),
+type FeatureConfig = {
+  paragraph?: boolean | Parameters<typeof ParagraphFeature>[0]
+  bold?: boolean | Parameters<typeof BoldFeature>[0]
+  italic?: boolean | Parameters<typeof ItalicFeature>[0]
+  underline?: boolean | Parameters<typeof UnderlineFeature>[0]
+  strikethrough?: boolean | Parameters<typeof StrikethroughFeature>[0]
+  subscript?: boolean | Parameters<typeof SubscriptFeature>[0]
+  superscript?: boolean | Parameters<typeof SuperscriptFeature>[0]
+  inlineCode?: boolean | Parameters<typeof InlineCodeFeature>[0]
+  heading?: boolean | Parameters<typeof HeadingFeature>[0]
+  align?: boolean | Parameters<typeof AlignFeature>[0]
+  indent?: boolean | Parameters<typeof IndentFeature>[0]
+  unorderedList?: boolean | Parameters<typeof UnorderedListFeature>[0]
+  orderedList?: boolean | Parameters<typeof OrderedListFeature>[0]
+  checklist?: boolean | Parameters<typeof ChecklistFeature>[0]
+  link?: boolean | Parameters<typeof LinkFeature>[0]
+  blockquote?: boolean | Parameters<typeof BlockquoteFeature>[0]
+  horizontalRule?: boolean | Parameters<typeof HorizontalRuleFeature>[0]
+  inlineToolbar?: boolean | Parameters<typeof InlineToolbarFeature>[0]
+  fixedToolbar?: boolean | Parameters<typeof FixedToolbarFeature>[0]
+  blocks?: boolean | Parameters<typeof BlocksFeature>[0]
+  table?: boolean | Parameters<typeof EXPERIMENTAL_TableFeature>[0]
+}
 
-    // Headings
-    HeadingFeature({
+type LexicalEditorType = (options?: {
+  overrides?: Partial<LexicalEditorProps>
+  features?: FeatureConfig
+}) => ReturnType<typeof lexicalEditor>
+
+export const defaultLexical: LexicalEditorType = ({ overrides = {}, features = {} } = {}) => {
+  // Default configurations for each feature
+  const defaultFeatures: FeatureConfig = {
+    paragraph: true,
+    bold: true,
+    italic: true,
+    underline: true,
+    strikethrough: true,
+    subscript: true,
+    superscript: true,
+    inlineCode: true,
+    heading: {
       enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
-    }),
-
-    // Alignment and indentation
-    AlignFeature(),
-    IndentFeature(),
-
-    // Lists
-    UnorderedListFeature(),
-    OrderedListFeature(),
-    ChecklistFeature(),
-
-    // Links with custom configuration
-    LinkFeature({
+    },
+    align: true,
+    indent: true,
+    unorderedList: true,
+    orderedList: true,
+    checklist: true,
+    link: {
       enabledCollections: ['pages'],
       fields: ({ defaultFields }) => {
-        const defaultFieldsWithoutUrl = defaultFields.filter((field) => {
-          if ('name' in field && field.name === 'url') return false
-          return true
-        })
-
         return [
-          ...defaultFieldsWithoutUrl,
-          {
-            name: 'url',
-            type: 'text',
-            label: 'URL',
-            admin: {
-              condition: (_data, siblingData) => siblingData?.linkType !== 'internal',
-            },
-            required: true,
-            validate: ((value, options) => {
-              if ((options?.siblingData as LinkFields)?.linkType === 'internal') {
-                return true
-              }
-              return value ? true : 'URL is required'
-            }) as TextFieldSingleValidation,
-          },
+          defaultFields[0],
+          navigation()
         ]
       },
-    }),
-
-    // Block elements
-    BlockquoteFeature(),
-    HorizontalRuleFeature(),
-
-    // Uploads
-    UploadFeature({
-      enabledCollections: ['media'],
-    }),
-
-    // Toolbars
-    InlineToolbarFeature(),
-    FixedToolbarFeature(),
-
-    // Advanced features
-    BlocksFeature({
+    },
+    blockquote: true,
+    horizontalRule: true,
+    inlineToolbar: true,
+    fixedToolbar: true,
+    blocks: {
       blocks: [],
-      inlineBlocks: [TagBlock],
-    }),
+      inlineBlocks: [],
+    },
+    table: true,
+  }
 
-    // Table support (experimental)
-    EXPERIMENTAL_TableFeature(),
+  // Merge default features with user-provided features
+  const mergedFeatures = deepMerge(defaultFeatures, features)
 
-    // Text State Feature - Colors and Highlights
-    TextStateFeature({
-      state: {
-        color: {
-          'color-primary': { 
-            label: 'Primary Color', 
-            css: { color: 'hsl(var(--primary))' } 
-          },
-          'color-secondary': { 
-            label: 'Secondary Color', 
-            css: { color: 'hsl(var(--secondary))' } 
-          },
-          'color-accent': { 
-            label: 'Accent Color', 
-            css: { color: 'hsl(var(--accent))' } 
-          },
-          'color-muted': { 
-            label: 'Muted Color', 
-            css: { color: 'hsl(var(--muted))' } 
-          },
-          'color-destructive': { 
-            label: 'Destructive Color', 
-            css: { color: 'hsl(var(--destructive))' } 
-          },
-        },
-        highlight: {
-          'highlight-primary': {
-            label: 'Primary Highlight',
-            css: {
-              'background-color': 'hsl(var(--primary))',
-              color: 'hsl(var(--primary-foreground))',
-            },
-          },
-          'highlight-secondary': {
-            label: 'Secondary Highlight',
-            css: {
-              'background-color': 'hsl(var(--secondary))',
-              color: 'hsl(var(--secondary-foreground))',
-            },
-          },
-          'highlight-accent': {
-            label: 'Accent Highlight',
-            css: {
-              'background-color': 'hsl(var(--accent))',
-              color: 'hsl(var(--accent-foreground))',
-            },
-          },
-          'highlight-muted': {
-            label: 'Muted Highlight',
-            css: { 
-              'background-color': 'hsl(var(--muted))', 
-              color: 'hsl(var(--muted-foreground))' 
-            },
-          },
-          'highlight-destructive': {
-            label: 'Destructive Highlight',
-            css: {
-              'background-color': 'hsl(var(--destructive))',
-              color: 'hsl(var(--destructive-foreground))',
-            },
-          },
-        },
-      },
-    }),
-  ],
-})
+  const enabledFeatures: any[] = []
+
+  // Helper function to add feature if not false
+  const addFeature = (config: any, Feature: any) => {
+    if (config === false) return
+    enabledFeatures.push(config === true ? Feature() : Feature(config))
+  }
+
+  // Build features array
+  addFeature(mergedFeatures.paragraph, ParagraphFeature)
+  addFeature(mergedFeatures.bold, BoldFeature)
+  addFeature(mergedFeatures.italic, ItalicFeature)
+  addFeature(mergedFeatures.underline, UnderlineFeature)
+  addFeature(mergedFeatures.strikethrough, StrikethroughFeature)
+  addFeature(mergedFeatures.subscript, SubscriptFeature)
+  addFeature(mergedFeatures.superscript, SuperscriptFeature)
+  addFeature(mergedFeatures.inlineCode, InlineCodeFeature)
+  addFeature(mergedFeatures.heading, HeadingFeature)
+  addFeature(mergedFeatures.align, AlignFeature)
+  addFeature(mergedFeatures.indent, IndentFeature)
+  addFeature(mergedFeatures.unorderedList, UnorderedListFeature)
+  addFeature(mergedFeatures.orderedList, OrderedListFeature)
+  addFeature(mergedFeatures.checklist, ChecklistFeature)
+  addFeature(mergedFeatures.link, LinkFeature)
+  addFeature(mergedFeatures.blockquote, BlockquoteFeature)
+  addFeature(mergedFeatures.horizontalRule, HorizontalRuleFeature)
+  addFeature(mergedFeatures.inlineToolbar, InlineToolbarFeature)
+  addFeature(mergedFeatures.fixedToolbar, FixedToolbarFeature)
+  addFeature(mergedFeatures.blocks, BlocksFeature)
+  addFeature(mergedFeatures.table, EXPERIMENTAL_TableFeature)
+
+  const editorConfig: LexicalEditorProps = {
+    features: enabledFeatures,
+  }
+
+  if (overrides && Object.keys(overrides).length > 0) {
+    return lexicalEditor(deepMerge(editorConfig, overrides))
+  }
+
+  return lexicalEditor(editorConfig)
+}

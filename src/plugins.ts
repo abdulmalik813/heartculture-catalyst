@@ -12,7 +12,7 @@ import { TimeBlock } from '@/blocks/form/time'
 import { defaultLexical } from '@/fields/lexical-field'
 
 const generateTitle: GenerateTitle<Page> = ({ doc }) => {
-  return doc?.title ? `${doc.title} | HeartCulture Catalyst` : 'HeartCulture Catalyst'
+  return doc?.title ? `${doc.title} | A Base App` : 'A Base App'
 }
 
 const generateURL: GenerateURL<Page> = ({ doc }) => {
@@ -63,7 +63,7 @@ export const plugins: Plugin[] = [
             if ('name' in field && field.name === 'confirmationMessage') {
               return {
                 ...field,
-                editor: defaultLexical
+                editor: defaultLexical(),
               }
             }
             return field
@@ -75,7 +75,7 @@ export const plugins: Plugin[] = [
   s3Storage({
     collections: {
       media: {
-        prefix: 'HCC',
+        prefix: 'base-app',
         signedDownloads: {
           shouldUseSignedURL: ({ filename }) => {
             return filename.endsWith('.mp4')

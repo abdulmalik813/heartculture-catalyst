@@ -19,6 +19,7 @@ export const Styles: CollectionConfig<'styles'> = {
       name: 'alias',
       type: 'text',
       required: true,
+      unique: true,
       label: 'Alias',
     },
     {

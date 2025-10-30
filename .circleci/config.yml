@@ -4,7 +4,7 @@ executors:
   docker-builder:
     docker:
       - image: cimg/base:current
-    resource_class: large
+    resource_class: medium
 
 jobs:
   build-and-push:
@@ -20,7 +20,7 @@ jobs:
           name: Set environment variables
           command: |
             echo "export REGISTRY=ghcr.io" >> $BASH_ENV
-            echo "export IMAGE_NAME=$GITHUB_USERNAME/$GITHUB_PROJECT" >> $BASH_ENV
+            echo "export IMAGE_NAME=$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME" >> $BASH_ENV
             echo "export IMAGE_TAG=$(date +'%Y.%m.%d').${CIRCLE_BUILD_NUM}" >> $BASH_ENV
             source $BASH_ENV
 
@@ -31,19 +31,12 @@ jobs:
       - run:
           name: Log in to GitHub Container Registry
           command: |
-            echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_USERNAME" --password-stdin
-      
+            echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$CIRCLE_PROJECT_USERNAME" --password-stdin
+
       - run:
-          name: Build Docker image with progress output
-          no_output_timeout: 30m
+          name: Build Docker image
+          no_output_timeout: 15m
           command: |
-            echo "🏗️  Building Docker image..."
-            echo "Registry: ${REGISTRY}"
-            echo "Image: ${IMAGE_NAME}"
-            echo "Tag: ${IMAGE_TAG}"
-            echo ""
-            
-            # Use --progress=plain to see all build output
             docker build \
               --progress=plain \
               --build-arg NEXT_PUBLIC_SERVER_URL="$NEXT_PUBLIC_SERVER_URL" \
@@ -57,50 +50,28 @@ jobs:
               -t ${REGISTRY}/${IMAGE_NAME}:latest \
               -t ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} \
               . 2>&1 | tee build.log
-            
-            echo ""
-            echo "✅ Build completed"
-            echo "📦 Image size:"
             docker images ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
-      
-      - run:
-          name: Inspect build output
-          command: |
-            echo "🔍 Inspecting Docker image layers..."
-            docker history ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
-            
-            echo ""
-            echo "📋 Checking .next directory structure..."
-            docker run --rm ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} sh -c "ls -lah .next/ && echo '' && ls -lah .next/static/ 2>/dev/null || echo 'No static directory'"
       
       - run:
           name: Push Docker image
           command: |
-            echo "⬆️  Pushing images to registry..."
             docker push ${REGISTRY}/${IMAGE_NAME}:latest
             docker push ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
-            echo "✅ Push completed"
       
       - run:
-          name: Trigger Coolify Deployment
+          name: Trigger Dokploy Deployment
           command: |
-            echo "🚀 Triggering Coolify deployment..."
-            curl --request GET "$COOLIFY_WEBHOOK" --header "Authorization: Bearer $COOLIFY_TOKEN"
-            echo "✅ Deployment triggered"
+            curl --request GET "$DOKPLOY_WEBHOOK" --header "Authorization: Bearer $DOKPLOY_TOKEN"
 
       - run:
-          name: Update a deploy to SUCCESS
+          name: Update deploy to SUCCESS
           command: circleci run release update --status=SUCCESS 
           when: on_success 
 
       - run:
-          name: Update planned deploy to FAILED
+          name: Update deploy to FAILED
           command: circleci run release update --status=FAILED 
-          when: on_fail  
-
-      - store_artifacts:
-          path: build.log
-          destination: docker-build-log
+          when: on_fail
 
 workflows:
   version: 2

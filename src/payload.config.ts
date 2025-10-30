@@ -13,6 +13,7 @@ import { schedulePublish } from '@/jobs/schedule-publish'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { plugins } from '@/plugins'
 import { defaultLexical } from '@/fields/lexical-field'
+import { Icons } from '@/collections/icons'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -65,9 +66,9 @@ export default buildConfig({
     defaultFromName: 'No Reply',
     apiKey: process.env.RESEND_API_KEY || '',
   }),
-  collections: [Users, Media, Styles, Pages],
+  collections: [Users, Media, Styles, Pages, Icons],
   cors: [getServerSideURL()].filter(Boolean),
-  editor: defaultLexical,
+  editor: defaultLexical(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

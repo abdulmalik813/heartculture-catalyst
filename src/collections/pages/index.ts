@@ -11,6 +11,9 @@ import {
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
 import { generatePreviewPath } from '@/lib/generate-preview-path'
+import { defaultLexical } from '@/fields/lexical-field'
+import { MediaBlock } from '@/blocks/lexical/media/config'
+import { NavigationBlock } from '@/blocks/lexical/navigation'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
@@ -55,14 +58,53 @@ export const Pages: CollectionConfig<'pages'> = {
           label: 'Content',
           fields: [
             {
-              name: 'styles',
-              type: 'relationship',
-              relationTo: 'styles',
-              hasMany: true,
-            },
-            {
-              name: 'content',
-              type: 'richText',
+              name: 'layout',
+              type: 'array',
+              fields: [
+                {
+                  name: 'enableContainer',
+                  type: 'checkbox',
+                  label: 'Enable Container',
+                  defaultValue: true,
+                },
+                {
+                  name: 'styles',
+                  type: 'relationship',
+                  relationTo: 'styles',
+                  hasMany: true,
+                },
+                {
+                  name: 'content',
+                  type: 'richText',
+                  editor: defaultLexical({
+                    features: {
+                      blocks: {
+                        blocks: [MediaBlock, NavigationBlock],
+                        inlineBlocks: [MediaBlock, NavigationBlock],
+                      },
+                    },
+                  }),
+                  defaultValue: {
+                    root: {
+                      children: [
+                        {
+                          children: [],
+                          direction: null,
+                          format: '',
+                          indent: 0,
+                          type: 'paragraph',
+                          version: 1,
+                        },
+                      ],
+                      direction: null,
+                      format: '',
+                      indent: 0,
+                      type: 'root',
+                      version: 1,
+                    },
+                  },
+                },
+              ],
             },
           ],
         },

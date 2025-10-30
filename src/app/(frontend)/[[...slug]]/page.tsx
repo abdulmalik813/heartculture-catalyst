@@ -8,6 +8,7 @@ import React, { cache } from 'react'
 import { generateMeta } from '@/lib/generate-meta'
 import { notFound } from 'next/navigation'
 import { LexicalRenderer } from '@/components/lexical-renderer'
+import { joinStyles } from '@/lib/make-styles'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -58,9 +59,17 @@ export default async function Page({ params, searchParams }: Readonly<PageProps>
   }
 
   return (
-    <article className='min-h-[70vh] '>
+    <article className="min-h-[70vh] ">
       <PayloadRedirects disableNotFound url={url} />
-      <LexicalRenderer collection={page} searchParams={searchParams} />
+      {page.layout?.map((block, i) => (
+        <LexicalRenderer
+          key={i}
+          content={block?.content}
+          styles={joinStyles(block?.styles)}
+          searchParams={searchParams}
+          enableContainer={block?.enableContainer}
+        />
+      ))}
     </article>
   )
 }

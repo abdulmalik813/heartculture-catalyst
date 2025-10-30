@@ -27,8 +27,8 @@ export const generateMeta = async (args: {
   const ogImage = getImageURL(doc?.meta?.image)
 
   const title = doc?.meta?.title
-    ? doc?.meta?.title + ' | HeartCulture Catalyst'
-    : 'HeartCulture Catalyst'
+    ? doc?.meta?.title + ' | A Base App'
+    : 'A Base App'
 
   return {
     description: doc?.meta?.description,
