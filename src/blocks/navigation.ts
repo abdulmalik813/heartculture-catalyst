@@ -4,6 +4,7 @@ import { Block } from 'payload'
 export const NavigationBlock: Block = {
   slug: 'navigationBlock',
   interfaceName: 'navigationBlock',
+  dbName: 'nav',
   fields: [
     navigation()
   ],

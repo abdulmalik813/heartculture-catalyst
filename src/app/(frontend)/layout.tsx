@@ -5,10 +5,11 @@ import { AdminBar } from '@/components/admin-bar'
 import { ThemeProvider } from '@/components/theme/theme-provider'
 import { getServerSideURL } from '@/lib/get-url'
 import { LivePreviewListener } from '@/components/live-preview-listener'
+import { APP_DESCRIPTION, APP_TITLE } from '@/constants/init'
 
 export const metadata = {
-  description: 'A Base app.',
-  title: 'A base app description',
+  description: APP_DESCRIPTION,
+  title: APP_TITLE,
 }
 
 export default async function RootLayout(props: { children: React.ReactNode }) {

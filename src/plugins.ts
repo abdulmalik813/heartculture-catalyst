@@ -10,9 +10,10 @@ import { s3Storage } from '@payloadcms/storage-s3'
 import { revalidateRedirects } from '@/hooks/revalidate-redirects'
 import { TimeBlock } from '@/blocks/form/time'
 import { defaultLexical } from '@/fields/lexical-field'
+import { APP_TITLE, S3 } from './constants/init'
 
 const generateTitle: GenerateTitle<Page> = ({ doc }) => {
-  return doc?.title ? `${doc.title} | A Base App` : 'A Base App'
+  return doc?.title ? `${doc.title} | ${APP_TITLE}` : APP_TITLE
 }
 
 const generateURL: GenerateURL<Page> = ({ doc }) => {
@@ -75,7 +76,7 @@ export const plugins: Plugin[] = [
   s3Storage({
     collections: {
       media: {
-        prefix: 'base-app',
+        prefix: S3.PREFIX,
         signedDownloads: {
           shouldUseSignedURL: ({ filename }) => {
             return filename.endsWith('.mp4')
@@ -83,16 +84,16 @@ export const plugins: Plugin[] = [
         },
       },
     },
-    bucket: process.env.S3_BUCKET!,
+    bucket: S3.BUCKET,
     clientUploads: true,
     config: {
       forcePathStyle: true,
       credentials: {
-        accessKeyId: process.env.S3_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
+        accessKeyId: S3.ACCESS_KEY_ID,
+        secretAccessKey: S3.SECRET_ACCESS_KEY,
       },
-      region: process.env.S3_REGION,
-      endpoint: process.env.S3_ENDPOINT!,
+      region: S3.REGION,
+      endpoint: S3.ENDPOINT,
     },
   }),
   payloadCloudPlugin(),

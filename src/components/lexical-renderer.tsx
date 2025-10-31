@@ -10,7 +10,7 @@ import {
   RichText as ConvertRichText,
 } from '@payloadcms/richtext-lexical/react'
 import { joinStyles } from '@/lib/make-styles'
-import { MediaBlock } from '@/blocks/lexical/media'
+import { MediaBlock } from '@/blocks/media'
 import { Navigation } from './custom-ui/navigation'
 
 interface LexicalRendererProps {
@@ -43,7 +43,7 @@ function jsxConverters(
             },
           },
         }
-        return <Navigation {...reconstructedNode.fields } />
+        return <Navigation {...reconstructedNode.fields} />
       },
       inlineBlocks: {
         // @ts-expect-error there may be some mismatch between the expected types here

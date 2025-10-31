@@ -1,5 +1,6 @@
 import type { Field, GroupField } from 'payload'
 import deepMerge from '@/lib/deep-merge'
+import { icon } from './icon'
 
 type NavType = (options?: { overrides?: Partial<GroupField> }) => Field
  
@@ -61,6 +62,7 @@ const navFields: Field[] = [
     label: 'URL',
     required: true,
   },
+  icon()
 ]
 
 export const navigation: NavType = ({ overrides = {} } = {}) =>

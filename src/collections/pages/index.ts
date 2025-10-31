@@ -11,9 +11,10 @@ import {
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
 import { generatePreviewPath } from '@/lib/generate-preview-path'
-import { defaultLexical } from '@/fields/lexical-field'
-import { MediaBlock } from '@/blocks/lexical/media/config'
-import { NavigationBlock } from '@/blocks/lexical/navigation'
+import { hero } from '@/fields/hero'
+import { ContentBlock } from '@/blocks/content'
+import { CallToActionBlock } from '@/blocks/call-to-action'
+import { container } from '@/fields/container'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
@@ -55,54 +56,22 @@ export const Pages: CollectionConfig<'pages'> = {
       type: 'tabs',
       tabs: [
         {
+          label: 'Hero',
+          fields: hero,
+        },
+        {
           label: 'Content',
           fields: [
             {
               name: 'layout',
               type: 'array',
               fields: [
+                ...container,
                 {
-                  name: 'enableContainer',
-                  type: 'checkbox',
-                  label: 'Enable Container',
-                  defaultValue: true,
-                },
-                {
-                  name: 'styles',
-                  type: 'relationship',
-                  relationTo: 'styles',
-                  hasMany: true,
-                },
-                {
-                  name: 'content',
-                  type: 'richText',
-                  editor: defaultLexical({
-                    features: {
-                      blocks: {
-                        blocks: [MediaBlock, NavigationBlock],
-                        inlineBlocks: [MediaBlock, NavigationBlock],
-                      },
-                    },
-                  }),
-                  defaultValue: {
-                    root: {
-                      children: [
-                        {
-                          children: [],
-                          direction: null,
-                          format: '',
-                          indent: 0,
-                          type: 'paragraph',
-                          version: 1,
-                        },
-                      ],
-                      direction: null,
-                      format: '',
-                      indent: 0,
-                      type: 'root',
-                      version: 1,
-                    },
-                  },
+                  name: 'blocks',
+                  type: 'blocks',
+                  blocks: [ContentBlock, CallToActionBlock],
+                  required: false,
                 },
               ],
             },
@@ -123,7 +92,6 @@ export const Pages: CollectionConfig<'pages'> = {
             MetaImageField({
               relationTo: 'media',
             }),
-
             MetaDescriptionField({}),
             PreviewField({
               hasGenerateFn: true,

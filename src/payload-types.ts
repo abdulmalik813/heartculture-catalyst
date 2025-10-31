@@ -230,25 +230,75 @@ export interface Style {
 export interface Page {
   id: number;
   title: string;
+  /**
+   * Choose how the hero section should be displayed
+   */
+  heroLayout: 'fullscreen' | 'heading-with-image' | 'heading-no-image';
+  /**
+   * Main hero heading text
+   */
+  heroTitle: string;
+  /**
+   * Supporting text below the title
+   */
+  description?: string | null;
+  titleStyles?: (number | Style)[] | null;
+  descriptionStyles?: (number | Style)[] | null;
+  navigations?:
+    | {
+        nav?: {
+          appearance?: ('link' | 'button' | 'dropdown') | null;
+          styles?: (number | Style)[] | null;
+          label?: string | null;
+          buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+          buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+          dropdownItems?:
+            | {
+                label?: string | null;
+                type?: ('reference' | 'custom') | null;
+                newTab?: boolean | null;
+                reference?: {
+                  relationTo: 'pages';
+                  value: number | Page;
+                } | null;
+                url?: string | null;
+                icon?: (number | null) | Icon;
+                placement?: ('before' | 'after') | null;
+                iconStyles?: (number | Style)[] | null;
+                id?: string | null;
+              }[]
+            | null;
+          link?: {
+            label?: string | null;
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            reference?: {
+              relationTo: 'pages';
+              value: number | Page;
+            } | null;
+            url?: string | null;
+            icon?: (number | null) | Icon;
+            placement?: ('before' | 'after') | null;
+            iconStyles?: (number | Style)[] | null;
+            id?: string | null;
+          };
+        };
+        id?: string | null;
+      }[]
+    | null;
+  media: number | Media;
+  wrapperStyles?: (number | Style)[] | null;
+  contentStyles?: (number | Style)[] | null;
+  /**
+   * Apply custom styles to the card wrapper
+   */
+  cardStyles?: (number | Style)[] | null;
   layout?:
     | {
         enableContainer?: boolean | null;
+        containerSize?: ('full' | 'two-thirds' | 'half' | 'one-third') | null;
         styles?: (number | Style)[] | null;
-        content?: {
-          root: {
-            type: string;
-            children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
+        blocks?: (ContentBlock | CallToActionBlock)[] | null;
         id?: string | null;
       }[]
     | null;
@@ -279,6 +329,99 @@ export interface Icon {
   name?: string | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentBlock".
+ */
+export interface ContentBlock {
+  enableContainer?: boolean | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contentBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CallToActionBlock".
+ */
+export interface CallToActionBlock {
+  /**
+   * Main call to action heading
+   */
+  title: string;
+  /**
+   * Supporting text below the title
+   */
+  description?: string | null;
+  titleStyles?: (number | Style)[] | null;
+  descriptionStyles?: (number | Style)[] | null;
+  navigations?:
+    | {
+        nav?: {
+          appearance?: ('link' | 'button' | 'dropdown') | null;
+          styles?: (number | Style)[] | null;
+          label?: string | null;
+          buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+          buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+          dropdownItems?:
+            | {
+                label?: string | null;
+                type?: ('reference' | 'custom') | null;
+                newTab?: boolean | null;
+                reference?: {
+                  relationTo: 'pages';
+                  value: number | Page;
+                } | null;
+                url?: string | null;
+                icon?: (number | null) | Icon;
+                placement?: ('before' | 'after') | null;
+                iconStyles?: (number | Style)[] | null;
+                id?: string | null;
+              }[]
+            | null;
+          link?: {
+            label?: string | null;
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            reference?: {
+              relationTo: 'pages';
+              value: number | Page;
+            } | null;
+            url?: string | null;
+            icon?: (number | null) | Icon;
+            placement?: ('before' | 'after') | null;
+            iconStyles?: (number | Style)[] | null;
+            id?: string | null;
+          };
+        };
+        id?: string | null;
+      }[]
+    | null;
+  media: number | Media;
+  wrapperStyles?: (number | Style)[] | null;
+  contentStyles?: (number | Style)[] | null;
+  /**
+   * Apply custom styles to the CTA container
+   */
+  containerStyles?: (number | Style)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'callToActionBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -806,12 +949,67 @@ export interface StylesSelect<T extends boolean = true> {
  */
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
+  heroLayout?: T;
+  heroTitle?: T;
+  description?: T;
+  titleStyles?: T;
+  descriptionStyles?: T;
+  navigations?:
+    | T
+    | {
+        nav?:
+          | T
+          | {
+              appearance?: T;
+              styles?: T;
+              label?: T;
+              buttonType?: T;
+              buttonSize?: T;
+              dropdownItems?:
+                | T
+                | {
+                    label?: T;
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    icon?: T;
+                    placement?: T;
+                    iconStyles?: T;
+                    id?: T;
+                  };
+              link?:
+                | T
+                | {
+                    label?: T;
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    icon?: T;
+                    placement?: T;
+                    iconStyles?: T;
+                    id?: T;
+                  };
+            };
+        id?: T;
+      };
+  media?: T;
+  wrapperStyles?: T;
+  contentStyles?: T;
+  cardStyles?: T;
   layout?:
     | T
     | {
         enableContainer?: T;
+        containerSize?: T;
         styles?: T;
-        content?: T;
+        blocks?:
+          | T
+          | {
+              contentBlock?: T | ContentBlockSelect<T>;
+              callToActionBlock?: T | CallToActionBlockSelect<T>;
+            };
         id?: T;
       };
   meta?:
@@ -827,6 +1025,72 @@ export interface PagesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentBlock_select".
+ */
+export interface ContentBlockSelect<T extends boolean = true> {
+  enableContainer?: T;
+  content?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CallToActionBlock_select".
+ */
+export interface CallToActionBlockSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  titleStyles?: T;
+  descriptionStyles?: T;
+  navigations?:
+    | T
+    | {
+        nav?:
+          | T
+          | {
+              appearance?: T;
+              styles?: T;
+              label?: T;
+              buttonType?: T;
+              buttonSize?: T;
+              dropdownItems?:
+                | T
+                | {
+                    label?: T;
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    icon?: T;
+                    placement?: T;
+                    iconStyles?: T;
+                    id?: T;
+                  };
+              link?:
+                | T
+                | {
+                    label?: T;
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    icon?: T;
+                    placement?: T;
+                    iconStyles?: T;
+                    id?: T;
+                  };
+            };
+        id?: T;
+      };
+  media?: T;
+  wrapperStyles?: T;
+  contentStyles?: T;
+  containerStyles?: T;
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1117,6 +1381,9 @@ export interface NavigationBlock {
             value: number | Page;
           } | null;
           url?: string | null;
+          icon?: (number | null) | Icon;
+          placement?: ('before' | 'after') | null;
+          iconStyles?: (number | Style)[] | null;
           id?: string | null;
         }[]
       | null;
@@ -1129,6 +1396,9 @@ export interface NavigationBlock {
         value: number | Page;
       } | null;
       url?: string | null;
+      icon?: (number | null) | Icon;
+      placement?: ('before' | 'after') | null;
+      iconStyles?: (number | Style)[] | null;
       id?: string | null;
     };
   };

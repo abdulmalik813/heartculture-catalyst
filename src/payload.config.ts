@@ -1,5 +1,4 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig, PayloadRequest, TaskConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -14,6 +13,8 @@ import { resendAdapter } from '@payloadcms/email-resend'
 import { plugins } from '@/plugins'
 import { defaultLexical } from '@/fields/lexical-field'
 import { Icons } from '@/collections/icons'
+import { CRON_SECRET, DATABASE_URI, EMAIL, PAYLOAD, TIMEZONES } from '@/constants/init'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -23,13 +24,8 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     timezones: {
-      supportedTimezones: [
-        {
-          label: 'America/Halifax',
-          value: 'America/Halifax',
-        },
-      ],
-      defaultTimezone: 'America/Halifax',
+      supportedTimezones: [...TIMEZONES.SUPPORTED_TIMEZONES],
+      defaultTimezone: TIMEZONES.DEFAULT_TIMEZONE,
     },
     user: Users.slug,
     livePreview: {
@@ -56,26 +52,26 @@ export default buildConfig({
     },
     components: {
       afterNavLinks: [
-        '/components/admin/invalidate-cache#CacheInvalidationButton', 
-        '/components/admin/theme-picker#ThemePicker'
+        '/components/admin/invalidate-cache#CacheInvalidationButton',
+        '/components/admin/theme-picker#ThemePicker',
       ],
     },
   },
   email: resendAdapter({
-    defaultFromAddress: 'noreply@noreply.com',
-    defaultFromName: 'No Reply',
-    apiKey: process.env.RESEND_API_KEY || '',
+    defaultFromAddress: EMAIL.FROM_ADDRESS,
+    defaultFromName: EMAIL.FROM_NAME,
+    apiKey: EMAIL.RESEND_API_KEY,
   }),
   collections: [Users, Media, Styles, Pages, Icons],
   cors: [getServerSideURL()].filter(Boolean),
   editor: defaultLexical(),
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: PAYLOAD.SECRET,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URI || '',
+      connectionString: DATABASE_URI,
     },
   }),
   sharp,
@@ -85,7 +81,7 @@ export default buildConfig({
       run: ({ req }: { req: PayloadRequest }): boolean => {
         if (req.user) return true
         const authHeader = req.headers.get('authorization')
-        return authHeader === `Bearer ${process.env.CRON_SECRET}`
+        return authHeader === `Bearer ${CRON_SECRET}`
       },
     },
     tasks: [schedulePublish as TaskConfig<'schedulePublish'>],
