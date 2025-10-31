@@ -2,7 +2,7 @@ import type { Field, GroupField } from 'payload'
 import deepMerge from '@/lib/deep-merge'
 
 type NavType = (options?: { overrides?: Partial<GroupField> }) => Field
-
+ 
 const navFields: Field[] = [
   {
     type: 'row',
