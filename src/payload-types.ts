@@ -291,7 +291,7 @@ export interface Page {
     | {
         container?: boolean | null;
         styles?: (number | Style)[] | null;
-        blocks?: (ContentBlock | CallToActionBlock | CardBlock | TabBlock)[] | null;
+        blocks?: (ContentBlock | CallToActionBlock | CardBlock | TabBlock | DividerBlock)[] | null;
         id?: string | null;
       }[]
     | null;
@@ -538,6 +538,38 @@ export interface TabBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'tabBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DividerBlock".
+ */
+export interface DividerBlock {
+  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
+  gridStyles?: (number | Style)[] | null;
+  type:
+    | 'line'
+    | 'dashed'
+    | 'dotted'
+    | 'double'
+    | 'gradient'
+    | 'wave'
+    | 'curve'
+    | 'angle'
+    | 'triangle'
+    | 'arrow'
+    | 'zigzag'
+    | 'spacer'
+    | 'fade';
+  height?: ('small' | 'medium' | 'large' | 'xlarge') | null;
+  color?: ('neutral' | 'primary' | 'secondary' | 'accent') | null;
+  /**
+   * Flip the divider upside down
+   */
+  flip?: boolean | null;
+  dividerStyles?: (number | Style)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'dividerBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1120,6 +1152,7 @@ export interface PagesSelect<T extends boolean = true> {
               callToActionBlock?: T | CallToActionBlockSelect<T>;
               cardBlock?: T | CardBlockSelect<T>;
               tabBlock?: T | TabBlockSelect<T>;
+              dividerBlock?: T | DividerBlockSelect<T>;
             };
         id?: T;
       };
@@ -1294,6 +1327,21 @@ export interface TabBlockSelect<T extends boolean = true> {
         contentStyles?: T;
         id?: T;
       };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DividerBlock_select".
+ */
+export interface DividerBlockSelect<T extends boolean = true> {
+  gridSize?: T;
+  gridStyles?: T;
+  type?: T;
+  height?: T;
+  color?: T;
+  flip?: T;
+  dividerStyles?: T;
   id?: T;
   blockName?: T;
 }

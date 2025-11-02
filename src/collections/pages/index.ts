@@ -16,6 +16,7 @@ import { ContentBlock } from '@/blocks/content/config'
 import { CallToActionBlock } from '@/blocks/call-to-action/config'
 import { CardBlock } from '@/blocks/card/config'
 import { TabBlock } from '@/blocks/tab/config'
+import { DividerBlock } from '@/blocks/divider/config'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
@@ -80,7 +81,13 @@ export const Pages: CollectionConfig<'pages'> = {
                 {
                   name: 'blocks',
                   type: 'blocks',
-                  blocks: [ContentBlock, CallToActionBlock, CardBlock, TabBlock(false)],
+                  blocks: [
+                    ContentBlock,
+                    CallToActionBlock,
+                    CardBlock(false),
+                    TabBlock(false),
+                    DividerBlock(false),
+                  ],
                   required: false,
                 },
               ],

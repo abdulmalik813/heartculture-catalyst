@@ -6,10 +6,11 @@ import Link from 'next/link'
 import { getServerSideURL } from '@/lib/get-url'
 import { Button } from '@/components/ui/button'
 import { LexicalRenderer } from '@/components/lexical-renderer'
+import { SearchParams } from '@/types/search-params'
 
 const browserPlayableTypes = ['image/jpeg', 'image/png', 'image/webp', 'video/mp4', 'video/webm']
 
-export function MediaBlockUI({ ...mediaBlock }: MediaBlock) {
+export function MediaBlockUI({ searchParams, ...mediaBlock }: MediaBlock & { searchParams?: SearchParams }) {
   if (!mediaBlock.media) return null
 
   const media: MediaCollection = mediaBlock.media as MediaCollection

@@ -7,12 +7,14 @@ import { joinStyles } from '@/lib/make-styles'
 import { CallToActionBlockUI } from '@/blocks/call-to-action'
 import { CardBlockUI } from '@/blocks/card'
 import { TabBlockUI } from '@/blocks/tab'
+import { DividerBlockUI } from '@/blocks/divider'
 
 const blockComponents = {
   contentBlock: ContentBlockUI,
   callToActionBlock: CallToActionBlockUI,
   cardBlock: CardBlockUI,
-  tabBlock: TabBlockUI
+  tabBlock: TabBlockUI,
+  dividerBlock: DividerBlockUI
 }
 
 type BlockRendererProps = {

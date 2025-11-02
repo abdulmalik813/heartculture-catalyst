@@ -4,6 +4,8 @@ import { MediaBlock } from '@/blocks/media/config'
 import { NavigationBlock } from '@/blocks/navigation/config'
 import { grid } from '@/fields/grid'
 import { TabBlock } from '@/blocks/tab/config'
+import { CardBlock } from '@/blocks/card/config'
+import { DividerBlock } from '@/blocks/divider/config'
 
 export const ContentBlock: Block = {
   slug: 'contentBlock',
@@ -26,7 +28,7 @@ export const ContentBlock: Block = {
           editor: defaultLexical({
             features: {
               blocks: {
-                blocks: [MediaBlock, NavigationBlock, TabBlock()],
+                blocks: [MediaBlock, NavigationBlock, TabBlock(), CardBlock(), DividerBlock()],
                 inlineBlocks: [MediaBlock, NavigationBlock],
               },
             },
