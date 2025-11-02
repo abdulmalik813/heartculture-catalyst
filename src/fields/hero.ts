@@ -99,16 +99,16 @@ export const hero: Field[] = [
       },
     ],
   },
-  // {
-  //   type: 'collapsible',
-  //   label: 'Media',
-  //   admin: {
-  //     condition: (data) => data.heroLayout !== 'heading-no-image',
-  //     initCollapsed: true,
-  //     description: 'Background image or featured media',
-  //   },
-  //   fields: media,
-  // },
+  {
+    type: 'collapsible',
+    label: 'Media',
+    admin: {
+      condition: (data) => data.heroLayout !== 'heading-no-image',
+      initCollapsed: true,
+      description: 'Background image or featured media',
+    },
+    fields: media,
+  },
   {
     type: 'collapsible',
     label: 'Advanced Styling',

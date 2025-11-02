@@ -283,6 +283,9 @@ export interface Page {
         id?: string | null;
       }[]
     | null;
+  media?: (number | null) | Media;
+  wrapperStyles?: (number | Style)[] | null;
+  contentStyles?: (number | Style)[] | null;
   /**
    * Apply custom styles to the card wrapper
    */
@@ -291,7 +294,7 @@ export interface Page {
     | {
         container?: boolean | null;
         styles?: (number | Style)[] | null;
-        blocks?: (ContentBlock | CallToActionBlock | CardBlock | TabBlock | DividerBlock)[] | null;
+        blocks?: (ContentBlock | CallToActionBlock | CardBlock | TabBlock | AccordionBlock | DividerBlock)[] | null;
         id?: string | null;
       }[]
     | null;
@@ -538,6 +541,38 @@ export interface TabBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'tabBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AccordionBlock".
+ */
+export interface AccordionBlock {
+  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
+  gridStyles?: (number | Style)[] | null;
+  items: {
+    title: string;
+    content: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    };
+    titleStyles?: (number | Style)[] | null;
+    contentStyles?: (number | Style)[] | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'accordionBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1139,6 +1174,9 @@ export interface PagesSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  media?: T;
+  wrapperStyles?: T;
+  contentStyles?: T;
   cardStyles?: T;
   layout?:
     | T
@@ -1152,6 +1190,7 @@ export interface PagesSelect<T extends boolean = true> {
               callToActionBlock?: T | CallToActionBlockSelect<T>;
               cardBlock?: T | CardBlockSelect<T>;
               tabBlock?: T | TabBlockSelect<T>;
+              accordionBlock?: T | AccordionBlockSelect<T>;
               dividerBlock?: T | DividerBlockSelect<T>;
             };
         id?: T;
@@ -1319,6 +1358,25 @@ export interface TabBlockSelect<T extends boolean = true> {
   gridSize?: T;
   gridStyles?: T;
   tabs?:
+    | T
+    | {
+        title?: T;
+        content?: T;
+        titleStyles?: T;
+        contentStyles?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AccordionBlock_select".
+ */
+export interface AccordionBlockSelect<T extends boolean = true> {
+  gridSize?: T;
+  gridStyles?: T;
+  items?:
     | T
     | {
         title?: T;

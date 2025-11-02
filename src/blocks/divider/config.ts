@@ -14,22 +14,17 @@ export const DividerBlock = (disableGrid: boolean = true): Block => ({
       label: 'Divider Type',
       defaultValue: 'line',
       options: [
-        // Line-Based
         { label: 'Simple Line', value: 'line' },
         { label: 'Dashed Line', value: 'dashed' },
         { label: 'Dotted Line', value: 'dotted' },
         { label: 'Double Line', value: 'double' },
         { label: 'Gradient Line', value: 'gradient' },
-        
-        // Shape-Based
         { label: 'Wave', value: 'wave' },
         { label: 'Curve', value: 'curve' },
         { label: 'Angle', value: 'angle' },
         { label: 'Triangle', value: 'triangle' },
         { label: 'Arrow', value: 'arrow' },
         { label: 'Zigzag', value: 'zigzag' },
-        
-        // Decorative
         { label: 'Spacer', value: 'spacer' },
         { label: 'Fade', value: 'fade' },
       ],

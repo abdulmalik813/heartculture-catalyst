@@ -3,6 +3,7 @@ import { grid } from '@/fields/grid'
 import { defaultLexical } from '@/fields/lexical-field'
 import { MediaBlock } from '../media/config'
 import { NavigationBlock } from '../navigation/config'
+import { defaultLexicalValue } from '@/constants/default-lexical'
 
 export const TabBlock = (disableGrid: boolean = true): Block => ({
   slug: 'tabBlock',
@@ -41,25 +42,7 @@ export const TabBlock = (disableGrid: boolean = true): Block => ({
                       },
                     },
                   }),
-                  defaultValue: {
-                    root: {
-                      children: [
-                        {
-                          children: [],
-                          direction: null,
-                          format: '',
-                          indent: 0,
-                          type: 'paragraph',
-                          version: 1,
-                        },
-                      ],
-                      direction: null,
-                      format: '',
-                      indent: 0,
-                      type: 'root',
-                      version: 1,
-                    },
-                  },
+                  defaultValue: defaultLexicalValue,
                   label: 'Tab Content',
                 },
               ],

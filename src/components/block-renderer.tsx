@@ -7,6 +7,7 @@ import { joinStyles } from '@/lib/make-styles'
 import { CallToActionBlockUI } from '@/blocks/call-to-action'
 import { CardBlockUI } from '@/blocks/card'
 import { TabBlockUI } from '@/blocks/tab'
+import { AccordionBlockUI } from '@/blocks/accordion'
 import { DividerBlockUI } from '@/blocks/divider'
 
 const blockComponents = {
@@ -14,6 +15,7 @@ const blockComponents = {
   callToActionBlock: CallToActionBlockUI,
   cardBlock: CardBlockUI,
   tabBlock: TabBlockUI,
+  accordionBlock: AccordionBlockUI,
   dividerBlock: DividerBlockUI
 }
 

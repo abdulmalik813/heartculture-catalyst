@@ -1,5 +1,5 @@
 import React from 'react'
-import type { DividerBlock, MediaBlock, NavigationBlock, Style, TabBlock } from '@/payload-types'
+import type { AccordionBlock, DividerBlock, MediaBlock, NavigationBlock, Style, TabBlock } from '@/payload-types'
 import {
   DefaultNodeTypes,
   DefaultTypedEditorState,
@@ -14,6 +14,7 @@ import { MediaBlockUI } from '@/blocks/media'
 import { NavigationBlockUI } from '../blocks/navigation'
 import { SearchParams } from '@/types/search-params'
 import { TabBlockUI } from '@/blocks/tab'
+import { AccordionBlockUI } from '@/blocks/accordion'
 import { DividerBlockUI } from '@/blocks/divider'
 
 interface LexicalRendererProps {
@@ -22,7 +23,7 @@ interface LexicalRendererProps {
   searchParams?: SearchParams
 }
 
-type NodeTypes = DefaultNodeTypes | SerializedBlockNode<MediaBlock | NavigationBlock | TabBlock | DividerBlock>
+type NodeTypes = DefaultNodeTypes | SerializedBlockNode<MediaBlock | NavigationBlock | TabBlock | AccordionBlock | DividerBlock>
 
 function jsxConverters(
   searchParams?: LexicalRendererProps['searchParams'],
@@ -55,6 +56,7 @@ function jsxConverters(
         mediaBlock: ({ node }) => <MediaBlockUI {...node.fields} searchParams={searchParams} />,
         navigationBlock: ({ node }) => <NavigationBlockUI {...node.fields} />,
         tabBlock: ({ node }) => <TabBlockUI {...node.fields} />,
+        accordionBlock: ({ node }) => <AccordionBlockUI {...node.fields} />,
         dividerBlock: ({ node }) => <DividerBlockUI {...node.fields} />,
       },
     }

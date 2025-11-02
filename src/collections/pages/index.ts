@@ -16,6 +16,7 @@ import { ContentBlock } from '@/blocks/content/config'
 import { CallToActionBlock } from '@/blocks/call-to-action/config'
 import { CardBlock } from '@/blocks/card/config'
 import { TabBlock } from '@/blocks/tab/config'
+import { AccordionBlock } from '@/blocks/accordion/config'
 import { DividerBlock } from '@/blocks/divider/config'
 
 export const Pages: CollectionConfig<'pages'> = {
@@ -86,6 +87,7 @@ export const Pages: CollectionConfig<'pages'> = {
                     CallToActionBlock,
                     CardBlock(false),
                     TabBlock(false),
+                    AccordionBlock(false),
                     DividerBlock(false),
                   ],
                   required: false,
