@@ -1,4 +1,4 @@
-import { MediaBlock as MediaBlockProps } from '@/payload-types'
+import { MediaBlock } from '@/payload-types'
 import { Media } from '@/components/media'
 import { joinStyles } from '@/lib/make-styles'
 import type { Media as MediaCollection } from '@/payload-types'
@@ -9,7 +9,7 @@ import { LexicalRenderer } from '@/components/lexical-renderer'
 
 const browserPlayableTypes = ['image/jpeg', 'image/png', 'image/webp', 'video/mp4', 'video/webm']
 
-export function MediaBlock({ ...mediaBlock }: MediaBlockProps) {
+export function MediaBlockUI({ ...mediaBlock }: MediaBlock) {
   if (!mediaBlock.media) return null
 
   const media: MediaCollection = mediaBlock.media as MediaCollection

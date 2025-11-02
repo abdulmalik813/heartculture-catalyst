@@ -12,7 +12,7 @@ import {
 } from '@payloadcms/plugin-seo/fields'
 import { generatePreviewPath } from '@/lib/generate-preview-path'
 import { hero } from '@/fields/hero'
-import { ContentBlock } from '@/blocks/content'
+import { ContentBlock } from '@/blocks/content/config'
 import { CallToActionBlock } from '@/blocks/call-to-action'
 import { container } from '@/fields/container'
 
@@ -66,7 +66,7 @@ export const Pages: CollectionConfig<'pages'> = {
               name: 'layout',
               type: 'array',
               fields: [
-                ...container,
+                container(),
                 {
                   name: 'blocks',
                   type: 'blocks',

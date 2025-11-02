@@ -10,16 +10,14 @@ import {
   RichText as ConvertRichText,
 } from '@payloadcms/richtext-lexical/react'
 import { joinStyles } from '@/lib/make-styles'
-import { MediaBlock } from '@/blocks/media'
-import { Navigation } from './custom-ui/navigation'
+import { MediaBlockUI } from '@/blocks/media'
+import { NavigationBlockUI } from '../blocks/navigation'
+import { SearchParams } from '@/types/search-params'
 
 interface LexicalRendererProps {
   content?: DefaultTypedEditorState | null
-  styles?: string | null
-  enableContainer?: boolean | null
-  searchParams?:
-    | Record<string, string | string[] | undefined | null>
-    | Promise<Record<string, string | string[] | undefined | null>>
+  contentStyles?: (number | Style)[] | undefined | null
+  searchParams?: SearchParams
 }
 
 type NodeTypes = DefaultNodeTypes | SerializedBlockNode<MediaBlockProps>
@@ -43,36 +41,34 @@ function jsxConverters(
             },
           },
         }
-        return <Navigation {...reconstructedNode.fields} />
+        return <NavigationBlockUI {...reconstructedNode.fields} />
       },
       inlineBlocks: {
         // @ts-expect-error there may be some mismatch between the expected types here
-        mediaBlock: ({ node }) => <MediaBlock {...node.fields} searchParams={searchParams} />,
+        mediaBlock: ({ node }) => <MediaBlockUI {...node.fields} searchParams={searchParams} />,
         // @ts-expect-error there may be some mismatch between the expected types here
-        navigationBlock: ({ node }) => <Navigation {...node.fields} />,
+        navigationBlock: ({ node }) => <NavigationBlockUI {...node.fields} />,
       },
       blocks: {
         // @ts-expect-error there may be some mismatch between the expected types here
-        mediaBlock: ({ node }) => <MediaBlock {...node.fields} searchParams={searchParams} />,
+        mediaBlock: ({ node }) => <MediaBlockUI {...node.fields} searchParams={searchParams} />,
         // @ts-expect-error there may be some mismatch between the expected types here
-        navigationBlock: ({ node }) => <Navigation {...node.fields} />,
+        navigationBlock: ({ node }) => <NavigationBlockUI {...node.fields} />,
       },
     }
   }
 }
 
 export async function LexicalRenderer({
-  styles,
   content,
   searchParams,
-  enableContainer,
+  contentStyles,
 }: LexicalRendererProps) {
   if (!content) return null
-  const container = enableContainer ? 'container mx-auto' : ''
   return (
     <ConvertRichText
       converters={jsxConverters(searchParams)}
-      className={joinStyles(container, styles)}
+      className={joinStyles(contentStyles)}
       data={content as DefaultTypedEditorState}
     />
   )

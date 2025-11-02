@@ -2,7 +2,7 @@ import type React from 'react'
 import type { Page } from '@/payload-types'
 
 import { getCachedDocument } from '@/lib/get-document'
-import { getCachedRedirects } from '@/lib/getRedirects'
+import { getCachedRedirects } from '@/lib/get-redirects'
 import { notFound, redirect } from 'next/navigation'
 
 interface Props {

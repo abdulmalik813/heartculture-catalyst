@@ -1,17 +1,17 @@
 import { Block } from 'payload'
 import { defaultLexical } from '@/fields/lexical-field'
 import { MediaBlock } from '@/blocks/media/config'
-import { NavigationBlock } from '@/blocks/navigation'
-import { container } from '@/fields/container'
+import { NavigationBlock } from '@/blocks/navigation/config'
 
 export const ContentBlock: Block = {
   slug: 'contentBlock',
   interfaceName: 'ContentBlock',
   fields: [
     {
-      name: 'enableContainer',
-      type: 'checkbox',
-      label: 'Enable Container',
+      name: 'contentStyles',
+      type: 'relationship',
+      relationTo: 'styles',
+      hasMany: true
     },
     {
       type: 'collapsible',

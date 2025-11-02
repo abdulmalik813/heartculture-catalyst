@@ -7,8 +7,9 @@ import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 import { generateMeta } from '@/lib/generate-meta'
 import { notFound } from 'next/navigation'
-import { LexicalRenderer } from '@/components/lexical-renderer'
 import { joinStyles } from '@/lib/make-styles'
+import { cn } from '@/lib/utils'
+import { BlockRenderer } from '@/components/block-renderer'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -61,14 +62,24 @@ export default async function Page({ params, searchParams }: Readonly<PageProps>
   return (
     <article className="min-h-[70vh] ">
       <PayloadRedirects disableNotFound url={url} />
-      {page.layout?.map((block, i) => (
-        <LexicalRenderer
+      {page.layout?.map((layout, i) => (
+        <div
           key={i}
-          content={block?.content}
-          styles={joinStyles(block?.styles)}
-          searchParams={searchParams}
-          enableContainer={block?.enableContainer}
-        />
+          className={joinStyles(
+            `${layout.enableContainer ? 'container mx-auto' : ''}`,
+            cn({
+              'w-full': layout.containerSize === 'full',
+              'max-w-[66.666%] mx-auto': layout.containerSize === 'two-thirds',
+              'max-w-[50%] mx-auto': layout.containerSize === 'half',
+              'max-w-[33.333%] mx-auto': layout.containerSize === 'one-third',
+            }),
+            layout.styles,
+          )}
+        >
+          {layout.blocks?.map((block, index) => (
+            <BlockRenderer key={index} searchParams={searchParams} block={block} />
+          ))}
+        </div>
       ))}
     </article>
   )

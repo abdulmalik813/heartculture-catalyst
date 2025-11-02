@@ -22,7 +22,6 @@ import {
   FixedToolbarFeature,
   BlocksFeature,
   EXPERIMENTAL_TableFeature,
-  type LinkFields,
   type LexicalEditorProps,
 } from '@payloadcms/richtext-lexical'
 import deepMerge from '@/lib/deep-merge'

@@ -1,5 +1,5 @@
 import { NavigationBlock } from '@/payload-types'
-import { Button } from '../ui/button'
+import { Button } from '../../components/ui/button'
 import { joinStyles } from '@/lib/make-styles'
 import Link from 'next/link'
 import {
@@ -7,9 +7,9 @@ import {
   DropdownMenuTrigger,
   DropdownMenu,
   DropdownMenuItem,
-} from '../ui/dropdown-menu'
+} from '../../components/ui/dropdown-menu'
 
-export function Navigation({ ...props }: Partial<NavigationBlock>) {
+export function NavigationBlockUI({ ...props }: Partial<NavigationBlock>) {
   if (props.nav?.appearance === 'button' || props.nav?.appearance === 'link') {
     const href =
       props.nav.link?.type === 'custom'
@@ -65,7 +65,7 @@ export function Navigation({ ...props }: Partial<NavigationBlock>) {
                   ? `/${item.reference.value.slug}`
                   : null
                 : null
-          
+
           if (!href) return null
 
           const relProps = item.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {}

@@ -335,7 +335,7 @@ export interface Icon {
  * via the `definition` "ContentBlock".
  */
 export interface ContentBlock {
-  enableContainer?: boolean | null;
+  contentStyles?: (number | Style)[] | null;
   content?: {
     root: {
       type: string;
@@ -1031,7 +1031,7 @@ export interface PagesSelect<T extends boolean = true> {
  * via the `definition` "ContentBlock_select".
  */
 export interface ContentBlockSelect<T extends boolean = true> {
-  enableContainer?: T;
+  contentStyles?: T;
   content?: T;
   id?: T;
   blockName?: T;
