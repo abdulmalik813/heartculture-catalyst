@@ -42,6 +42,13 @@ interface PageProps {
   }>
 }
 
+const colsSpanClasses = {
+  full: 'col-span-4 lg:col-span-12',
+  half: 'col-span-4 lg:col-span-6',
+  'one-third': 'col-span-4 lg:col-span-4',
+  'two-thirds': 'col-span-4 lg:col-span-8',
+}
+
 export default async function Page({ params, searchParams }: Readonly<PageProps>) {
   const param = await params
   const slug = param?.slug ? param.slug.join('/') : 'home'
@@ -60,25 +67,18 @@ export default async function Page({ params, searchParams }: Readonly<PageProps>
   }
 
   return (
-    <article className="min-h-[70vh] ">
+    <article className="min-h-[70vh]">
       <PayloadRedirects disableNotFound url={url} />
       {page.layout?.map((layout, i) => (
         <div
           key={i}
-          className={joinStyles(
-            `${layout.enableContainer ? 'container mx-auto' : ''}`,
-            cn({
-              'w-full': layout.containerSize === 'full',
-              'max-w-[66.666%] mx-auto': layout.containerSize === 'two-thirds',
-              'max-w-[50%] mx-auto': layout.containerSize === 'half',
-              'max-w-[33.333%] mx-auto': layout.containerSize === 'one-third',
-            }),
-            layout.styles,
-          )}
+          className={joinStyles(cn(layout.container && 'container mx-auto'), layout.styles)}
         >
-          {layout.blocks?.map((block, index) => (
-            <BlockRenderer key={index} searchParams={searchParams} block={block} />
-          ))}
+          <div className="grid grid-cols-4 lg:grid-cols-12 gap-4">
+            {layout.blocks?.map((block, index) => (
+              <BlockRenderer key={index} searchParams={searchParams} block={block} />
+            ))}
+          </div>
         </div>
       ))}
     </article>

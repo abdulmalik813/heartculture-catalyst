@@ -2,31 +2,31 @@ import { Block } from 'payload'
 import { defaultLexical } from '@/fields/lexical-field'
 import { MediaBlock } from '@/blocks/media/config'
 import { NavigationBlock } from '@/blocks/navigation/config'
+import { grid } from '@/fields/grid'
+import { TabBlock } from '@/blocks/tab/config'
 
 export const ContentBlock: Block = {
   slug: 'contentBlock',
   interfaceName: 'ContentBlock',
   fields: [
-    {
-      name: 'contentStyles',
-      type: 'relationship',
-      relationTo: 'styles',
-      hasMany: true
-    },
+    grid(),
     {
       type: 'collapsible',
       label: 'Content',
-      admin: {
-        initCollapsed: false,
-      },
       fields: [
+        {
+          name: 'contentStyles',
+          type: 'relationship',
+          relationTo: 'styles',
+          hasMany: true,
+        },
         {
           name: 'content',
           type: 'richText',
           editor: defaultLexical({
             features: {
               blocks: {
-                blocks: [MediaBlock, NavigationBlock],
+                blocks: [MediaBlock, NavigationBlock, TabBlock()],
                 inlineBlocks: [MediaBlock, NavigationBlock],
               },
             },

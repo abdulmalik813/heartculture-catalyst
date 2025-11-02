@@ -13,8 +13,9 @@ import {
 import { generatePreviewPath } from '@/lib/generate-preview-path'
 import { hero } from '@/fields/hero'
 import { ContentBlock } from '@/blocks/content/config'
-import { CallToActionBlock } from '@/blocks/call-to-action'
-import { container } from '@/fields/container'
+import { CallToActionBlock } from '@/blocks/call-to-action/config'
+import { CardBlock } from '@/blocks/card/config'
+import { TabBlock } from '@/blocks/tab/config'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
@@ -66,11 +67,20 @@ export const Pages: CollectionConfig<'pages'> = {
               name: 'layout',
               type: 'array',
               fields: [
-                container(),
+                {
+                  name: 'container',
+                  type: 'checkbox',
+                },
+                {
+                  name: 'styles',
+                  type: 'relationship',
+                  relationTo: 'styles',
+                  hasMany: true,
+                },
                 {
                   name: 'blocks',
                   type: 'blocks',
-                  blocks: [ContentBlock, CallToActionBlock],
+                  blocks: [ContentBlock, CallToActionBlock, CardBlock, TabBlock(false)],
                   required: false,
                 },
               ],

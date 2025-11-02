@@ -57,7 +57,6 @@ type LexicalEditorType = (options?: {
 }) => ReturnType<typeof lexicalEditor>
 
 export const defaultLexical: LexicalEditorType = ({ overrides = {}, features = {} } = {}) => {
-  // Default configurations for each feature
   const defaultFeatures: FeatureConfig = {
     paragraph: true,
     bold: true,
@@ -79,6 +78,7 @@ export const defaultLexical: LexicalEditorType = ({ overrides = {}, features = {
       enabledCollections: ['pages'],
       fields: ({ defaultFields }) => {
         return [
+          // default field: name: text, type: text
           defaultFields[0],
           navigation()
         ]

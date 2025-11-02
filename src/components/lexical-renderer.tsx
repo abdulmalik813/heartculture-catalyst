@@ -1,5 +1,5 @@
 import React from 'react'
-import type { MediaBlock as MediaBlockProps, Style } from '@/payload-types'
+import type { MediaBlock, NavigationBlock, Style, TabBlock } from '@/payload-types'
 import {
   DefaultNodeTypes,
   DefaultTypedEditorState,
@@ -13,6 +13,7 @@ import { joinStyles } from '@/lib/make-styles'
 import { MediaBlockUI } from '@/blocks/media'
 import { NavigationBlockUI } from '../blocks/navigation'
 import { SearchParams } from '@/types/search-params'
+import { TabBlockUI } from '@/blocks/tab'
 
 interface LexicalRendererProps {
   content?: DefaultTypedEditorState | null
@@ -20,7 +21,7 @@ interface LexicalRendererProps {
   searchParams?: SearchParams
 }
 
-type NodeTypes = DefaultNodeTypes | SerializedBlockNode<MediaBlockProps>
+type NodeTypes = DefaultNodeTypes | SerializedBlockNode<MediaBlock | NavigationBlock | TabBlock>
 
 function jsxConverters(
   searchParams?: LexicalRendererProps['searchParams'],
@@ -52,8 +53,8 @@ function jsxConverters(
       blocks: {
         // @ts-expect-error there may be some mismatch between the expected types here
         mediaBlock: ({ node }) => <MediaBlockUI {...node.fields} searchParams={searchParams} />,
-        // @ts-expect-error there may be some mismatch between the expected types here
         navigationBlock: ({ node }) => <NavigationBlockUI {...node.fields} />,
+        tabBlock: ({ node }) => <TabBlockUI {...node.fields} />,
       },
     }
   }

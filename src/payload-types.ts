@@ -247,58 +247,51 @@ export interface Page {
   navigations?:
     | {
         nav?: {
-          appearance?: ('link' | 'button' | 'dropdown') | null;
-          styles?: (number | Style)[] | null;
           label?: string | null;
-          buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
-          buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
-          dropdownItems?:
-            | {
-                label?: string | null;
-                type?: ('reference' | 'custom') | null;
-                newTab?: boolean | null;
-                reference?: {
-                  relationTo: 'pages';
-                  value: number | Page;
-                } | null;
-                url?: string | null;
-                icon?: (number | null) | Icon;
-                placement?: ('before' | 'after') | null;
-                iconStyles?: (number | Style)[] | null;
-                id?: string | null;
-              }[]
-            | null;
+          appearance?: ('link' | 'button' | 'dropdown') | null;
           link?: {
             label?: string | null;
             type?: ('reference' | 'custom') | null;
-            newTab?: boolean | null;
             reference?: {
               relationTo: 'pages';
               value: number | Page;
             } | null;
             url?: string | null;
-            icon?: (number | null) | Icon;
-            placement?: ('before' | 'after') | null;
-            iconStyles?: (number | Style)[] | null;
+            newTab?: boolean | null;
             id?: string | null;
           };
+          dropdownItems?:
+            | {
+                label?: string | null;
+                type?: ('reference' | 'custom') | null;
+                reference?: {
+                  relationTo: 'pages';
+                  value: number | Page;
+                } | null;
+                url?: string | null;
+                newTab?: boolean | null;
+                id?: string | null;
+              }[]
+            | null;
+          buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+          buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+          styles?: (number | Style)[] | null;
+          icon?: (number | null) | Icon;
+          placement?: ('before' | 'after') | null;
+          iconStyles?: (number | Style)[] | null;
         };
         id?: string | null;
       }[]
     | null;
-  media: number | Media;
-  wrapperStyles?: (number | Style)[] | null;
-  contentStyles?: (number | Style)[] | null;
   /**
    * Apply custom styles to the card wrapper
    */
   cardStyles?: (number | Style)[] | null;
   layout?:
     | {
-        enableContainer?: boolean | null;
-        containerSize?: ('full' | 'two-thirds' | 'half' | 'one-third') | null;
+        container?: boolean | null;
         styles?: (number | Style)[] | null;
-        blocks?: (ContentBlock | CallToActionBlock)[] | null;
+        blocks?: (ContentBlock | CallToActionBlock | CardBlock | TabBlock)[] | null;
         id?: string | null;
       }[]
     | null;
@@ -335,6 +328,8 @@ export interface Icon {
  * via the `definition` "ContentBlock".
  */
 export interface ContentBlock {
+  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
+  gridStyles?: (number | Style)[] | null;
   contentStyles?: (number | Style)[] | null;
   content?: {
     root: {
@@ -360,68 +355,189 @@ export interface ContentBlock {
  * via the `definition` "CallToActionBlock".
  */
 export interface CallToActionBlock {
-  /**
-   * Main call to action heading
-   */
-  title: string;
-  /**
-   * Supporting text below the title
-   */
-  description?: string | null;
-  titleStyles?: (number | Style)[] | null;
-  descriptionStyles?: (number | Style)[] | null;
-  navigations?:
-    | {
-        nav?: {
-          appearance?: ('link' | 'button' | 'dropdown') | null;
-          styles?: (number | Style)[] | null;
+  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
+  gridStyles?: (number | Style)[] | null;
+  card: {
+    enableTitle?: boolean | null;
+    enableAction?: boolean | null;
+    enableDescription?: boolean | null;
+    enableContent?: boolean | null;
+    enableFooter?: boolean | null;
+    title?: string | null;
+    action: {
+      nav?: {
+        label?: string | null;
+        appearance?: ('link' | 'button' | 'dropdown') | null;
+        link?: {
           label?: string | null;
-          buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
-          buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
-          dropdownItems?:
-            | {
-                label?: string | null;
-                type?: ('reference' | 'custom') | null;
-                newTab?: boolean | null;
-                reference?: {
-                  relationTo: 'pages';
-                  value: number | Page;
-                } | null;
-                url?: string | null;
-                icon?: (number | null) | Icon;
-                placement?: ('before' | 'after') | null;
-                iconStyles?: (number | Style)[] | null;
-                id?: string | null;
-              }[]
-            | null;
-          link?: {
+          type?: ('reference' | 'custom') | null;
+          reference?: {
+            relationTo: 'pages';
+            value: number | Page;
+          } | null;
+          url?: string | null;
+          newTab?: boolean | null;
+          id?: string | null;
+        };
+        dropdownItems?:
+          | {
+              label?: string | null;
+              type?: ('reference' | 'custom') | null;
+              reference?: {
+                relationTo: 'pages';
+                value: number | Page;
+              } | null;
+              url?: string | null;
+              newTab?: boolean | null;
+              id?: string | null;
+            }[]
+          | null;
+        buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+        buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+        styles?: (number | Style)[] | null;
+        icon?: (number | null) | Icon;
+        placement?: ('before' | 'after') | null;
+        iconStyles?: (number | Style)[] | null;
+      };
+    };
+    description?: string | null;
+    content?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    footer?: string | null;
+    cardStyles?: (number | Style)[] | null;
+    titleStyles?: (number | Style)[] | null;
+    actionStyles?: (number | Style)[] | null;
+    descriptionStyles?: (number | Style)[] | null;
+    contentStyles?: (number | Style)[] | null;
+    footerStyles?: (number | Style)[] | null;
+  };
+  media?: (number | null) | Media;
+  wrapperStyles?: (number | Style)[] | null;
+  contentStyles?: (number | Style)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'callToActionBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CardBlock".
+ */
+export interface CardBlock {
+  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
+  gridStyles?: (number | Style)[] | null;
+  enableTitle?: boolean | null;
+  enableAction?: boolean | null;
+  enableDescription?: boolean | null;
+  enableContent?: boolean | null;
+  enableFooter?: boolean | null;
+  title?: string | null;
+  action: {
+    nav?: {
+      label?: string | null;
+      appearance?: ('link' | 'button' | 'dropdown') | null;
+      link?: {
+        label?: string | null;
+        type?: ('reference' | 'custom') | null;
+        reference?: {
+          relationTo: 'pages';
+          value: number | Page;
+        } | null;
+        url?: string | null;
+        newTab?: boolean | null;
+        id?: string | null;
+      };
+      dropdownItems?:
+        | {
             label?: string | null;
             type?: ('reference' | 'custom') | null;
-            newTab?: boolean | null;
             reference?: {
               relationTo: 'pages';
               value: number | Page;
             } | null;
             url?: string | null;
-            icon?: (number | null) | Icon;
-            placement?: ('before' | 'after') | null;
-            iconStyles?: (number | Style)[] | null;
+            newTab?: boolean | null;
             id?: string | null;
-          };
-        };
-        id?: string | null;
-      }[]
-    | null;
-  media: number | Media;
-  wrapperStyles?: (number | Style)[] | null;
+          }[]
+        | null;
+      buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+      buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+      styles?: (number | Style)[] | null;
+      icon?: (number | null) | Icon;
+      placement?: ('before' | 'after') | null;
+      iconStyles?: (number | Style)[] | null;
+    };
+  };
+  description?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  footer?: string | null;
+  cardStyles?: (number | Style)[] | null;
+  titleStyles?: (number | Style)[] | null;
+  actionStyles?: (number | Style)[] | null;
+  descriptionStyles?: (number | Style)[] | null;
   contentStyles?: (number | Style)[] | null;
-  /**
-   * Apply custom styles to the CTA container
-   */
-  containerStyles?: (number | Style)[] | null;
+  footerStyles?: (number | Style)[] | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'callToActionBlock';
+  blockType: 'cardBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TabBlock".
+ */
+export interface TabBlock {
+  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
+  gridStyles?: (number | Style)[] | null;
+  tabs: {
+    title: string;
+    content: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    };
+    titleStyles?: (number | Style)[] | null;
+    contentStyles?: (number | Style)[] | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'tabBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -960,55 +1076,50 @@ export interface PagesSelect<T extends boolean = true> {
         nav?:
           | T
           | {
-              appearance?: T;
-              styles?: T;
               label?: T;
-              buttonType?: T;
-              buttonSize?: T;
-              dropdownItems?:
-                | T
-                | {
-                    label?: T;
-                    type?: T;
-                    newTab?: T;
-                    reference?: T;
-                    url?: T;
-                    icon?: T;
-                    placement?: T;
-                    iconStyles?: T;
-                    id?: T;
-                  };
+              appearance?: T;
               link?:
                 | T
                 | {
                     label?: T;
                     type?: T;
-                    newTab?: T;
                     reference?: T;
                     url?: T;
-                    icon?: T;
-                    placement?: T;
-                    iconStyles?: T;
+                    newTab?: T;
                     id?: T;
                   };
+              dropdownItems?:
+                | T
+                | {
+                    label?: T;
+                    type?: T;
+                    reference?: T;
+                    url?: T;
+                    newTab?: T;
+                    id?: T;
+                  };
+              buttonType?: T;
+              buttonSize?: T;
+              styles?: T;
+              icon?: T;
+              placement?: T;
+              iconStyles?: T;
             };
         id?: T;
       };
-  media?: T;
-  wrapperStyles?: T;
-  contentStyles?: T;
   cardStyles?: T;
   layout?:
     | T
     | {
-        enableContainer?: T;
-        containerSize?: T;
+        container?: T;
         styles?: T;
         blocks?:
           | T
           | {
               contentBlock?: T | ContentBlockSelect<T>;
               callToActionBlock?: T | CallToActionBlockSelect<T>;
+              cardBlock?: T | CardBlockSelect<T>;
+              tabBlock?: T | TabBlockSelect<T>;
             };
         id?: T;
       };
@@ -1031,6 +1142,8 @@ export interface PagesSelect<T extends boolean = true> {
  * via the `definition` "ContentBlock_select".
  */
 export interface ContentBlockSelect<T extends boolean = true> {
+  gridSize?: T;
+  gridStyles?: T;
   contentStyles?: T;
   content?: T;
   id?: T;
@@ -1041,54 +1154,146 @@ export interface ContentBlockSelect<T extends boolean = true> {
  * via the `definition` "CallToActionBlock_select".
  */
 export interface CallToActionBlockSelect<T extends boolean = true> {
+  gridSize?: T;
+  gridStyles?: T;
+  card?:
+    | T
+    | {
+        enableTitle?: T;
+        enableAction?: T;
+        enableDescription?: T;
+        enableContent?: T;
+        enableFooter?: T;
+        title?: T;
+        action?:
+          | T
+          | {
+              nav?:
+                | T
+                | {
+                    label?: T;
+                    appearance?: T;
+                    link?:
+                      | T
+                      | {
+                          label?: T;
+                          type?: T;
+                          reference?: T;
+                          url?: T;
+                          newTab?: T;
+                          id?: T;
+                        };
+                    dropdownItems?:
+                      | T
+                      | {
+                          label?: T;
+                          type?: T;
+                          reference?: T;
+                          url?: T;
+                          newTab?: T;
+                          id?: T;
+                        };
+                    buttonType?: T;
+                    buttonSize?: T;
+                    styles?: T;
+                    icon?: T;
+                    placement?: T;
+                    iconStyles?: T;
+                  };
+            };
+        description?: T;
+        content?: T;
+        footer?: T;
+        cardStyles?: T;
+        titleStyles?: T;
+        actionStyles?: T;
+        descriptionStyles?: T;
+        contentStyles?: T;
+        footerStyles?: T;
+      };
+  media?: T;
+  wrapperStyles?: T;
+  contentStyles?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CardBlock_select".
+ */
+export interface CardBlockSelect<T extends boolean = true> {
+  gridSize?: T;
+  gridStyles?: T;
+  enableTitle?: T;
+  enableAction?: T;
+  enableDescription?: T;
+  enableContent?: T;
+  enableFooter?: T;
   title?: T;
-  description?: T;
-  titleStyles?: T;
-  descriptionStyles?: T;
-  navigations?:
+  action?:
     | T
     | {
         nav?:
           | T
           | {
-              appearance?: T;
-              styles?: T;
               label?: T;
-              buttonType?: T;
-              buttonSize?: T;
-              dropdownItems?:
-                | T
-                | {
-                    label?: T;
-                    type?: T;
-                    newTab?: T;
-                    reference?: T;
-                    url?: T;
-                    icon?: T;
-                    placement?: T;
-                    iconStyles?: T;
-                    id?: T;
-                  };
+              appearance?: T;
               link?:
                 | T
                 | {
                     label?: T;
                     type?: T;
-                    newTab?: T;
                     reference?: T;
                     url?: T;
-                    icon?: T;
-                    placement?: T;
-                    iconStyles?: T;
+                    newTab?: T;
                     id?: T;
                   };
+              dropdownItems?:
+                | T
+                | {
+                    label?: T;
+                    type?: T;
+                    reference?: T;
+                    url?: T;
+                    newTab?: T;
+                    id?: T;
+                  };
+              buttonType?: T;
+              buttonSize?: T;
+              styles?: T;
+              icon?: T;
+              placement?: T;
+              iconStyles?: T;
             };
+      };
+  description?: T;
+  content?: T;
+  footer?: T;
+  cardStyles?: T;
+  titleStyles?: T;
+  actionStyles?: T;
+  descriptionStyles?: T;
+  contentStyles?: T;
+  footerStyles?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TabBlock_select".
+ */
+export interface TabBlockSelect<T extends boolean = true> {
+  gridSize?: T;
+  gridStyles?: T;
+  tabs?:
+    | T
+    | {
+        title?: T;
+        content?: T;
+        titleStyles?: T;
+        contentStyles?: T;
         id?: T;
       };
-  media?: T;
-  wrapperStyles?: T;
-  contentStyles?: T;
-  containerStyles?: T;
   id?: T;
   blockName?: T;
 }
@@ -1353,7 +1558,7 @@ export interface TaskSchedulePublish {
  * via the `definition` "mediaBlock".
  */
 export interface MediaBlock {
-  media: number | Media;
+  media?: (number | null) | Media;
   wrapperStyles?: (number | Style)[] | null;
   contentStyles?: (number | Style)[] | null;
   id?: string | null;
@@ -1366,41 +1571,38 @@ export interface MediaBlock {
  */
 export interface NavigationBlock {
   nav?: {
-    appearance?: ('link' | 'button' | 'dropdown') | null;
-    styles?: (number | Style)[] | null;
     label?: string | null;
-    buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
-    buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
-    dropdownItems?:
-      | {
-          label?: string | null;
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?: {
-            relationTo: 'pages';
-            value: number | Page;
-          } | null;
-          url?: string | null;
-          icon?: (number | null) | Icon;
-          placement?: ('before' | 'after') | null;
-          iconStyles?: (number | Style)[] | null;
-          id?: string | null;
-        }[]
-      | null;
+    appearance?: ('link' | 'button' | 'dropdown') | null;
     link?: {
       label?: string | null;
       type?: ('reference' | 'custom') | null;
-      newTab?: boolean | null;
       reference?: {
         relationTo: 'pages';
         value: number | Page;
       } | null;
       url?: string | null;
-      icon?: (number | null) | Icon;
-      placement?: ('before' | 'after') | null;
-      iconStyles?: (number | Style)[] | null;
+      newTab?: boolean | null;
       id?: string | null;
     };
+    dropdownItems?:
+      | {
+          label?: string | null;
+          type?: ('reference' | 'custom') | null;
+          reference?: {
+            relationTo: 'pages';
+            value: number | Page;
+          } | null;
+          url?: string | null;
+          newTab?: boolean | null;
+          id?: string | null;
+        }[]
+      | null;
+    buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+    buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+    styles?: (number | Style)[] | null;
+    icon?: (number | null) | Icon;
+    placement?: ('before' | 'after') | null;
+    iconStyles?: (number | Style)[] | null;
   };
   id?: string | null;
   blockName?: string | null;
