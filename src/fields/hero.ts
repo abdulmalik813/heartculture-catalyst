@@ -1,11 +1,24 @@
 import { GroupField } from 'payload'
 import { media } from './media'
 import { navigation } from './navigation'
+import { card } from './card'
 
 export const hero: GroupField = {
-  type: "group",
-  name: "hero",
+  type: 'group',
+  name: 'hero',
   fields: [
+    {
+      name: 'layout',
+      type: 'select',
+      required: true,
+      defaultValue: 'with-image',
+      label: 'Hero Layout',
+      options: [
+        { label: 'Full Screen Hero', value: 'fullscreen' },
+        { label: 'Hero with Image', value: 'with-image' },
+        { label: 'Simple Hero (Text Only)', value: 'text-only' },
+      ],
+    },
     {
       type: 'tabs',
       tabs: [
@@ -13,75 +26,75 @@ export const hero: GroupField = {
           label: 'Content',
           fields: [
             {
-              name: 'heroLayout',
-              type: 'select',
-              required: true,
-              defaultValue: 'heading-with-image',
-              label: 'Layout',
-              options: [
-                { label: 'Full Screen', value: 'fullscreen' },
-                { label: 'With Image', value: 'heading-with-image' },
-                { label: 'No Image', value: 'heading-no-image' },
-              ],
-            },
-            {
               name: 'heroTitle',
               type: 'textarea',
-              required: true,
-              label: 'Title',
+              admin: {
+                condition: (_, siblingData) => siblingData.layout === 'text-only',
+              },
             },
             {
-              name: 'description',
+              name: 'heroDescription',
               type: 'textarea',
-              label: 'Description',
+              admin: {
+                condition: (_, siblingData) => siblingData.layout === 'text-only',
+              },
             },
             {
-              name: 'navigations',
-              type: 'array',
-              minRows: 0,
-              maxRows: 3,
-              label: 'CTAs',
-              fields: [navigation()],
+              type: 'group',
+              admin: {
+                condition: (_, siblingData) => siblingData.layout !== 'text-only',
+              },
+              fields: card(),
             },
           ],
         },
         {
           label: 'Media',
-          fields: media,
           admin: {
-            condition: (_, siblingData) => siblingData.heroLayout !== 'heading-no-image',
+            condition: (_, siblingData) => siblingData.layout !== 'text-only',
           },
+          fields: media,
         },
         {
-          label: 'Styles',
+          label: 'Styling',
+          admin: {
+            condition: (_, siblingData) => siblingData.layout === 'text-only',
+          },
           fields: [
             {
-              name: 'titleStyles',
+              name: 'containerStyles',
+              type: 'relationship',
+              relationTo: 'styles',
+              hasMany: true,
+              label: 'Hero Container Styles',
+              admin: {
+                description: 'Styles applied to the entire hero section',
+                condition: (_, siblingData) => siblingData.layout === 'text-only',
+              },
+            },
+            {
+              name: 'heroTitleStyles',
               type: 'relationship',
               relationTo: 'styles',
               hasMany: true,
               label: 'Title Styles',
+              admin: {
+                condition: (_, siblingData) => siblingData.layout === 'text-only',
+              },
             },
             {
-              name: 'descriptionStyles',
+              name: 'heroDescriptionStyles',
               type: 'relationship',
               relationTo: 'styles',
               hasMany: true,
               label: 'Description Styles',
-            },
-            {
-              name: 'cardStyles',
-              type: 'relationship',
-              relationTo: 'styles',
-              hasMany: true,
-              label: 'Container Styles',
               admin: {
-                condition: (_, siblingData) => siblingData.heroLayout === 'heading-with-image',
+                condition: (_, siblingData) => siblingData.layout === 'text-only',
               },
             },
           ],
         },
       ],
     },
-  ]
+  ],
 }

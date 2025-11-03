@@ -231,15 +231,33 @@ export interface Page {
   id: number;
   title: string;
   hero: {
-    heroLayout: 'fullscreen' | 'heading-with-image' | 'heading-no-image';
-    heroTitle: string;
-    description?: string | null;
-    navigations?:
-      | {
-          nav?: {
-            label?: string | null;
-            appearance?: ('link' | 'button' | 'dropdown') | null;
-            link?: {
+    layout: 'fullscreen' | 'with-image' | 'text-only';
+    heroTitle?: string | null;
+    heroDescription?: string | null;
+    enableTitle?: boolean | null;
+    enableAction?: boolean | null;
+    enableDescription?: boolean | null;
+    enableContent?: boolean | null;
+    enableFooter?: boolean | null;
+    title?: string | null;
+    actionPlacement?: ('header' | 'footer') | null;
+    action: {
+      nav?: {
+        label?: string | null;
+        appearance?: ('link' | 'button' | 'dropdown') | null;
+        link?: {
+          label?: string | null;
+          type?: ('reference' | 'custom') | null;
+          reference?: {
+            relationTo: 'pages';
+            value: number | Page;
+          } | null;
+          url?: string | null;
+          newTab?: boolean | null;
+          id?: string | null;
+        };
+        dropdownItems?:
+          | {
               label?: string | null;
               type?: ('reference' | 'custom') | null;
               reference?: {
@@ -249,36 +267,48 @@ export interface Page {
               url?: string | null;
               newTab?: boolean | null;
               id?: string | null;
-            };
-            dropdownItems?:
-              | {
-                  label?: string | null;
-                  type?: ('reference' | 'custom') | null;
-                  reference?: {
-                    relationTo: 'pages';
-                    value: number | Page;
-                  } | null;
-                  url?: string | null;
-                  newTab?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
-            buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
-            styles?: (number | Style)[] | null;
-            icon?: (number | null) | Icon;
-            placement?: ('before' | 'after') | null;
-            iconStyles?: (number | Style)[] | null;
-          };
-          id?: string | null;
-        }[]
-      | null;
+            }[]
+          | null;
+        buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+        buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+        styles?: (number | Style)[] | null;
+        icon?: (number | null) | Icon;
+        placement?: ('before' | 'after') | null;
+        iconStyles?: (number | Style)[] | null;
+      };
+    };
+    description?: string | null;
+    content?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    footer?: string | null;
+    cardStyles?: (number | Style)[] | null;
+    titleStyles?: (number | Style)[] | null;
+    actionStyles?: (number | Style)[] | null;
+    descriptionStyles?: (number | Style)[] | null;
+    cardContentStyles?: (number | Style)[] | null;
+    footerStyles?: (number | Style)[] | null;
     media?: (number | null) | Media;
     wrapperStyles?: (number | Style)[] | null;
     contentStyles?: (number | Style)[] | null;
-    titleStyles?: (number | Style)[] | null;
-    descriptionStyles?: (number | Style)[] | null;
-    cardStyles?: (number | Style)[] | null;
+    /**
+     * Styles applied to the entire hero section
+     */
+    containerStyles?: (number | Style)[] | null;
+    heroTitleStyles?: (number | Style)[] | null;
+    heroDescriptionStyles?: (number | Style)[] | null;
   };
   layout?:
     | {
@@ -416,7 +446,7 @@ export interface CallToActionBlock {
     titleStyles?: (number | Style)[] | null;
     actionStyles?: (number | Style)[] | null;
     descriptionStyles?: (number | Style)[] | null;
-    contentStyles?: (number | Style)[] | null;
+    cardContentStyles?: (number | Style)[] | null;
     footerStyles?: (number | Style)[] | null;
   };
   media?: (number | null) | Media;
@@ -497,7 +527,7 @@ export interface CardBlock {
   titleStyles?: (number | Style)[] | null;
   actionStyles?: (number | Style)[] | null;
   descriptionStyles?: (number | Style)[] | null;
-  contentStyles?: (number | Style)[] | null;
+  cardContentStyles?: (number | Style)[] | null;
   footerStyles?: (number | Style)[] | null;
   id?: string | null;
   blockName?: string | null;
@@ -1138,10 +1168,17 @@ export interface PagesSelect<T extends boolean = true> {
   hero?:
     | T
     | {
-        heroLayout?: T;
+        layout?: T;
         heroTitle?: T;
-        description?: T;
-        navigations?:
+        heroDescription?: T;
+        enableTitle?: T;
+        enableAction?: T;
+        enableDescription?: T;
+        enableContent?: T;
+        enableFooter?: T;
+        title?: T;
+        actionPlacement?: T;
+        action?:
           | T
           | {
               nav?:
@@ -1176,14 +1213,22 @@ export interface PagesSelect<T extends boolean = true> {
                     placement?: T;
                     iconStyles?: T;
                   };
-              id?: T;
             };
+        description?: T;
+        content?: T;
+        footer?: T;
+        cardStyles?: T;
+        titleStyles?: T;
+        actionStyles?: T;
+        descriptionStyles?: T;
+        cardContentStyles?: T;
+        footerStyles?: T;
         media?: T;
         wrapperStyles?: T;
         contentStyles?: T;
-        titleStyles?: T;
-        descriptionStyles?: T;
-        cardStyles?: T;
+        containerStyles?: T;
+        heroTitleStyles?: T;
+        heroDescriptionStyles?: T;
       };
   layout?:
     | T
@@ -1289,7 +1334,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
         titleStyles?: T;
         actionStyles?: T;
         descriptionStyles?: T;
-        contentStyles?: T;
+        cardContentStyles?: T;
         footerStyles?: T;
       };
   media?: T;
@@ -1355,7 +1400,7 @@ export interface CardBlockSelect<T extends boolean = true> {
   titleStyles?: T;
   actionStyles?: T;
   descriptionStyles?: T;
-  contentStyles?: T;
+  cardContentStyles?: T;
   footerStyles?: T;
   id?: T;
   blockName?: T;

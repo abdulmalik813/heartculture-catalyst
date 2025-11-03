@@ -46,7 +46,7 @@ export async function CardBlockUI({
       )}
 
       {cardBlock.enableContent && cardBlock.content && (
-        <CardContent className={joinStyles(cardBlock.contentStyles)}>
+        <CardContent className={joinStyles(cardBlock.cardContentStyles)}>
           <LexicalRenderer content={cardBlock.content} />
         </CardContent>
       )}

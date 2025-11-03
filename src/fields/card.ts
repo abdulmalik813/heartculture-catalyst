@@ -163,7 +163,7 @@ export const card = (): Field[] => {
               },
             },
             {
-              name: 'contentStyles',
+              name: 'cardContentStyles',
               type: 'relationship',
               relationTo: 'styles',
               hasMany: true,

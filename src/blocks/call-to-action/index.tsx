@@ -8,13 +8,12 @@ import Link from 'next/link'
 import { getServerSideURL } from '@/lib/get-url'
 import { Button } from '@/components/ui/button'
 import { LexicalRenderer } from '@/components/lexical-renderer'
-
-const browserPlayableTypes = ['image/jpeg', 'image/png', 'image/webp', 'video/mp4', 'video/webm']
+import { browserPlayableTypes } from '@/constants/browser-media'
 
 export async function CallToActionBlockUI({
   searchParams,
   ...callToActionBlock
-}: CallToActionBlock & { searchParams?: SearchParams }) {
+}: Partial<CallToActionBlock> & { searchParams?: SearchParams }) {
   const media = callToActionBlock.media as MediaCollection | undefined
   const isPlayable = media && browserPlayableTypes.includes(media.mimeType || '')
 
