@@ -15,11 +15,9 @@ export async function CallToActionBlockUI({
   return (
     <div className="relative min-h-[300px] flex items-center justify-center p-8 md:p-12 lg:p-16">
       {media && media.url && (
-        <div
-          className={`absolute inset-0 -z-10 overflow-hidden`}
-        >
+        <div className={`absolute inset-0 -z-10 overflow-hidden`}>
           {/* @ts-expect-error there may be some mismatch between the expected types here */}
-          <MediaBlockUI {...callToActionBlock}/>
+          <MediaBlockUI {...callToActionBlock} className="w-full h-full object-cover" />{' '}
         </div>
       )}
 

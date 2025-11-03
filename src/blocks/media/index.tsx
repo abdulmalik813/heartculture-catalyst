@@ -9,7 +9,7 @@ import { LexicalRenderer } from '@/components/lexical-renderer'
 import { SearchParams } from '@/types/search-params'
 import { browserPlayableTypes } from '@/constants/browser-media'
 
-export function MediaBlockUI({ searchParams, ...mediaBlock }: Partial<MediaBlock> & { searchParams?: SearchParams }) {
+export function MediaBlockUI({ searchParams, className, ...mediaBlock}: Partial<MediaBlock> & { searchParams?: SearchParams } & { className?: string } ) {
   if (!mediaBlock.media) return null
 
   const media: MediaCollection = mediaBlock.media as MediaCollection
@@ -19,7 +19,7 @@ export function MediaBlockUI({ searchParams, ...mediaBlock }: Partial<MediaBlock
     return (
       <Media
         className={joinStyles(mediaBlock.wrapperStyles)}
-        imgClassName={joinStyles(mediaBlock.contentStyles)}
+        imgClassName={joinStyles(className, mediaBlock.contentStyles)}
         videoClassName={joinStyles(mediaBlock.contentStyles)}
         resource={media}
       />
@@ -28,7 +28,7 @@ export function MediaBlockUI({ searchParams, ...mediaBlock }: Partial<MediaBlock
   return <div className={joinStyles(mediaBlock.wrapperStyles)}>
 
     <Link href={getServerSideURL() + media.url}>
-        <Button className={ joinStyles(mediaBlock.contentStyles) }>
+        <Button className={ joinStyles(className, mediaBlock.contentStyles) }>
             {media?.caption && <LexicalRenderer content={media.caption} />}
         </Button>
     </Link>
