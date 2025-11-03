@@ -75,6 +75,7 @@ export default buildConfig({
     },
   }),
   sharp,
+  serverURL: getServerSideURL(),
   plugins: [...plugins],
   jobs: {
     access: {
