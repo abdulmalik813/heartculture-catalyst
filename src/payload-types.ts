@@ -118,7 +118,6 @@ export interface Page {
           label?: string | null;
           appearance?: ('link' | 'button' | 'dropdown') | null;
           link?: {
-            label?: string | null;
             type?: ('reference' | 'custom') | null;
             reference?: {
               relationTo: 'pages';
@@ -126,11 +125,10 @@ export interface Page {
             } | null;
             url?: string | null;
             newTab?: boolean | null;
-            id?: string | null;
           };
           dropdownItems?:
             | {
-                label?: string | null;
+                label: string;
                 type?: ('reference' | 'custom') | null;
                 reference?: {
                   relationTo: 'pages';
@@ -381,7 +379,6 @@ export interface CallToActionBlock {
         label?: string | null;
         appearance?: ('link' | 'button' | 'dropdown') | null;
         link?: {
-          label?: string | null;
           type?: ('reference' | 'custom') | null;
           reference?: {
             relationTo: 'pages';
@@ -389,11 +386,10 @@ export interface CallToActionBlock {
           } | null;
           url?: string | null;
           newTab?: boolean | null;
-          id?: string | null;
         };
         dropdownItems?:
           | {
-              label?: string | null;
+              label: string;
               type?: ('reference' | 'custom') | null;
               reference?: {
                 relationTo: 'pages';
@@ -463,7 +459,6 @@ export interface CardBlock {
       label?: string | null;
       appearance?: ('link' | 'button' | 'dropdown') | null;
       link?: {
-        label?: string | null;
         type?: ('reference' | 'custom') | null;
         reference?: {
           relationTo: 'pages';
@@ -471,11 +466,10 @@ export interface CardBlock {
         } | null;
         url?: string | null;
         newTab?: boolean | null;
-        id?: string | null;
       };
       dropdownItems?:
         | {
-            label?: string | null;
+            label: string;
             type?: ('reference' | 'custom') | null;
             reference?: {
               relationTo: 'pages';
@@ -1091,12 +1085,10 @@ export interface PagesSelect<T extends boolean = true> {
                           link?:
                             | T
                             | {
-                                label?: T;
                                 type?: T;
                                 reference?: T;
                                 url?: T;
                                 newTab?: T;
-                                id?: T;
                               };
                           dropdownItems?:
                             | T
@@ -1207,12 +1199,10 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
                     link?:
                       | T
                       | {
-                          label?: T;
                           type?: T;
                           reference?: T;
                           url?: T;
                           newTab?: T;
-                          id?: T;
                         };
                     dropdownItems?:
                       | T
@@ -1274,12 +1264,10 @@ export interface CardBlockSelect<T extends boolean = true> {
               link?:
                 | T
                 | {
-                    label?: T;
                     type?: T;
                     reference?: T;
                     url?: T;
                     newTab?: T;
-                    id?: T;
                   };
               dropdownItems?:
                 | T
@@ -1758,7 +1746,6 @@ export interface NavigationBar {
           label?: string | null;
           appearance?: ('link' | 'button' | 'dropdown') | null;
           link?: {
-            label?: string | null;
             type?: ('reference' | 'custom') | null;
             reference?: {
               relationTo: 'pages';
@@ -1766,11 +1753,10 @@ export interface NavigationBar {
             } | null;
             url?: string | null;
             newTab?: boolean | null;
-            id?: string | null;
           };
           dropdownItems?:
             | {
-                label?: string | null;
+                label: string;
                 type?: ('reference' | 'custom') | null;
                 reference?: {
                   relationTo: 'pages';
@@ -1797,7 +1783,6 @@ export interface NavigationBar {
           label?: string | null;
           appearance?: ('link' | 'button' | 'dropdown') | null;
           link?: {
-            label?: string | null;
             type?: ('reference' | 'custom') | null;
             reference?: {
               relationTo: 'pages';
@@ -1805,11 +1790,10 @@ export interface NavigationBar {
             } | null;
             url?: string | null;
             newTab?: boolean | null;
-            id?: string | null;
           };
           dropdownItems?:
             | {
-                label?: string | null;
+                label: string;
                 type?: ('reference' | 'custom') | null;
                 reference?: {
                   relationTo: 'pages';
@@ -1877,12 +1861,10 @@ export interface NavigationBarSelect<T extends boolean = true> {
               link?:
                 | T
                 | {
-                    label?: T;
                     type?: T;
                     reference?: T;
                     url?: T;
                     newTab?: T;
-                    id?: T;
                   };
               dropdownItems?:
                 | T
@@ -1914,12 +1896,10 @@ export interface NavigationBarSelect<T extends boolean = true> {
               link?:
                 | T
                 | {
-                    label?: T;
                     type?: T;
                     reference?: T;
                     url?: T;
                     newTab?: T;
-                    id?: T;
                   };
               dropdownItems?:
                 | T
@@ -2010,7 +1990,6 @@ export interface NavigationBlock {
     label?: string | null;
     appearance?: ('link' | 'button' | 'dropdown') | null;
     link?: {
-      label?: string | null;
       type?: ('reference' | 'custom') | null;
       reference?: {
         relationTo: 'pages';
@@ -2018,11 +1997,10 @@ export interface NavigationBlock {
       } | null;
       url?: string | null;
       newTab?: boolean | null;
-      id?: string | null;
     };
     dropdownItems?:
       | {
-          label?: string | null;
+          label: string;
           type?: ('reference' | 'custom') | null;
           reference?: {
             relationTo: 'pages';

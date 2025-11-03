@@ -6,18 +6,6 @@ type NavType = (options?: { overrides?: Partial<GroupField> }) => Field
 
 const navFields: Field[] = [
   {
-    name: 'label',
-    type: 'text',
-    label: 'Label',
-    required: true,
-    admin: {
-      condition: (doc, siblingData, data) => {
-          console.log(doc)
-       return data?.blockData?.nav?.appearance === 'dropdown'
-      }
-    },
-  },
-  {
     type: 'collapsible',
     label: 'Link Configuration',
     admin: {
@@ -111,7 +99,15 @@ export const navigation: NavType = ({ overrides = {} } = {}) =>
                   name: 'dropdownItems',
                   type: 'array',
                   label: 'Dropdown Items',
-                  fields: navFields,
+                  fields: [
+                    {
+                      name: 'label',
+                      type: 'text',
+                      label: 'Label',
+                      required: true,
+                    },
+                    ...navFields,
+                  ],
                   admin: {
                     condition: (_, siblingData) => siblingData?.appearance === 'dropdown',
                   },
