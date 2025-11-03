@@ -31,69 +31,6 @@ export const NavigationBar: GlobalConfig = {
       type: 'tabs',
       tabs: [
         {
-          label: 'Appearance',
-          fields: [
-            {
-              name: 'style',
-              type: 'select',
-              required: true,
-              defaultValue: 'default',
-              label: 'Header Style',
-              options: [
-                { label: 'Default', value: 'default' },
-                { label: 'Transparent', value: 'transparent' },
-                { label: 'Floating', value: 'floating' },
-                { label: 'Glassmorphic', value: 'glass' },
-                { label: 'Minimal', value: 'minimal' },
-                { label: 'Centered', value: 'centered' },
-                { label: 'Split', value: 'split' },
-                { label: 'Sidebar', value: 'sidebar' },
-              ],
-            },
-            {
-              name: 'behavior',
-              type: 'select',
-              required: true,
-              defaultValue: 'static',
-              label: 'Scroll Behavior',
-              options: [
-                { label: 'Static', value: 'static' },
-                { label: 'Sticky', value: 'sticky' },
-                { label: 'Hide on Scroll', value: 'hide' },
-                { label: 'Shrink on Scroll', value: 'shrink' },
-              ],
-            },
-            {
-              name: 'background',
-              type: 'select',
-              defaultValue: 'opaque',
-              label: 'Background',
-              admin: {
-                condition: (data) => {
-                  return data?.style !== 'transparent' && data?.style !== 'glass'
-                },
-              },
-              options: [
-                { label: 'Opaque', value: 'opaque' },
-                { label: 'Blur', value: 'blur' },
-                { label: 'Gradient', value: 'gradient' },
-              ],
-            },
-            {
-              name: 'shadow',
-              type: 'checkbox',
-              label: 'Enable Shadow',
-              defaultValue: false,
-            },
-            {
-              name: 'border',
-              type: 'checkbox',
-              label: 'Enable Bottom Border',
-              defaultValue: false,
-            },
-          ],
-        },
-        {
           label: 'Navigation',
           fields: [
             {
@@ -102,24 +39,49 @@ export const NavigationBar: GlobalConfig = {
               label: 'Navigation Links',
               fields: [navigation()],
             },
+            {
+              name: 'cta',
+              type: 'array',
+              label: 'CTA Links',
+              maxRows: 2,
+              fields: [navigation()],
+            },
           ],
         },
         {
-          label: 'CTA',
+          label: 'Styles',
           fields: [
             {
-              name: 'cta',
-              type: 'group',
-              label: 'Call to Action',
-              fields: [
-                {
-                  name: 'ctaLinks',
-                  type: 'array',
-                  label: 'CTA Links',
-                  maxRows: 2,
-                  fields: [navigation()],
-                },
+              name: 'logoStyles',
+              type: 'relationship',
+              relationTo: 'styles',
+              hasMany: true,
+            },
+            {
+              name: 'useTitleWithLogo',
+              type: 'checkbox',
+            },
+            {
+              name: 'titleStyles',
+              type: 'relationship',
+              relationTo: 'styles',
+              hasMany: true,
+              admin: {
+                condition: (_, data) => data?.useTitleWithLogo === true,
+              },
+            },
+            {
+              name: 'namePosition',
+              type: 'select',
+              options: [
+                { label: 'Top', value: 'top' },
+                { label: 'Bottom', value: 'bottom' },
+                { label: 'Right', value: 'right' },
+                { label: 'Left', value: 'left' },
               ],
+              admin: {
+                condition: (_, data) => data?.useTitleWithLogo === true,
+              },
             },
           ],
         },

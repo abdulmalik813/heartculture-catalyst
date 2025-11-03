@@ -1752,11 +1752,6 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface NavigationBar {
   id: number;
-  style: 'default' | 'transparent' | 'floating' | 'glass' | 'minimal' | 'centered' | 'split' | 'sidebar';
-  behavior: 'static' | 'sticky' | 'hide' | 'shrink';
-  background?: ('opaque' | 'blur' | 'gradient') | null;
-  shadow?: boolean | null;
-  border?: boolean | null;
   navigation?:
     | {
         nav?: {
@@ -1796,47 +1791,49 @@ export interface NavigationBar {
         id?: string | null;
       }[]
     | null;
-  cta?: {
-    ctaLinks?:
-      | {
-          nav?: {
+  cta?:
+    | {
+        nav?: {
+          label?: string | null;
+          appearance?: ('link' | 'button' | 'dropdown') | null;
+          link?: {
             label?: string | null;
-            appearance?: ('link' | 'button' | 'dropdown') | null;
-            link?: {
-              label?: string | null;
-              type?: ('reference' | 'custom') | null;
-              reference?: {
-                relationTo: 'pages';
-                value: number | Page;
-              } | null;
-              url?: string | null;
-              newTab?: boolean | null;
-              id?: string | null;
-            };
-            dropdownItems?:
-              | {
-                  label?: string | null;
-                  type?: ('reference' | 'custom') | null;
-                  reference?: {
-                    relationTo: 'pages';
-                    value: number | Page;
-                  } | null;
-                  url?: string | null;
-                  newTab?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
-            buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
-            styles?: (number | Style)[] | null;
-            icon?: (number | null) | Icon;
-            placement?: ('before' | 'after') | null;
-            iconStyles?: (number | Style)[] | null;
+            type?: ('reference' | 'custom') | null;
+            reference?: {
+              relationTo: 'pages';
+              value: number | Page;
+            } | null;
+            url?: string | null;
+            newTab?: boolean | null;
+            id?: string | null;
           };
-          id?: string | null;
-        }[]
-      | null;
-  };
+          dropdownItems?:
+            | {
+                label?: string | null;
+                type?: ('reference' | 'custom') | null;
+                reference?: {
+                  relationTo: 'pages';
+                  value: number | Page;
+                } | null;
+                url?: string | null;
+                newTab?: boolean | null;
+                id?: string | null;
+              }[]
+            | null;
+          buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+          buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+          styles?: (number | Style)[] | null;
+          icon?: (number | null) | Icon;
+          placement?: ('before' | 'after') | null;
+          iconStyles?: (number | Style)[] | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  logoStyles?: (number | Style)[] | null;
+  useTitleWithLogo?: boolean | null;
+  titleStyles?: (number | Style)[] | null;
+  namePosition?: ('top' | 'bottom' | 'right' | 'left') | null;
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1869,11 +1866,6 @@ export interface Setting {
  * via the `definition` "navigationBar_select".
  */
 export interface NavigationBarSelect<T extends boolean = true> {
-  style?: T;
-  behavior?: T;
-  background?: T;
-  shadow?: T;
-  border?: T;
   navigation?:
     | T
     | {
@@ -1914,44 +1906,44 @@ export interface NavigationBarSelect<T extends boolean = true> {
   cta?:
     | T
     | {
-        ctaLinks?:
+        nav?:
           | T
           | {
-              nav?:
+              label?: T;
+              appearance?: T;
+              link?:
                 | T
                 | {
                     label?: T;
-                    appearance?: T;
-                    link?:
-                      | T
-                      | {
-                          label?: T;
-                          type?: T;
-                          reference?: T;
-                          url?: T;
-                          newTab?: T;
-                          id?: T;
-                        };
-                    dropdownItems?:
-                      | T
-                      | {
-                          label?: T;
-                          type?: T;
-                          reference?: T;
-                          url?: T;
-                          newTab?: T;
-                          id?: T;
-                        };
-                    buttonType?: T;
-                    buttonSize?: T;
-                    styles?: T;
-                    icon?: T;
-                    placement?: T;
-                    iconStyles?: T;
+                    type?: T;
+                    reference?: T;
+                    url?: T;
+                    newTab?: T;
+                    id?: T;
                   };
-              id?: T;
+              dropdownItems?:
+                | T
+                | {
+                    label?: T;
+                    type?: T;
+                    reference?: T;
+                    url?: T;
+                    newTab?: T;
+                    id?: T;
+                  };
+              buttonType?: T;
+              buttonSize?: T;
+              styles?: T;
+              icon?: T;
+              placement?: T;
+              iconStyles?: T;
             };
+        id?: T;
       };
+  logoStyles?: T;
+  useTitleWithLogo?: T;
+  titleStyles?: T;
+  namePosition?: T;
   _status?: T;
   updatedAt?: T;
   createdAt?: T;

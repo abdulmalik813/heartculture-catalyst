@@ -4,7 +4,7 @@ import { icon } from './icon'
 
 type NavType = (options?: { overrides?: Partial<GroupField> }) => Field
 
-const navFields: Field[] = [
+export const navFields: Field[] = [
   {
     name: 'label',
     type: 'text',

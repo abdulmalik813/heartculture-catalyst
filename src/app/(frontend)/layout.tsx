@@ -9,7 +9,7 @@ import { Font, Setting } from '@/payload-types'
 import { getCachedGlobal } from '@/lib/get-globals'
 import { Metadata } from 'next'
 import { getAppSettings } from '@/constants/app'
-import { Header } from '@/components/header'
+import { NavigationBarUI } from '@/components/navigation-bar'
 
 export async function generateMetadata(): Promise<Metadata> {
   const appData = await getAppSettings()
@@ -54,7 +54,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
             }}
           />
           <main>
-            <Header />
+            <NavigationBarUI />
             {children}
             </main>
         </ThemeProvider>
