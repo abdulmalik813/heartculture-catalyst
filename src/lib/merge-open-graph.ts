@@ -1,20 +1,23 @@
 import type { Metadata } from 'next'
 import { getServerSideURL } from './get-url'
-import { OPENGRAPH } from '@/constants/init'
+import { getAppSettings } from '@/constants/app'
 
-const defaultOpenGraph: Metadata['openGraph'] = {
-  type: 'website',
-  description: OPENGRAPH.DEFAULT_DESCRIPTION,
-  images: [
-    {
-      url: getServerSideURL() + OPENGRAPH.DEFAULT_IMAGE_URL,
-    },
-  ],
-  siteName: OPENGRAPH.SITE_NAME,
-  title: OPENGRAPH.DEFAULT_TITLE,
-}
+export const mergeOpenGraph = async (og?: Metadata['openGraph']): Promise<Metadata['openGraph']> => {
+  const appData = await getAppSettings()
+  const serverUrl = getServerSideURL()
 
-export const mergeOpenGraph = (og?: Metadata['openGraph']): Metadata['openGraph'] => {
+  const defaultOpenGraph: Metadata['openGraph'] = {
+    type: 'website',
+    description: appData.appDescription,
+    images: [
+      {
+        url: serverUrl + appData.fallbackImage,
+      },
+    ],
+    siteName: appData.appTitle,
+    title: appData.appTitle,
+  }
+
   return {
     ...defaultOpenGraph,
     ...og,

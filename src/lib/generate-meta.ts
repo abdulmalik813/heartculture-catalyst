@@ -4,12 +4,12 @@ import type { Media, Page, Config } from '../payload-types'
 
 import { mergeOpenGraph } from './merge-open-graph'
 import { getServerSideURL } from './get-url'
-import { OPENGRAPH, DEFAULT_IMAGE_URL } from '@/constants/init'
+import { getAppSettings } from '@/constants/app'
 
-const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
+const getImageURL = async (image?: Media | Config['db']['defaultIDType'] | null) => {
   const serverUrl = getServerSideURL()
-
-  let url = serverUrl + DEFAULT_IMAGE_URL
+  const appData = await getAppSettings()
+  let url = appData.fallbackImage
 
   if (image && typeof image === 'object' && 'url' in image) {
     const ogUrl = image.sizes?.og?.url
@@ -23,14 +23,15 @@ const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
 export const generateMeta = async (args: { doc: Partial<Page> | null }): Promise<Metadata> => {
   const { doc } = args
 
-  const ogImage = getImageURL(doc?.meta?.image)
+  const ogImage = await getImageURL(doc?.meta?.image)
+  const appData = await getAppSettings()
 
-  const title = doc?.meta?.title ? doc?.meta?.title : OPENGRAPH.SITE_NAME
+  const title = doc?.meta?.title ? doc?.meta?.title : appData.appTitle
 
   return {
     description: doc?.meta?.description,
-    openGraph: mergeOpenGraph({
-      description: doc?.meta?.description || OPENGRAPH.DEFAULT_DESCRIPTION,
+    openGraph: await mergeOpenGraph({
+      description: doc?.meta?.description || appData.appTitle,
       images: ogImage
         ? [
             {

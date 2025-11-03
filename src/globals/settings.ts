@@ -29,6 +29,50 @@ export const Settings: GlobalConfig = {
       type: 'tabs',
       tabs: [
         {
+          label: 'App Data',
+          fields: [
+            {
+              name: 'appTitle',
+              type: 'text',
+              label: 'App Title',
+              required: true,
+            },
+            {
+              name: 'appDescription',
+              type: 'textarea',
+              label: 'App Description',
+              required: true,
+            },
+            {
+              name: 'fallbackImage',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Fallback Image (PNG)',
+              required: true,
+            },
+             {
+              name: 'favIcon',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Favicon (ICO)',
+              required: true,
+            },
+            {
+              name: 'favIconSvg',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Favicon (SVG)',
+              required: false,
+            },
+            {
+              name: 'favIconPng',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Favicon (PNG)',
+            },
+          ],
+        },
+        {
           label: 'Fonts',
           fields: [
             {

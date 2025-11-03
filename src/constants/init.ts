@@ -1,10 +1,5 @@
-// App data
-
-export const APP_ID = 'base-app'
-export const APP_TITLE = 'A Base App'
-export const APP_DESCRIPTION = 'A Base App for many stuff'
-export const APP_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
-export const DEFAULT_IMAGE_URL = '/logo.png'
+import { getCachedGlobal } from "@/lib/get-globals"
+import { Setting } from "@/payload-types"
 
 // Database
 export const DATABASE_URI = process.env.DATABASE_URI!
@@ -16,8 +11,14 @@ export const S3 = {
   ACCESS_KEY_ID: process.env.S3_ACCESS_KEY_ID!,
   SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS_KEY!,
   ENDPOINT: process.env.S3_ENDPOINT!,
-  PREFIX: APP_ID,
 }
+
+// Payload
+export const PAYLOAD = {
+  SECRET: process.env.PAYLOAD_SECRET!,
+  PREVIEW: process.env.PREVIEW_SECRET!,
+}
+
 
 // Email
 export const EMAIL = {
@@ -28,12 +29,6 @@ export const EMAIL = {
 
 // Cron
 export const CRON_SECRET = process.env.CRON_SECRET!
-
-// Payload
-export const PAYLOAD = {
-  SECRET: process.env.PAYLOAD_SECRET!,
-  PREVIEW: process.env.PREVIEW_SECRET!,
-}
 
 // Timezone
 export const TIMEZONES = {
@@ -46,10 +41,5 @@ export const TIMEZONES = {
   DEFAULT_TIMEZONE: 'America/Halifax',
 }
 
-// OpenGraph
-export const OPENGRAPH = {
-  DEFAULT_IMAGE_URL: DEFAULT_IMAGE_URL,
-  SITE_NAME: APP_TITLE,
-  DEFAULT_DESCRIPTION: APP_DESCRIPTION,
-  DEFAULT_TITLE: APP_TITLE,
-}
+// App data
+export const APP_URL = process.env.NEXT_PUBLIC_SERVER_URL!

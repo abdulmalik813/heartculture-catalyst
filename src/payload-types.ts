@@ -1748,6 +1748,12 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Setting {
   id: number;
+  appTitle: string;
+  appDescription: string;
+  fallbackImage: number | Media;
+  favIcon: number | Media;
+  favIconSvg?: (number | null) | Media;
+  favIconPng?: (number | null) | Media;
   defaultFont?: (number | null) | Font;
   fontPrimary?: (number | null) | Font;
   fontSecondary?: (number | null) | Font;
@@ -1762,6 +1768,12 @@ export interface Setting {
  * via the `definition` "settings_select".
  */
 export interface SettingsSelect<T extends boolean = true> {
+  appTitle?: T;
+  appDescription?: T;
+  fallbackImage?: T;
+  favIcon?: T;
+  favIconSvg?: T;
+  favIconPng?: T;
   defaultFont?: T;
   fontPrimary?: T;
   fontSecondary?: T;
