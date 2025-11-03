@@ -18,21 +18,6 @@ async function getGlobal(slug: Global, depth = 0, draft: boolean) {
   return global
 }
 
-async function getGlobalVersion(slug: Global) {
-  const payload = await getPayload({ config: configPromise })
-  const result = await payload.findGlobalVersions({
-    slug: slug,
-    limit: 1,
-    sort: '-createdAt',
-    select: {
-      version: {
-        id: true
-      }
-    }
-  })
-  return result.docs[0]?.id
-}
-
 /**
  * Returns a unstable_cache function mapped with the cache tag for the slug
  */
@@ -45,13 +30,5 @@ export const getCachedGlobal = (
     ? getGlobal(slug, depth, draft)
     : unstable_cache(async () => getGlobal(slug, depth, draft), [slug], {
         tags: [`global_${slug}`],
-      })()
-}
-
-export const getCachedGlobalVersion = (slug: Global, draft = false) => {
-  return draft 
-    ? getGlobalVersion(slug)
-    : unstable_cache(async () => getGlobalVersion(slug), [slug], {
-        tags: [`global_version_${slug}`],
       })()
 }

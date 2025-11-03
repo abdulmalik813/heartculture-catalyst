@@ -29,6 +29,35 @@ export const Settings: GlobalConfig = {
       type: 'tabs',
       tabs: [
         {
+          label: 'Fonts',
+          fields: [
+            {
+              name: 'defaultFont',
+              type: 'relationship',
+              relationTo: 'fonts',
+              label: 'Default Font',
+            },
+            {
+              name: 'fontPrimary',
+              type: 'relationship',
+              relationTo: 'fonts',
+              label: 'Font Primary',
+            },
+            {
+              name: 'fontSecondary',
+              type: 'relationship',
+              relationTo: 'fonts',
+              label: 'Font Secondary',
+            },
+            {
+              name: 'fontAccent',
+              type: 'relationship',
+              relationTo: 'fonts',
+              label: 'Font Accent',
+            },
+          ],
+        },
+        {
           label: 'Theme',
           fields: [
             {

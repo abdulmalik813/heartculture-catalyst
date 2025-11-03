@@ -15,6 +15,7 @@ import { defaultLexical } from '@/fields/lexical-field'
 import { Icons } from '@/collections/icons'
 import { CRON_SECRET, DATABASE_URI, EMAIL, PAYLOAD, TIMEZONES } from '@/constants/init'
 import { Settings } from '@/globals/settings'
+import { Fonts } from '@/collections/fonts'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -63,7 +64,7 @@ export default buildConfig({
     defaultFromName: EMAIL.FROM_NAME,
     apiKey: EMAIL.RESEND_API_KEY,
   }),
-  collections: [Users, Media, Styles, Pages, Icons],
+  collections: [Pages, Users, Media, Styles, Icons, Fonts],
   globals: [Settings],
   cors: [getServerSideURL()].filter(Boolean),
   editor: defaultLexical(),

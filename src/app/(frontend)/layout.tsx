@@ -6,6 +6,8 @@ import { ThemeProvider } from '@/components/theme/theme-provider'
 import { getServerSideURL } from '@/lib/get-url'
 import { LivePreviewListener } from '@/components/live-preview-listener'
 import { APP_DESCRIPTION, APP_TITLE } from '@/constants/init'
+import { Font, Setting } from '@/payload-types'
+import { getCachedGlobal } from '@/lib/get-globals'
 
 export const metadata = {
   description: APP_DESCRIPTION,
@@ -14,11 +16,16 @@ export const metadata = {
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
-
   const { children } = props
 
+  const settings = (await getCachedGlobal('settings', 1, isEnabled)) as Setting
+  
+  const defaultFont = settings.defaultFont && typeof settings.defaultFont === 'object'
+    ? (settings.defaultFont as Font).name || 'Inter'  
+    : 'Inter'
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning style={{ fontFamily: `'${defaultFont}', sans-serif` }}>
       {isEnabled && <LivePreviewListener />}
       <head>
         <link rel="icon" href="/favicon.ico" />

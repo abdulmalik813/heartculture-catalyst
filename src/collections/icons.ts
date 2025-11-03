@@ -8,7 +8,7 @@ export const Icons: CollectionConfig = {
     useAsTitle: 'name',
   },
   access: {
-    create: anyone,
+    create: authenticated,
     delete: authenticated,
     read: anyone,
     update: authenticated,

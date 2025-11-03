@@ -29,21 +29,31 @@ export const hero: GroupField = {
               name: 'heroTitle',
               type: 'textarea',
               admin: {
-                condition: (_, siblingData) => siblingData.layout === 'text-only',
+                condition: (data, siblingData) => {
+                  // Access parent group data
+                  const layout = siblingData?.layout || data?.hero?.layout
+                  return layout === 'text-only'
+                },
               },
             },
             {
               name: 'heroDescription',
               type: 'textarea',
               admin: {
-                condition: (_, siblingData) => siblingData.layout === 'text-only',
+                condition: (data, siblingData) => {
+                  const layout = siblingData?.layout || data?.hero?.layout
+                  return layout === 'text-only'
+                },
               },
             },
             {
               type: 'group',
               name: 'card',
               admin: {
-                condition: (_, siblingData) => siblingData.layout !== 'text-only',
+                condition: (data, siblingData) => {
+                  const layout = siblingData?.layout || data?.hero?.layout
+                  return layout !== 'text-only'
+                },
               },
               fields: card(),
             },
@@ -52,14 +62,20 @@ export const hero: GroupField = {
         {
           label: 'Media',
           admin: {
-            condition: (_, siblingData) => siblingData.layout !== 'text-only',
+            condition: (data, siblingData) => {
+              const layout = siblingData?.layout || data?.hero?.layout
+              return layout !== 'text-only'
+            },
           },
           fields: media,
         },
         {
           label: 'Styling',
           admin: {
-            condition: (_, siblingData) => siblingData.layout === 'text-only',
+            condition: (data, siblingData) => {
+              const layout = siblingData?.layout || data?.hero?.layout
+              return layout === 'text-only'
+            },
           },
           fields: [
             {
@@ -70,7 +86,6 @@ export const hero: GroupField = {
               label: 'Hero Container Styles',
               admin: {
                 description: 'Styles applied to the entire hero section',
-                condition: (_, siblingData) => siblingData.layout === 'text-only',
               },
             },
             {
@@ -79,9 +94,6 @@ export const hero: GroupField = {
               relationTo: 'styles',
               hasMany: true,
               label: 'Title Styles',
-              admin: {
-                condition: (_, siblingData) => siblingData.layout === 'text-only',
-              },
             },
             {
               name: 'heroDescriptionStyles',
@@ -89,9 +101,6 @@ export const hero: GroupField = {
               relationTo: 'styles',
               hasMany: true,
               label: 'Description Styles',
-              admin: {
-                condition: (_, siblingData) => siblingData.layout === 'text-only',
-              },
             },
           ],
         },
