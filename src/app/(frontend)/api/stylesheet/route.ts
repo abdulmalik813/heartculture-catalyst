@@ -157,7 +157,7 @@ export async function GET(req: NextRequest) {
     {
       headers: {
         'Content-Type': 'text/css',
-        'Cache-Control': draft ? 'no-store' : 'public, max-age=604800, immutable',
+        'Cache-Control': 'no-store',
       },
     }
   )
