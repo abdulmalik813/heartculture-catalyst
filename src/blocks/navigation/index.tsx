@@ -9,11 +9,24 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu'
 import { SearchParams } from '@/types/search-params'
+import { IconRender } from '@/components/icon-renderer'
 
 export function NavigationBlockUI({
   searchParams,
   ...navigationBlock
 }: Partial<NavigationBlock> & { searchParams?: SearchParams }) {
+  
+  const icon = typeof navigationBlock.nav?.icon === "object" ? navigationBlock.nav?.icon : null
+  const iconStyles = navigationBlock.nav?.iconStyles
+  const iconPlacement = navigationBlock.nav?.placement
+
+  const hasIcon = icon?.name != "" && icon?.name != null  
+
+  const renderIcon = () => {
+    if (!hasIcon) return null
+    return <IconRender icon={icon.name ?? ''} iconStyles={joinStyles(iconStyles)} />
+  }
+
   if (navigationBlock.nav?.appearance === 'button' || navigationBlock.nav?.appearance === 'link') {
     const href =
       navigationBlock.nav.link?.type === 'custom'
@@ -38,15 +51,29 @@ export function NavigationBlockUI({
           size={navigationBlock.nav.buttonSize}
           variant={navigationBlock.nav.buttonType}
         >
-          <Link href={href} {...relProps} prefetch={!isExternal}>
+          <Link 
+            href={href} 
+            {...relProps} 
+            prefetch={!isExternal} 
+            className={hasIcon ? 'flex items-center gap-2' : ''}
+          >
+            {iconPlacement !== 'after' && renderIcon()}
             {navigationBlock.nav.label}
+            {iconPlacement === 'after' && renderIcon()}
           </Link>
         </Button>
       )
     } else {
       return (
-        <Link href={href} {...relProps} className={joinStyles(navigationBlock.nav.styles)} prefetch={!isExternal}>
+        <Link
+          href={href}
+          {...relProps}
+          className={joinStyles(navigationBlock.nav.styles, hasIcon ? 'flex items-center gap-2' : '')}
+          prefetch={!isExternal}
+        >
+          {iconPlacement !== 'after' && renderIcon()}
           {navigationBlock.nav.label}
+          {iconPlacement === 'after' && renderIcon()}
         </Link>
       )
     }
@@ -60,7 +87,11 @@ export function NavigationBlockUI({
         size={navigationBlock.nav?.buttonSize}
         variant={navigationBlock.nav?.buttonType}
       >
-        <DropdownMenuTrigger>{navigationBlock.nav?.label}</DropdownMenuTrigger>
+        <DropdownMenuTrigger className={hasIcon ? 'flex items-center gap-2' : ''}>
+          {iconPlacement !== 'after' && renderIcon()}
+          {navigationBlock.nav?.label}
+          {iconPlacement === 'after' && renderIcon()}
+        </DropdownMenuTrigger>
       </Button>
       <DropdownMenuContent>
         {navigationBlock.nav?.dropdownItems?.map((item, index) => {
