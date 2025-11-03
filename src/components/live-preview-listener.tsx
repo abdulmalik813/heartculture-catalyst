@@ -2,14 +2,14 @@
 import { getClientSideURL } from '@/lib/get-url'
 import { RefreshRouteOnSave as PayloadLivePreview } from '@payloadcms/live-preview-react'
 import { useRouter } from 'next/navigation'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 
-export const LivePreviewListener: React.FC = () => {
+export function LivePreviewListener() {
   const router = useRouter()
   
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'payload-live-preview' && event.data?.globalSlug === 'styleSheet') {
+      if (event.data?.type === 'payload-live-preview' && event.data?.globalSlug === 'settings') {
         window.location.reload()
       }
     }

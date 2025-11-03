@@ -6,12 +6,13 @@ import { unstable_cache } from 'next/cache'
 
 type Collection = keyof Config['collections']
 
-async function getDocument(collection: Collection, slug: string, depth = 0) {
+async function getDocument(collection: Collection, slug: string, depth = 0, draft = false) {
   const payload = await getPayload({ config: configPromise })
 
   const page = await payload.find({
     collection,
     depth,
+    draft,
     where: {
       slug: {
         equals: slug,
@@ -22,10 +23,55 @@ async function getDocument(collection: Collection, slug: string, depth = 0) {
   return page.docs[0]
 }
 
+async function getAllDocuments(collection: Collection, draft = false) {
+  const payload = await getPayload({ config: configPromise })
+
+  const result = await payload.find({
+    collection,
+    draft,
+  })
+
+  return result.docs
+}
+
 /**
  * Returns a unstable_cache function mapped with the cache tag for the slug
  */
-export const getCachedDocument = (collection: Collection, slug: string) =>
-  unstable_cache(async () => getDocument(collection, slug), [collection, slug], {
-    tags: [`${collection}_${slug}`],
-  })
+export const getCachedDocument = (
+  collection: Collection,
+  slug: string,
+  depth = 0,
+  draft = false
+) => {
+  if (draft) {
+    return () => getDocument(collection, slug, depth, draft)
+  }
+
+  return unstable_cache(
+    async () => getDocument(collection, slug, depth, draft),
+    [collection, slug, depth.toString()],
+    {
+      tags: [`${collection}_${slug}`],
+    }
+  )
+}
+
+/**
+ * Returns a unstable_cache function mapped with the cache tag for the collection
+ */
+export const getCachedDocuments = (
+  collection: Collection,
+  draft = false
+) => {
+  if (draft) {
+    return () => getAllDocuments(collection, draft)
+  }
+
+  return unstable_cache(
+    async () => getAllDocuments(collection, draft),
+    [`${collection}_tag`],
+    {
+      tags: [`${collection}_tag`],
+    }
+  )
+}

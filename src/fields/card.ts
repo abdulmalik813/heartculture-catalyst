@@ -77,9 +77,8 @@ export const card = (): Field[] => {
                 },
                 {
                   name: 'action',
-                  type: 'group',
+                  type: 'array',
                   required: true,
-                  label: 'Action Details',
                   fields: [navigation()],
                 },
               ],

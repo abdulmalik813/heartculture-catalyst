@@ -3,6 +3,7 @@ import { getPayload } from "payload";
 import configPromise from '@payload-config'
 import { draftMode } from "next/headers";
 import { unstable_cache } from "next/cache";
+import { getCachedGlobal } from "@/lib/get-globals";
 
 const getCachedStyles = unstable_cache(
     async () => {
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest) {
     const { isEnabled: draft } = await draftMode()
 
     let styles;
-
+    let theme
     if (draft) {
         const payload = await getPayload({ config: configPromise })
         const result = await payload.find({
@@ -33,7 +34,9 @@ export async function GET(req: NextRequest) {
             overrideAccess: true,
         })
         styles = result.docs
+        theme = (await getCachedGlobal("settings", 0, true)).theme
     } else {
+        theme = (await getCachedGlobal("settings")).theme
         styles = await getCachedStyles()
     }
 
@@ -42,7 +45,7 @@ export async function GET(req: NextRequest) {
         .filter(css => css.trim() !== '')
         .join('\n\n')
 
-    return new NextResponse("\n " + combinedCSS, {
+    return new NextResponse("\n " + theme + "\n\n" + combinedCSS, {
         headers: {
             'Content-Type': 'text/css',
             'Cache-Control': 'no-store',

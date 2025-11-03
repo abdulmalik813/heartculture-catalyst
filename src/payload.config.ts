@@ -14,6 +14,7 @@ import { plugins } from '@/plugins'
 import { defaultLexical } from '@/fields/lexical-field'
 import { Icons } from '@/collections/icons'
 import { CRON_SECRET, DATABASE_URI, EMAIL, PAYLOAD, TIMEZONES } from '@/constants/init'
+import { Settings } from '@/globals/settings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -63,6 +64,7 @@ export default buildConfig({
     apiKey: EMAIL.RESEND_API_KEY,
   }),
   collections: [Users, Media, Styles, Pages, Icons],
+  globals: [Settings],
   cors: [getServerSideURL()].filter(Boolean),
   editor: defaultLexical(),
   secret: PAYLOAD.SECRET,

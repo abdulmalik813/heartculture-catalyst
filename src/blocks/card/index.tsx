@@ -21,7 +21,9 @@ export async function CardBlockUI({
 
   return (
     <Card className={joinStyles(cardBlock.cardStyles)}>
-      {(cardBlock.enableTitle || cardBlock.enableDescription || (cardBlock.enableAction && showActionInHeader)) && (
+      {(cardBlock.enableTitle ||
+        cardBlock.enableDescription ||
+        (cardBlock.enableAction && showActionInHeader)) && (
         <CardHeader>
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
@@ -38,7 +40,9 @@ export async function CardBlockUI({
             </div>
             {cardBlock.enableAction && showActionInHeader && cardBlock.action && (
               <div className={joinStyles(cardBlock.actionStyles)}>
-                <NavigationBlockUI {...cardBlock.action} searchParams={searchParams} />
+                {cardBlock.action.map((action, index) => (
+                  <NavigationBlockUI key={index} {...action} searchParams={searchParams} />
+                ))}
               </div>
             )}
           </div>
@@ -59,7 +63,9 @@ export async function CardBlockUI({
             )}
             {cardBlock.enableAction && showActionInFooter && cardBlock.action && (
               <div className={joinStyles(cardBlock.actionStyles)}>
-                <NavigationBlockUI {...cardBlock.action} searchParams={searchParams} />
+                {cardBlock.action.map((action, index) => (
+                  <NavigationBlockUI key={index} {...action} searchParams={searchParams} />
+                ))}
               </div>
             )}
           </div>

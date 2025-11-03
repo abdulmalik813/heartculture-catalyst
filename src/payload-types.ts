@@ -51,8 +51,12 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    settings: Setting;
+  };
+  globalsSelect: {
+    settings: SettingsSelect<false> | SettingsSelect<true>;
+  };
   locale: null;
   user: User & {
     collection: 'users';
@@ -277,7 +281,8 @@ export interface Page {
           placement?: ('before' | 'after') | null;
           iconStyles?: (number | Style)[] | null;
         };
-      };
+        id?: string | null;
+      }[];
       description?: string | null;
       content?: {
         root: {
@@ -426,7 +431,8 @@ export interface CallToActionBlock {
         placement?: ('before' | 'after') | null;
         iconStyles?: (number | Style)[] | null;
       };
-    };
+      id?: string | null;
+    }[];
     description?: string | null;
     content?: {
       root: {
@@ -507,7 +513,8 @@ export interface CardBlock {
       placement?: ('before' | 'after') | null;
       iconStyles?: (number | Style)[] | null;
     };
-  };
+    id?: string | null;
+  }[];
   description?: string | null;
   content?: {
     root: {
@@ -1218,6 +1225,7 @@ export interface PagesSelect<T extends boolean = true> {
                           placement?: T;
                           iconStyles?: T;
                         };
+                    id?: T;
                   };
               description?: T;
               content?: T;
@@ -1332,6 +1340,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
                     placement?: T;
                     iconStyles?: T;
                   };
+              id?: T;
             };
         description?: T;
         content?: T;
@@ -1398,6 +1407,7 @@ export interface CardBlockSelect<T extends boolean = true> {
               placement?: T;
               iconStyles?: T;
             };
+        id?: T;
       };
   description?: T;
   content?: T;
@@ -1709,6 +1719,28 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings".
+ */
+export interface Setting {
+  id: number;
+  theme: string;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings_select".
+ */
+export interface SettingsSelect<T extends boolean = true> {
+  theme?: T;
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "TaskSchedulePublish".
  */
 export interface TaskSchedulePublish {
@@ -1719,7 +1751,7 @@ export interface TaskSchedulePublish {
       relationTo: 'pages';
       value: number | Page;
     } | null;
-    global?: string | null;
+    global?: 'settings' | null;
     user?: (number | null) | User;
   };
   output?: unknown;
