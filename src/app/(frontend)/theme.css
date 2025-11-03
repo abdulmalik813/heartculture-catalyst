@@ -12,7 +12,9 @@
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
 
-@custom-variant dark (&:is(.dark *));
+@variant dark (&:is(.dark *));
+@variant h-medium (@media (min-height: 500px));
+@variant h-tall (@media (min-height: 700px));
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);

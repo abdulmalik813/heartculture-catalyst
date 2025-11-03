@@ -234,72 +234,74 @@ export interface Page {
     layout: 'fullscreen' | 'with-image' | 'text-only';
     heroTitle?: string | null;
     heroDescription?: string | null;
-    enableTitle?: boolean | null;
-    enableAction?: boolean | null;
-    enableDescription?: boolean | null;
-    enableContent?: boolean | null;
-    enableFooter?: boolean | null;
-    title?: string | null;
-    actionPlacement?: ('header' | 'footer') | null;
-    action: {
-      nav?: {
-        label?: string | null;
-        appearance?: ('link' | 'button' | 'dropdown') | null;
-        link?: {
+    card?: {
+      enableTitle?: boolean | null;
+      enableAction?: boolean | null;
+      enableDescription?: boolean | null;
+      enableContent?: boolean | null;
+      enableFooter?: boolean | null;
+      title?: string | null;
+      actionPlacement?: ('header' | 'footer') | null;
+      action: {
+        nav?: {
           label?: string | null;
-          type?: ('reference' | 'custom') | null;
-          reference?: {
-            relationTo: 'pages';
-            value: number | Page;
-          } | null;
-          url?: string | null;
-          newTab?: boolean | null;
-          id?: string | null;
+          appearance?: ('link' | 'button' | 'dropdown') | null;
+          link?: {
+            label?: string | null;
+            type?: ('reference' | 'custom') | null;
+            reference?: {
+              relationTo: 'pages';
+              value: number | Page;
+            } | null;
+            url?: string | null;
+            newTab?: boolean | null;
+            id?: string | null;
+          };
+          dropdownItems?:
+            | {
+                label?: string | null;
+                type?: ('reference' | 'custom') | null;
+                reference?: {
+                  relationTo: 'pages';
+                  value: number | Page;
+                } | null;
+                url?: string | null;
+                newTab?: boolean | null;
+                id?: string | null;
+              }[]
+            | null;
+          buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+          buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+          styles?: (number | Style)[] | null;
+          icon?: (number | null) | Icon;
+          placement?: ('before' | 'after') | null;
+          iconStyles?: (number | Style)[] | null;
         };
-        dropdownItems?:
-          | {
-              label?: string | null;
-              type?: ('reference' | 'custom') | null;
-              reference?: {
-                relationTo: 'pages';
-                value: number | Page;
-              } | null;
-              url?: string | null;
-              newTab?: boolean | null;
-              id?: string | null;
-            }[]
-          | null;
-        buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
-        buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
-        styles?: (number | Style)[] | null;
-        icon?: (number | null) | Icon;
-        placement?: ('before' | 'after') | null;
-        iconStyles?: (number | Style)[] | null;
       };
-    };
-    description?: string | null;
-    content?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
+      description?: string | null;
+      content?: {
+        root: {
+          type: string;
+          children: {
+            type: any;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
           version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-    footer?: string | null;
-    cardStyles?: (number | Style)[] | null;
-    titleStyles?: (number | Style)[] | null;
-    actionStyles?: (number | Style)[] | null;
-    descriptionStyles?: (number | Style)[] | null;
-    cardContentStyles?: (number | Style)[] | null;
-    footerStyles?: (number | Style)[] | null;
+        };
+        [k: string]: unknown;
+      } | null;
+      footer?: string | null;
+      cardStyles?: (number | Style)[] | null;
+      titleStyles?: (number | Style)[] | null;
+      actionStyles?: (number | Style)[] | null;
+      descriptionStyles?: (number | Style)[] | null;
+      cardContentStyles?: (number | Style)[] | null;
+      footerStyles?: (number | Style)[] | null;
+    };
     media?: (number | null) | Media;
     wrapperStyles?: (number | Style)[] | null;
     contentStyles?: (number | Style)[] | null;
@@ -1171,58 +1173,62 @@ export interface PagesSelect<T extends boolean = true> {
         layout?: T;
         heroTitle?: T;
         heroDescription?: T;
-        enableTitle?: T;
-        enableAction?: T;
-        enableDescription?: T;
-        enableContent?: T;
-        enableFooter?: T;
-        title?: T;
-        actionPlacement?: T;
-        action?:
+        card?:
           | T
           | {
-              nav?:
+              enableTitle?: T;
+              enableAction?: T;
+              enableDescription?: T;
+              enableContent?: T;
+              enableFooter?: T;
+              title?: T;
+              actionPlacement?: T;
+              action?:
                 | T
                 | {
-                    label?: T;
-                    appearance?: T;
-                    link?:
+                    nav?:
                       | T
                       | {
                           label?: T;
-                          type?: T;
-                          reference?: T;
-                          url?: T;
-                          newTab?: T;
-                          id?: T;
+                          appearance?: T;
+                          link?:
+                            | T
+                            | {
+                                label?: T;
+                                type?: T;
+                                reference?: T;
+                                url?: T;
+                                newTab?: T;
+                                id?: T;
+                              };
+                          dropdownItems?:
+                            | T
+                            | {
+                                label?: T;
+                                type?: T;
+                                reference?: T;
+                                url?: T;
+                                newTab?: T;
+                                id?: T;
+                              };
+                          buttonType?: T;
+                          buttonSize?: T;
+                          styles?: T;
+                          icon?: T;
+                          placement?: T;
+                          iconStyles?: T;
                         };
-                    dropdownItems?:
-                      | T
-                      | {
-                          label?: T;
-                          type?: T;
-                          reference?: T;
-                          url?: T;
-                          newTab?: T;
-                          id?: T;
-                        };
-                    buttonType?: T;
-                    buttonSize?: T;
-                    styles?: T;
-                    icon?: T;
-                    placement?: T;
-                    iconStyles?: T;
                   };
+              description?: T;
+              content?: T;
+              footer?: T;
+              cardStyles?: T;
+              titleStyles?: T;
+              actionStyles?: T;
+              descriptionStyles?: T;
+              cardContentStyles?: T;
+              footerStyles?: T;
             };
-        description?: T;
-        content?: T;
-        footer?: T;
-        cardStyles?: T;
-        titleStyles?: T;
-        actionStyles?: T;
-        descriptionStyles?: T;
-        cardContentStyles?: T;
-        footerStyles?: T;
         media?: T;
         wrapperStyles?: T;
         contentStyles?: T;

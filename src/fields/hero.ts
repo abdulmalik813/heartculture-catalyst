@@ -41,6 +41,7 @@ export const hero: GroupField = {
             },
             {
               type: 'group',
+              name: 'card',
               admin: {
                 condition: (_, siblingData) => siblingData.layout !== 'text-only',
               },

@@ -9,7 +9,7 @@ import { LexicalRenderer } from '@/components/lexical-renderer'
 import { SearchParams } from '@/types/search-params'
 import { browserPlayableTypes } from '@/constants/browser-media'
 
-export function MediaBlockUI({ searchParams, ...mediaBlock }: MediaBlock & { searchParams?: SearchParams }) {
+export function MediaBlockUI({ searchParams, ...mediaBlock }: Partial<MediaBlock> & { searchParams?: SearchParams }) {
   if (!mediaBlock.media) return null
 
   const media: MediaCollection = mediaBlock.media as MediaCollection
