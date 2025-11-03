@@ -4,7 +4,7 @@ import configPromise from '@payload-config'
 import { draftMode } from 'next/headers'
 import { unstable_cache } from 'next/cache'
 import { getCachedGlobal } from '@/lib/get-globals'
-import { Font } from '@/payload-types'
+import { Font, Setting } from '@/payload-types'
 
 const getCachedStyles = unstable_cache(
   async () => {
@@ -74,7 +74,7 @@ export async function GET(req: NextRequest) {
       overrideAccess: true,
     })
     styles = result.docs
-    settings = await getCachedGlobal('settings', 1, true)
+    settings = await getCachedGlobal('settings', 1, true) as Setting
     
     const fonts = new Set<string>()
 
@@ -100,7 +100,7 @@ export async function GET(req: NextRequest) {
 
     googleFontsCSS = await fetchGoogleFonts(Array.from(fonts))
   } else {
-    settings = await getCachedGlobal('settings', 1)
+    settings = await getCachedGlobal('settings', 1) as Setting
     styles = await getCachedStyles()
     
     const fonts = new Set<string>()

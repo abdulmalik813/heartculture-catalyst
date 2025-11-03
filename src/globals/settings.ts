@@ -32,6 +32,17 @@ export const Settings: GlobalConfig = {
           label: 'App Data',
           fields: [
             {
+                name: 'logo',
+                type: 'upload',
+                relationTo: 'media',
+                required: true
+            },
+            {
+                name: 'logoDark',
+                type: 'upload',
+                relationTo: 'media'
+            },
+            {
               name: 'appTitle',
               type: 'text',
               label: 'App Title',

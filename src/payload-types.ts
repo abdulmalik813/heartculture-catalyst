@@ -54,9 +54,11 @@ export interface Config {
     defaultIDType: number;
   };
   globals: {
+    navigationBar: NavigationBar;
     settings: Setting;
   };
   globalsSelect: {
+    navigationBar: NavigationBarSelect<false> | NavigationBarSelect<true>;
     settings: SettingsSelect<false> | SettingsSelect<true>;
   };
   locale: null;
@@ -175,6 +177,7 @@ export interface Page {
     media?: (number | null) | Media;
     wrapperStyles?: (number | Style)[] | null;
     contentStyles?: (number | Style)[] | null;
+    fullscreenStyles?: (number | Style)[] | null;
     /**
      * Styles applied to the entire hero section
      */
@@ -1127,6 +1130,7 @@ export interface PagesSelect<T extends boolean = true> {
         media?: T;
         wrapperStyles?: T;
         contentStyles?: T;
+        fullscreenStyles?: T;
         containerStyles?: T;
         heroTitleStyles?: T;
         heroDescriptionStyles?: T;
@@ -1744,10 +1748,107 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigationBar".
+ */
+export interface NavigationBar {
+  id: number;
+  style: 'default' | 'transparent' | 'floating' | 'glass' | 'minimal' | 'centered' | 'split' | 'sidebar';
+  behavior: 'static' | 'sticky' | 'hide' | 'shrink';
+  background?: ('opaque' | 'blur' | 'gradient') | null;
+  shadow?: boolean | null;
+  border?: boolean | null;
+  navigation?:
+    | {
+        nav?: {
+          label?: string | null;
+          appearance?: ('link' | 'button' | 'dropdown') | null;
+          link?: {
+            label?: string | null;
+            type?: ('reference' | 'custom') | null;
+            reference?: {
+              relationTo: 'pages';
+              value: number | Page;
+            } | null;
+            url?: string | null;
+            newTab?: boolean | null;
+            id?: string | null;
+          };
+          dropdownItems?:
+            | {
+                label?: string | null;
+                type?: ('reference' | 'custom') | null;
+                reference?: {
+                  relationTo: 'pages';
+                  value: number | Page;
+                } | null;
+                url?: string | null;
+                newTab?: boolean | null;
+                id?: string | null;
+              }[]
+            | null;
+          buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+          buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+          styles?: (number | Style)[] | null;
+          icon?: (number | null) | Icon;
+          placement?: ('before' | 'after') | null;
+          iconStyles?: (number | Style)[] | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  cta?: {
+    ctaLinks?:
+      | {
+          nav?: {
+            label?: string | null;
+            appearance?: ('link' | 'button' | 'dropdown') | null;
+            link?: {
+              label?: string | null;
+              type?: ('reference' | 'custom') | null;
+              reference?: {
+                relationTo: 'pages';
+                value: number | Page;
+              } | null;
+              url?: string | null;
+              newTab?: boolean | null;
+              id?: string | null;
+            };
+            dropdownItems?:
+              | {
+                  label?: string | null;
+                  type?: ('reference' | 'custom') | null;
+                  reference?: {
+                    relationTo: 'pages';
+                    value: number | Page;
+                  } | null;
+                  url?: string | null;
+                  newTab?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+            buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+            styles?: (number | Style)[] | null;
+            icon?: (number | null) | Icon;
+            placement?: ('before' | 'after') | null;
+            iconStyles?: (number | Style)[] | null;
+          };
+          id?: string | null;
+        }[]
+      | null;
+  };
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "settings".
  */
 export interface Setting {
   id: number;
+  logo: number | Media;
+  logoDark?: (number | null) | Media;
   appTitle: string;
   appDescription: string;
   fallbackImage: number | Media;
@@ -1765,9 +1866,104 @@ export interface Setting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigationBar_select".
+ */
+export interface NavigationBarSelect<T extends boolean = true> {
+  style?: T;
+  behavior?: T;
+  background?: T;
+  shadow?: T;
+  border?: T;
+  navigation?:
+    | T
+    | {
+        nav?:
+          | T
+          | {
+              label?: T;
+              appearance?: T;
+              link?:
+                | T
+                | {
+                    label?: T;
+                    type?: T;
+                    reference?: T;
+                    url?: T;
+                    newTab?: T;
+                    id?: T;
+                  };
+              dropdownItems?:
+                | T
+                | {
+                    label?: T;
+                    type?: T;
+                    reference?: T;
+                    url?: T;
+                    newTab?: T;
+                    id?: T;
+                  };
+              buttonType?: T;
+              buttonSize?: T;
+              styles?: T;
+              icon?: T;
+              placement?: T;
+              iconStyles?: T;
+            };
+        id?: T;
+      };
+  cta?:
+    | T
+    | {
+        ctaLinks?:
+          | T
+          | {
+              nav?:
+                | T
+                | {
+                    label?: T;
+                    appearance?: T;
+                    link?:
+                      | T
+                      | {
+                          label?: T;
+                          type?: T;
+                          reference?: T;
+                          url?: T;
+                          newTab?: T;
+                          id?: T;
+                        };
+                    dropdownItems?:
+                      | T
+                      | {
+                          label?: T;
+                          type?: T;
+                          reference?: T;
+                          url?: T;
+                          newTab?: T;
+                          id?: T;
+                        };
+                    buttonType?: T;
+                    buttonSize?: T;
+                    styles?: T;
+                    icon?: T;
+                    placement?: T;
+                    iconStyles?: T;
+                  };
+              id?: T;
+            };
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "settings_select".
  */
 export interface SettingsSelect<T extends boolean = true> {
+  logo?: T;
+  logoDark?: T;
   appTitle?: T;
   appDescription?: T;
   fallbackImage?: T;
@@ -1796,7 +1992,7 @@ export interface TaskSchedulePublish {
       relationTo: 'pages';
       value: number | Page;
     } | null;
-    global?: 'settings' | null;
+    global?: ('navigationBar' | 'settings') | null;
     user?: (number | null) | User;
   };
   output?: unknown;

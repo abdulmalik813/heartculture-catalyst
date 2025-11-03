@@ -18,7 +18,7 @@ export async function Hero({
 
   if (hero.layout === 'fullscreen') {
     return (
-      <section className="relative overflow-hidden h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)]">
+      <section className={joinStyles('relative overflow-hidden', hero.fullscreenStyles)}>
         <div className="absolute inset-0 z-0">
           {hero.media && (
             <Media

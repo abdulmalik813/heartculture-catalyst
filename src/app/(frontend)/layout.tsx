@@ -9,6 +9,7 @@ import { Font, Setting } from '@/payload-types'
 import { getCachedGlobal } from '@/lib/get-globals'
 import { Metadata } from 'next'
 import { getAppSettings } from '@/constants/app'
+import { Header } from '@/components/header'
 
 export async function generateMetadata(): Promise<Metadata> {
   const appData = await getAppSettings()
@@ -52,7 +53,10 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
               preview: isEnabled,
             }}
           />
-          <main>{children}</main>
+          <main>
+            <Header />
+            {children}
+            </main>
         </ThemeProvider>
       </body>
     </html>

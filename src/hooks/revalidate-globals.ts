@@ -16,3 +16,13 @@ export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) =>
   revalidateTag('global_settings')
   return doc
 }
+
+export const revalidateHeader: GlobalAfterChangeHook = async ({ doc, req }) => {
+  revalidateTag('global_header')
+  return doc
+}
+
+export const revalidateFooter: GlobalAfterChangeHook = async ({ doc, req }) => {
+  revalidateTag('global_footer')
+  return doc
+}

@@ -74,33 +74,50 @@ export const hero: GroupField = {
           admin: {
             condition: (data, siblingData) => {
               const layout = siblingData?.layout || data?.hero?.layout
-              return layout === 'text-only'
+              return layout === 'text-only' || layout === 'fullscreen'
             },
           },
           fields: [
             {
-              name: 'containerStyles',
+              name: 'fullscreenStyles',
               type: 'relationship',
               relationTo: 'styles',
               hasMany: true,
-              label: 'Hero Container Styles',
+            },
+            {
+              type: 'group',
               admin: {
-                description: 'Styles applied to the entire hero section',
+                condition: (data, siblingData) => {
+                  const layout = siblingData?.layout || data?.hero?.layout
+                  return layout === 'text-only'
+                },
               },
-            },
-            {
-              name: 'heroTitleStyles',
-              type: 'relationship',
-              relationTo: 'styles',
-              hasMany: true,
-              label: 'Title Styles',
-            },
-            {
-              name: 'heroDescriptionStyles',
-              type: 'relationship',
-              relationTo: 'styles',
-              hasMany: true,
-              label: 'Description Styles',
+              fields: [
+                {
+                  name: 'containerStyles',
+                  type: 'relationship',
+                  relationTo: 'styles',
+                  hasMany: true,
+                  label: 'Hero Container Styles',
+                  admin: {
+                    description: 'Styles applied to the entire hero section',
+                  },
+                },
+                {
+                  name: 'heroTitleStyles',
+                  type: 'relationship',
+                  relationTo: 'styles',
+                  hasMany: true,
+                  label: 'Title Styles',
+                },
+                {
+                  name: 'heroDescriptionStyles',
+                  type: 'relationship',
+                  relationTo: 'styles',
+                  hasMany: true,
+                  label: 'Description Styles',
+                },
+              ],
             },
           ],
         },

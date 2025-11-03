@@ -16,6 +16,7 @@ import { Icons } from '@/collections/icons'
 import { CRON_SECRET, DATABASE_URI, EMAIL, PAYLOAD, TIMEZONES } from '@/constants/init'
 import { Settings } from '@/globals/settings'
 import { Fonts } from '@/collections/fonts'
+import { NavigationBar } from '@/globals/navigation-bar'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -65,7 +66,7 @@ export default buildConfig({
     apiKey: EMAIL.RESEND_API_KEY,
   }),
   collections: [Pages, Users, Media, Styles, Icons, Fonts],
-  globals: [Settings],
+  globals: [NavigationBar, Settings],
   cors: [getServerSideURL()].filter(Boolean),
   editor: defaultLexical(),
   secret: PAYLOAD.SECRET,
