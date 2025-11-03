@@ -4,14 +4,17 @@ import { icon } from './icon'
 
 type NavType = (options?: { overrides?: Partial<GroupField> }) => Field
 
-export const navFields: Field[] = [
+const navFields: Field[] = [
   {
     name: 'label',
     type: 'text',
     label: 'Label',
     required: true,
     admin: {
-      condition: (_, __, data) => data?.blockData?.nav?.appearance === 'dropdown',
+      condition: (doc, siblingData, data) => {
+          console.log(doc)
+       return data?.blockData?.nav?.appearance === 'dropdown'
+      }
     },
   },
   {
