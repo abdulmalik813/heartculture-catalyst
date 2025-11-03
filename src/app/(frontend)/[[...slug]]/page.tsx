@@ -10,6 +10,7 @@ import { notFound } from 'next/navigation'
 import { joinStyles } from '@/lib/make-styles'
 import { cn } from '@/lib/utils'
 import { BlockRenderer } from '@/components/block-renderer'
+import { Hero } from '@/components/hero'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -42,11 +43,12 @@ interface PageProps {
   }>
 }
 
-const colsSpanClasses = {
-  full: 'col-span-4 lg:col-span-12',
-  half: 'col-span-4 lg:col-span-6',
-  'one-third': 'col-span-4 lg:col-span-4',
-  'two-thirds': 'col-span-4 lg:col-span-8',
+const gapClasses = {
+  none: 'gap-0',
+  small: 'gap-2',
+  medium: 'gap-4',
+  large: 'gap-6',
+  xlarge: 'gap-8',
 }
 
 export default async function Page({ params, searchParams }: Readonly<PageProps>) {
@@ -69,12 +71,13 @@ export default async function Page({ params, searchParams }: Readonly<PageProps>
   return (
     <article className="min-h-[70vh]">
       <PayloadRedirects disableNotFound url={url} />
+      <Hero hero={page.hero} />
       {page.layout?.map((layout, i) => (
         <div
           key={i}
           className={joinStyles(cn(layout.container && 'container mx-auto'), layout.styles)}
         >
-          <div className="grid grid-cols-4 lg:grid-cols-12 gap-4">
+          <div className={cn('grid grid-cols-4 lg:grid-cols-12', gapClasses[layout.gapSize || 'medium'])}>
             {layout.blocks?.map((block, index) => (
               <BlockRenderer key={index} searchParams={searchParams} block={block} />
             ))}

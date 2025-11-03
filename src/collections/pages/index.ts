@@ -60,7 +60,7 @@ export const Pages: CollectionConfig<'pages'> = {
       tabs: [
         {
           label: 'Hero',
-          fields: hero,
+          fields: [hero],
         },
         {
           label: 'Content',
@@ -70,27 +70,71 @@ export const Pages: CollectionConfig<'pages'> = {
               type: 'array',
               fields: [
                 {
-                  name: 'container',
-                  type: 'checkbox',
-                },
-                {
-                  name: 'styles',
-                  type: 'relationship',
-                  relationTo: 'styles',
-                  hasMany: true,
-                },
-                {
-                  name: 'blocks',
-                  type: 'blocks',
-                  blocks: [
-                    ContentBlock,
-                    CallToActionBlock,
-                    CardBlock(false),
-                    TabBlock(false),
-                    AccordionBlock(false),
-                    DividerBlock(false),
+                  type: 'tabs',
+                  tabs: [
+                    {
+                      label: 'Content',
+                      fields: [
+                        {
+                          name: 'blocks',
+                          type: 'blocks',
+                          blocks: [
+                            ContentBlock,
+                            CallToActionBlock,
+                            CardBlock(false),
+                            TabBlock(false),
+                            AccordionBlock(false),
+                            DividerBlock(false),
+                          ],
+                          required: false,
+                        },
+                      ],
+                    },
+                    {
+                      label: 'Styles',
+                      fields: [
+                        {
+                          name: 'container',
+                          type: 'checkbox',
+                        },
+                        {
+                          name: 'gapSize',
+                          type: 'select',
+                          required: true,
+                          defaultValue: 'medium',
+                          options: [
+                            {
+                              label: 'None',
+                              value: 'none',
+                            },
+                            {
+                              label: 'Small',
+                              value: 'small',
+                            },
+                            {
+                              label: 'Medium',
+                              value: 'medium',
+                            },
+                            {
+                              label: 'Large',
+                              value: 'large',
+                            },
+                            {
+                              label: 'Extra Large',
+                              value: 'xlarge',
+                            },
+                          ],
+                        },
+                        {
+                          name: 'styles',
+                          type: 'relationship',
+                          relationTo: 'styles',
+                          hasMany: true,
+                          label: 'Layout Styles',
+                        },
+                      ],
+                    },
                   ],
-                  required: false,
                 },
               ],
             },

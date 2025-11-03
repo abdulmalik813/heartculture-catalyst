@@ -12,59 +12,94 @@ export const AccordionBlock = (disableGrid: boolean = true): Block => ({
   fields: [
     ...(disableGrid ? [] : [grid()]),
     {
-      name: 'items',
-      type: 'array',
-      label: 'Items',
-      minRows: 1,
-      required: true,
-      fields: [
+      type: 'tabs',
+      tabs: [
         {
-          type: 'tabs',
-          tabs: [
+          label: 'Content',
+          fields: [
             {
-              label: 'Content',
+              name: 'items',
+              type: 'array',
+              label: 'Items',
+              minRows: 1,
+              required: true,
               fields: [
                 {
-                  name: 'title',
-                  type: 'text',
-                  required: true,
-                  label: 'Title',
-                },
-                {
-                  name: 'content',
-                  type: 'richText',
-                  required: true,
-                  editor: defaultLexical({
-                    features: {
-                      blocks: {
-                        blocks: [MediaBlock, NavigationBlock],
-                        inlineBlocks: [MediaBlock, NavigationBlock],
-                      },
+                  type: 'tabs',
+                  tabs: [
+                    {
+                      label: 'Content',
+                      fields: [
+                        {
+                          name: 'trigger',
+                          type: 'text',
+                          required: true,
+                          label: 'Trigger',
+                        },
+                        {
+                          name: 'content',
+                          type: 'richText',
+                          required: true,
+                          editor: defaultLexical({
+                            features: {
+                              blocks: {
+                                blocks: [MediaBlock, NavigationBlock],
+                                inlineBlocks: [MediaBlock, NavigationBlock],
+                              },
+                            },
+                          }),
+                          defaultValue: defaultLexicalValue,
+                          label: 'Content',
+                        },
+                      ],
                     },
-                  }),
-                  defaultValue: defaultLexicalValue,
-                  label: 'Content',
+                    {
+                      label: 'Styles',
+                      fields: [
+                        {
+                          name: 'triggerStyles',
+                          type: 'relationship',
+                          relationTo: 'styles',
+                          hasMany: true,
+                          label: 'Trigger Styles',
+                        },
+                        {
+                          name: 'contentStyles',
+                          type: 'relationship',
+                          relationTo: 'styles',
+                          hasMany: true,
+                          label: 'Content Styles',
+                        },
+                      ],
+                    },
+                  ],
                 },
               ],
             },
+          ],
+        },
+        {
+          label: 'Styles',
+          fields: [
             {
-              label: 'Styles',
-              fields: [
-                {
-                  name: 'titleStyles',
-                  type: 'relationship',
-                  relationTo: 'styles',
-                  hasMany: true,
-                  label: 'Title Styles',
-                },
-                {
-                  name: 'contentStyles',
-                  type: 'relationship',
-                  relationTo: 'styles',
-                  hasMany: true,
-                  label: 'Content Styles',
-                },
-              ],
+              name: 'accordionStyles',
+              type: 'relationship',
+              relationTo: 'styles',
+              hasMany: true,
+              label: 'Accordion Styles',
+              admin: {
+                description: 'Styles for the entire accordion container',
+              },
+            },
+            {
+              name: 'accordionItemStyles',
+              type: 'relationship',
+              relationTo: 'styles',
+              hasMany: true,
+              label: 'Accordion Item Styles',
+              admin: {
+                description: 'Styles applied to all accordion items',
+              },
             },
           ],
         },

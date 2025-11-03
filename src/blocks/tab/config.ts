@@ -12,59 +12,86 @@ export const TabBlock = (disableGrid: boolean = true): Block => ({
   fields: [
     ...(disableGrid ? [] : [grid()]),
     {
-      name: 'tabs',
-      type: 'array',
-      label: 'Tabs',
-      minRows: 1,
-      required: true,
-      fields: [
+      type: 'tabs',
+      tabs: [
         {
-          type: 'tabs',
-          tabs: [
+          label: 'Content',
+          fields: [
             {
-              label: 'Content',
+              name: 'tabs',
+              type: 'array',
+              label: 'Tabs',
+              minRows: 1,
+              required: true,
               fields: [
                 {
-                  name: 'title',
-                  type: 'text',
-                  required: true,
-                  label: 'Tab Title',
-                },
-                {
-                  name: 'content',
-                  type: 'richText',
-                  required: true,
-                  editor: defaultLexical({
-                    features: {
-                      blocks: {
-                        blocks: [MediaBlock, NavigationBlock],
-                        inlineBlocks: [MediaBlock, NavigationBlock],
-                      },
+                  type: 'tabs',
+                  tabs: [
+                    {
+                      label: 'Content',
+                      fields: [
+                        {
+                          name: 'title',
+                          type: 'text',
+                          required: true,
+                          label: 'Tab Title',
+                        },
+                        {
+                          name: 'content',
+                          type: 'richText',
+                          required: true,
+                          editor: defaultLexical({
+                            features: {
+                              blocks: {
+                                blocks: [MediaBlock, NavigationBlock],
+                                inlineBlocks: [MediaBlock, NavigationBlock],
+                              },
+                            },
+                          }),
+                          defaultValue: defaultLexicalValue,
+                          label: 'Tab Content',
+                        },
+                      ],
                     },
-                  }),
-                  defaultValue: defaultLexicalValue,
-                  label: 'Tab Content',
+                    {
+                      label: 'Styles',
+                      fields: [
+                        {
+                          name: 'titleStyles',
+                          type: 'relationship',
+                          relationTo: 'styles',
+                          hasMany: true,
+                          label: 'Title Styles',
+                        },
+                        {
+                          name: 'contentStyles',
+                          type: 'relationship',
+                          relationTo: 'styles',
+                          hasMany: true,
+                          label: 'Content Styles',
+                        },
+                      ],
+                    },
+                  ],
                 },
               ],
             },
+          ],
+        },
+        {
+          label: 'Styles',
+          fields: [
             {
-              label: 'Styles',
-              fields: [
-                {
-                  name: 'titleStyles',
-                  type: 'relationship',
-                  relationTo: 'styles',
-                  hasMany: true,
-                  label: 'Title Styles',
-                },
-                {
-                  name: 'contentStyles',
-                  type: 'relationship',
-                  relationTo: 'styles',
-                  hasMany: true,
-                  label: 'Content Styles',
-                },
-              ],
+              name: 'tabStyles',
+              type: 'relationship',
+              relationTo: 'styles',
+              hasMany: true,
+            },
+            {
+              name: 'tabListStyles',
+              type: 'relationship',
+              relationTo: 'styles',
+              hasMany: true,
             },
           ],
         },

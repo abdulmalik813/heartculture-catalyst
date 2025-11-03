@@ -67,6 +67,15 @@ export const card = (): Field[] => {
               },
               fields: [
                 {
+                  name: 'actionPlacement',
+                  type: 'select',
+                  options: [
+                    { label: 'Header', value: 'header' },
+                    { label: 'Footer', value: 'footer' },
+                  ],
+                  defaultValue: 'header',
+                },
+                {
                   name: 'action',
                   type: 'group',
                   required: true,

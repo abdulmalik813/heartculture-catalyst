@@ -16,7 +16,6 @@ export const grid: GridType = ({ overrides = {} } = {}) => {
           {
             name: 'gridSize',
             type: 'select',
-            label: 'Grid Size',
             defaultValue: 'full',
             required: true,
             admin: {

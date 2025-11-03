@@ -230,71 +230,62 @@ export interface Style {
 export interface Page {
   id: number;
   title: string;
-  /**
-   * Choose how the hero section should be displayed
-   */
-  heroLayout: 'fullscreen' | 'heading-with-image' | 'heading-no-image';
-  /**
-   * Main hero heading text
-   */
-  heroTitle: string;
-  /**
-   * Supporting text below the title
-   */
-  description?: string | null;
-  titleStyles?: (number | Style)[] | null;
-  descriptionStyles?: (number | Style)[] | null;
-  navigations?:
-    | {
-        nav?: {
-          label?: string | null;
-          appearance?: ('link' | 'button' | 'dropdown') | null;
-          link?: {
+  hero: {
+    heroLayout: 'fullscreen' | 'heading-with-image' | 'heading-no-image';
+    heroTitle: string;
+    description?: string | null;
+    navigations?:
+      | {
+          nav?: {
             label?: string | null;
-            type?: ('reference' | 'custom') | null;
-            reference?: {
-              relationTo: 'pages';
-              value: number | Page;
-            } | null;
-            url?: string | null;
-            newTab?: boolean | null;
-            id?: string | null;
+            appearance?: ('link' | 'button' | 'dropdown') | null;
+            link?: {
+              label?: string | null;
+              type?: ('reference' | 'custom') | null;
+              reference?: {
+                relationTo: 'pages';
+                value: number | Page;
+              } | null;
+              url?: string | null;
+              newTab?: boolean | null;
+              id?: string | null;
+            };
+            dropdownItems?:
+              | {
+                  label?: string | null;
+                  type?: ('reference' | 'custom') | null;
+                  reference?: {
+                    relationTo: 'pages';
+                    value: number | Page;
+                  } | null;
+                  url?: string | null;
+                  newTab?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+            buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+            styles?: (number | Style)[] | null;
+            icon?: (number | null) | Icon;
+            placement?: ('before' | 'after') | null;
+            iconStyles?: (number | Style)[] | null;
           };
-          dropdownItems?:
-            | {
-                label?: string | null;
-                type?: ('reference' | 'custom') | null;
-                reference?: {
-                  relationTo: 'pages';
-                  value: number | Page;
-                } | null;
-                url?: string | null;
-                newTab?: boolean | null;
-                id?: string | null;
-              }[]
-            | null;
-          buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
-          buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
-          styles?: (number | Style)[] | null;
-          icon?: (number | null) | Icon;
-          placement?: ('before' | 'after') | null;
-          iconStyles?: (number | Style)[] | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  media?: (number | null) | Media;
-  wrapperStyles?: (number | Style)[] | null;
-  contentStyles?: (number | Style)[] | null;
-  /**
-   * Apply custom styles to the card wrapper
-   */
-  cardStyles?: (number | Style)[] | null;
+          id?: string | null;
+        }[]
+      | null;
+    media?: (number | null) | Media;
+    wrapperStyles?: (number | Style)[] | null;
+    contentStyles?: (number | Style)[] | null;
+    titleStyles?: (number | Style)[] | null;
+    descriptionStyles?: (number | Style)[] | null;
+    cardStyles?: (number | Style)[] | null;
+  };
   layout?:
     | {
-        container?: boolean | null;
-        styles?: (number | Style)[] | null;
         blocks?: (ContentBlock | CallToActionBlock | CardBlock | TabBlock | AccordionBlock | DividerBlock)[] | null;
+        container?: boolean | null;
+        gapSize: 'none' | 'small' | 'medium' | 'large' | 'xlarge';
+        styles?: (number | Style)[] | null;
         id?: string | null;
       }[]
     | null;
@@ -367,6 +358,7 @@ export interface CallToActionBlock {
     enableContent?: boolean | null;
     enableFooter?: boolean | null;
     title?: string | null;
+    actionPlacement?: ('header' | 'footer') | null;
     action: {
       nav?: {
         label?: string | null;
@@ -447,6 +439,7 @@ export interface CardBlock {
   enableContent?: boolean | null;
   enableFooter?: boolean | null;
   title?: string | null;
+  actionPlacement?: ('header' | 'footer') | null;
   action: {
     nav?: {
       label?: string | null;
@@ -538,6 +531,8 @@ export interface TabBlock {
     contentStyles?: (number | Style)[] | null;
     id?: string | null;
   }[];
+  tabStyles?: (number | Style)[] | null;
+  tabListStyles?: (number | Style)[] | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'tabBlock';
@@ -550,7 +545,7 @@ export interface AccordionBlock {
   gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
   gridStyles?: (number | Style)[] | null;
   items: {
-    title: string;
+    trigger: string;
     content: {
       root: {
         type: string;
@@ -566,10 +561,18 @@ export interface AccordionBlock {
       };
       [k: string]: unknown;
     };
-    titleStyles?: (number | Style)[] | null;
+    triggerStyles?: (number | Style)[] | null;
     contentStyles?: (number | Style)[] | null;
     id?: string | null;
   }[];
+  /**
+   * Styles for the entire accordion container
+   */
+  accordionStyles?: (number | Style)[] | null;
+  /**
+   * Styles applied to all accordion items
+   */
+  accordionItemStyles?: (number | Style)[] | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'accordionBlock';
@@ -1132,57 +1135,59 @@ export interface StylesSelect<T extends boolean = true> {
  */
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
-  heroLayout?: T;
-  heroTitle?: T;
-  description?: T;
-  titleStyles?: T;
-  descriptionStyles?: T;
-  navigations?:
+  hero?:
     | T
     | {
-        nav?:
+        heroLayout?: T;
+        heroTitle?: T;
+        description?: T;
+        navigations?:
           | T
           | {
-              label?: T;
-              appearance?: T;
-              link?:
+              nav?:
                 | T
                 | {
                     label?: T;
-                    type?: T;
-                    reference?: T;
-                    url?: T;
-                    newTab?: T;
-                    id?: T;
+                    appearance?: T;
+                    link?:
+                      | T
+                      | {
+                          label?: T;
+                          type?: T;
+                          reference?: T;
+                          url?: T;
+                          newTab?: T;
+                          id?: T;
+                        };
+                    dropdownItems?:
+                      | T
+                      | {
+                          label?: T;
+                          type?: T;
+                          reference?: T;
+                          url?: T;
+                          newTab?: T;
+                          id?: T;
+                        };
+                    buttonType?: T;
+                    buttonSize?: T;
+                    styles?: T;
+                    icon?: T;
+                    placement?: T;
+                    iconStyles?: T;
                   };
-              dropdownItems?:
-                | T
-                | {
-                    label?: T;
-                    type?: T;
-                    reference?: T;
-                    url?: T;
-                    newTab?: T;
-                    id?: T;
-                  };
-              buttonType?: T;
-              buttonSize?: T;
-              styles?: T;
-              icon?: T;
-              placement?: T;
-              iconStyles?: T;
+              id?: T;
             };
-        id?: T;
+        media?: T;
+        wrapperStyles?: T;
+        contentStyles?: T;
+        titleStyles?: T;
+        descriptionStyles?: T;
+        cardStyles?: T;
       };
-  media?: T;
-  wrapperStyles?: T;
-  contentStyles?: T;
-  cardStyles?: T;
   layout?:
     | T
     | {
-        container?: T;
-        styles?: T;
         blocks?:
           | T
           | {
@@ -1193,6 +1198,9 @@ export interface PagesSelect<T extends boolean = true> {
               accordionBlock?: T | AccordionBlockSelect<T>;
               dividerBlock?: T | DividerBlockSelect<T>;
             };
+        container?: T;
+        gapSize?: T;
+        styles?: T;
         id?: T;
       };
   meta?:
@@ -1237,6 +1245,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
         enableContent?: T;
         enableFooter?: T;
         title?: T;
+        actionPlacement?: T;
         action?:
           | T
           | {
@@ -1302,6 +1311,7 @@ export interface CardBlockSelect<T extends boolean = true> {
   enableContent?: T;
   enableFooter?: T;
   title?: T;
+  actionPlacement?: T;
   action?:
     | T
     | {
@@ -1366,6 +1376,8 @@ export interface TabBlockSelect<T extends boolean = true> {
         contentStyles?: T;
         id?: T;
       };
+  tabStyles?: T;
+  tabListStyles?: T;
   id?: T;
   blockName?: T;
 }
@@ -1379,12 +1391,14 @@ export interface AccordionBlockSelect<T extends boolean = true> {
   items?:
     | T
     | {
-        title?: T;
+        trigger?: T;
         content?: T;
-        titleStyles?: T;
+        triggerStyles?: T;
         contentStyles?: T;
         id?: T;
       };
+  accordionStyles?: T;
+  accordionItemStyles?: T;
   id?: T;
   blockName?: T;
 }

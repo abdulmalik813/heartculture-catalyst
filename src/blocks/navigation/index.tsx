@@ -25,6 +25,7 @@ export function NavigationBlockUI({
           : null
     if (!href) return null
 
+    const isExternal = navigationBlock.nav.link?.type === 'custom'
     const relProps = navigationBlock.nav.link?.newTab
       ? { target: '_blank', rel: 'noopener noreferrer' }
       : {}
@@ -37,14 +38,14 @@ export function NavigationBlockUI({
           size={navigationBlock.nav.buttonSize}
           variant={navigationBlock.nav.buttonType}
         >
-          <Link href={href} {...relProps}>
+          <Link href={href} {...relProps} prefetch={!isExternal}>
             {navigationBlock.nav.label}
           </Link>
         </Button>
       )
     } else {
       return (
-        <Link href={href} {...relProps} className={joinStyles(navigationBlock.nav.styles)}>
+        <Link href={href} {...relProps} className={joinStyles(navigationBlock.nav.styles)} prefetch={!isExternal}>
           {navigationBlock.nav.label}
         </Link>
       )
@@ -74,11 +75,12 @@ export function NavigationBlockUI({
 
           if (!href) return null
 
+          const isExternal = item.type === 'custom'
           const relProps = item.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {}
 
           return (
             <DropdownMenuItem key={index} asChild>
-              <Link href={href} {...relProps}>
+              <Link href={href} {...relProps} prefetch={!isExternal}>
                 {item.label}
               </Link>
             </DropdownMenuItem>

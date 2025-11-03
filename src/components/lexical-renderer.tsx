@@ -1,5 +1,12 @@
 import React from 'react'
-import type { AccordionBlock, DividerBlock, MediaBlock, NavigationBlock, Style, TabBlock } from '@/payload-types'
+import type {
+  AccordionBlock,
+  DividerBlock,
+  MediaBlock,
+  NavigationBlock,
+  Style,
+  TabBlock,
+} from '@/payload-types'
 import {
   DefaultNodeTypes,
   DefaultTypedEditorState,
@@ -16,6 +23,7 @@ import { SearchParams } from '@/types/search-params'
 import { TabBlockUI } from '@/blocks/tab'
 import { AccordionBlockUI } from '@/blocks/accordion'
 import { DividerBlockUI } from '@/blocks/divider'
+import { CardBlockUI } from '@/blocks/card'
 
 interface LexicalRendererProps {
   content?: DefaultTypedEditorState | null
@@ -23,7 +31,9 @@ interface LexicalRendererProps {
   searchParams?: SearchParams
 }
 
-type NodeTypes = DefaultNodeTypes | SerializedBlockNode<MediaBlock | NavigationBlock | TabBlock | AccordionBlock | DividerBlock>
+type NodeTypes =
+  | DefaultNodeTypes
+  | SerializedBlockNode<MediaBlock | NavigationBlock | TabBlock | AccordionBlock | DividerBlock>
 
 function jsxConverters(
   searchParams?: LexicalRendererProps['searchParams'],
@@ -58,6 +68,8 @@ function jsxConverters(
         tabBlock: ({ node }) => <TabBlockUI {...node.fields} />,
         accordionBlock: ({ node }) => <AccordionBlockUI {...node.fields} />,
         dividerBlock: ({ node }) => <DividerBlockUI {...node.fields} />,
+        // @ts-expect-error there may be some mismatch between the expected types here
+        cardBlock: ({ node }) => <CardBlockUI {...node.fields} />,
       },
     }
   }
