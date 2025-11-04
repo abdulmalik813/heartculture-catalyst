@@ -10,6 +10,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
+  NavigationMenuViewport,
 } from '@/components/ui/navigation-menu'
 import { NavigationBlockUI } from '@/blocks/navigation'
 
@@ -46,7 +47,6 @@ export async function NavigationBarUI() {
               <span className="ml-2 text-xl font-semibold">{settings.appTitle}</span>
             )}
           </Link>
-
           <NavigationMenu>
             <NavigationMenuList>
               {navBarData.navigation?.map((navItem) => {
@@ -76,6 +76,7 @@ export async function NavigationBarUI() {
                 )
               })}
             </NavigationMenuList>
+            <NavigationMenuViewport />
           </NavigationMenu>
 
           <div className="flex items-center gap-2">
