@@ -10,38 +10,75 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { SearchParams } from '@/types/search-params'
 import { IconRender } from '@/components/icon-renderer'
+import { getHref } from '@/constants/get-href'
 
-export function NavigationBlockUI({
-  searchParams,
-  ...navigationBlock
-}: Partial<NavigationBlock> & { searchParams?: SearchParams }) {
-  
-  const icon = typeof navigationBlock.nav?.icon === "object" ? navigationBlock.nav?.icon : null
-  const iconStyles = navigationBlock.nav?.iconStyles
-  const iconPlacement = navigationBlock.nav?.placement
-
-  const hasIcon = icon?.name != "" && icon?.name != null  
+function getIconData(item: any) {
+  const icon = typeof item?.icon === 'object' ? item?.icon : null
+  const iconStyles = item?.iconStyles
+  const iconPlacement = item?.placement
+  const hasIcon = icon?.name != '' && icon?.name != null
 
   const renderIcon = () => {
     if (!hasIcon) return null
     return <IconRender icon={icon.name ?? ''} iconStyles={joinStyles(iconStyles)} />
   }
 
-  if (navigationBlock.nav?.appearance === 'button' || navigationBlock.nav?.appearance === 'link') {
-    const href =
-      navigationBlock.nav.link?.type === 'custom'
-        ? navigationBlock.nav.link.url
-        : navigationBlock.nav.link?.reference?.relationTo === 'pages'
-          ? typeof navigationBlock.nav.link.reference.value === 'object'
-            ? `/${navigationBlock.nav.link.reference.value.slug}`
-            : null
-          : null
-    if (!href) return null
+  return { hasIcon, iconPlacement, renderIcon }
+}
 
-    const isExternal = navigationBlock.nav.link?.type === 'custom'
-    const relProps = navigationBlock.nav.link?.newTab
-      ? { target: '_blank', rel: 'noopener noreferrer' }
-      : {}
+type DropdownItem = NonNullable<NonNullable<NavigationBlock['nav']>['items']>[number]
+
+type LinkItem = {
+  type?: ('reference' | 'custom') | null
+  newTab?: boolean | null
+  icon?: any
+  iconStyles?: any
+  placement?: string | null
+  label?: string | null
+}
+
+function LinkWithIcon({
+  href,
+  item,
+  label,
+  className = '',
+}: {
+  href: string
+  item: LinkItem
+  label: string
+  className?: string
+}) {
+  const isExternal = item?.type === 'custom'
+  const relProps = item?.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {}
+  const { hasIcon, iconPlacement, renderIcon } = getIconData(item)
+
+  return (
+    <Link
+      href={href}
+      {...relProps}
+      className={joinStyles(className, hasIcon ? 'flex items-center gap-2' : '')}
+      prefetch={!isExternal}
+    >
+      {iconPlacement !== 'after' && renderIcon()}
+      {label}
+      {iconPlacement === 'after' && renderIcon()}
+    </Link>
+  )
+}
+
+export function NavigationBlockUI({
+  searchParams,
+  dropdownItem,
+  ...navigationBlock
+}: Partial<NavigationBlock> & {
+  searchParams?: SearchParams
+  dropdownItem?: DropdownItem
+}) {
+  const { hasIcon, iconPlacement, renderIcon } = getIconData(navigationBlock.nav)
+
+  if (navigationBlock.nav?.appearance === 'button' || navigationBlock.nav?.appearance === 'link') {
+    const href = getHref(navigationBlock.nav.link)
+    if (!href) return null
 
     if (navigationBlock.nav?.appearance === 'button') {
       return (
@@ -51,32 +88,29 @@ export function NavigationBlockUI({
           size={navigationBlock.nav.buttonSize}
           variant={navigationBlock.nav.buttonType}
         >
-          <Link 
-            href={href} 
-            {...relProps} 
-            prefetch={!isExternal} 
-            className={hasIcon ? 'flex items-center gap-2' : ''}
-          >
-            {iconPlacement !== 'after' && renderIcon()}
-            {navigationBlock.nav.label}
-            {iconPlacement === 'after' && renderIcon()}
-          </Link>
+          <LinkWithIcon
+            href={href}
+            item={navigationBlock.nav}
+            label={navigationBlock.nav.label ?? ''}
+          />
         </Button>
       )
     } else {
       return (
-        <Link
+        <LinkWithIcon
           href={href}
-          {...relProps}
-          className={joinStyles(navigationBlock.nav.styles, hasIcon ? 'flex items-center gap-2' : '')}
-          prefetch={!isExternal}
-        >
-          {iconPlacement !== 'after' && renderIcon()}
-          {navigationBlock.nav.label}
-          {iconPlacement === 'after' && renderIcon()}
-        </Link>
+          item={navigationBlock.nav}
+          label={navigationBlock.nav.label ?? ''}
+          className={joinStyles(navigationBlock.nav.styles)}
+        />
       )
     }
+  }
+
+  if (dropdownItem) {
+    const href = getHref(dropdownItem)
+    if (!href) return null
+    return <LinkWithIcon href={href} item={dropdownItem} label={dropdownItem.label ?? ''} />
   }
 
   return (
@@ -94,26 +128,13 @@ export function NavigationBlockUI({
         </DropdownMenuTrigger>
       </Button>
       <DropdownMenuContent>
-        {navigationBlock.nav?.dropdownItems?.map((item, index) => {
-          const href =
-            item.type === 'custom'
-              ? item.url
-              : item.reference?.relationTo === 'pages'
-                ? typeof item.reference.value === 'object'
-                  ? `/${item.reference.value.slug}`
-                  : null
-                : null
-
+        {navigationBlock.nav?.items?.map((item, index) => {
+          const href = getHref(item)
           if (!href) return null
-
-          const isExternal = item.type === 'custom'
-          const relProps = item.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {}
 
           return (
             <DropdownMenuItem key={index} asChild>
-              <Link href={href} {...relProps} prefetch={!isExternal}>
-                {item.label}
-              </Link>
+              <LinkWithIcon href={href} item={item} label={item.label ?? ''} />
             </DropdownMenuItem>
           )
         })}

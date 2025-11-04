@@ -62,7 +62,6 @@ export const navigation: NavType = ({ overrides = {} } = {}) =>
           name: 'label',
           type: 'text',
           label: 'Text to display',
-          required: true,
           admin: {
             condition: (_, __, data) => {
               return data?.blockData?.text === undefined
@@ -96,17 +95,31 @@ export const navigation: NavType = ({ overrides = {} } = {}) =>
                   fields: navFields,
                 },
                 {
-                  name: 'dropdownItems',
+                  name: 'items',
                   type: 'array',
                   label: 'Dropdown Items',
                   fields: [
                     {
-                      name: 'label',
-                      type: 'text',
-                      label: 'Label',
-                      required: true,
+                      type: 'tabs',
+                      tabs: [
+                        {
+                          label: 'Link',
+                          fields: [
+                            {
+                              name: 'label',
+                              type: 'text',
+                              label: 'Label',
+                              required: true,
+                            },
+                            ...navFields,
+                          ],
+                        },
+                        {
+                          label: 'Icon',
+                          fields: icon(),
+                        },
+                      ],
                     },
-                    ...navFields,
                   ],
                   admin: {
                     condition: (_, siblingData) => siblingData?.appearance === 'dropdown',

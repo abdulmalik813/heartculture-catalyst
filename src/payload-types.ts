@@ -126,7 +126,7 @@ export interface Page {
             url?: string | null;
             newTab?: boolean | null;
           };
-          dropdownItems?:
+          items?:
             | {
                 label: string;
                 type?: ('reference' | 'custom') | null;
@@ -136,6 +136,9 @@ export interface Page {
                 } | null;
                 url?: string | null;
                 newTab?: boolean | null;
+                icon?: (number | null) | Icon;
+                placement?: ('before' | 'after') | null;
+                iconStyles?: (number | Style)[] | null;
                 id?: string | null;
               }[]
             | null;
@@ -212,6 +215,16 @@ export interface Page {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "icons".
+ */
+export interface Icon {
+  id: number;
+  name?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "styles".
  */
 export interface Style {
@@ -226,16 +239,6 @@ export interface Style {
    * CSS stylesheet (if tailwind, the content will be overridden)
    */
   stylesheet?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "icons".
- */
-export interface Icon {
-  id: number;
-  name?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -387,7 +390,7 @@ export interface CallToActionBlock {
           url?: string | null;
           newTab?: boolean | null;
         };
-        dropdownItems?:
+        items?:
           | {
               label: string;
               type?: ('reference' | 'custom') | null;
@@ -397,6 +400,9 @@ export interface CallToActionBlock {
               } | null;
               url?: string | null;
               newTab?: boolean | null;
+              icon?: (number | null) | Icon;
+              placement?: ('before' | 'after') | null;
+              iconStyles?: (number | Style)[] | null;
               id?: string | null;
             }[]
           | null;
@@ -467,7 +473,7 @@ export interface CardBlock {
         url?: string | null;
         newTab?: boolean | null;
       };
-      dropdownItems?:
+      items?:
         | {
             label: string;
             type?: ('reference' | 'custom') | null;
@@ -477,6 +483,9 @@ export interface CardBlock {
             } | null;
             url?: string | null;
             newTab?: boolean | null;
+            icon?: (number | null) | Icon;
+            placement?: ('before' | 'after') | null;
+            iconStyles?: (number | Style)[] | null;
             id?: string | null;
           }[]
         | null;
@@ -1090,7 +1099,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 url?: T;
                                 newTab?: T;
                               };
-                          dropdownItems?:
+                          items?:
                             | T
                             | {
                                 label?: T;
@@ -1098,6 +1107,9 @@ export interface PagesSelect<T extends boolean = true> {
                                 reference?: T;
                                 url?: T;
                                 newTab?: T;
+                                icon?: T;
+                                placement?: T;
+                                iconStyles?: T;
                                 id?: T;
                               };
                           buttonType?: T;
@@ -1204,7 +1216,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
                           url?: T;
                           newTab?: T;
                         };
-                    dropdownItems?:
+                    items?:
                       | T
                       | {
                           label?: T;
@@ -1212,6 +1224,9 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
                           reference?: T;
                           url?: T;
                           newTab?: T;
+                          icon?: T;
+                          placement?: T;
+                          iconStyles?: T;
                           id?: T;
                         };
                     buttonType?: T;
@@ -1269,7 +1284,7 @@ export interface CardBlockSelect<T extends boolean = true> {
                     url?: T;
                     newTab?: T;
                   };
-              dropdownItems?:
+              items?:
                 | T
                 | {
                     label?: T;
@@ -1277,6 +1292,9 @@ export interface CardBlockSelect<T extends boolean = true> {
                     reference?: T;
                     url?: T;
                     newTab?: T;
+                    icon?: T;
+                    placement?: T;
+                    iconStyles?: T;
                     id?: T;
                   };
               buttonType?: T;
@@ -1754,7 +1772,7 @@ export interface NavigationBar {
             url?: string | null;
             newTab?: boolean | null;
           };
-          dropdownItems?:
+          items?:
             | {
                 label: string;
                 type?: ('reference' | 'custom') | null;
@@ -1764,6 +1782,9 @@ export interface NavigationBar {
                 } | null;
                 url?: string | null;
                 newTab?: boolean | null;
+                icon?: (number | null) | Icon;
+                placement?: ('before' | 'after') | null;
+                iconStyles?: (number | Style)[] | null;
                 id?: string | null;
               }[]
             | null;
@@ -1791,7 +1812,7 @@ export interface NavigationBar {
             url?: string | null;
             newTab?: boolean | null;
           };
-          dropdownItems?:
+          items?:
             | {
                 label: string;
                 type?: ('reference' | 'custom') | null;
@@ -1801,6 +1822,9 @@ export interface NavigationBar {
                 } | null;
                 url?: string | null;
                 newTab?: boolean | null;
+                icon?: (number | null) | Icon;
+                placement?: ('before' | 'after') | null;
+                iconStyles?: (number | Style)[] | null;
                 id?: string | null;
               }[]
             | null;
@@ -1866,7 +1890,7 @@ export interface NavigationBarSelect<T extends boolean = true> {
                     url?: T;
                     newTab?: T;
                   };
-              dropdownItems?:
+              items?:
                 | T
                 | {
                     label?: T;
@@ -1874,6 +1898,9 @@ export interface NavigationBarSelect<T extends boolean = true> {
                     reference?: T;
                     url?: T;
                     newTab?: T;
+                    icon?: T;
+                    placement?: T;
+                    iconStyles?: T;
                     id?: T;
                   };
               buttonType?: T;
@@ -1901,7 +1928,7 @@ export interface NavigationBarSelect<T extends boolean = true> {
                     url?: T;
                     newTab?: T;
                   };
-              dropdownItems?:
+              items?:
                 | T
                 | {
                     label?: T;
@@ -1909,6 +1936,9 @@ export interface NavigationBarSelect<T extends boolean = true> {
                     reference?: T;
                     url?: T;
                     newTab?: T;
+                    icon?: T;
+                    placement?: T;
+                    iconStyles?: T;
                     id?: T;
                   };
               buttonType?: T;
@@ -1998,7 +2028,7 @@ export interface NavigationBlock {
       url?: string | null;
       newTab?: boolean | null;
     };
-    dropdownItems?:
+    items?:
       | {
           label: string;
           type?: ('reference' | 'custom') | null;
@@ -2008,6 +2038,9 @@ export interface NavigationBlock {
           } | null;
           url?: string | null;
           newTab?: boolean | null;
+          icon?: (number | null) | Icon;
+          placement?: ('before' | 'after') | null;
+          iconStyles?: (number | Style)[] | null;
           id?: string | null;
         }[]
       | null;

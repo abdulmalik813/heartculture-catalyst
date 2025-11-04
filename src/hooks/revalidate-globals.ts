@@ -3,7 +3,7 @@ import { Page } from '@/payload-types'
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { GlobalAfterChangeHook } from 'payload'
 
-export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) => {
+export const revalidateSettings: GlobalAfterChangeHook = async ({ doc }) => {
   const pages = (await getCachedDocuments('pages', true)()) as Page[]
 
   revalidatePath('/', 'layout')
@@ -17,12 +17,12 @@ export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) =>
   return doc
 }
 
-export const revalidateHeader: GlobalAfterChangeHook = async ({ doc, req }) => {
-  revalidateTag('global_header')
+export const revalidateNavBar: GlobalAfterChangeHook = async ({ doc }) => {
+  revalidateTag('global_navigationBar')
   return doc
 }
 
-export const revalidateFooter: GlobalAfterChangeHook = async ({ doc, req }) => {
+export const revalidateFooter: GlobalAfterChangeHook = async ({ doc }) => {
   revalidateTag('global_footer')
   return doc
 }

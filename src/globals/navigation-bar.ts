@@ -1,5 +1,5 @@
 import { navigation } from '@/fields/navigation'
-import { revalidateHeader } from '@/hooks/revalidate-globals'
+import { revalidateNavBar } from '@/hooks/revalidate-globals'
 import { generatePreviewPath } from '@/lib/generate-preview-path'
 import { GlobalConfig } from 'payload'
 
@@ -89,7 +89,7 @@ export const NavigationBar: GlobalConfig = {
     },
   ],
   hooks: {
-    afterChange: [revalidateHeader],
+    afterChange: [revalidateNavBar],
   },
   versions: {
     drafts: {
