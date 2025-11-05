@@ -4,23 +4,8 @@ import configPromise from '@payload-config'
 import { draftMode } from 'next/headers'
 import { unstable_cache } from 'next/cache'
 import { getCachedGlobal } from '@/lib/get-globals'
-import { Setting } from '@/payload-types'
-
-const getCachedStyles = unstable_cache(
-  async () => {
-    const payload = await getPayload({ config: configPromise })
-    const result = await payload.find({
-      collection: 'styles',
-      limit: 100000,
-    })
-    return result.docs
-  },
-  ['styles-cache'],
-  {
-    tags: ['styles-tag'],
-    revalidate: false,
-  },
-)
+import { Setting, Style } from '@/payload-types'
+import { getCachedDocuments } from '@/lib/get-document'
 
 interface FontData {
   id: string
@@ -92,13 +77,7 @@ export async function GET(req: NextRequest) {
   let fontsourceCSS
 
   if (draft) {
-    const payload = await getPayload({ config: configPromise })
-    const result = await payload.find({
-      collection: 'styles',
-      limit: 100000,
-      overrideAccess: true,
-    })
-    styles = result.docs
+    styles = await getCachedDocuments("styles", true)() as Style[]
     settings = await getCachedGlobal('settings', 1, true) as Setting
     
     const fonts: FontData[] = []
@@ -118,7 +97,7 @@ export async function GET(req: NextRequest) {
     fontsourceCSS = await fetchFontsourceFonts(fonts)
   } else {
     settings = await getCachedGlobal('settings', 1) as Setting
-    styles = await getCachedStyles()
+    styles = await getCachedDocuments("styles")() as Style[]
     
     const fonts: FontData[] = []
 

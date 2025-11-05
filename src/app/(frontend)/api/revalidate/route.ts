@@ -27,15 +27,15 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    revalidateTag('global_footer')
-    revalidateTag('global_header')
     revalidateTag('redirects')
-    revalidateTag('global_styleSheet')
-    revalidateTag('global_version_styleSheet')
     revalidateTag('pages-sitemap')
     revalidateTag('posts-sitemap')
-    revalidateTag('global_font')
-    revalidateTag('google-fonts')
+    revalidateTag('styles-tag')
+    revalidateTag('fonts-tag')
+    revalidateTag('global_navigationBar')
+    revalidateTag('global_footer')
+    revalidateTag('global_settings')
+
 
     const pages = await payload.find({
       collection: 'pages',

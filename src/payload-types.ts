@@ -25,7 +25,6 @@ export interface Config {
     media: Media;
     styles: Style;
     icons: Icon;
-    fonts: Font;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -41,7 +40,6 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     styles: StylesSelect<false> | StylesSelect<true>;
     icons: IconsSelect<false> | IconsSelect<true>;
-    fonts: FontsSelect<false> | FontsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -661,16 +659,6 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "fonts".
- */
-export interface Font {
-  id: number;
-  name?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1001,10 +989,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'icons';
         value: number | Icon;
-      } | null)
-    | ({
-        relationTo: 'fonts';
-        value: number | Font;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1512,15 +1496,6 @@ export interface StylesSelect<T extends boolean = true> {
  * via the `definition` "icons_select".
  */
 export interface IconsSelect<T extends boolean = true> {
-  name?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "fonts_select".
- */
-export interface FontsSelect<T extends boolean = true> {
   name?: T;
   updatedAt?: T;
   createdAt?: T;
