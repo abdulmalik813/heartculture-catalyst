@@ -35,12 +35,22 @@ export function joinStyles(
 }
 
 function sanitizeAlias(alias: string): string {
-  return alias
+  const sanitized = alias
     .toLowerCase()
     .trim()
     .replace(/\s+/g, '-')
     .replace(/[^a-z0-9-]/g, '')
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '')
-    .slice(0, 5)
+    .slice(0, 5);
+  
+  if (!sanitized) {
+    return 'item';
+  }
+  
+  if (/^[0-9-]/.test(sanitized)) {
+    return 'c' + sanitized.slice(0, 4);
+  }
+  
+  return sanitized;
 }
