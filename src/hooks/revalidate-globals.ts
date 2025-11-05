@@ -18,29 +18,31 @@ export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) =>
   const currentFontIds = new Set(additionalFonts.map((font: any) => font.id))
 
   for (const font of additionalFonts) {
-    const className = `font-${font.id}`
-    const existingStyle = existingStyles.docs.find((style) => style.className === className)
+    if (font?.title != null || font?.title?.trim() != '') {
+      const className = `font-${font.id}`
+      const existingStyle = existingStyles.docs.find((style) => style.className === className)
 
-    if (existingStyle) {
-      if (existingStyle.alias !== font.title) {
-        await req.payload.update({
+      if (existingStyle) {
+        if (existingStyle.alias !== font.title) {
+          await req.payload.update({
+            collection: 'styles',
+            id: existingStyle.id,
+            data: {
+              alias: font.title,
+            },
+          })
+        }
+      } else {
+        await req.payload.create({
           collection: 'styles',
-          id: existingStyle.id,
           data: {
             alias: font.title,
+            className: className,
+            tailwind: false,
+            stylesheet: '',
           },
         })
       }
-    } else {
-      await req.payload.create({
-        collection: 'styles',
-        data: {
-          alias: font.title,
-          className: className,
-          tailwind: false,
-          stylesheet: '',
-        },
-      })
     }
   }
   for (const style of existingStyles.docs) {
@@ -68,7 +70,6 @@ export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) =>
   revalidateTag('global_settings')
   return doc
 }
-
 
 export const revalidateNavBar: GlobalAfterChangeHook = async ({ doc }) => {
   if (doc._status === 'draft') {
