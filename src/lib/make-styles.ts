@@ -6,16 +6,25 @@ export function joinStyles (
   let mapClass = ''
   let stringClass = ''
 
-  for (const item of items) {
-    if (Array.isArray(item)) {
-      mapClass += ' ' + item
-        .map((i) => (typeof i === 'object' && i !== null && i.alias ? sanitizeAlias(i.alias) : i))
-        .filter(Boolean)
-        .join(' ')
-    } else if (typeof item === 'string') {
-      stringClass += ` ${item}`
-    }
+for (const item of items) {
+  if (Array.isArray(item)) {
+    mapClass += ' ' + item
+      .map((i) => 
+        typeof i === 'object' && i !== null && i.className 
+          ? i.className
+              .split(" ")
+              .map((cls) => cls.trim())
+              .filter((cls) => cls !== "")
+              .map((cls) => `${sanitizeAlias(i.alias)}-${cls}`)
+              .join(" ")
+          : i
+      )
+      .filter(Boolean)
+      .join(' ')
+  } else if (typeof item === 'string') {
+    stringClass += ` ${item}`
   }
+}
   
   const trimmedStringClass = stringClass.trim();
   const trimmedMapClass = mapClass.trim();

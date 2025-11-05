@@ -55,7 +55,7 @@ export async function NavigationBarUI() {
                     <NavigationMenuItem key={navItem.id}>
                       <NavigationMenuTrigger>{navItem.nav.label}</NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <ul className="grid w-[200px] gap-4">
+                        <ul className="grid w-[200px] gap-2">
                           {navItem.nav.items?.map((dropdownItem, index) => (
                             <li key={index}>
                               <NavigationMenuLink asChild>
