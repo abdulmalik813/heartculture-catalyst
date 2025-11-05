@@ -99,7 +99,7 @@ export const Settings: GlobalConfig = {
                   admin: {
                     components: {
                       Field: {
-                        path: '@/components/admin/font-family-search-field#FontFamilySearchField'
+                        path: '@/components/admin/font-family-search-field#FontFamilySearchField',
                       },
                     },
                   },
@@ -125,7 +125,11 @@ export const Settings: GlobalConfig = {
                   label: 'Title',
                   required: true,
                   admin: {
-                    description: 'Name to identify this font in your Styles (e.g., "Heading Font", "Body Font", "Accent Font").',
+                    description:
+                      'Name to identify this font in your Styles (e.g., "Heading Font", "Body Font", "Accent Font"). This cannot be changed after creation',
+                  },
+                  access: {
+                    update: ({ id }) => !id,
                   },
                 },
                 {
@@ -136,7 +140,7 @@ export const Settings: GlobalConfig = {
                   admin: {
                     components: {
                       Field: {
-                        path: '@/components/admin/font-family-search-field#FontFamilySearchField'
+                        path: '@/components/admin/font-family-search-field#FontFamilySearchField',
                       },
                     },
                   },

@@ -229,6 +229,9 @@ export interface Icon {
  */
 export interface Style {
   id: number;
+  /**
+   * This cannot be changed after creation
+   */
   alias: string;
   tailwind?: boolean | null;
   /**
@@ -1875,7 +1878,7 @@ export interface Setting {
   additionalFonts?:
     | {
         /**
-         * Name to identify this font in your Styles (e.g., "Heading Font", "Body Font", "Accent Font").
+         * Name to identify this font in your Styles (e.g., "Heading Font", "Body Font", "Accent Font"). This cannot be changed after creation
          */
         title: string;
         family: string;

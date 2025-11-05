@@ -11,10 +11,11 @@ export const generateStylesheet: CollectionBeforeChangeHook<Style> = async ({
   if (data.tailwind !== false) {
     const endpoint = process.env.TAILWIND_GENERATOR!
     const className = data.className
-
+    const title = data.alias
     const formData = new FormData()
     formData.append('className', className)
     formData.append('file', globalCSS)
+    formData.append('title', title)
 
     try {
       const response = await axios.post(endpoint, formData, {

@@ -21,6 +21,12 @@ export const Styles: CollectionConfig<'styles'> = {
       required: true,
       unique: true,
       label: 'Alias',
+      access: {
+        update: ({ id }) => !id,
+      },
+      admin: {
+        description: 'This cannot be changed after creation',
+      },
     },
     {
       name: 'tailwind',

@@ -23,17 +23,7 @@ export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) =>
       const className = `font-${font.id}`
       const existingStyle = existingStyles.docs.find((style) => style.className === className)
 
-      if (existingStyle) {
-        if (existingStyle.alias !== font.title) {
-          await req.payload.update({
-            collection: 'styles',
-            id: existingStyle.id,
-            data: {
-              alias: font.title,
-            },
-          })
-        }
-      } else {
+      if (!existingStyle) {
         await req.payload.create({
           collection: 'styles',
           data: {

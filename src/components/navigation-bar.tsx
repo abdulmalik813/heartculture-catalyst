@@ -48,14 +48,14 @@ export async function NavigationBarUI() {
           </Link>
 
           <NavigationMenu viewport={false} className='z-100'>
-            <NavigationMenuList>
+            <NavigationMenuList className="flex-wrap">
               {navBarData.navigation?.map((navItem) => {
                 if (navItem.nav?.appearance === 'dropdown') {
                   return (
                     <NavigationMenuItem key={navItem.id}>
                       <NavigationMenuTrigger>{navItem.nav.label}</NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <ul>
+                        <ul className="grid w-[200px] gap-4">
                           {navItem.nav.items?.map((dropdownItem, index) => (
                             <li key={index}>
                               <NavigationMenuLink asChild>

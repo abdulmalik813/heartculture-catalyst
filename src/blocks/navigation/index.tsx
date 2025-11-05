@@ -42,11 +42,13 @@ function LinkWithIcon({
   item,
   label,
   className = '',
+  dropdownItem = false
 }: {
   href: string
   item: LinkItem
   label: string
   className?: string
+  dropdownItem?: boolean
 }) {
   const isExternal = item?.type === 'custom'
   const relProps = item?.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {}
@@ -56,7 +58,7 @@ function LinkWithIcon({
     <Link
       href={href}
       {...relProps}
-      className={joinStyles(className, hasIcon ? 'flex items-center gap-2' : '')}
+      className={joinStyles(className, hasIcon ? !dropdownItem ? 'flex items-center gap-2' : 'flex-row items-center gap-2' : '')}
       prefetch={!isExternal}
     >
       {iconPlacement !== 'after' && renderIcon()}
@@ -110,7 +112,7 @@ export function NavigationBlockUI({
   if (dropdownItem) {
     const href = getHref(dropdownItem)
     if (!href) return null
-    return <LinkWithIcon href={href} item={dropdownItem} label={dropdownItem.label ?? ''} />
+    return <LinkWithIcon href={href} item={dropdownItem} label={dropdownItem.label ?? ''} dropdownItem/>
   }
 
   return (
