@@ -41,7 +41,6 @@ function LinkWithIcon({
   href,
   item,
   label,
-  inSheet = false,
   className = '',
   dropdownItem = false
 }: {
@@ -50,7 +49,6 @@ function LinkWithIcon({
   label: string
   className?: string
   dropdownItem?: boolean
-  inSheet?: boolean
 }) {
   const isExternal = item?.type === 'custom'
   const relProps = item?.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {}
@@ -60,7 +58,7 @@ function LinkWithIcon({
     <Link
       href={href}
       {...relProps}
-      className={joinStyles(className, hasIcon ? !dropdownItem || inSheet ? 'flex items-center gap-2' : 'flex-row items-center gap-2' : '')}
+      className={joinStyles(className, hasIcon ? !dropdownItem ? 'flex items-center gap-2' : 'flex-row items-center gap-2' : '')}
       prefetch={!isExternal}
     >
       {iconPlacement !== 'after' && renderIcon()}
@@ -73,12 +71,10 @@ function LinkWithIcon({
 export function NavigationBlockUI({
   searchParams,
   dropdownItem,
-  inSheet = false,
   ...navigationBlock
 }: Partial<NavigationBlock> & {
   searchParams?: SearchParams
   dropdownItem?: DropdownItem
-  inSheet?: boolean
 }) {
   const { hasIcon, iconPlacement, renderIcon } = getIconData(navigationBlock.nav)
 
@@ -96,7 +92,6 @@ export function NavigationBlockUI({
         >
           <LinkWithIcon
             href={href}
-            inSheet
             item={navigationBlock.nav}
             label={navigationBlock.nav.label ?? ''}
           />
@@ -107,7 +102,6 @@ export function NavigationBlockUI({
         <LinkWithIcon
           href={href}
           item={navigationBlock.nav}
-          inSheet
           label={navigationBlock.nav.label ?? ''}
           className={joinStyles(navigationBlock.nav.styles)}
         />
@@ -118,7 +112,7 @@ export function NavigationBlockUI({
   if (dropdownItem) {
     const href = getHref(dropdownItem)
     if (!href) return null
-    return <LinkWithIcon href={href} item={dropdownItem} label={dropdownItem.label ?? ''} dropdownItem inSheet/>
+    return <LinkWithIcon href={href} item={dropdownItem} label={dropdownItem.label ?? ''} dropdownItem/>
   }
 
   return (
