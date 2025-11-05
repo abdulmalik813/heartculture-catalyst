@@ -1,10 +1,10 @@
-import { getCachedDocuments } from '@/lib/get-document'
-import { Page } from '@/payload-types'
-import { revalidatePath, revalidateTag } from 'next/cache'
+import { getServerSideURL } from '@/lib/get-url'
+import { revalidateTag } from 'next/cache'
 import { GlobalAfterChangeHook } from 'payload'
 
 export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) => {
   const additionalFonts = doc.additionalFonts || []
+  
   const existingStyles = await req.payload.find({
     collection: 'styles',
     where: {
@@ -18,7 +18,7 @@ export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) =>
   const currentFontIds = new Set(additionalFonts.map((font: any) => font.id))
 
   for (const font of additionalFonts) {
-    if (font?.title != null || font?.title?.trim() != '') {
+    if (font?.title != null && font?.title?.trim() !== '') {
       const className = `font-${font.id}`
       const existingStyle = existingStyles.docs.find((style) => style.className === className)
 
@@ -45,6 +45,7 @@ export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) =>
       }
     }
   }
+  
   for (const style of existingStyles.docs) {
     const styleId = style.className.replace('font-', '')
     if (!currentFontIds.has(styleId)) {
@@ -59,15 +60,7 @@ export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) =>
     return doc
   }
 
-  const pages = (await getCachedDocuments('pages', true)()) as Page[]
-  revalidatePath('/', 'layout')
-  for (const page of pages) {
-    if (page.slug) {
-      revalidatePath(`/${page.slug}`)
-    }
-  }
-  revalidateTag('fonts-tag')
-  revalidateTag('global_settings')
+  await fetch(`${getServerSideURL()}/api/revalidate`)
   return doc
 }
 
