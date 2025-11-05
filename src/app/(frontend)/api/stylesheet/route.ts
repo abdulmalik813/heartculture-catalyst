@@ -4,7 +4,7 @@ import configPromise from '@payload-config'
 import { draftMode } from 'next/headers'
 import { unstable_cache } from 'next/cache'
 import { getCachedGlobal } from '@/lib/get-globals'
-import { Font, Setting } from '@/payload-types'
+import { Setting } from '@/payload-types'
 
 const getCachedStyles = unstable_cache(
   async () => {
@@ -22,41 +22,66 @@ const getCachedStyles = unstable_cache(
   },
 )
 
+interface FontData {
+  id: string
+  family: string
+  category: string
+  variable: boolean
+  weight: number
+  style: string
+  subset: string
+}
+
 const getCachedFontCSS = unstable_cache(
-  async (fonts: string[]) => {
+  async (fontsJson: string) => {
+    const fonts: FontData[] = JSON.parse(fontsJson)
     if (fonts.length === 0) return ''
     
-    const fontFamilies = fonts.map(font => `family=${font.replace(/ /g, '+')}`).join('&')
-    const googleFontUrl = `https://fonts.googleapis.com/css2?${fontFamilies}&display=swap`
+    const fontImports = fonts.map(font => {
+      const baseUrl = `https://cdn.jsdelivr.net/npm/@fontsource/${font.id}@latest`
+      if (font.variable) {
+        return `@import url('${baseUrl}/${font.subset}-variable.css');`
+      } else {
+        return `@import url('${baseUrl}/${font.subset}-${font.weight}.css');`
+      }
+    }).join('\n')
     
-    try {
-      const response = await fetch(googleFontUrl)
-      return await response.text()
-    } catch (error) {
-      console.error('Failed to fetch Google Fonts:', error)
-      return ''
-    }
+    return fontImports
   },
-  ['google-fonts-css'],
+  ['fontsource-css'],
   {
     tags: ['fonts-tag'],
     revalidate: 60 * 60 * 24 * 7,
   }
 )
 
-async function fetchGoogleFonts(fonts: string[]) {
+async function fetchFontsourceFonts(fonts: FontData[]) {
   if (fonts.length === 0) return ''
   
-  const fontFamilies = fonts.map(font => `family=${font.replace(/ /g, '+')}`).join('&')
-  const googleFontUrl = `https://fonts.googleapis.com/css2?${fontFamilies}&display=swap`
+  const fontImports = fonts.map(font => {
+    const baseUrl = `https://cdn.jsdelivr.net/npm/@fontsource/${font.id}@latest`
+    if (font.variable) {
+      return `@import url('${baseUrl}/${font.subset}-variable.css');`
+    } else {
+      return `@import url('${baseUrl}/${font.subset}-${font.weight}.css');`
+    }
+  }).join('\n')
   
-  try {
-    const response = await fetch(googleFontUrl, { cache: 'no-store' })
-    return await response.text()
-  } catch (error) {
-    console.error('Failed to fetch Google Fonts:', error)
-    return ''
-  }
+  return fontImports
+}
+
+function isFontData(data: unknown): data is FontData {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'id' in data &&
+    'family' in data &&
+    'category' in data &&
+    'variable' in data &&
+    'weight' in data &&
+    'style' in data &&
+    'subset' in data
+  )
 }
 
 export async function GET(req: NextRequest) {
@@ -64,7 +89,7 @@ export async function GET(req: NextRequest) {
 
   let styles
   let settings
-  let googleFontsCSS
+  let fontsourceCSS
 
   if (draft) {
     const payload = await getPayload({ config: configPromise })
@@ -76,73 +101,57 @@ export async function GET(req: NextRequest) {
     styles = result.docs
     settings = await getCachedGlobal('settings', 1, true) as Setting
     
-    const fonts = new Set<string>()
+    const fonts: FontData[] = []
 
-    if (settings.defaultFont && typeof settings.defaultFont === 'object') {
-      const fontName = (settings.defaultFont as Font).name
-      if (fontName) fonts.add(fontName)
+    if (settings.default?.fontData && isFontData(settings.default.fontData)) {
+      fonts.push(settings.default.fontData)
     }
 
-    if (settings.fontPrimary && typeof settings.fontPrimary === 'object') {
-      const fontName = (settings.fontPrimary as Font).name
-      if (fontName) fonts.add(fontName)
+    if (settings.additionalFonts && Array.isArray(settings.additionalFonts)) {
+      settings.additionalFonts.forEach((font: any) => {
+        if (font.fontData && isFontData(font.fontData)) {
+          fonts.push(font.fontData)
+        }
+      })
     }
 
-    if (settings.fontSecondary && typeof settings.fontSecondary === 'object') {
-      const fontName = (settings.fontSecondary as Font).name
-      if (fontName) fonts.add(fontName)
-    }
-
-    if (settings.fontAccent && typeof settings.fontAccent === 'object') {
-      const fontName = (settings.fontAccent as Font).name
-      if (fontName) fonts.add(fontName)
-    }
-
-    googleFontsCSS = await fetchGoogleFonts(Array.from(fonts))
+    fontsourceCSS = await fetchFontsourceFonts(fonts)
   } else {
     settings = await getCachedGlobal('settings', 1) as Setting
     styles = await getCachedStyles()
     
-    const fonts = new Set<string>()
+    const fonts: FontData[] = []
 
-    if (settings.defaultFont && typeof settings.defaultFont === 'object') {
-      const fontName = (settings.defaultFont as Font).name
-      if (fontName) fonts.add(fontName)
+    if (settings.default?.fontData && isFontData(settings.default.fontData)) {
+      fonts.push(settings.default.fontData)
     }
 
-    if (settings.fontPrimary && typeof settings.fontPrimary === 'object') {
-      const fontName = (settings.fontPrimary as Font).name
-      if (fontName) fonts.add(fontName)
+    if (settings.additionalFonts && Array.isArray(settings.additionalFonts)) {
+      settings.additionalFonts.forEach((font: any) => {
+        if (font.fontData && isFontData(font.fontData)) {
+          fonts.push(font.fontData)
+        }
+      })
     }
 
-    if (settings.fontSecondary && typeof settings.fontSecondary === 'object') {
-      const fontName = (settings.fontSecondary as Font).name
-      if (fontName) fonts.add(fontName)
-    }
-
-    if (settings.fontAccent && typeof settings.fontAccent === 'object') {
-      const fontName = (settings.fontAccent as Font).name
-      if (fontName) fonts.add(fontName)
-    }
-
-    googleFontsCSS = await getCachedFontCSS(Array.from(fonts))
+    fontsourceCSS = await getCachedFontCSS(JSON.stringify(fonts))
   }
 
   const fontClasses: string[] = []
 
-  if (settings.fontPrimary && typeof settings.fontPrimary === 'object') {
-    const fontName = (settings.fontPrimary as Font).name ?? 'Inter'
-    fontClasses.push(`.font-primary {\n  font-family: "${fontName}", sans-serif !important;\n}`)
-  }
-
-  if (settings.fontSecondary && typeof settings.fontSecondary === 'object') {
-    const fontName = (settings.fontSecondary as Font).name ?? 'Inter'
-    fontClasses.push(`.font-secondary {\n  font-family: "${fontName}", sans-serif !important;\n}`)
-  }
-
-  if (settings.fontAccent && typeof settings.fontAccent === 'object') {
-    const fontName = (settings.fontAccent as Font).name ?? 'Inter'
-    fontClasses.push(`.font-accent {\n  font-family: "${fontName}", sans-serif !important;\n}`)
+  if (settings.additionalFonts && Array.isArray(settings.additionalFonts)) {
+    settings.additionalFonts.forEach((font: any) => {
+      if (font.id && font.family && font.fontData && isFontData(font.fontData)) {
+        const fontData = font.fontData
+        const fontFamilyValue = `'${fontData.family}', sans-serif`
+        const fontWeight = fontData.variable ? 400 : fontData.weight
+        const fontStyle = fontData.style || 'normal'
+        
+        fontClasses.push(
+          `.font-${font.id} {\n  font-family: ${fontFamilyValue} !important;\n  font-weight: ${fontWeight} !important;\n  font-style: ${fontStyle} !important;\n}`
+        )
+      }
+    })
   }
 
   const fontCSS = fontClasses.length > 0 ? `${fontClasses.join('\n\n')}\n\n` : ''
@@ -153,7 +162,7 @@ export async function GET(req: NextRequest) {
     .join('\n\n')
 
   return new NextResponse(
-    googleFontsCSS + '\n\n' + fontCSS + settings.theme + '\n\n' + combinedCSS,
+    fontsourceCSS + '\n\n' + fontCSS + settings.theme + '\n\n' + combinedCSS,
     {
       headers: {
         'Content-Type': 'text/css',

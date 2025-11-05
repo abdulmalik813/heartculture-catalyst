@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
     revalidateTag('pages-sitemap')
     revalidateTag('posts-sitemap')
     revalidateTag('global_font')
+    revalidateTag('google-fonts')
 
     const pages = await payload.find({
       collection: 'pages',

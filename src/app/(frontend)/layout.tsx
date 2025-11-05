@@ -5,7 +5,7 @@ import { AdminBar } from '@/components/admin-bar'
 import { ThemeProvider } from '@/components/theme/theme-provider'
 import { getServerSideURL } from '@/lib/get-url'
 import { LivePreviewListener } from '@/components/live-preview-listener'
-import { Font, Setting } from '@/payload-types'
+import { Setting } from '@/payload-types'
 import { getCachedGlobal } from '@/lib/get-globals'
 import { Metadata } from 'next'
 import { getAppSettings } from '@/constants/app'
@@ -35,28 +35,27 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
 
   const settings = (await getCachedGlobal('settings', 1, isEnabled)) as Setting
 
-  const defaultFont =
-    settings.defaultFont && typeof settings.defaultFont === 'object'
-      ? (settings.defaultFont as Font).name || 'Inter'
-      : 'Inter'
+  const defaultFontFamily = settings?.default?.family || 'sans-serif'
 
   return (
-    <html lang="en" suppressHydrationWarning style={{ fontFamily: `'${defaultFont}', sans-serif` }}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      style={{ fontFamily: `'${defaultFontFamily}', sans-serif` }}
+    >
       {isEnabled && <LivePreviewListener />}
       <head>
         <link href={`${getServerSideURL()}/api/stylesheet`} rel="stylesheet" />
       </head>
-      <body>
+      <body className="flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <AdminBar
             adminBarProps={{
               preview: isEnabled,
             }}
           />
-          <main>
-            <NavigationBarUI />
-            {children}
-            </main>
+          <NavigationBarUI />
+          <main className="flex-1">{children}</main>
         </ThemeProvider>
       </body>
     </html>

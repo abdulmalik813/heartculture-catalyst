@@ -32,15 +32,15 @@ export const Settings: GlobalConfig = {
           label: 'App Data',
           fields: [
             {
-                name: 'logo',
-                type: 'upload',
-                relationTo: 'media',
-                required: true
+              name: 'logo',
+              type: 'upload',
+              relationTo: 'media',
+              required: true,
             },
             {
-                name: 'logoDark',
-                type: 'upload',
-                relationTo: 'media'
+              name: 'logoDark',
+              type: 'upload',
+              relationTo: 'media',
             },
             {
               name: 'appTitle',
@@ -61,7 +61,7 @@ export const Settings: GlobalConfig = {
               label: 'Fallback Image (PNG)',
               required: true,
             },
-             {
+            {
               name: 'favIcon',
               type: 'upload',
               relationTo: 'media',
@@ -87,28 +87,69 @@ export const Settings: GlobalConfig = {
           label: 'Fonts',
           fields: [
             {
-              name: 'defaultFont',
-              type: 'relationship',
-              relationTo: 'fonts',
+              name: 'default',
+              type: 'group',
               label: 'Default Font',
+              fields: [
+                {
+                  name: 'family',
+                  type: 'text',
+                  label: 'Font Family',
+                  required: true,
+                  admin: {
+                    components: {
+                      Field: {
+                        path: '@/components/admin/font-family-search-field#FontFamilySearchField'
+                      },
+                    },
+                  },
+                },
+                {
+                  name: 'fontData',
+                  type: 'json',
+                  label: 'Font Configuration',
+                  admin: {
+                    condition: () => false,
+                  },
+                },
+              ],
             },
             {
-              name: 'fontPrimary',
-              type: 'relationship',
-              relationTo: 'fonts',
-              label: 'Font Primary',
-            },
-            {
-              name: 'fontSecondary',
-              type: 'relationship',
-              relationTo: 'fonts',
-              label: 'Font Secondary',
-            },
-            {
-              name: 'fontAccent',
-              type: 'relationship',
-              relationTo: 'fonts',
-              label: 'Font Accent',
+              name: 'additionalFonts',
+              type: 'array',
+              label: 'Additional Fonts',
+              fields: [
+                {
+                  name: 'title',
+                  type: 'text',
+                  label: 'Title',
+                  required: true,
+                  admin: {
+                    description: 'Name to identify this font in your Styles (e.g., "Heading Font", "Body Font", "Accent Font").',
+                  },
+                },
+                {
+                  name: 'family',
+                  type: 'text',
+                  label: 'Font Family',
+                  required: true,
+                  admin: {
+                    components: {
+                      Field: {
+                        path: '@/components/admin/font-family-search-field#FontFamilySearchField'
+                      },
+                    },
+                  },
+                },
+                {
+                  name: 'fontData',
+                  type: 'json',
+                  label: 'Font Configuration',
+                  admin: {
+                    condition: () => false,
+                  },
+                },
+              ],
             },
           ],
         },

@@ -1860,10 +1860,37 @@ export interface Setting {
   favIcon: number | Media;
   favIconSvg?: (number | null) | Media;
   favIconPng?: (number | null) | Media;
-  defaultFont?: (number | null) | Font;
-  fontPrimary?: (number | null) | Font;
-  fontSecondary?: (number | null) | Font;
-  fontAccent?: (number | null) | Font;
+  default: {
+    family: string;
+    fontData?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  additionalFonts?:
+    | {
+        /**
+         * Name to identify this font in your Styles (e.g., "Heading Font", "Body Font", "Accent Font").
+         */
+        title: string;
+        family: string;
+        fontData?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        id?: string | null;
+      }[]
+    | null;
   theme: string;
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
@@ -1972,10 +1999,20 @@ export interface SettingsSelect<T extends boolean = true> {
   favIcon?: T;
   favIconSvg?: T;
   favIconPng?: T;
-  defaultFont?: T;
-  fontPrimary?: T;
-  fontSecondary?: T;
-  fontAccent?: T;
+  default?:
+    | T
+    | {
+        family?: T;
+        fontData?: T;
+      };
+  additionalFonts?:
+    | T
+    | {
+        title?: T;
+        family?: T;
+        fontData?: T;
+        id?: T;
+      };
   theme?: T;
   _status?: T;
   updatedAt?: T;

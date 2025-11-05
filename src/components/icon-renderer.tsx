@@ -18,7 +18,6 @@ export function IconRender({
   const Icon = icons[iconName as keyof typeof icons]
   
   if (!Icon) {
-    console.log('Icon not found:', icon, '→', iconName)
     return null
   }
   

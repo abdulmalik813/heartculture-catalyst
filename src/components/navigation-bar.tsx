@@ -10,7 +10,6 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport,
 } from '@/components/ui/navigation-menu'
 import { NavigationBlockUI } from '@/blocks/navigation'
 
@@ -47,7 +46,8 @@ export async function NavigationBarUI() {
               <span className="ml-2 text-xl font-semibold">{settings.appTitle}</span>
             )}
           </Link>
-          <NavigationMenu>
+
+          <NavigationMenu viewport={false} className='z-100'>
             <NavigationMenuList>
               {navBarData.navigation?.map((navItem) => {
                 if (navItem.nav?.appearance === 'dropdown') {
@@ -55,7 +55,7 @@ export async function NavigationBarUI() {
                     <NavigationMenuItem key={navItem.id}>
                       <NavigationMenuTrigger>{navItem.nav.label}</NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                        <ul>
                           {navItem.nav.items?.map((dropdownItem, index) => (
                             <li key={index}>
                               <NavigationMenuLink asChild>
@@ -76,7 +76,6 @@ export async function NavigationBarUI() {
                 )
               })}
             </NavigationMenuList>
-            <NavigationMenuViewport />
           </NavigationMenu>
 
           <div className="flex items-center gap-2">
