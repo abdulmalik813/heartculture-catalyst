@@ -12,6 +12,8 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
 import { NavigationBlockUI } from '@/blocks/navigation'
+import { MediaBlockUI } from '@/blocks/media'
+import { joinStyles } from '@/lib/make-styles'
 
 export async function NavigationBarUI() {
   const { isEnabled } = await draftMode()
@@ -25,29 +27,23 @@ export async function NavigationBarUI() {
 
   return (
     <header className="border-b">
-      <div className="container mx-auto px-4 py-4">
+      <div className="px-4 py-4">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center">
-            <Image
-              src={lightLogo.url || ''}
-              alt={lightLogo.alt || 'Logo'}
-              width={40}
-              height={40}
-              className="dark:hidden"
+            <MediaBlockUI
+              media={lightLogo}
+              className={joinStyles('dark:hidden', navBarData.logoStyles)}
             />
-            <Image
-              src={darkLogo.url || ''}
-              alt={darkLogo.alt || 'Logo'}
-              width={40}
-              height={40}
-              className="hidden dark:block"
+            <MediaBlockUI
+              media={darkLogo}
+              className={joinStyles('hidden dark:block', navBarData.logoStyles)}
             />
             {navBarData.useTitleWithLogo && settings.appTitle && (
               <span className="ml-2 text-xl font-semibold">{settings.appTitle}</span>
             )}
           </Link>
 
-          <NavigationMenu viewport={false} className='z-100'>
+          <NavigationMenu viewport={false} className="z-100">
             <NavigationMenuList className="flex-wrap">
               {navBarData.navigation?.map((navItem) => {
                 if (navItem.nav?.appearance === 'dropdown') {

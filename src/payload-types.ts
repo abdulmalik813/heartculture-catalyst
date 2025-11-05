@@ -1844,7 +1844,6 @@ export interface NavigationBar {
   logoStyles?: (number | Style)[] | null;
   useTitleWithLogo?: boolean | null;
   titleStyles?: (number | Style)[] | null;
-  namePosition?: ('top' | 'bottom' | 'right' | 'left') | null;
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1983,7 +1982,6 @@ export interface NavigationBarSelect<T extends boolean = true> {
   logoStyles?: T;
   useTitleWithLogo?: T;
   titleStyles?: T;
-  namePosition?: T;
   _status?: T;
   updatedAt?: T;
   createdAt?: T;

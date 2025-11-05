@@ -69,20 +69,7 @@ export const NavigationBar: GlobalConfig = {
               admin: {
                 condition: (_, data) => data?.useTitleWithLogo === true,
               },
-            },
-            {
-              name: 'namePosition',
-              type: 'select',
-              options: [
-                { label: 'Top', value: 'top' },
-                { label: 'Bottom', value: 'bottom' },
-                { label: 'Right', value: 'right' },
-                { label: 'Left', value: 'left' },
-              ],
-              admin: {
-                condition: (_, data) => data?.useTitleWithLogo === true,
-              },
-            },
+            }
           ],
         },
       ],
