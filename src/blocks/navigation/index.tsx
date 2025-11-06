@@ -11,6 +11,7 @@ import {
 import { SearchParams } from '@/types/search-params'
 import { IconRender } from '@/components/icon-renderer'
 import { getHref } from '@/constants/get-href'
+import { SheetClose } from '@/components/ui/sheet'
 
 function getIconData(item: any) {
   const icon = typeof item?.icon === 'object' ? item?.icon : null
@@ -42,7 +43,7 @@ function LinkWithIcon({
   item,
   label,
   className = '',
-  dropdownItem = false
+  dropdownItem = false,
 }: {
   href: string
   item: LinkItem
@@ -58,7 +59,10 @@ function LinkWithIcon({
     <Link
       href={href}
       {...relProps}
-      className={joinStyles(className, hasIcon ? !dropdownItem ? 'flex items-center gap-2' : 'flex-row items-center gap-2' : '')}
+      className={joinStyles(
+        className,
+        hasIcon ? (!dropdownItem ? 'flex items-center gap-2' : 'flex flex-row items-center gap-2') : '',
+      )}
       prefetch={!isExternal}
     >
       {iconPlacement !== 'after' && renderIcon()}
@@ -71,8 +75,10 @@ function LinkWithIcon({
 export function NavigationBlockUI({
   searchParams,
   dropdownItem,
+  className,
   ...navigationBlock
 }: Partial<NavigationBlock> & {
+  className?: string
   searchParams?: SearchParams
   dropdownItem?: DropdownItem
 }) {
@@ -86,7 +92,7 @@ export function NavigationBlockUI({
       return (
         <Button
           asChild
-          className={joinStyles(navigationBlock.nav.styles)}
+          className={joinStyles(className, navigationBlock.nav.styles)}
           size={navigationBlock.nav.buttonSize}
           variant={navigationBlock.nav.buttonType}
         >
@@ -103,7 +109,7 @@ export function NavigationBlockUI({
           href={href}
           item={navigationBlock.nav}
           label={navigationBlock.nav.label ?? ''}
-          className={joinStyles(navigationBlock.nav.styles)}
+          className={joinStyles(className, navigationBlock.nav.styles)}
         />
       )
     }
@@ -112,14 +118,16 @@ export function NavigationBlockUI({
   if (dropdownItem) {
     const href = getHref(dropdownItem)
     if (!href) return null
-    return <LinkWithIcon href={href} item={dropdownItem} label={dropdownItem.label ?? ''} dropdownItem/>
+    return (
+      <LinkWithIcon href={href} item={dropdownItem} label={dropdownItem.label ?? ''} className={className} dropdownItem />
+    )
   }
 
   return (
     <DropdownMenu>
       <Button
         asChild
-        className={joinStyles(navigationBlock.nav?.styles)}
+        className={joinStyles(className, navigationBlock.nav?.styles)}
         size={navigationBlock.nav?.buttonSize}
         variant={navigationBlock.nav?.buttonType}
       >

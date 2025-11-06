@@ -3,7 +3,9 @@ export function getHref(link: any) {
     ? link.url
     : link?.reference?.relationTo === 'pages'
       ? typeof link.reference.value === 'object'
-        ? `/${link.reference.value.slug}`
+        ? link.reference.value.slug === 'home'
+          ? '/'
+          : `/${link.reference.value.slug}`
         : null
       : null
 }
