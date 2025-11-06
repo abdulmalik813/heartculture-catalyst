@@ -78,7 +78,7 @@ export async function Footer() {
 
       <div className="border-t" />
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto">
         <div className="py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-sm text-muted-foreground text-center sm:text-left">
             © {new Date().getFullYear()} {settings.appTitle}. All rights reserved.
