@@ -53,10 +53,12 @@ export interface Config {
   };
   globals: {
     navigationBar: NavigationBar;
+    footer: Footer;
     settings: Setting;
   };
   globalsSelect: {
     navigationBar: NavigationBarSelect<false> | NavigationBarSelect<true>;
+    footer: FooterSelect<false> | FooterSelect<true>;
     settings: SettingsSelect<false> | SettingsSelect<true>;
   };
   locale: null;
@@ -186,7 +188,9 @@ export interface Page {
   };
   layout?:
     | {
-        blocks?: (ContentBlock | CallToActionBlock | CardBlock | TabBlock | AccordionBlock | DividerBlock)[] | null;
+        blocks?:
+          | (ContentBlock | CallToActionBlock | CardBlock | TabBlock | AccordionBlock | DividerBlock | FormBlock)[]
+          | null;
         container?: boolean | null;
         gapSize: 'none' | 'small' | 'medium' | 'large' | 'xlarge';
         styles?: (number | Style)[] | null;
@@ -634,49 +638,31 @@ export interface DividerBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "FormBlock".
  */
-export interface User {
-  id: number;
-  name?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "redirects".
- */
-export interface Redirect {
-  id: number;
-  /**
-   * You will need to rebuild the website when changing this field.
-   */
-  from: string;
-  to?: {
-    type?: ('reference' | 'custom') | null;
-    reference?: {
-      relationTo: 'pages';
-      value: number | Page;
-    } | null;
-    url?: string | null;
-  };
-  updatedAt: string;
-  createdAt: string;
+export interface FormBlock {
+  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
+  gridStyles?: (number | Style)[] | null;
+  form: number | Form;
+  enableDescription?: boolean | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'formBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -851,6 +837,52 @@ export interface Form {
         id?: string | null;
       }[]
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  name?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects".
+ */
+export interface Redirect {
+  id: number;
+  /**
+   * You will need to rebuild the website when changing this field.
+   */
+  from: string;
+  to?: {
+    type?: ('reference' | 'custom') | null;
+    reference?: {
+      relationTo: 'pages';
+      value: number | Page;
+    } | null;
+    url?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -1138,6 +1170,7 @@ export interface PagesSelect<T extends boolean = true> {
               tabBlock?: T | TabBlockSelect<T>;
               accordionBlock?: T | AccordionBlockSelect<T>;
               dividerBlock?: T | DividerBlockSelect<T>;
+              formBlock?: T | FormBlockSelect<T>;
             };
         container?: T;
         gapSize?: T;
@@ -1359,6 +1392,19 @@ export interface DividerBlockSelect<T extends boolean = true> {
   color?: T;
   flip?: T;
   dividerStyles?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FormBlock_select".
+ */
+export interface FormBlockSelect<T extends boolean = true> {
+  gridSize?: T;
+  gridStyles?: T;
+  form?: T;
+  enableDescription?: T;
+  description?: T;
   id?: T;
   blockName?: T;
 }
@@ -1825,6 +1871,100 @@ export interface NavigationBar {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: number;
+  tagLine?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  columns?:
+    | {
+        groups?:
+          | {
+              groupLabel?: string | null;
+              items?:
+                | {
+                    nav?: {
+                      label?: string | null;
+                      appearance?: ('link' | 'button' | 'dropdown') | null;
+                      link?: {
+                        type?: ('reference' | 'custom') | null;
+                        reference?: {
+                          relationTo: 'pages';
+                          value: number | Page;
+                        } | null;
+                        url?: string | null;
+                        newTab?: boolean | null;
+                      };
+                      items?:
+                        | {
+                            label: string;
+                            type?: ('reference' | 'custom') | null;
+                            reference?: {
+                              relationTo: 'pages';
+                              value: number | Page;
+                            } | null;
+                            url?: string | null;
+                            newTab?: boolean | null;
+                            icon?: (number | null) | Icon;
+                            placement?: ('before' | 'after') | null;
+                            iconStyles?: (number | Style)[] | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+                      buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+                      styles?: (number | Style)[] | null;
+                      icon?: (number | null) | Icon;
+                      placement?: ('before' | 'after') | null;
+                      iconStyles?: (number | Style)[] | null;
+                    };
+                    id?: string | null;
+                  }[]
+                | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Styles for the logo
+   */
+  logoStyles?: (number | Style)[] | null;
+  useLabelWithLogo?: boolean | null;
+  labelStyles?: (number | Style)[] | null;
+  /**
+   * Styles for the tagline text
+   */
+  tagLineStyles?: (number | Style)[] | null;
+  /**
+   * Styles for column group labels
+   */
+  groupLabelStyles?: (number | Style)[] | null;
+  /**
+   * Styles for footer links
+   */
+  linkStyles?: (number | Style)[] | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "settings".
  */
 export interface Setting {
@@ -1964,6 +2104,72 @@ export interface NavigationBarSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer_select".
+ */
+export interface FooterSelect<T extends boolean = true> {
+  tagLine?: T;
+  columns?:
+    | T
+    | {
+        groups?:
+          | T
+          | {
+              groupLabel?: T;
+              items?:
+                | T
+                | {
+                    nav?:
+                      | T
+                      | {
+                          label?: T;
+                          appearance?: T;
+                          link?:
+                            | T
+                            | {
+                                type?: T;
+                                reference?: T;
+                                url?: T;
+                                newTab?: T;
+                              };
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                type?: T;
+                                reference?: T;
+                                url?: T;
+                                newTab?: T;
+                                icon?: T;
+                                placement?: T;
+                                iconStyles?: T;
+                                id?: T;
+                              };
+                          buttonType?: T;
+                          buttonSize?: T;
+                          styles?: T;
+                          icon?: T;
+                          placement?: T;
+                          iconStyles?: T;
+                        };
+                    id?: T;
+                  };
+              id?: T;
+            };
+        id?: T;
+      };
+  logoStyles?: T;
+  useLabelWithLogo?: T;
+  labelStyles?: T;
+  tagLineStyles?: T;
+  groupLabelStyles?: T;
+  linkStyles?: T;
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "settings_select".
  */
 export interface SettingsSelect<T extends boolean = true> {
@@ -2007,7 +2213,7 @@ export interface TaskSchedulePublish {
       relationTo: 'pages';
       value: number | Page;
     } | null;
-    global?: ('navigationBar' | 'settings') | null;
+    global?: ('navigationBar' | 'footer' | 'settings') | null;
     user?: (number | null) | User;
   };
   output?: unknown;

@@ -1,7 +1,9 @@
 import React from 'react'
 import type {
   AccordionBlock,
+  CardBlock,
   DividerBlock,
+  FormBlock,
   MediaBlock,
   NavigationBlock,
   Style,
@@ -24,16 +26,18 @@ import { TabBlockUI } from '@/blocks/tab'
 import { AccordionBlockUI } from '@/blocks/accordion'
 import { DividerBlockUI } from '@/blocks/divider'
 import { CardBlockUI } from '@/blocks/card'
+import { FormBlockUI } from '@/blocks/form'
 
 interface LexicalRendererProps {
   content?: DefaultTypedEditorState | null
   contentStyles?: (number | Style)[] | undefined | null
   searchParams?: SearchParams
+  className?: string
 }
 
 type NodeTypes =
   | DefaultNodeTypes
-  | SerializedBlockNode<MediaBlock | NavigationBlock | TabBlock | AccordionBlock | DividerBlock>
+  | SerializedBlockNode<MediaBlock | NavigationBlock | TabBlock | AccordionBlock | DividerBlock | FormBlock | CardBlock>
 
 function jsxConverters(
   searchParams?: LexicalRendererProps['searchParams'],
@@ -68,8 +72,8 @@ function jsxConverters(
         tabBlock: ({ node }) => <TabBlockUI {...node.fields} />,
         accordionBlock: ({ node }) => <AccordionBlockUI {...node.fields} />,
         dividerBlock: ({ node }) => <DividerBlockUI {...node.fields} />,
-        // @ts-expect-error there may be some mismatch between the expected types here
         cardBlock: ({ node }) => <CardBlockUI {...node.fields} />,
+        formBlock: ({ node }) => <FormBlockUI {...node.fields} />,
       },
     }
   }
@@ -79,12 +83,13 @@ export async function LexicalRenderer({
   content,
   searchParams,
   contentStyles,
+  className,
 }: LexicalRendererProps) {
   if (!content) return null
   return (
     <ConvertRichText
       converters={jsxConverters(searchParams)}
-      className={joinStyles(contentStyles)}
+      className={joinStyles(className, contentStyles)}
       data={content as DefaultTypedEditorState}
     />
   )

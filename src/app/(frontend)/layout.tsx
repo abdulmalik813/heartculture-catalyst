@@ -10,6 +10,7 @@ import { getCachedGlobal } from '@/lib/get-globals'
 import { Metadata } from 'next'
 import { getAppSettings } from '@/constants/app'
 import { NavigationBarUI } from '@/components/navigation-bar'
+import { Footer } from '@/components/footer'
 
 export async function generateMetadata(): Promise<Metadata> {
   const appData = await getAppSettings()
@@ -56,6 +57,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
           />
           <NavigationBarUI />
           <main className="flex-1">{children}</main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

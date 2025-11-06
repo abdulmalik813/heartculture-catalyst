@@ -18,6 +18,7 @@ import { CardBlock } from '@/blocks/card/config'
 import { TabBlock } from '@/blocks/tab/config'
 import { AccordionBlock } from '@/blocks/accordion/config'
 import { DividerBlock } from '@/blocks/divider/config'
+import { FormBlock } from '@/blocks/form/config'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
@@ -85,6 +86,7 @@ export const Pages: CollectionConfig<'pages'> = {
                             TabBlock(false),
                             AccordionBlock(false),
                             DividerBlock(false),
+                            FormBlock(false)
                           ],
                           required: false,
                         },

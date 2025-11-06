@@ -8,7 +8,7 @@ import { Page } from '@/payload-types'
 import { getServerSideURL } from '@/lib/get-url'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { revalidateRedirects } from '@/hooks/revalidate-redirects'
-import { TimeBlock } from '@/blocks/form/time'
+import { TimeBlock } from '@/fields/time'
 import { defaultLexical } from '@/fields/lexical-field'
 import { S3 } from './constants/init'
 

@@ -8,6 +8,7 @@ import { CardBlock } from '@/blocks/card/config'
 import { AccordionBlock } from '@/blocks/accordion/config'
 import { DividerBlock } from '@/blocks/divider/config'
 import { defaultLexicalValue } from '@/constants/default-lexical'
+import { FormBlock } from '../form/config'
 
 export const ContentBlock: Block = {
   slug: 'contentBlock',
@@ -30,7 +31,7 @@ export const ContentBlock: Block = {
           editor: defaultLexical({
             features: {
               blocks: {
-                blocks: [MediaBlock, NavigationBlock, TabBlock(), CardBlock(), AccordionBlock(), DividerBlock()],
+                blocks: [MediaBlock, NavigationBlock, TabBlock(), CardBlock(), AccordionBlock(), DividerBlock(), FormBlock()],
                 inlineBlocks: [MediaBlock, NavigationBlock],
               },
             },
