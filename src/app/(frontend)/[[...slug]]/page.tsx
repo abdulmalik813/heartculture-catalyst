@@ -63,7 +63,7 @@ interface SlugProps {
   params: Promise<{
     slug?: string[]
   }>
-  searchParams: Promise<SearchParams>
+  searchParams: Promise<Record<string, string | string[] | undefined | null>>
 }
 
 const gapClasses = {
@@ -143,7 +143,7 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
   )
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: SlugProps): Promise<Metadata> {
   const settings = (await getCachedGlobal('settings', 1, false)) as Setting
   const postSlug = settings.postSlug || 'posts'
   const param = await params
