@@ -21,6 +21,8 @@ export interface Config {
   blocks: {};
   collections: {
     pages: Page;
+    posts: Post;
+    categories: Category;
     users: User;
     media: Media;
     styles: Style;
@@ -36,6 +38,8 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
+    posts: PostsSelect<false> | PostsSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     styles: StylesSelect<false> | StylesSelect<true>;
@@ -1004,6 +1008,168 @@ export interface TableBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: number;
+  title: string;
+  /**
+   * Brief summary of the post for listings and previews
+   */
+  excerpt?: string | null;
+  author?: (number | null) | User;
+  categories?: (number | Category)[] | null;
+  hero: {
+    layout: 'fullscreen' | 'with-image' | 'text-only';
+    heroTitle?: string | null;
+    heroDescription?: string | null;
+    card?: {
+      enableTitle?: boolean | null;
+      enableAction?: boolean | null;
+      enableDescription?: boolean | null;
+      enableContent?: boolean | null;
+      enableFooter?: boolean | null;
+      title?: string | null;
+      actionPlacement?: ('header' | 'footer') | null;
+      action: {
+        nav?: {
+          label?: string | null;
+          appearance?: ('link' | 'button' | 'dropdown') | null;
+          link?: {
+            type?: ('reference' | 'custom') | null;
+            reference?: {
+              relationTo: 'pages';
+              value: number | Page;
+            } | null;
+            url?: string | null;
+            newTab?: boolean | null;
+          };
+          items?:
+            | {
+                label: string;
+                type?: ('reference' | 'custom') | null;
+                reference?: {
+                  relationTo: 'pages';
+                  value: number | Page;
+                } | null;
+                url?: string | null;
+                newTab?: boolean | null;
+                icon?: (number | null) | Icon;
+                placement?: ('before' | 'after') | null;
+                iconStyles?: (number | Style)[] | null;
+                id?: string | null;
+              }[]
+            | null;
+          buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+          buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+          styles?: (number | Style)[] | null;
+          icon?: (number | null) | Icon;
+          placement?: ('before' | 'after') | null;
+          iconStyles?: (number | Style)[] | null;
+        };
+        id?: string | null;
+      }[];
+      description?: string | null;
+      content?: {
+        root: {
+          type: string;
+          children: {
+            type: any;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+      footer?: string | null;
+      cardStyles?: (number | Style)[] | null;
+      titleStyles?: (number | Style)[] | null;
+      actionStyles?: (number | Style)[] | null;
+      descriptionStyles?: (number | Style)[] | null;
+      cardContentStyles?: (number | Style)[] | null;
+      footerStyles?: (number | Style)[] | null;
+      animate?: {
+        /**
+         * Choose an animation effect
+         */
+        type?: ('none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight') | null;
+        /**
+         * Animation duration
+         */
+        duration?: number | null;
+        /**
+         * Delay before animation starts
+         */
+        delay?: number | null;
+        /**
+         * Trigger when element enters viewport
+         */
+        animateOnScroll?: boolean | null;
+        /**
+         * Only animate first time (uncheck to re-animate)
+         */
+        animateOnce?: boolean | null;
+        /**
+         * How much of element must be visible to trigger (0-1)
+         */
+        viewportAmount?: number | null;
+      };
+    };
+    media?: (number | null) | Media;
+    wrapperStyles?: (number | Style)[] | null;
+    contentStyles?: (number | Style)[] | null;
+    fullscreenStyles?: (number | Style)[] | null;
+    /**
+     * Styles applied to the entire hero section
+     */
+    containerStyles?: (number | Style)[] | null;
+    heroTitleStyles?: (number | Style)[] | null;
+    heroDescriptionStyles?: (number | Style)[] | null;
+  };
+  layout?:
+    | {
+        blocks?:
+          | (
+              | ContentBlock
+              | CallToActionBlock
+              | CardBlock
+              | TabBlock
+              | AccordionBlock
+              | DividerBlock
+              | FormBlock
+              | TableBlock
+            )[]
+          | null;
+        container?: boolean | null;
+        gapSize: 'none' | 'small' | 'medium' | 'large' | 'xlarge';
+        styles?: (number | Style)[] | null;
+        id?: string | null;
+      }[]
+    | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -1026,6 +1192,29 @@ export interface User {
       }[]
     | null;
   password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  name: string;
+  /**
+   * Brief description of this category
+   */
+  description?: string | null;
+  /**
+   * Color variant for category badges (uses shadcn/ui variants)
+   */
+  color?: ('default' | 'primary' | 'secondary' | 'destructive' | 'outline') | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1167,6 +1356,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'pages';
         value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'posts';
+        value: number | Post;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: number | Category;
       } | null)
     | ({
         relationTo: 'users';
@@ -1635,6 +1832,144 @@ export interface TableBlockSelect<T extends boolean = true> {
   captionStyles?: T;
   id?: T;
   blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  title?: T;
+  excerpt?: T;
+  author?: T;
+  categories?: T;
+  hero?:
+    | T
+    | {
+        layout?: T;
+        heroTitle?: T;
+        heroDescription?: T;
+        card?:
+          | T
+          | {
+              enableTitle?: T;
+              enableAction?: T;
+              enableDescription?: T;
+              enableContent?: T;
+              enableFooter?: T;
+              title?: T;
+              actionPlacement?: T;
+              action?:
+                | T
+                | {
+                    nav?:
+                      | T
+                      | {
+                          label?: T;
+                          appearance?: T;
+                          link?:
+                            | T
+                            | {
+                                type?: T;
+                                reference?: T;
+                                url?: T;
+                                newTab?: T;
+                              };
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                type?: T;
+                                reference?: T;
+                                url?: T;
+                                newTab?: T;
+                                icon?: T;
+                                placement?: T;
+                                iconStyles?: T;
+                                id?: T;
+                              };
+                          buttonType?: T;
+                          buttonSize?: T;
+                          styles?: T;
+                          icon?: T;
+                          placement?: T;
+                          iconStyles?: T;
+                        };
+                    id?: T;
+                  };
+              description?: T;
+              content?: T;
+              footer?: T;
+              cardStyles?: T;
+              titleStyles?: T;
+              actionStyles?: T;
+              descriptionStyles?: T;
+              cardContentStyles?: T;
+              footerStyles?: T;
+              animate?:
+                | T
+                | {
+                    type?: T;
+                    duration?: T;
+                    delay?: T;
+                    animateOnScroll?: T;
+                    animateOnce?: T;
+                    viewportAmount?: T;
+                  };
+            };
+        media?: T;
+        wrapperStyles?: T;
+        contentStyles?: T;
+        fullscreenStyles?: T;
+        containerStyles?: T;
+        heroTitleStyles?: T;
+        heroDescriptionStyles?: T;
+      };
+  layout?:
+    | T
+    | {
+        blocks?:
+          | T
+          | {
+              contentBlock?: T | ContentBlockSelect<T>;
+              callToActionBlock?: T | CallToActionBlockSelect<T>;
+              cardBlock?: T | CardBlockSelect<T>;
+              tabBlock?: T | TabBlockSelect<T>;
+              accordionBlock?: T | AccordionBlockSelect<T>;
+              dividerBlock?: T | DividerBlockSelect<T>;
+              formBlock?: T | FormBlockSelect<T>;
+              tableBlock?: T | TableBlockSelect<T>;
+            };
+        container?: T;
+        gapSize?: T;
+        styles?: T;
+        id?: T;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  publishedAt?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  color?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2465,10 +2800,15 @@ export interface TaskSchedulePublish {
   input: {
     type?: ('publish' | 'unpublish') | null;
     locale?: string | null;
-    doc?: {
-      relationTo: 'pages';
-      value: number | Page;
-    } | null;
+    doc?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: number | Post;
+        } | null);
     global?: ('navigationBar' | 'footer' | 'settings') | null;
     user?: (number | null) | User;
   };

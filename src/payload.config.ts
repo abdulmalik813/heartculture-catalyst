@@ -17,6 +17,8 @@ import { CRON_SECRET, DATABASE_URI, EMAIL, PAYLOAD, TIMEZONES } from '@/constant
 import { Settings } from '@/globals/settings'
 import { NavigationBar } from '@/globals/navigation-bar'
 import { Footer } from '@/globals/footer'
+import { Posts } from '@/collections/posts'
+import { Categories } from '@/collections/categories'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -65,7 +67,7 @@ export default buildConfig({
     defaultFromName: EMAIL.FROM_NAME,
     apiKey: EMAIL.RESEND_API_KEY,
   }),
-  collections: [Pages, Users, Media, Styles, Icons],
+  collections: [Pages, Posts, Categories, Users, Media, Styles, Icons],
   globals: [NavigationBar, Footer, Settings],
   cors: [getServerSideURL()].filter(Boolean),
   editor: defaultLexical(),
