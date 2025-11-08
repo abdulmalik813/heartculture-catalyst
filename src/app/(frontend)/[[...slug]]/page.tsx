@@ -59,11 +59,11 @@ export async function generateStaticParams() {
   return params
 }
 
-interface PageProps {
+interface SlugProps {
   params: Promise<{
     slug?: string[]
   }>
-  searchParams: SearchParams
+  searchParams: Promise<SearchParams>
 }
 
 const gapClasses = {
@@ -74,7 +74,7 @@ const gapClasses = {
   xlarge: 'gap-8',
 }
 
-export default async function Slug({ params, searchParams }: Readonly<PageProps>) {
+export default async function Slug({ params, searchParams }: Readonly<SlugProps>) {
   const { isEnabled: draft } = await draftMode()
   const postSlug = ((await getCachedGlobal('settings', 1, draft)) as Setting).postSlug || 'posts'
   let isPostPage = false
