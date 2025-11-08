@@ -32,7 +32,7 @@ export const ContentBlock: Block = {
             features: {
               blocks: {
                 blocks: [MediaBlock, NavigationBlock, TabBlock(), CardBlock(), AccordionBlock(), DividerBlock(), FormBlock()],
-                inlineBlocks: [MediaBlock, NavigationBlock],
+                inlineBlocks: [NavigationBlock],
               },
             },
           }),

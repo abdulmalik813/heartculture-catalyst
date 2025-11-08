@@ -15,7 +15,6 @@ import {
   IndentFeature,
   UnorderedListFeature,
   OrderedListFeature,
-  ChecklistFeature,
   BlockquoteFeature,
   HorizontalRuleFeature,
   InlineToolbarFeature,
@@ -41,7 +40,6 @@ type FeatureConfig = {
   indent?: boolean | Parameters<typeof IndentFeature>[0]
   unorderedList?: boolean | Parameters<typeof UnorderedListFeature>[0]
   orderedList?: boolean | Parameters<typeof OrderedListFeature>[0]
-  checklist?: boolean | Parameters<typeof ChecklistFeature>[0]
   link?: boolean | Parameters<typeof LinkFeature>[0]
   blockquote?: boolean | Parameters<typeof BlockquoteFeature>[0]
   horizontalRule?: boolean | Parameters<typeof HorizontalRuleFeature>[0]
@@ -73,7 +71,6 @@ export const defaultLexical: LexicalEditorType = ({ overrides = {}, features = {
     indent: true,
     unorderedList: true,
     orderedList: true,
-    checklist: true,
     link: {
       enabledCollections: ['pages'],
       fields: ({ defaultFields }) => {
@@ -120,7 +117,6 @@ export const defaultLexical: LexicalEditorType = ({ overrides = {}, features = {
   addFeature(mergedFeatures.indent, IndentFeature)
   addFeature(mergedFeatures.unorderedList, UnorderedListFeature)
   addFeature(mergedFeatures.orderedList, OrderedListFeature)
-  addFeature(mergedFeatures.checklist, ChecklistFeature)
   addFeature(mergedFeatures.link, LinkFeature)
   addFeature(mergedFeatures.blockquote, BlockquoteFeature)
   addFeature(mergedFeatures.horizontalRule, HorizontalRuleFeature)

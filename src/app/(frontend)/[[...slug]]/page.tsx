@@ -69,7 +69,7 @@ export default async function Page({ params, searchParams }: Readonly<PageProps>
   }
 
   return (
-    <article className="min-h-[70vh]">
+    <article className="min-h-[70vh]" suppressHydrationWarning>
       <PayloadRedirects disableNotFound url={url} />
       <Hero hero={page.hero} />
       {page.layout?.map((layout, i) => (
