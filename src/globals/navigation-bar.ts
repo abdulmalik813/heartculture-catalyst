@@ -1,3 +1,4 @@
+import { defaultLexical } from '@/fields/lexical-field'
 import { navigation } from '@/fields/navigation'
 import { revalidateNavBar } from '@/hooks/revalidate-globals'
 import { generatePreviewPath } from '@/lib/generate-preview-path'
@@ -49,6 +50,59 @@ export const NavigationBar: GlobalConfig = {
           ],
         },
         {
+          label: 'Banner',
+          fields: [
+            {
+              name: 'banner',
+              type: 'group',
+              label: 'Banner',
+              fields: [
+                {
+                  name: 'enableBanner',
+                  type: 'checkbox',
+                  label: 'Enable Banner',
+                  defaultValue: false,
+                },
+                {
+                  type: 'tabs',
+                  admin: {
+                    condition: (_, siblingData) => siblingData?.enableBanner === true,
+                  },
+                  tabs: [
+                    {
+                      label: 'Content',
+                      fields: [
+                        {
+                          name: 'content',
+                          type: 'richText',
+                          editor: defaultLexical(),
+                        },
+                      ],
+                    },
+                    {
+                      label: 'Styles',
+                      fields: [
+                        {
+                          name: 'bannerStyles',
+                          type: 'relationship',
+                          relationTo: 'styles',
+                          hasMany: true,
+                        },
+                        {
+                          name: 'contentStyles',
+                          type: 'relationship',
+                          relationTo: 'styles',
+                          hasMany: true,
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
           label: 'Styles',
           fields: [
             {
@@ -69,7 +123,7 @@ export const NavigationBar: GlobalConfig = {
               admin: {
                 condition: (_, data) => data?.useTitleWithLogo === true,
               },
-            }
+            },
           ],
         },
       ],

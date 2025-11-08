@@ -16,7 +16,7 @@ const blockComponents = {
   cardBlock: CardBlockUI,
   tabBlock: TabBlockUI,
   accordionBlock: AccordionBlockUI,
-  dividerBlock: DividerBlockUI
+  dividerBlock: DividerBlockUI,
 }
 
 type BlockRendererProps = {

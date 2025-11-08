@@ -86,7 +86,7 @@ export const Pages: CollectionConfig<'pages'> = {
                             TabBlock(false),
                             AccordionBlock(false),
                             DividerBlock(false),
-                            FormBlock(false)
+                            FormBlock(false),
                           ],
                           required: false,
                         },

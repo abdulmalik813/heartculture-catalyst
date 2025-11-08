@@ -6,6 +6,7 @@ import { NavigationBlock } from '@/blocks/navigation/config'
 import { TabBlock } from '@/blocks/tab/config'
 import { AccordionBlock } from '@/blocks/accordion/config'
 import { defaultLexicalValue } from '@/constants/default-lexical'
+import { animate } from './animate'
 
 export const card = (): Field[] => {
   return [
@@ -183,6 +184,12 @@ export const card = (): Field[] => {
             },
           ],
         },
+        {
+          label: "Animation",
+          fields: [
+            animate()
+          ]
+        }
       ],
     },
   ]

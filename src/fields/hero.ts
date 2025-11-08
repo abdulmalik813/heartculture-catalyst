@@ -30,7 +30,6 @@ export const hero: GroupField = {
               type: 'textarea',
               admin: {
                 condition: (data, siblingData) => {
-                  // Access parent group data
                   const layout = siblingData?.layout || data?.hero?.layout
                   return layout === 'text-only'
                 },

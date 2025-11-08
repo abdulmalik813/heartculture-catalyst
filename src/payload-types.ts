@@ -174,6 +174,32 @@ export interface Page {
       descriptionStyles?: (number | Style)[] | null;
       cardContentStyles?: (number | Style)[] | null;
       footerStyles?: (number | Style)[] | null;
+      animate?: {
+        /**
+         * Choose an animation effect
+         */
+        type?: ('none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight') | null;
+        /**
+         * Animation duration
+         */
+        duration?: number | null;
+        /**
+         * Delay before animation starts
+         */
+        delay?: number | null;
+        /**
+         * Trigger when element enters viewport
+         */
+        animateOnScroll?: boolean | null;
+        /**
+         * Only animate first time (uncheck to re-animate)
+         */
+        animateOnce?: boolean | null;
+        /**
+         * How much of element must be visible to trigger (0-1)
+         */
+        viewportAmount?: number | null;
+      };
     };
     media?: (number | null) | Media;
     wrapperStyles?: (number | Style)[] | null;
@@ -443,6 +469,32 @@ export interface CallToActionBlock {
     descriptionStyles?: (number | Style)[] | null;
     cardContentStyles?: (number | Style)[] | null;
     footerStyles?: (number | Style)[] | null;
+    animate?: {
+      /**
+       * Choose an animation effect
+       */
+      type?: ('none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight') | null;
+      /**
+       * Animation duration
+       */
+      duration?: number | null;
+      /**
+       * Delay before animation starts
+       */
+      delay?: number | null;
+      /**
+       * Trigger when element enters viewport
+       */
+      animateOnScroll?: boolean | null;
+      /**
+       * Only animate first time (uncheck to re-animate)
+       */
+      animateOnce?: boolean | null;
+      /**
+       * How much of element must be visible to trigger (0-1)
+       */
+      viewportAmount?: number | null;
+    };
   };
   media?: (number | null) | Media;
   wrapperStyles?: (number | Style)[] | null;
@@ -526,6 +578,32 @@ export interface CardBlock {
   descriptionStyles?: (number | Style)[] | null;
   cardContentStyles?: (number | Style)[] | null;
   footerStyles?: (number | Style)[] | null;
+  animate?: {
+    /**
+     * Choose an animation effect
+     */
+    type?: ('none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight') | null;
+    /**
+     * Animation duration
+     */
+    duration?: number | null;
+    /**
+     * Delay before animation starts
+     */
+    delay?: number | null;
+    /**
+     * Trigger when element enters viewport
+     */
+    animateOnScroll?: boolean | null;
+    /**
+     * Only animate first time (uncheck to re-animate)
+     */
+    animateOnce?: boolean | null;
+    /**
+     * How much of element must be visible to trigger (0-1)
+     */
+    viewportAmount?: number | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'cardBlock';
@@ -1149,6 +1227,16 @@ export interface PagesSelect<T extends boolean = true> {
               descriptionStyles?: T;
               cardContentStyles?: T;
               footerStyles?: T;
+              animate?:
+                | T
+                | {
+                    type?: T;
+                    duration?: T;
+                    delay?: T;
+                    animateOnScroll?: T;
+                    animateOnce?: T;
+                    viewportAmount?: T;
+                  };
             };
         media?: T;
         wrapperStyles?: T;
@@ -1267,6 +1355,16 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
         descriptionStyles?: T;
         cardContentStyles?: T;
         footerStyles?: T;
+        animate?:
+          | T
+          | {
+              type?: T;
+              duration?: T;
+              delay?: T;
+              animateOnScroll?: T;
+              animateOnce?: T;
+              viewportAmount?: T;
+            };
       };
   media?: T;
   wrapperStyles?: T;
@@ -1335,6 +1433,16 @@ export interface CardBlockSelect<T extends boolean = true> {
   descriptionStyles?: T;
   cardContentStyles?: T;
   footerStyles?: T;
+  animate?:
+    | T
+    | {
+        type?: T;
+        duration?: T;
+        delay?: T;
+        animateOnScroll?: T;
+        animateOnce?: T;
+        viewportAmount?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -1862,6 +1970,26 @@ export interface NavigationBar {
         id?: string | null;
       }[]
     | null;
+  banner?: {
+    enableBanner?: boolean | null;
+    content?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    bannerStyles?: (number | Style)[] | null;
+    contentStyles?: (number | Style)[] | null;
+  };
   logoStyles?: (number | Style)[] | null;
   useTitleWithLogo?: boolean | null;
   titleStyles?: (number | Style)[] | null;
@@ -2093,6 +2221,14 @@ export interface NavigationBarSelect<T extends boolean = true> {
               iconStyles?: T;
             };
         id?: T;
+      };
+  banner?:
+    | T
+    | {
+        enableBanner?: T;
+        content?: T;
+        bannerStyles?: T;
+        contentStyles?: T;
       };
   logoStyles?: T;
   useTitleWithLogo?: T;
