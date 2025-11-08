@@ -26,6 +26,7 @@ export async function generateStaticParams() {
 interface CategoryProps {
   params: Promise<{
     slug: string
+    category: string
   }>
   searchParams: Promise<{
     page?: string
@@ -33,11 +34,11 @@ interface CategoryProps {
 }
 
 export default async function Category({ params, searchParams }: Readonly<CategoryProps>) {
-  const { slug } = await params
+  const { slug, category: categorySlug } = await params
   const { page = '1' } = await searchParams
   const currentPage = parseInt(page)
 
-  const category = await queryCategoryBySlug({ slug })
+  const category = await queryCategoryBySlug({ slug: categorySlug })
   
   if (!category) {
     notFound()
