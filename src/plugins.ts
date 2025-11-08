@@ -2,6 +2,7 @@ import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
+import { searchPlugin } from '@payloadcms/plugin-search'
 import { Plugin, Block } from 'payload'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { Page } from '@/payload-types'
@@ -53,6 +54,34 @@ export const plugins: Plugin[] = [
   seoPlugin({
     generateTitle,
     generateURL,
+  }),
+  searchPlugin({
+    collections: ['posts', 'pages'],
+    defaultPriorities: {
+      posts: 10,
+      pages: 20,
+    },
+    searchOverrides: {
+      fields: ({ defaultFields }) => [
+        ...defaultFields,
+        {
+          name: 'excerpt',
+          type: 'textarea',
+          admin: {
+            readOnly: true,
+          },
+        },
+      ],
+    },
+    beforeSync: ({ originalDoc, searchDoc }) => {
+      if ('excerpt' in originalDoc) {
+        return {
+          ...searchDoc,
+          excerpt: originalDoc?.excerpt || '',
+        }
+      }
+      return searchDoc
+    },
   }),
   formBuilderPlugin({
     fields: {

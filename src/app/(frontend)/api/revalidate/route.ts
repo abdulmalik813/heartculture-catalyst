@@ -36,13 +36,25 @@ export async function POST(request: NextRequest) {
     revalidateTag('global_footer')
     revalidateTag('global_settings')
 
-
     const pages = await payload.find({
       collection: 'pages',
       limit: 1000
     })
     revalidatePath("/")
     pages.docs.forEach((page) => revalidatePath("/" + page.slug))
+
+    const posts = await payload.find({
+      collection: 'posts',
+      limit: 1000
+    })
+    revalidatePath("/posts")
+    posts.docs.forEach((post) => revalidatePath("/posts/" + post.slug))
+
+    const categories = await payload.find({
+      collection: 'categories',
+      limit: 1000
+    })
+    categories.docs.forEach((category) => revalidatePath("/posts/category/" + category.slug))
 
     return NextResponse.json({
       revalidated: true,

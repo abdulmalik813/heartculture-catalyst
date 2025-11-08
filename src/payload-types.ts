@@ -28,6 +28,7 @@ export interface Config {
     styles: Style;
     icons: Icon;
     redirects: Redirect;
+    search: Search;
     forms: Form;
     'form-submissions': FormSubmission;
     'payload-jobs': PayloadJob;
@@ -45,6 +46,7 @@ export interface Config {
     styles: StylesSelect<false> | StylesSelect<true>;
     icons: IconsSelect<false> | IconsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
+    search: SearchSelect<false> | SearchSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
@@ -1207,7 +1209,7 @@ export interface Category {
   /**
    * Color variant for category badges (uses shadcn/ui variants)
    */
-  color?: ('default' | 'primary' | 'secondary' | 'destructive' | 'outline') | null;
+  color?: ('default' | 'secondary' | 'destructive' | 'outline') | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -1234,6 +1236,29 @@ export interface Redirect {
     } | null;
     url?: string | null;
   };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This is a collection of automatically created search results. These results are used by the global site search and will be updated automatically as documents in the CMS are created or updated.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "search".
+ */
+export interface Search {
+  id: number;
+  title?: string | null;
+  priority?: number | null;
+  doc:
+    | {
+        relationTo: 'posts';
+        value: number | Post;
+      }
+    | {
+        relationTo: 'pages';
+        value: number | Page;
+      };
+  excerpt?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1384,6 +1409,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'redirects';
         value: number | Redirect;
+      } | null)
+    | ({
+        relationTo: 'search';
+        value: number | Search;
       } | null)
     | ({
         relationTo: 'forms';
@@ -2122,6 +2151,18 @@ export interface RedirectsSelect<T extends boolean = true> {
         reference?: T;
         url?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "search_select".
+ */
+export interface SearchSelect<T extends boolean = true> {
+  title?: T;
+  priority?: T;
+  doc?: T;
+  excerpt?: T;
   updatedAt?: T;
   createdAt?: T;
 }

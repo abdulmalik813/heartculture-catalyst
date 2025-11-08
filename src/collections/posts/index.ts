@@ -32,6 +32,7 @@ export const Posts: CollectionConfig<'posts'> = {
   admin: {
     defaultColumns: ['title', 'slug', 'publishedAt', 'updatedAt'],
     useAsTitle: 'title',
+    listSearchableFields: ['title', 'excerpt'],
     livePreview: {
       url: ({ data, req }) =>
         generatePreviewPath({

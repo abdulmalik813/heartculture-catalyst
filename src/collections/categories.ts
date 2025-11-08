@@ -41,10 +41,6 @@ export const Categories: CollectionConfig<'categories'> = {
           value: 'default',
         },
         {
-          label: 'Primary',
-          value: 'primary',
-        },
-        {
           label: 'Secondary',
           value: 'secondary',
         },
