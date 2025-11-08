@@ -215,7 +215,16 @@ export interface Page {
   layout?:
     | {
         blocks?:
-          | (ContentBlock | CallToActionBlock | CardBlock | TabBlock | AccordionBlock | DividerBlock | FormBlock)[]
+          | (
+              | ContentBlock
+              | CallToActionBlock
+              | CardBlock
+              | TabBlock
+              | AccordionBlock
+              | DividerBlock
+              | FormBlock
+              | TableBlock
+            )[]
           | null;
         container?: boolean | null;
         gapSize: 'none' | 'small' | 'medium' | 'large' | 'xlarge';
@@ -920,6 +929,81 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TableBlock".
+ */
+export interface TableBlock {
+  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
+  gridStyles?: (number | Style)[] | null;
+  /**
+   * Optional caption displayed above or below the table
+   */
+  caption?: string | null;
+  showHeader?: boolean | null;
+  headers?:
+    | {
+        header: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  rows: {
+    cells: {
+      content: {
+        root: {
+          type: string;
+          children: {
+            type: any;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      };
+      cellStyles?: (number | Style)[] | null;
+      id?: string | null;
+    }[];
+    rowStyles?: (number | Style)[] | null;
+    id?: string | null;
+  }[];
+  /**
+   * Styles for the entire table container
+   */
+  tableStyles?: (number | Style)[] | null;
+  /**
+   * Styles applied to the table header
+   */
+  headerStyles?: (number | Style)[] | null;
+  /**
+   * Styles applied to the table body
+   */
+  bodyStyles?: (number | Style)[] | null;
+  /**
+   * Styles applied to the table caption
+   */
+  captionStyles?: (number | Style)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'tableBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -1259,6 +1343,7 @@ export interface PagesSelect<T extends boolean = true> {
               accordionBlock?: T | AccordionBlockSelect<T>;
               dividerBlock?: T | DividerBlockSelect<T>;
               formBlock?: T | FormBlockSelect<T>;
+              tableBlock?: T | TableBlockSelect<T>;
             };
         container?: T;
         gapSize?: T;
@@ -1513,6 +1598,41 @@ export interface FormBlockSelect<T extends boolean = true> {
   form?: T;
   enableDescription?: T;
   description?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TableBlock_select".
+ */
+export interface TableBlockSelect<T extends boolean = true> {
+  gridSize?: T;
+  gridStyles?: T;
+  caption?: T;
+  showHeader?: T;
+  headers?:
+    | T
+    | {
+        header?: T;
+        id?: T;
+      };
+  rows?:
+    | T
+    | {
+        cells?:
+          | T
+          | {
+              content?: T;
+              cellStyles?: T;
+              id?: T;
+            };
+        rowStyles?: T;
+        id?: T;
+      };
+  tableStyles?: T;
+  headerStyles?: T;
+  bodyStyles?: T;
+  captionStyles?: T;
   id?: T;
   blockName?: T;
 }

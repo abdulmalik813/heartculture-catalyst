@@ -8,6 +8,7 @@ import type {
   NavigationBlock,
   Style,
   TabBlock,
+  TableBlock,
 } from '@/payload-types'
 import {
   DefaultNodeTypes,
@@ -27,6 +28,7 @@ import { AccordionBlockUI } from '@/blocks/accordion'
 import { DividerBlockUI } from '@/blocks/divider'
 import { CardBlockUI } from '@/blocks/card'
 import { FormBlockUI } from '@/blocks/form'
+import { TableBlockUI } from '@/blocks/table'
 
 interface LexicalRendererProps {
   content?: DefaultTypedEditorState | null
@@ -45,6 +47,7 @@ type NodeTypes =
       | DividerBlock
       | FormBlock
       | CardBlock
+      | TableBlock
     >
 
 function jsxConverters(
@@ -79,18 +82,10 @@ function jsxConverters(
       list: ({ node, nodesToJSX }) => {
         const Tag = node.tag
         const listClasses = Tag === 'ul' ? 'list-disc my-4 pl-8' : 'list-decimal my-4 pl-8'
-        return (
-          <Tag className={listClasses}>
-            {nodesToJSX({ nodes: node.children })}
-          </Tag>
-        )
+        return <Tag className={listClasses}>{nodesToJSX({ nodes: node.children })}</Tag>
       },
       listitem: ({ node, nodesToJSX }) => {
-        return (
-          <li className="my-2">
-            {nodesToJSX({ nodes: node.children })}
-          </li>
-        )
+        return <li className="my-2">{nodesToJSX({ nodes: node.children })}</li>
       },
       code: ({ node, nodesToJSX }) => {
         return (
@@ -126,6 +121,7 @@ function jsxConverters(
         dividerBlock: ({ node }) => <DividerBlockUI {...node.fields} />,
         cardBlock: ({ node }) => <CardBlockUI {...node.fields} />,
         formBlock: ({ node }) => <FormBlockUI {...node.fields} />,
+        tableBlock: ({ node }) => <TableBlockUI {...node.fields} />,
       },
     }
   }

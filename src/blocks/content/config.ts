@@ -9,6 +9,7 @@ import { AccordionBlock } from '@/blocks/accordion/config'
 import { DividerBlock } from '@/blocks/divider/config'
 import { defaultLexicalValue } from '@/constants/default-lexical'
 import { FormBlock } from '../form/config'
+import { TableBlock } from '../table/config'
 
 export const ContentBlock: Block = {
   slug: 'contentBlock',
@@ -31,7 +32,7 @@ export const ContentBlock: Block = {
           editor: defaultLexical({
             features: {
               blocks: {
-                blocks: [MediaBlock, NavigationBlock, TabBlock(), CardBlock(), AccordionBlock(), DividerBlock(), FormBlock()],
+                blocks: [MediaBlock, NavigationBlock, TabBlock(), CardBlock(), AccordionBlock(), DividerBlock(), FormBlock(), TableBlock()],
                 inlineBlocks: [NavigationBlock],
               },
             },

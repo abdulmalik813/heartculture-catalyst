@@ -1,4 +1,3 @@
-import type { TextFieldSingleValidation } from 'payload'
 import {
   BoldFeature,
   ItalicFeature,
@@ -20,7 +19,6 @@ import {
   InlineToolbarFeature,
   FixedToolbarFeature,
   BlocksFeature,
-  EXPERIMENTAL_TableFeature,
   type LexicalEditorProps,
 } from '@payloadcms/richtext-lexical'
 import deepMerge from '@/lib/deep-merge'
@@ -46,7 +44,6 @@ type FeatureConfig = {
   inlineToolbar?: boolean | Parameters<typeof InlineToolbarFeature>[0]
   fixedToolbar?: boolean | Parameters<typeof FixedToolbarFeature>[0]
   blocks?: boolean | Parameters<typeof BlocksFeature>[0]
-  table?: boolean | Parameters<typeof EXPERIMENTAL_TableFeature>[0]
 }
 
 type LexicalEditorType = (options?: {
@@ -89,7 +86,6 @@ export const defaultLexical: LexicalEditorType = ({ overrides = {}, features = {
       blocks: [],
       inlineBlocks: [],
     },
-    table: true,
   }
 
   // Merge default features with user-provided features
@@ -123,7 +119,6 @@ export const defaultLexical: LexicalEditorType = ({ overrides = {}, features = {
   addFeature(mergedFeatures.inlineToolbar, InlineToolbarFeature)
   addFeature(mergedFeatures.fixedToolbar, FixedToolbarFeature)
   addFeature(mergedFeatures.blocks, BlocksFeature)
-  addFeature(mergedFeatures.table, EXPERIMENTAL_TableFeature)
 
   const editorConfig: LexicalEditorProps = {
     features: enabledFeatures,

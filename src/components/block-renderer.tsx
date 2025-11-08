@@ -9,6 +9,7 @@ import { CardBlockUI } from '@/blocks/card'
 import { TabBlockUI } from '@/blocks/tab'
 import { AccordionBlockUI } from '@/blocks/accordion'
 import { DividerBlockUI } from '@/blocks/divider'
+import { TableBlockUI } from '@/blocks/table'
 
 const blockComponents = {
   contentBlock: ContentBlockUI,
@@ -17,6 +18,7 @@ const blockComponents = {
   tabBlock: TabBlockUI,
   accordionBlock: AccordionBlockUI,
   dividerBlock: DividerBlockUI,
+  tableBlock: TableBlockUI
 }
 
 type BlockRendererProps = {
