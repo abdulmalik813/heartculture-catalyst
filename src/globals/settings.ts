@@ -1,6 +1,6 @@
 import { revalidateSettings } from '@/hooks/revalidate-globals'
 import { generatePreviewPath } from '@/lib/generate-preview-path'
-import { GlobalConfig } from 'payload'
+import { GlobalConfig, PayloadRequest } from 'payload'
 
 export const Settings: GlobalConfig = {
   slug: 'settings',
@@ -80,6 +80,108 @@ export const Settings: GlobalConfig = {
               type: 'upload',
               relationTo: 'media',
               label: 'Favicon (PNG)',
+            },
+          ],
+        },
+        {
+          label: 'Post',
+          fields: [
+            {
+              name: 'enablePost',
+              type: 'checkbox',
+              label: 'Enable Post Functionality',
+              defaultValue: false,
+              admin: {
+                description: 'Toggle to enable or disable post functionality.',
+              },
+            },
+            {
+              name: 'postPageTitle',
+              type: 'text',
+              required: true,
+              admin: {
+                condition: (data: { enablePost?: boolean }) => data?.enablePost === true,
+              },
+            },
+            {
+              name: 'postSlug',
+              type: 'text',
+              label: 'Post Slug',
+              required: true,
+              admin: {
+                condition: (data: { enablePost?: boolean }) => data?.enablePost === true,
+              },
+              validate: async (
+                value: string | null | undefined,
+                args: {
+                  data?: { enablePost?: boolean }
+                  req?: PayloadRequest
+                },
+              ) => {
+                if (!args?.data?.enablePost) {
+                  return true
+                }
+
+                if (!value) {
+                  return 'Slug is required when post is enabled'
+                }
+
+                const validCharPattern = /^[a-zA-Z]+(-[a-zA-Z]+)?$/
+                if (!validCharPattern.test(value)) {
+                  return 'Slug can only contain letters and optionally one hyphen'
+                }
+
+                if (!args || !args.req || !args.req.payload) {
+                  return 'Error validating slug. Please try again.'
+                }
+
+                const { req } = args
+
+                try {
+                  const existingPage = await req.payload.find({
+                    collection: 'pages',
+                    where: {
+                      slug: {
+                        contains: value,
+                      },
+                    },
+                    limit: 1,
+                  })
+
+                  if (existingPage.docs && existingPage.docs.length > 0) {
+                    return `Invalid: This slug is already used by a page. Please choose a different slug.`
+                  }
+
+                  return true
+                } catch (error) {
+                  return 'Error validating slug. Please try again.'
+                }
+              },
+            },
+            {
+              type: 'collapsible',
+              label: 'Post Archive Page Metadata',
+              admin: {
+                condition: (data: { enablePost?: boolean }) => data?.enablePost === true,
+              },
+              fields: [
+                {
+                  name: 'postMetaTitle',
+                  type: 'text',
+                  label: 'Meta Title',
+                },
+                {
+                  name: 'postMetaDescription',
+                  type: 'textarea',
+                  label: 'Meta Description',
+                },
+                {
+                  name: 'postMetaImage',
+                  type: 'upload',
+                  relationTo: 'media',
+                  label: 'Meta Image',
+                },
+              ],
             },
           ],
         },

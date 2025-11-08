@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import type { Page } from '@/payload-types'
+import type { Page, Post } from '@/payload-types'
 import { SearchParams } from '@/types/search-params'
 import { ContentBlockUI } from '@/blocks/content'
 import { cn } from '@/lib/utils'
@@ -22,7 +22,7 @@ const blockComponents = {
 }
 
 type BlockRendererProps = {
-  block: NonNullable<NonNullable<Page['layout']>[number]['blocks']>[number]
+  block: NonNullable<NonNullable<Page['layout']>[number]['blocks']>[number] | NonNullable<NonNullable<Post['layout']>[number]['blocks']>[number]
   searchParams?: SearchParams
 }
 

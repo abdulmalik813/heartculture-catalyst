@@ -2,42 +2,48 @@ import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionBe
 
 import { revalidatePath, revalidateTag } from 'next/cache'
 
-import type { Post } from '@/payload-types'
+import type { Post, Setting } from '@/payload-types'
 
-export const revalidatePost: CollectionAfterChangeHook<Post> = ({
+export const revalidatePost: CollectionAfterChangeHook<Post> = async ({
   doc,
   previousDoc,
   req: { payload, context },
 }) => {
   if (!context.disableRevalidate) {
+    const settings = await payload.findGlobal({ slug: 'settings' }) as Setting
+    const postSlug = settings.postSlug || 'posts'
+
     if (doc._status === 'published') {
-      const path = `/posts/${doc.slug}`
+      const path = `/${postSlug}/${doc.slug}`
 
       payload.logger.info(`Revalidating post at path: ${path}`)
 
       revalidatePath(path)
-      revalidatePath('/posts')
+      revalidatePath(`/${postSlug}`)
       revalidateTag('posts-sitemap')
     }
 
     if (previousDoc?._status === 'published' && doc._status !== 'published') {
-      const oldPath = `/posts/${previousDoc.slug}`
+      const oldPath = `/${postSlug}/${previousDoc.slug}`
 
       payload.logger.info(`Revalidating old post at path: ${oldPath}`)
 
       revalidatePath(oldPath)
-      revalidatePath('/posts')
+      revalidatePath(`/${postSlug}`)
       revalidateTag('posts-sitemap')
     }
   }
   return doc
 }
 
-export const revalidateDelete: CollectionAfterDeleteHook<Post> = ({ doc, req: { context } }) => {
+export const revalidateDelete: CollectionAfterDeleteHook<Post> = async ({ doc, req: { payload, context } }) => {
   if (!context.disableRevalidate) {
-    const path = `/posts/${doc?.slug}`
+    const settings = await payload.findGlobal({ slug: 'settings' }) as Setting
+    const postSlug = settings.postSlug || 'posts'
+    
+    const path = `/${postSlug}/${doc?.slug}`
     revalidatePath(path)
-    revalidatePath('/posts')
+    revalidatePath(`/${postSlug}`)
     revalidateTag('posts-sitemap')
   }
 

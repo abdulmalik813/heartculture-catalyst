@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-import type { Media, Page, Config } from '../payload-types'
+import type { Media, Page, Config, Post, Setting } from '../payload-types'
 
 import { mergeOpenGraph } from './merge-open-graph'
 import { getServerSideURL } from './get-url'
@@ -20,7 +20,7 @@ const getImageURL = async (image?: Media | Config['db']['defaultIDType'] | null)
   return url
 }
 
-export const generateMeta = async (args: { doc: Partial<Page> | null }): Promise<Metadata> => {
+export const generateMeta = async (args: { doc: Partial<Page> | Partial<Post> | null }): Promise<Metadata> => {
   const { doc } = args
 
   const ogImage = await getImageURL(doc?.meta?.image)
@@ -41,6 +41,33 @@ export const generateMeta = async (args: { doc: Partial<Page> | null }): Promise
         : undefined,
       title,
       url: Array.isArray(doc?.slug) ? doc?.slug.join('/') : '/',
+    }),
+    title,
+  }
+}
+
+export const generatePostsListingMeta  = async (settings: Setting): Promise<Metadata> => {
+  const { postMetaTitle, postMetaDescription, postMetaImage, postSlug } = settings
+  const appData = await getAppSettings()
+  
+  const ogImage = await getImageURL(postMetaImage)
+  const title = postMetaTitle || appData.appTitle
+  const description = postMetaDescription || appData.appTitle
+  const slug = postSlug || 'posts'
+
+  return {
+    description,
+    openGraph: await mergeOpenGraph({
+      description,
+      images: ogImage
+        ? [
+            {
+              url: ogImage,
+            },
+          ]
+        : undefined,
+      title,
+      url: `/${slug}`,
     }),
     title,
   }

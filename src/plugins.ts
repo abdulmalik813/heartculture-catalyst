@@ -56,7 +56,7 @@ export const plugins: Plugin[] = [
     generateURL,
   }),
   searchPlugin({
-    collections: ['posts', 'pages'],
+    collections: ['posts'],
     defaultPriorities: {
       posts: 10,
       pages: 20,

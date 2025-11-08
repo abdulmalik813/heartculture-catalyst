@@ -28,9 +28,6 @@ export const Categories: CollectionConfig<'categories'> = {
     {
       name: 'description',
       type: 'textarea',
-      admin: {
-        description: 'Brief description of this category',
-      },
     },
     {
       name: 'color',
@@ -54,9 +51,6 @@ export const Categories: CollectionConfig<'categories'> = {
         },
       ],
       defaultValue: 'default',
-      admin: {
-        description: 'Color variant for category badges (uses shadcn/ui variants)',
-      },
     },
     slugField(),
   ],

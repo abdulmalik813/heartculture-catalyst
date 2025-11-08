@@ -1202,13 +1202,7 @@ export interface User {
 export interface Category {
   id: number;
   name: string;
-  /**
-   * Brief description of this category
-   */
   description?: string | null;
-  /**
-   * Color variant for category badges (uses shadcn/ui variants)
-   */
   color?: ('default' | 'secondary' | 'destructive' | 'outline') | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -1249,15 +1243,10 @@ export interface Search {
   id: number;
   title?: string | null;
   priority?: number | null;
-  doc:
-    | {
-        relationTo: 'posts';
-        value: number | Post;
-      }
-    | {
-        relationTo: 'pages';
-        value: number | Page;
-      };
+  doc: {
+    relationTo: 'posts';
+    value: number | Post;
+  };
   excerpt?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -2601,6 +2590,15 @@ export interface Setting {
   favIcon: number | Media;
   favIconSvg?: (number | null) | Media;
   favIconPng?: (number | null) | Media;
+  /**
+   * Toggle to enable or disable post functionality.
+   */
+  enablePost?: boolean | null;
+  postPageTitle?: string | null;
+  postSlug?: string | null;
+  postMetaTitle?: string | null;
+  postMetaDescription?: string | null;
+  postMetaImage?: (number | null) | Media;
   default: {
     family: string;
     fontData?:
@@ -2813,6 +2811,12 @@ export interface SettingsSelect<T extends boolean = true> {
   favIcon?: T;
   favIconSvg?: T;
   favIconPng?: T;
+  enablePost?: T;
+  postPageTitle?: T;
+  postSlug?: T;
+  postMetaTitle?: T;
+  postMetaDescription?: T;
+  postMetaImage?: T;
   default?:
     | T
     | {

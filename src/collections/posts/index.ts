@@ -20,33 +20,113 @@ import { AccordionBlock } from '@/blocks/accordion/config'
 import { DividerBlock } from '@/blocks/divider/config'
 import { FormBlock } from '@/blocks/form/config'
 import { TableBlock } from '@/blocks/table/config'
+import { getCachedGlobal } from '@/lib/get-globals'
+import { Setting } from '@/payload-types'
+import type { Payload } from 'payload'
+
+let cachedPostEnabled: boolean | null = null
+let cachedPostLabel: string = 'Posts'
+
+const checkPostEnabled = async (payload: Payload): Promise<boolean> => {
+  try {
+    const settings = (await getCachedGlobal('settings', 1, true)) as Setting
+    cachedPostEnabled = settings?.enablePost ?? false
+    cachedPostLabel = settings?.postPageTitle || 'Posts'
+    return cachedPostEnabled
+  } catch {
+    cachedPostEnabled = false
+    return false
+  }
+}
 
 export const Posts: CollectionConfig<'posts'> = {
   slug: 'posts',
+  labels: {
+    singular: () => cachedPostLabel,
+    plural: () => cachedPostLabel,
+  },
   access: {
-    create: authenticated,
-    delete: authenticated,
-    read: authenticatedOrPublished,
-    update: authenticated,
+    create: async ({ req }) => {
+      if (!req.payload) return false
+      await checkPostEnabled(req.payload)
+      if (!cachedPostEnabled) return false
+      return authenticated({ req })
+    },
+    delete: async ({ req }) => {
+      if (!req.payload) return false
+      await checkPostEnabled(req.payload)
+      if (!cachedPostEnabled) return false
+      return authenticated({ req })
+    },
+    read: async ({ req }) => {
+      if (!req.payload) return false
+      await checkPostEnabled(req.payload)
+      if (!cachedPostEnabled) return false
+      return authenticatedOrPublished({ req })
+    },
+    update: async ({ req }) => {
+      if (!req.payload) return false
+      await checkPostEnabled(req.payload)
+      if (!cachedPostEnabled) return false
+      return authenticated({ req })
+    },
   },
   admin: {
     defaultColumns: ['title', 'slug', 'publishedAt', 'updatedAt'],
     useAsTitle: 'title',
     listSearchableFields: ['title', 'excerpt'],
+    hidden: ({ user }) => {
+      if (user?.payload) {
+        checkPostEnabled(user.payload)
+      }
+      return cachedPostEnabled === false
+    },
     livePreview: {
-      url: ({ data, req }) =>
-        generatePreviewPath({
-          slug: data?.slug,
+      url: async ({ data, req }) => {
+        if (!req.payload) return ''
+
+        try {
+          const settings = await req.payload.findGlobal({
+            slug: 'settings',
+          })
+          const postSlug = settings?.postSlug || 'posts'
+
+          return generatePreviewPath({
+            slug: `${postSlug}/${data?.slug}`,
+            collection: 'posts',
+            req,
+          })
+        } catch {
+          return generatePreviewPath({
+            slug: data?.slug,
+            collection: 'posts',
+            req,
+          })
+        }
+      },
+    },
+    preview: async (data, { req }) => {
+      if (!req.payload) return ''
+
+      try {
+        const settings = await req.payload.findGlobal({
+          slug: 'settings',
+        })
+        const postSlug = settings?.postSlug || 'posts'
+
+        return generatePreviewPath({
+          slug: `${postSlug}/${data?.slug}`,
           collection: 'posts',
           req,
-        }),
+        })
+      } catch {
+        return generatePreviewPath({
+          slug: data?.slug as string,
+          collection: 'posts',
+          req,
+        })
+      }
     },
-    preview: (data, { req }) =>
-      generatePreviewPath({
-        slug: data?.slug as string,
-        collection: 'posts',
-        req,
-      }),
   },
   defaultPopulate: {
     title: true,
