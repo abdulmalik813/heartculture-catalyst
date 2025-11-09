@@ -5,7 +5,6 @@ import { animate } from '@/fields/animate'
 export const LastModifiedBlock: Block = {
   slug: 'lastModifiedBlock',
   interfaceName: 'LastModifiedBlock',
-  dbName: 'last_modified',
   fields: [
     {
       type: 'tabs',
@@ -30,10 +29,6 @@ export const LastModifiedBlock: Block = {
               hasMany: true,
             },
           ],
-        },
-        {
-          label: 'Animation',
-          fields: [animate()],
         },
       ],
     },

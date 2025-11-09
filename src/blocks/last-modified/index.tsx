@@ -13,7 +13,7 @@ export function LastModifiedBlockUI({
   setting: Setting | null
 } & { page: Post | Page | null }) {
   if (!page) {
-    return null
+    return <></>
   }
 
   const { updatedAt } = page
@@ -24,15 +24,13 @@ export function LastModifiedBlockUI({
   }).format(new Date(updatedAt))
 
   return (
-    <AnimateWrapper animate={lastModifiedBlock.animate}>
-      <Card className={joinStyles(lastModifiedBlock.cardStyles)}>
-        <CardContent className={joinStyles(lastModifiedBlock.cardContentStyles)}>
-          Last modified on {formattedDate}
-          {page.author && typeof page.author === 'object' && page.author?.name && (
-            <> by {page.author.name}</>
-          )}
-        </CardContent>
-      </Card>
-    </AnimateWrapper>
+    <Card className={joinStyles(lastModifiedBlock.cardStyles)}>
+      <CardContent className={joinStyles(lastModifiedBlock.cardContentStyles)}>
+        Last modified on {formattedDate}
+        {page.author && typeof page.author === 'object' && page.author?.name && (
+          <> by {page.author.name}</>
+        )}
+      </CardContent>
+    </Card>
   )
 }

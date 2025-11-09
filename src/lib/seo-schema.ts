@@ -29,16 +29,16 @@ export const articleSchema = async (post: Post, settings: Setting) => {
   return {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
-    headline: post.title,
-    datePublished: new Date(post.createdAt),
-    dateModified: new Date(post.updatedAt),
+    headline: post?.title,
+    datePublished: new Date(post?.createdAt),
+    dateModified: new Date(post?.updatedAt),
     image: [getMediaUrl(imageUrl)],
     author: {
       '@type': 'Person',
-      name: author.name,
+      name: author?.name,
       sameAs: socialLinks,
     },
-    url: `${getServerSideURL()}/${settings.postSlug}/${post.slug}`,
+    url: `${getServerSideURL()}/${settings.postSlug}/${post?.slug}`,
   }
 }
 
