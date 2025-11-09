@@ -27,6 +27,7 @@ export interface Config {
     media: Media;
     styles: Style;
     icons: Icon;
+    testimonials: Testimonial;
     redirects: Redirect;
     search: Search;
     forms: Form;
@@ -45,6 +46,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     styles: StylesSelect<false> | StylesSelect<true>;
     icons: IconsSelect<false> | IconsSelect<true>;
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     search: SearchSelect<false> | SearchSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
@@ -1214,6 +1216,26 @@ export interface Category {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials".
+ */
+export interface Testimonial {
+  id: number;
+  type: 'individual' | 'company';
+  name: string;
+  position?: string | null;
+  /**
+   * Company name (for individuals) or leave empty for companies
+   */
+  company?: string | null;
+  avatar?: (number | null) | Media;
+  content: string;
+  rating?: number | null;
+  date?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1394,6 +1416,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'icons';
         value: number | Icon;
+      } | null)
+    | ({
+        relationTo: 'testimonials';
+        value: number | Testimonial;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -2124,6 +2150,22 @@ export interface StylesSelect<T extends boolean = true> {
  */
 export interface IconsSelect<T extends boolean = true> {
   name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials_select".
+ */
+export interface TestimonialsSelect<T extends boolean = true> {
+  type?: T;
+  name?: T;
+  position?: T;
+  company?: T;
+  avatar?: T;
+  content?: T;
+  rating?: T;
+  date?: T;
   updatedAt?: T;
   createdAt?: T;
 }

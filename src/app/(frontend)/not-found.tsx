@@ -25,12 +25,6 @@ export default function NotFound() {
               Go to Homepage
             </Link>
           </Button>
-          <Button asChild variant="outline" className="w-full">
-            <Link href="/search">
-              <Search className="mr-2 h-4 w-4" />
-              Search Site
-            </Link>
-          </Button>
         </CardContent>
       </Card>
     </article>

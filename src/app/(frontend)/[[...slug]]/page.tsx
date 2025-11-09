@@ -11,7 +11,6 @@ import { joinStyles } from '@/lib/make-styles'
 import { cn } from '@/lib/utils'
 import { BlockRenderer } from '@/components/block-renderer'
 import { Hero } from '@/components/hero'
-import { SearchParams } from '@/types/search-params'
 import { getCachedGlobal } from '@/lib/get-globals'
 import { Page, Post, Setting } from '@/payload-types'
 import PostListingPage from '@/components/post-listing'
@@ -164,7 +163,6 @@ export async function generateMetadata({ params }: SlugProps): Promise<Metadata>
 
   let page: Post | Page | null = null
 
-  // Only check for post routes if posts are enabled
   if (isPostEnabled) {
     const postSlug = settings.postSlug || 'posts'
     

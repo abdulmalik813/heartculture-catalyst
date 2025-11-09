@@ -1,8 +1,19 @@
 import type { Field, GroupField } from 'payload'
 import deepMerge from '@/lib/deep-merge'
 import { icon } from './icon'
+import { getCachedGlobal } from '@/lib/get-globals'
+import { Setting } from '@/payload-types'
 
 type NavType = (options?: { overrides?: Partial<GroupField> }) => Field
+
+const settings = (await getCachedGlobal('settings', 1, false)) as Setting
+
+const { enablePost, postSlug } = settings
+
+const relationToCollections = ['pages']
+if (enablePost) {
+  relationToCollections.push('posts')
+}
 
 const navFields: Field[] = [
   {
@@ -28,8 +39,7 @@ const navFields: Field[] = [
         admin: {
           condition: (_, data) => data?.type === 'reference',
         },
-        label: 'Select Page',
-        relationTo: ['pages'],
+        relationTo: relationToCollections,
         required: true,
       },
       {
