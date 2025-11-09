@@ -6,10 +6,13 @@ export const Users: CollectionConfig = {
     useAsTitle: 'name',
   },
   auth: true,
+  access: {
+    read: () => true,
+  },
   fields: [
     {
       name: 'name',
       type: 'text',
-    }
+    },
   ],
 }
