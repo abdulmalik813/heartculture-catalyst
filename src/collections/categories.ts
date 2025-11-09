@@ -1,18 +1,62 @@
 import type { CollectionConfig } from 'payload'
 import { authenticated } from '@/access/authenticated'
 import { slugField } from 'payload'
+import { getCachedGlobal } from '@/lib/get-globals'
+import { Setting } from '@/payload-types'
+
+
+let cachedPostEnabled: boolean | null = null
+let cachedPostLabel: string = 'Posts'
+
+const checkPostEnabled = async (): Promise<boolean> => {
+  try {
+    const setting = (await getCachedGlobal('settings', 1, true)) as Setting
+    cachedPostEnabled = setting?.enablePost ?? false
+    cachedPostLabel = setting?.postListingPageTitle || 'Posts'
+    return cachedPostEnabled
+  } catch {
+    cachedPostEnabled = false
+    return false
+  }
+}
 
 export const Categories: CollectionConfig<'categories'> = {
   slug: 'categories',
   access: {
-    create: authenticated,
-    delete: authenticated,
-    read: () => true,
-    update: authenticated,
+    create: async ({ req }) => {
+      if (!req.payload) return false
+      await checkPostEnabled()
+      if (!cachedPostEnabled) return false
+      return authenticated({ req })
+    },
+    delete: async ({ req }) => {
+      if (!req.payload) return false
+      await checkPostEnabled()
+      if (!cachedPostEnabled) return false
+      return authenticated({ req })
+    },
+    read: async ({ req }) => {
+      if (!req.payload) return false
+      await checkPostEnabled()
+      if (!cachedPostEnabled) return false
+      return true
+    },
+    update: async ({ req }) => {
+      if (!req.payload) return false
+      await checkPostEnabled()
+      if (!cachedPostEnabled) return false
+      return authenticated({ req })
+    },
   },
   admin: {
     defaultColumns: ['name', 'slug', 'updatedAt'],
     useAsTitle: 'name',
+        hidden: ({ user }) => {
+      if (user?.payload) {
+        checkPostEnabled()
+      }
+      return cachedPostEnabled === false
+    },
   },
   defaultPopulate: {
     name: true,
