@@ -33,20 +33,29 @@ export const ContentBlock: Block = {
           editor: defaultLexical({
             features: {
               blocks: {
-                blocks: [MediaBlock, NavigationBlock, TabBlock(), CardBlock(), AccordionBlock(), DividerBlock(), FormBlock(), TableBlock()],
+                blocks: [
+                  MediaBlock,
+                  NavigationBlock,
+                  TabBlock(),
+                  CardBlock(),
+                  AccordionBlock(),
+                  DividerBlock(),
+                  FormBlock(),
+                  TableBlock(),
+                ],
                 inlineBlocks: [NavigationBlock],
               },
             },
           }),
           defaultValue: defaultLexicalValue,
-        }
+        },
       ],
     },
     {
-      label: "Animate",
-      type: "group",
-      fields: [animate()]
-    }
+      label: 'Animate',
+      type: 'collapsible',
+      fields: [animate()],
+    },
   ],
   graphQL: {
     singularName: 'ContentBlock',
