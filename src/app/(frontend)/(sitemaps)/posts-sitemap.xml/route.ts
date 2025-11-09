@@ -41,11 +41,6 @@ const getPostsSitemap = unstable_cache(
         },
       })
 
-      sitemap.push({
-        loc: `${SITE_URL}/${postSlug}`,
-        lastmod: dateFallback,
-      })
-
       if (posts.docs && posts.docs.length > 0) {
         posts.docs
           .filter((post) => Boolean(post?.slug))

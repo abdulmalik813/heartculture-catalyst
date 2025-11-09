@@ -3,11 +3,15 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
 import { getServerSideURL } from '@/lib/get-url'
+import { getCachedGlobal } from '@/lib/get-globals'
+import { Setting } from '@/payload-types'
 
 const getPagesSitemap = unstable_cache(
   async () => {
     const payload = await getPayload({ config })
     const SITE_URL = getServerSideURL()
+    const settings = (await getCachedGlobal('settings', 1, false)) as Setting
+    const isPostEnabled = settings.enablePost
 
     const dateFallback = new Date().toISOString()
     const sitemap: ISitemapField[] = []
@@ -40,6 +44,39 @@ const getPagesSitemap = unstable_cache(
               lastmod: page.updatedAt || dateFallback,
             })
           })
+      }
+
+      if (isPostEnabled) {
+        const postSlug = settings.postSlug || 'posts'
+
+        try {
+          const recentPost = await payload.find({
+            collection: 'posts',
+            overrideAccess: false,
+            draft: false,
+            depth: 0,
+            limit: 1,
+            pagination: false,
+            sort: '-updatedAt',
+            where: {
+              _status: {
+                equals: 'published',
+              },
+            },
+            select: {
+              updatedAt: true,
+            },
+          })
+
+          const postListingLastmod = recentPost.docs?.[0]?.updatedAt || dateFallback
+
+          sitemap.push({
+            loc: `${SITE_URL}/${postSlug}`,
+            lastmod: postListingLastmod,
+          })
+        } catch (error) {
+          console.error('Error fetching post listing for sitemap:', error)
+        }
       }
     } catch (error) {
       console.error('Error fetching pages for sitemap:', error)
