@@ -18,7 +18,8 @@ import PostListingPage from '@/components/post-listing'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
-  const postSlug = ((await getCachedGlobal('settings', 1, false)) as Setting).postSlug || 'posts'
+  const settings = (await getCachedGlobal('settings', 1, false)) as Setting
+  const isPostEnabled = settings.enablePost
 
   const pages = await payload.find({
     collection: 'pages',
@@ -31,28 +32,32 @@ export async function generateStaticParams() {
     },
   })
 
-  const posts = await payload.find({
-    collection: 'posts',
-    draft: false,
-    limit: 1000,
-    overrideAccess: false,
-    pagination: false,
-    select: {
-      slug: true,
-    },
-  })
-
   const params: { slug: string[] }[] = []
 
-  params.push({ slug: postSlug.split('/') })
+  if (isPostEnabled) {
+    const postSlug = settings.postSlug || 'posts'
+    
+    const posts = await payload.find({
+      collection: 'posts',
+      draft: false,
+      limit: 1000,
+      overrideAccess: false,
+      pagination: false,
+      select: {
+        slug: true,
+      },
+    })
+
+    params.push({ slug: postSlug.split('/') })
+
+    posts.docs?.forEach(({ slug }) => {
+      const correctSlug = `${postSlug}/${slug}`
+      params.push({ slug: correctSlug?.split('/') })
+    })
+  }
 
   pages.docs?.forEach(({ slug }) => {
     params.push({ slug: slug?.split('/') })
-  })
-
-  posts.docs?.forEach(({ slug }) => {
-    const correctSlug = `${postSlug}/${slug}`
-    params.push({ slug: correctSlug?.split('/') })
   })
 
   params.push({ slug: [] })
@@ -76,25 +81,33 @@ const gapClasses = {
 
 export default async function Slug({ params, searchParams }: Readonly<SlugProps>) {
   const { isEnabled: draft } = await draftMode()
-  const postSlug = ((await getCachedGlobal('settings', 1, draft)) as Setting).postSlug || 'posts'
-  let isPostPage = false
+  const settings = ((await getCachedGlobal('settings', 1, draft)) as Setting)
+  const isPostEnabled = settings.enablePost
   const param = await params
   const slug = param?.slug ? param.slug.join('/') : 'home'
   const url = '/' + slug
 
   let page: Post | Page | null = null
-  if (param?.slug?.includes(postSlug)) {
-    if (param?.slug.length === 1 && param?.slug[0] === postSlug) {
-      isPostPage = true
-    } else if (param?.slug[0] === postSlug) {
-      let postItemSlug = param?.slug.slice(1).join('/')
-      page = await queryBySlug({
-        slug: postItemSlug,
-        collection: 'posts',
-        draft,
-      })
+  let isPostPage = false
+  
+  if (isPostEnabled) {
+    const postSlug = settings.postSlug || 'posts'
+    
+    if (param?.slug?.includes(postSlug)) {
+      if (param?.slug.length === 1 && param?.slug[0] === postSlug) {
+        isPostPage = true
+      } else if (param?.slug[0] === postSlug) {
+        const postItemSlug = param?.slug.slice(1).join('/')
+        page = await queryBySlug({
+          slug: postItemSlug,
+          collection: 'posts',
+          draft,
+        })
+      }
     }
-  } else {
+  }
+  
+  if (!page && !isPostPage) {
     page = await queryBySlug({
       slug,
       collection: 'pages',
@@ -145,24 +158,31 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
 
 export async function generateMetadata({ params }: SlugProps): Promise<Metadata> {
   const settings = (await getCachedGlobal('settings', 1, false)) as Setting
-  const postSlug = settings.postSlug || 'posts'
+  const isPostEnabled = settings.enablePost
   const param = await params
   const slug = param?.slug ? param.slug.join('/') : 'home'
 
   let page: Post | Page | null = null
 
-  if (param?.slug?.includes(postSlug)) {
-    if (param?.slug.length === 1 && param?.slug[0] === postSlug) {
-      return generatePostsListingMeta(settings)
-    } else if (param?.slug[0] === postSlug) {
-      let postItemSlug = param?.slug.slice(1).join('/')
-      page = await queryBySlug({
-        slug: postItemSlug,
-        collection: 'posts',
-        draft: false,
-      })
+  // Only check for post routes if posts are enabled
+  if (isPostEnabled) {
+    const postSlug = settings.postSlug || 'posts'
+    
+    if (param?.slug?.includes(postSlug)) {
+      if (param?.slug.length === 1 && param?.slug[0] === postSlug) {
+        return generatePostsListingMeta(settings)
+      } else if (param?.slug[0] === postSlug) {
+        const postItemSlug = param?.slug.slice(1).join('/')
+        page = await queryBySlug({
+          slug: postItemSlug,
+          collection: 'posts',
+          draft: false,
+        })
+      }
     }
-  } else {
+  }
+  
+  if (!page) {
     page = await queryBySlug({
       slug,
       collection: 'pages',
