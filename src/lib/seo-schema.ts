@@ -1,6 +1,7 @@
 import { getCachedGlobal } from '@/lib/get-globals'
 import { getServerSideURL } from '@/lib/get-url'
 import type { Post, Media, User, Social, Setting } from '@/payload-types'
+import { getMediaUrl } from './get-media-url'
 
 export const articleSchema = async (post: Post, settings: Setting) => {
   const image = post.meta?.image as Media | undefined
@@ -31,7 +32,7 @@ export const articleSchema = async (post: Post, settings: Setting) => {
     headline: post.title,
     datePublished: new Date(post.createdAt),
     dateModified: new Date(post.updatedAt),
-    image: [`${getServerSideURL()}/${imageUrl}`],
+    image: [getMediaUrl(imageUrl)],
     author: {
       '@type': 'Person',
       name: author.name,
@@ -54,7 +55,7 @@ export const imageSchema = async (image: Media | null | undefined, settings: Set
   return {
     '@context': 'https://schema.org',
     '@type': 'ImageObject',
-    contentUrl: `${getServerSideURL()}/${contentUrl}`,
+    contentUrl: getMediaUrl(contentUrl),
     creditText: image?.creditText,
   }
 }
