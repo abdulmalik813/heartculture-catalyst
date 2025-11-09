@@ -10,6 +10,7 @@ import { DividerBlock } from '@/blocks/divider/config'
 import { defaultLexicalValue } from '@/constants/default-lexical'
 import { FormBlock } from '../form/config'
 import { TableBlock } from '../table/config'
+import { animate } from '@/fields/animate'
 
 export const ContentBlock: Block = {
   slug: 'contentBlock',
@@ -41,6 +42,11 @@ export const ContentBlock: Block = {
         }
       ],
     },
+    {
+      label: "Animate",
+      type: "group",
+      fields: [animate()]
+    }
   ],
   graphQL: {
     singularName: 'ContentBlock',
