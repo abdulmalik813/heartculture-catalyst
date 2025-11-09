@@ -20,6 +20,7 @@ import { Footer } from '@/globals/footer'
 import { Posts } from '@/collections/posts'
 import { Categories } from '@/collections/categories'
 import { Testimonials } from './collections/testimonials'
+import { Social } from '@/globals/social'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -69,7 +70,7 @@ export default buildConfig({
     apiKey: EMAIL.RESEND_API_KEY,
   }),
   collections: [Pages, Posts, Categories, Users, Media, Styles, Icons, Testimonials],
-  globals: [NavigationBar, Footer, Settings],
+  globals: [NavigationBar, Footer, Settings, Social],
   cors: [getServerSideURL()].filter(Boolean),
   editor: defaultLexical(),
   secret: PAYLOAD.SECRET,

@@ -78,3 +78,12 @@ export const revalidateFooter: GlobalAfterChangeHook = async ({ doc }) => {
   revalidateTag('global_footer')
   return doc
 }
+
+export const revalidateSocial: GlobalAfterChangeHook = async ({ doc }) => {
+  if (doc._status === 'draft') {
+    return doc
+  }
+
+  revalidateTag('global_social')
+  return doc
+}

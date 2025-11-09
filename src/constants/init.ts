@@ -1,6 +1,3 @@
-import { getCachedGlobal } from "@/lib/get-globals"
-import { Setting } from "@/payload-types"
-
 // Database
 export const DATABASE_URI = process.env.DATABASE_URI!
 

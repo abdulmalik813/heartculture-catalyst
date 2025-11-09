@@ -30,6 +30,10 @@ export const Media: CollectionConfig = {
         },
       }),
     },
+    {
+      name: 'creditText',
+      type: 'text'
+    }
   ],
   upload: {
     adminThumbnail: 'thumbnail',
