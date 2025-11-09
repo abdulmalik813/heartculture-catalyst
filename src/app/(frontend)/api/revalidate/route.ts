@@ -2,6 +2,8 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { getCachedGlobal } from '@/lib/get-globals'
+import { Setting } from '@/payload-types'
 
 export async function POST(request: NextRequest) {
   try {
@@ -48,14 +50,10 @@ export async function POST(request: NextRequest) {
       collection: 'posts',
       limit: 1000
     })
-    revalidatePath("/posts")
-    posts.docs.forEach((post) => revalidatePath("/posts/" + post.slug))
 
-    const categories = await payload.find({
-      collection: 'categories',
-      limit: 1000
-    })
-    categories.docs.forEach((category) => revalidatePath("/posts/category/" + category.slug))
+    const postSlug = (await getCachedGlobal("settings") as Setting).postSlug
+    revalidatePath(`/${postSlug}`)
+    posts.docs.forEach((post) => revalidatePath(`/${postSlug}/${post.slug}`))
 
     return NextResponse.json({
       revalidated: true,
