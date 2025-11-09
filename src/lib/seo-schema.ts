@@ -2,9 +2,9 @@ import { getCachedGlobal } from '@/lib/get-globals'
 import { getServerSideURL } from '@/lib/get-url'
 import type { Post, Media, User, Social, Setting } from '@/payload-types'
 
-export const articleSchema = async (props: Post) => {
-  const image = props.meta?.image as Media | undefined
-  const author = props.author as User
+export const articleSchema = async (post: Post, settings: Setting) => {
+  const image = post.meta?.image as Media | undefined
+  const author = post.author as User
   const social = (await getCachedGlobal('social')) as Social
 
   const socialLinks = [
@@ -19,7 +19,6 @@ export const articleSchema = async (props: Post) => {
   let imageUrl: string
 
   if (!image || !image.url) {
-    const settings = (await getCachedGlobal('settings')) as Setting
     const logo = settings.logo as Media
     imageUrl = logo.url || ''
   } else {
@@ -29,9 +28,9 @@ export const articleSchema = async (props: Post) => {
   return {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
-    headline: props.title,
-    datePublished: new Date(props.createdAt),
-    dateModified: new Date(props.updatedAt),
+    headline: post.title,
+    datePublished: new Date(post.createdAt),
+    dateModified: new Date(post.updatedAt),
     image: [`${getServerSideURL()}/${imageUrl}`],
     author: {
       '@type': 'Person',
@@ -41,21 +40,20 @@ export const articleSchema = async (props: Post) => {
   }
 }
 
-export const imageSchema = async (props: Media | null | undefined) => {
+export const imageSchema = async (image: Media | null | undefined, settings: Setting) => {
   let contentUrl: string
 
-  if (!props || !props.url) {
-    const settings = (await getCachedGlobal('settings')) as Setting
+  if (!image || !image.url) {
     const logo = settings.logo as Media
     contentUrl = logo.url || ''
   } else {
-    contentUrl = props.url
+    contentUrl = image.url
   }
 
   return {
     '@context': 'https://schema.org',
     '@type': 'ImageObject',
     contentUrl: `${getServerSideURL()}/${contentUrl}`,
-    creditText: props?.creditText,
+    creditText: image?.creditText,
   }
 }

@@ -131,15 +131,11 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
   }
 
   if (!page && !isPostListingPage) {
-    try {
-      page = await queryBySlug({
-        slug,
-        collection: 'pages',
-        draft,
-      })
-    } catch (error) {
-      console.error('Error fetching page:', error)
-    }
+    page = await queryBySlug({
+      slug,
+      collection: 'pages',
+      draft,
+    })
   }
 
   if (!page && slug === 'home' && !isPostListingPage) {
@@ -150,11 +146,11 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
     return <PayloadRedirects url={url} />
   }
 
-  const renderSchema = (page: Page | Post, isItAPost: boolean) => {
-    const schemas: any[] = [imageSchema(page.meta?.image as Media)]
+  const renderSchema = () => {
+    const schemas: any[] = [imageSchema(page?.meta?.image as Media, settings)]
 
-    if (isItAPost) {
-      schemas.push(articleSchema(page))
+    if (isItAPost && page) {
+      schemas.push(articleSchema(page, settings))
     }
 
     return (
@@ -164,8 +160,8 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
     )
   }
 
-  const renderPostListingSchema = (settings: Setting) => {
-    const schema = [imageSchema(settings?.postMetaImage as Media)]
+  const renderPostListingSchema = () => {
+    const schema = [imageSchema(settings?.postMetaImage as Media, settings)]
     return (
       <Script type={'application/ld+json'} strategy="lazyOnload">
         {JSON.stringify(schema)}
@@ -178,7 +174,7 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
       <PayloadRedirects disableNotFound url={url} />
       {isPostListingPage ? (
         <>
-          {renderPostListingSchema(settings)}
+          {renderPostListingSchema()}
           <PostListingPage searchParams={searchParams} />
         </>
       ) : (
@@ -202,7 +198,7 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
                 </div>
               </div>
             ))}
-            {renderSchema(page, isItAPost)}
+            {renderSchema()}
           </>
         )
       )}
