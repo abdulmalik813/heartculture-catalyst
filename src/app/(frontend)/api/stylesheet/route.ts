@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getPayload } from 'payload'
-import configPromise from '@payload-config'
 import { draftMode } from 'next/headers'
 import { unstable_cache } from 'next/cache'
 import { getCachedGlobal } from '@/lib/get-globals'
@@ -17,44 +15,6 @@ interface FontData {
   subset: string
 }
 
-const getCachedFontCSS = unstable_cache(
-  async (fontsJson: string) => {
-    const fonts: FontData[] = JSON.parse(fontsJson)
-    if (fonts.length === 0) return ''
-    
-    const fontImports = fonts.map(font => {
-      const baseUrl = `https://cdn.jsdelivr.net/npm/@fontsource/${font.id}@latest`
-      if (font.variable) {
-        return `@import url('${baseUrl}/${font.subset}-variable.css');`
-      } else {
-        return `@import url('${baseUrl}/${font.subset}-${font.weight}.css');`
-      }
-    }).join('\n')
-    
-    return fontImports
-  },
-  ['fontsource-css'],
-  {
-    tags: ['fonts-tag'],
-    revalidate: 60 * 60 * 24 * 7,
-  }
-)
-
-async function fetchFontsourceFonts(fonts: FontData[]) {
-  if (fonts.length === 0) return ''
-  
-  const fontImports = fonts.map(font => {
-    const baseUrl = `https://cdn.jsdelivr.net/npm/@fontsource/${font.id}@latest`
-    if (font.variable) {
-      return `@import url('${baseUrl}/${font.subset}-variable.css');`
-    } else {
-      return `@import url('${baseUrl}/${font.subset}-${font.weight}.css');`
-    }
-  }).join('\n')
-  
-  return fontImports
-}
-
 function isFontData(data: unknown): data is FontData {
   return (
     typeof data === 'object' &&
@@ -69,84 +29,83 @@ function isFontData(data: unknown): data is FontData {
   )
 }
 
-export async function GET(req: NextRequest) {
-  const { isEnabled: draft } = await draftMode()
-
-  let styles
-  let settings
-  let fontsourceCSS
-
-  if (draft) {
-    styles = await getCachedDocuments("styles", true)() as Style[]
-    settings = await getCachedGlobal('settings', 1, true) as Setting
-    
-    const fonts: FontData[] = []
-
-    if (settings.default?.fontData && isFontData(settings.default.fontData)) {
-      fonts.push(settings.default.fontData)
-    }
-
-    if (settings.additionalFonts && Array.isArray(settings.additionalFonts)) {
-      settings.additionalFonts.forEach((font: any) => {
-        if (font.fontData && isFontData(font.fontData)) {
-          fonts.push(font.fontData)
-        }
-      })
-    }
-
-    fontsourceCSS = await fetchFontsourceFonts(fonts)
-  } else {
-    settings = await getCachedGlobal('settings', 1) as Setting
-    styles = await getCachedDocuments("styles")() as Style[]
-    
-    const fonts: FontData[] = []
-
-    if (settings.default?.fontData && isFontData(settings.default.fontData)) {
-      fonts.push(settings.default.fontData)
-    }
-
-    if (settings.additionalFonts && Array.isArray(settings.additionalFonts)) {
-      settings.additionalFonts.forEach((font: any) => {
-        if (font.fontData && isFontData(font.fontData)) {
-          fonts.push(font.fontData)
-        }
-      })
-    }
-
-    fontsourceCSS = await getCachedFontCSS(JSON.stringify(fonts))
+function generateFontImport(font: FontData): string {
+  if (font.variable) {
+    return `@import url('https://cdn.jsdelivr.net/npm/@fontsource-variable/${font.id}@latest/files/${font.subset}-wght.css');`
   }
+  return `@import url('https://cdn.jsdelivr.net/npm/@fontsource/${font.id}@latest/files/${font.subset}-${font.weight}.css');`
+}
 
-  const fontClasses: string[] = []
+function generateFontClass(font: any): string | null {
+  if (!font.id || !font.family || !font.fontData || !isFontData(font.fontData)) {
+    return null
+  }
+  
+  const fontData = font.fontData
+  const family = `'${fontData.family}', sans-serif`
+  const weight = fontData.variable ? 400 : fontData.weight
+  const style = fontData.style || 'normal'
+  
+  return `.font-${font.id} {\n  font-family: ${family} !important;\n  font-weight: ${weight} !important;\n  font-style: ${style} !important;\n}`
+}
 
+function collectFonts(settings: Setting): FontData[] {
+  const fonts: FontData[] = []
+  
+  if (settings.default?.fontData && isFontData(settings.default.fontData)) {
+    fonts.push(settings.default.fontData)
+  }
+  
   if (settings.additionalFonts && Array.isArray(settings.additionalFonts)) {
     settings.additionalFonts.forEach((font: any) => {
-      if (font.id && font.family && font.fontData && isFontData(font.fontData)) {
-        const fontData = font.fontData
-        const fontFamilyValue = `'${fontData.family}', sans-serif`
-        const fontWeight = fontData.variable ? 400 : fontData.weight
-        const fontStyle = fontData.style || 'normal'
-        
-        fontClasses.push(
-          `.font-${font.id} {\n  font-family: ${fontFamilyValue} !important;\n  font-weight: ${fontWeight} !important;\n  font-style: ${fontStyle} !important;\n}`
-        )
+      if (font.fontData && isFontData(font.fontData)) {
+        fonts.push(font.fontData)
       }
     })
   }
+  
+  return fonts
+}
 
-  const fontCSS = fontClasses.length > 0 ? `${fontClasses.join('\n\n')}\n\n` : ''
+const getCachedFontCSS = unstable_cache(
+  async (fontsJson: string) => {
+    const fonts: FontData[] = JSON.parse(fontsJson)
+    return fonts.map(generateFontImport).join('\n')
+  },
+  ['fontsource-css'],
+  { tags: ['fonts-tag'], revalidate: 60 * 60 * 24 * 7 }
+)
 
-  const combinedCSS = styles
-    .map((style) => style.stylesheet || '')
-    .filter((css) => css.trim() !== '')
+export async function GET(req: NextRequest) {
+  const { isEnabled: draft } = await draftMode()
+  
+  const settings = await getCachedGlobal('settings', 1, draft) as Setting
+  const styles = await getCachedDocuments("styles", draft)() as Style[]
+  
+  const fonts = collectFonts(settings)
+  
+  const fontsourceCSS = draft 
+    ? fonts.map(generateFontImport).join('\n')
+    : await getCachedFontCSS(JSON.stringify(fonts))
+  
+  const fontClasses = settings.additionalFonts
+    ?.map(generateFontClass)
+    .filter(Boolean)
+    .join('\n\n') || ''
+  
+  const stylesCSS = styles
+    .map(s => s.stylesheet || '')
+    .filter(css => css.trim())
     .join('\n\n')
-
-  return new NextResponse(
-    fontsourceCSS + '\n\n' + fontCSS + settings.theme + '\n\n' + combinedCSS,
-    {
-      headers: {
-        'Content-Type': 'text/css',
-        'Cache-Control': 'no-store',
-      },
-    }
-  )
+  
+  const css = [fontsourceCSS, fontClasses, settings.theme, stylesCSS]
+    .filter(Boolean)
+    .join('\n\n')
+  
+  return new NextResponse(css, {
+    headers: {
+      'Content-Type': 'text/css',
+      'Cache-Control': 'no-store',
+    },
+  })
 }
