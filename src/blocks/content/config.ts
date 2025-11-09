@@ -54,6 +54,9 @@ export const ContentBlock: Block = {
     {
       label: 'Animate',
       type: 'collapsible',
+      admin: {
+        initCollapsed: true
+      },
       fields: [animate()],
     },
   ],
