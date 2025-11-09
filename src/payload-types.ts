@@ -637,6 +637,32 @@ export interface ContentBlock {
     };
     [k: string]: unknown;
   } | null;
+  animate?: {
+    /**
+     * Choose an animation effect
+     */
+    type?: ('none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight') | null;
+    /**
+     * Animation duration
+     */
+    duration?: number | null;
+    /**
+     * Delay before animation starts
+     */
+    delay?: number | null;
+    /**
+     * Trigger when element enters viewport
+     */
+    animateOnScroll?: boolean | null;
+    /**
+     * Only animate first time (uncheck to re-animate)
+     */
+    animateOnce?: boolean | null;
+    /**
+     * How much of element must be visible to trigger (0-1)
+     */
+    viewportAmount?: number | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'contentBlock';
@@ -1719,6 +1745,16 @@ export interface ContentBlockSelect<T extends boolean = true> {
   gridStyles?: T;
   contentStyles?: T;
   content?: T;
+  animate?:
+    | T
+    | {
+        type?: T;
+        duration?: T;
+        delay?: T;
+        animateOnScroll?: T;
+        animateOnce?: T;
+        viewportAmount?: T;
+      };
   id?: T;
   blockName?: T;
 }

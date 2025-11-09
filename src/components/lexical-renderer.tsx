@@ -192,7 +192,6 @@ function jsxConverters(
 export async function LexicalRenderer({
   content,
   searchParams,
-  contentStyles,
   className,
   setting,
   page,
@@ -201,7 +200,7 @@ export async function LexicalRenderer({
   return (
     <ConvertRichText
       converters={jsxConverters(setting, page, searchParams)}
-      className={joinStyles('richtext-content', className, contentStyles)}
+      className={joinStyles('richtext-content', className)}
       data={content as DefaultTypedEditorState}
     />
   )
