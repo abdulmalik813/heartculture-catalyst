@@ -150,19 +150,37 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
     return <PayloadRedirects url={url} />
   }
 
-  const renderPostSchema = (post: Post) => {
-    const schema = [
-      imageSchema(post.meta?.image as Media),
-      articleSchema(post)
-    ]
-    return <Script type={'application/ld+json'} strategy='lazyOnload'>{JSON.stringify(schema)}</Script>
+  const renderSchema = (page: Page | Post, isItAPost: boolean) => {
+    const schemas: any[] = [imageSchema(page.meta?.image as Media)]
+
+    if (isItAPost) {
+      schemas.push(articleSchema(page))
+    }
+
+    return (
+      <Script type={'application/ld+json'} strategy="lazyOnload">
+        {JSON.stringify(schemas)}
+      </Script>
+    )
+  }
+
+  const renderPostListingSchema = (settings: Setting) => {
+    const schema = [imageSchema(settings?.postMetaImage as Media)]
+    return (
+      <Script type={'application/ld+json'} strategy="lazyOnload">
+        {JSON.stringify(schema)}
+      </Script>
+    )
   }
 
   return (
     <article className="min-h-[70vh]">
       <PayloadRedirects disableNotFound url={url} />
       {isPostListingPage ? (
-        <PostListingPage searchParams={searchParams} />
+        <>
+          {renderPostListingSchema(settings)}
+          <PostListingPage searchParams={searchParams} />
+        </>
       ) : (
         page && (
           <>
@@ -184,7 +202,7 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
                 </div>
               </div>
             ))}
-            {isItAPost && renderPostSchema(page)}
+            {renderSchema(page, isItAPost)}
           </>
         )
       )}
@@ -209,29 +227,21 @@ export async function generateMetadata({ params }: SlugProps): Promise<Metadata>
       if (postItemSlug === null) {
         return generatePostsListingMeta(settings)
       } else if (postItemSlug) {
-        try {
-          page = await queryBySlug({
-            slug: postItemSlug,
-            collection: 'posts',
-            draft: false,
-          })
-        } catch (error) {
-          console.error('Error fetching post metadata:', error)
-        }
+        page = await queryBySlug({
+          slug: postItemSlug,
+          collection: 'posts',
+          draft: false,
+        })
       }
     }
   }
 
   if (!page) {
-    try {
-      page = await queryBySlug({
-        slug,
-        collection: 'pages',
-        draft: false,
-      })
-    } catch (error) {
-      console.error('Error fetching page metadata:', error)
-    }
+    page = await queryBySlug({
+      slug,
+      collection: 'pages',
+      draft: false,
+    })
   }
 
   return generateMeta({ doc: page })
