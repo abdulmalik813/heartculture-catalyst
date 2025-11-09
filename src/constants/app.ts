@@ -7,14 +7,14 @@ export async function getAppSettings() {
   const setting = (await getCachedGlobal('settings', 1, isEnabled)) as Setting
 
   const fallbackImage =
-    typeof settings.fallbackImage === 'object' ? settings?.fallbackImage?.url : ''
-  const favIconPng = typeof settings.favIconPng === 'object' ? settings?.favIconPng?.url : null
-  const favIconSvg = typeof settings.favIconSvg === 'object' ? settings?.favIconSvg?.url : null
-  const favIcon = typeof settings.favIcon === 'object' ? settings?.favIcon?.url : null
+    typeof setting.fallbackImage === 'object' ? setting?.fallbackImage?.url : ''
+  const favIconPng = typeof setting.favIconPng === 'object' ? setting?.favIconPng?.url : null
+  const favIconSvg = typeof setting.favIconSvg === 'object' ? setting?.favIconSvg?.url : null
+  const favIcon = typeof setting.favIcon === 'object' ? setting?.favIcon?.url : null
 
   return {
-    appTitle: settings.appTitle,
-    appDescription: settings.appDescription,
+    appTitle: setting.appTitle,
+    appDescription: setting.appDescription,
     fallbackImage,
     favIcon,
     favIconPng,

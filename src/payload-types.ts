@@ -111,6 +111,7 @@ export interface UserAuthOperations {
 export interface Page {
   id: number;
   title: string;
+  author?: (number | null) | User;
   hero: {
     layout: 'fullscreen' | 'with-image' | 'text-only';
     heroTitle?: string | null;
@@ -246,6 +247,7 @@ export interface Page {
               | DividerBlock
               | FormBlock
               | TableBlock
+              | LastModifiedBlock
             )[]
           | null;
         container?: boolean | null;
@@ -271,6 +273,31 @@ export interface Page {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  name?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -420,6 +447,8 @@ export interface Post {
               | DividerBlock
               | FormBlock
               | TableBlock
+              | LastModifiedBlock
+              | RecentPostsBlock
             )[]
           | null;
         container?: boolean | null;
@@ -445,31 +474,6 @@ export interface Post {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  name?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1267,6 +1271,29 @@ export interface TableBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LastModifiedBlock".
+ */
+export interface LastModifiedBlock {
+  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
+  gridStyles?: (number | Style)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'lastModifiedBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RecentPostsBlock".
+ */
+export interface RecentPostsBlock {
+  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
+  gridStyles?: (number | Style)[] | null;
+  numberOfPosts: number;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'recentPostsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "testimonials".
  */
 export interface Testimonial {
@@ -1540,6 +1567,7 @@ export interface PayloadMigration {
  */
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
+  author?: T;
   hero?:
     | T
     | {
@@ -1638,6 +1666,7 @@ export interface PagesSelect<T extends boolean = true> {
               dividerBlock?: T | DividerBlockSelect<T>;
               formBlock?: T | FormBlockSelect<T>;
               tableBlock?: T | TableBlockSelect<T>;
+              lastModifiedBlock?: T | LastModifiedBlockSelect<T>;
             };
         container?: T;
         gapSize?: T;
@@ -1936,6 +1965,16 @@ export interface TableBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LastModifiedBlock_select".
+ */
+export interface LastModifiedBlockSelect<T extends boolean = true> {
+  gridSize?: T;
+  gridStyles?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
@@ -2041,6 +2080,8 @@ export interface PostsSelect<T extends boolean = true> {
               dividerBlock?: T | DividerBlockSelect<T>;
               formBlock?: T | FormBlockSelect<T>;
               tableBlock?: T | TableBlockSelect<T>;
+              lastModifiedBlock?: T | LastModifiedBlockSelect<T>;
+              recentPostsBlock?: T | RecentPostsBlockSelect<T>;
             };
         container?: T;
         gapSize?: T;
@@ -2060,6 +2101,17 @@ export interface PostsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RecentPostsBlock_select".
+ */
+export interface RecentPostsBlockSelect<T extends boolean = true> {
+  gridSize?: T;
+  gridStyles?: T;
+  numberOfPosts?: T;
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

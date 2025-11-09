@@ -20,6 +20,7 @@ import { AccordionBlock } from '@/blocks/accordion/config'
 import { DividerBlock } from '@/blocks/divider/config'
 import { FormBlock } from '@/blocks/form/config'
 import { TableBlock } from '@/blocks/table/config'
+import { LastModifiedBlock } from '@/blocks/last-modified/config'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
@@ -48,6 +49,14 @@ export const Pages: CollectionConfig<'pages'> = {
       name: 'title',
       type: 'text',
       required: true,
+    },
+    {
+      name: 'author',
+      type: 'relationship',
+      relationTo: 'users',
+      admin: {
+        position: 'sidebar',
+      },
     },
     {
       type: 'tabs',
@@ -81,6 +90,7 @@ export const Pages: CollectionConfig<'pages'> = {
                             DividerBlock(false),
                             FormBlock(false),
                             TableBlock(false),
+                            LastModifiedBlock,
                           ],
                           required: false,
                         },

@@ -20,6 +20,8 @@ import { AccordionBlock } from '@/blocks/accordion/config'
 import { DividerBlock } from '@/blocks/divider/config'
 import { FormBlock } from '@/blocks/form/config'
 import { TableBlock } from '@/blocks/table/config'
+import { LastModifiedBlock } from '@/blocks/last-modified/config'
+import { RecentPostsBlock } from '@/blocks/recent-posts/config'
 import { getCachedGlobal } from '@/lib/get-globals'
 import { Setting } from '@/payload-types'
 import type { Payload } from 'payload'
@@ -168,6 +170,8 @@ export const Posts: CollectionConfig<'posts'> = {
                             DividerBlock(false),
                             FormBlock(false),
                             TableBlock(false),
+                            LastModifiedBlock,
+                            RecentPostsBlock,
                           ],
                           required: false,
                         },

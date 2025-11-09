@@ -10,6 +10,8 @@ import { TabBlockUI } from '@/blocks/tab'
 import { AccordionBlockUI } from '@/blocks/accordion'
 import { DividerBlockUI } from '@/blocks/divider'
 import { TableBlockUI } from '@/blocks/table'
+import { LastModifiedBlockUI } from '@/blocks/last-modified'
+import { RecentPostsBlockUI } from '@/blocks/recent-posts'
 
 const blockComponents = {
   contentBlock: ContentBlockUI,
@@ -18,7 +20,9 @@ const blockComponents = {
   tabBlock: TabBlockUI,
   accordionBlock: AccordionBlockUI,
   dividerBlock: DividerBlockUI,
-  tableBlock: TableBlockUI
+  tableBlock: TableBlockUI,
+  lastModifiedBlock: LastModifiedBlockUI,
+  recentPostsBlock: RecentPostsBlockUI
 }
 
 type BlockRendererProps = {
@@ -35,7 +39,7 @@ const colsSpanClasses = {
   'two-thirds': 'col-span-4 lg:col-span-8',
 }
 
-export function BlockRenderer({ block, searchParams }: BlockRendererProps) {
+export function BlockRenderer({ block, searchParams, setting, page }: BlockRendererProps) {
   const blockType = block.blockType as keyof typeof blockComponents
   const Block = blockComponents[blockType]
   const hasGrid = 'gridSize' in block

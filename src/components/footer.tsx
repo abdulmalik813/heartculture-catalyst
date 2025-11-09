@@ -13,8 +13,8 @@ export async function Footer() {
   const footerData = (await getCachedGlobal('footer', 1, isEnabled)) as FooterType
   const setting = (await getCachedGlobal('settings', 1, isEnabled)) as Setting
 
-  const lightLogo = settings.logo
-  const darkLogo = settings?.logoDark ?? settings.logo
+  const lightLogo = setting.logo
+  const darkLogo = setting?.logoDark ?? setting.logo
 
   if (typeof lightLogo !== 'object' || typeof darkLogo !== 'object') return null
 
@@ -33,6 +33,8 @@ export async function Footer() {
                     'dark:hidden transition-transform group-hover:scale-105',
                     footerData.logoStyles,
                   )}
+                  setting={setting}
+                  page={null}
                 />
                 <MediaBlockUI
                   media={darkLogo}
@@ -40,15 +42,17 @@ export async function Footer() {
                     'hidden dark:block transition-transform group-hover:scale-105',
                     footerData.logoStyles,
                   )}
+                  setting={setting}
+                  page={null}
                 />
-                {footerData.useLabelWithLogo && settings.appTitle && (
+                {footerData.useLabelWithLogo && setting.appTitle && (
                   <span
                     className={joinStyles(
                       'text-xl font-bold tracking-tight',
                       footerData.labelStyles,
                     )}
                   >
-                    {settings.appTitle}
+                    {setting.appTitle}
                   </span>
                 )}
               </Link>
@@ -56,7 +60,7 @@ export async function Footer() {
                 <div
                   className={joinStyles('text-muted-foreground max-w-sm', footerData.tagLineStyles)}
                 >
-                  <LexicalRenderer content={footerData.tagLine} />
+                  <LexicalRenderer content={footerData.tagLine} setting={setting} page={null} />
                 </div>
               )}
             </div>
@@ -85,6 +89,8 @@ export async function Footer() {
                               'text-muted-foreground hover:text-foreground transition-colors text-sm',
                               footerData.linkStyles,
                             )}
+                            setting={setting}
+                            page={null}
                           />
                         ))}
                       </nav>
@@ -102,7 +108,7 @@ export async function Footer() {
       <div className="container mx-auto">
         <div className="py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-sm text-muted-foreground text-center sm:text-left">
-            © {new Date().getFullYear()} {settings.appTitle}. All rights reserved.
+            © {new Date().getFullYear()} {setting.appTitle}. All rights reserved.
           </p>
           <ThemeToggle />
         </div>
