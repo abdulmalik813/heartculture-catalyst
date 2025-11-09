@@ -11,7 +11,7 @@ const getPagesSitemap = unstable_cache(
     const payload = await getPayload({ config })
     const SITE_URL = getServerSideURL()
     const setting = (await getCachedGlobal('settings', 1, false)) as Setting
-    const isPostEnabled = settings.enablePost
+    const isPostEnabled = setting.enablePost
 
     const dateFallback = new Date().toISOString()
     const sitemap: ISitemapField[] = []
@@ -47,7 +47,7 @@ const getPagesSitemap = unstable_cache(
       }
 
       if (isPostEnabled) {
-        const postSlug = settings.postSlug || 'posts'
+        const postSlug = setting.postSlug || 'posts'
 
         try {
           const recentPost = await payload.find({
