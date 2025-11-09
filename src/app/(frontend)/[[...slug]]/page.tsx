@@ -14,7 +14,7 @@ import { Hero } from '@/components/hero'
 import { getCachedGlobal } from '@/lib/get-globals'
 import { Media, Page, Post, Setting } from '@/payload-types'
 import PostListingPage from '@/components/post-listing'
-import { articleSchema, imageSchema } from '@/components/schema'
+import { articleSchema, imageSchema } from '@/lib/seo-schema'
 import Script from 'next/script'
 
 export async function generateStaticParams() {
@@ -155,7 +155,6 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
       imageSchema(post.meta?.image as Media),
       articleSchema(post)
     ]
-
     return <Script type={'application/ld+json'} strategy='lazyOnload'>{JSON.stringify(schema)}</Script>
   }
 
