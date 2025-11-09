@@ -10,8 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { SearchParams } from '@/types/search-params'
 import { IconRender } from '@/components/icon-renderer'
-import { getHref } from '@/constants/get-href'
-import { SheetClose } from '@/components/ui/sheet'
+import { getHref } from '@/lib/get-href'
 
 function getIconData(item: any) {
   const icon = typeof item?.icon === 'object' ? item?.icon : null
@@ -30,7 +29,7 @@ function getIconData(item: any) {
 type DropdownItem = NonNullable<NonNullable<NavigationBlock['nav']>['items']>[number]
 
 type LinkItem = {
-  type?: ('reference' | 'custom') | null
+  type?: ('reference' | 'custom' | 'postsPage') | null
   newTab?: boolean | null
   icon?: any
   iconStyles?: any

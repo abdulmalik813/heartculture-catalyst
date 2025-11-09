@@ -126,22 +126,34 @@ export interface Page {
           label?: string | null;
           appearance?: ('link' | 'button' | 'dropdown') | null;
           link?: {
-            type?: ('reference' | 'custom') | null;
-            reference?: {
-              relationTo: 'pages';
-              value: number | Page;
-            } | null;
+            type?: ('reference' | 'postsPage' | 'custom') | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: number | Page;
+                } | null)
+              | ({
+                  relationTo: 'posts';
+                  value: number | Post;
+                } | null);
+            postPageUrl?: string | null;
             url?: string | null;
             newTab?: boolean | null;
           };
           items?:
             | {
                 label: string;
-                type?: ('reference' | 'custom') | null;
-                reference?: {
-                  relationTo: 'pages';
-                  value: number | Page;
-                } | null;
+                type?: ('reference' | 'postsPage' | 'custom') | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: number | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: number | Post;
+                    } | null);
+                postPageUrl?: string | null;
                 url?: string | null;
                 newTab?: boolean | null;
                 icon?: (number | null) | Icon;
@@ -257,6 +269,222 @@ export interface Page {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: number;
+  title: string;
+  /**
+   * Brief summary of the post for listings and previews
+   */
+  excerpt?: string | null;
+  author?: (number | null) | User;
+  categories?: (number | Category)[] | null;
+  hero: {
+    layout: 'fullscreen' | 'with-image' | 'text-only';
+    heroTitle?: string | null;
+    heroDescription?: string | null;
+    card?: {
+      enableTitle?: boolean | null;
+      enableAction?: boolean | null;
+      enableDescription?: boolean | null;
+      enableContent?: boolean | null;
+      enableFooter?: boolean | null;
+      title?: string | null;
+      actionPlacement?: ('header' | 'footer') | null;
+      action: {
+        nav?: {
+          label?: string | null;
+          appearance?: ('link' | 'button' | 'dropdown') | null;
+          link?: {
+            type?: ('reference' | 'postsPage' | 'custom') | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: number | Page;
+                } | null)
+              | ({
+                  relationTo: 'posts';
+                  value: number | Post;
+                } | null);
+            postPageUrl?: string | null;
+            url?: string | null;
+            newTab?: boolean | null;
+          };
+          items?:
+            | {
+                label: string;
+                type?: ('reference' | 'postsPage' | 'custom') | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: number | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: number | Post;
+                    } | null);
+                postPageUrl?: string | null;
+                url?: string | null;
+                newTab?: boolean | null;
+                icon?: (number | null) | Icon;
+                placement?: ('before' | 'after') | null;
+                iconStyles?: (number | Style)[] | null;
+                id?: string | null;
+              }[]
+            | null;
+          buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+          buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+          styles?: (number | Style)[] | null;
+          icon?: (number | null) | Icon;
+          placement?: ('before' | 'after') | null;
+          iconStyles?: (number | Style)[] | null;
+        };
+        id?: string | null;
+      }[];
+      description?: string | null;
+      content?: {
+        root: {
+          type: string;
+          children: {
+            type: any;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+      footer?: string | null;
+      cardStyles?: (number | Style)[] | null;
+      titleStyles?: (number | Style)[] | null;
+      actionStyles?: (number | Style)[] | null;
+      descriptionStyles?: (number | Style)[] | null;
+      cardContentStyles?: (number | Style)[] | null;
+      footerStyles?: (number | Style)[] | null;
+      animate?: {
+        /**
+         * Choose an animation effect
+         */
+        type?: ('none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight') | null;
+        /**
+         * Animation duration
+         */
+        duration?: number | null;
+        /**
+         * Delay before animation starts
+         */
+        delay?: number | null;
+        /**
+         * Trigger when element enters viewport
+         */
+        animateOnScroll?: boolean | null;
+        /**
+         * Only animate first time (uncheck to re-animate)
+         */
+        animateOnce?: boolean | null;
+        /**
+         * How much of element must be visible to trigger (0-1)
+         */
+        viewportAmount?: number | null;
+      };
+    };
+    media?: (number | null) | Media;
+    wrapperStyles?: (number | Style)[] | null;
+    contentStyles?: (number | Style)[] | null;
+    fullscreenStyles?: (number | Style)[] | null;
+    /**
+     * Styles applied to the entire hero section
+     */
+    containerStyles?: (number | Style)[] | null;
+    heroTitleStyles?: (number | Style)[] | null;
+    heroDescriptionStyles?: (number | Style)[] | null;
+  };
+  layout?:
+    | {
+        blocks?:
+          | (
+              | ContentBlock
+              | CallToActionBlock
+              | CardBlock
+              | TabBlock
+              | AccordionBlock
+              | DividerBlock
+              | FormBlock
+              | TableBlock
+            )[]
+          | null;
+        container?: boolean | null;
+        gapSize: 'none' | 'small' | 'medium' | 'large' | 'xlarge';
+        styles?: (number | Style)[] | null;
+        id?: string | null;
+      }[]
+    | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  name?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  name: string;
+  description?: string | null;
+  color?: ('default' | 'secondary' | 'destructive' | 'outline') | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -430,22 +658,34 @@ export interface CallToActionBlock {
         label?: string | null;
         appearance?: ('link' | 'button' | 'dropdown') | null;
         link?: {
-          type?: ('reference' | 'custom') | null;
-          reference?: {
-            relationTo: 'pages';
-            value: number | Page;
-          } | null;
+          type?: ('reference' | 'postsPage' | 'custom') | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          postPageUrl?: string | null;
           url?: string | null;
           newTab?: boolean | null;
         };
         items?:
           | {
               label: string;
-              type?: ('reference' | 'custom') | null;
-              reference?: {
-                relationTo: 'pages';
-                value: number | Page;
-              } | null;
+              type?: ('reference' | 'postsPage' | 'custom') | null;
+              reference?:
+                | ({
+                    relationTo: 'pages';
+                    value: number | Page;
+                  } | null)
+                | ({
+                    relationTo: 'posts';
+                    value: number | Post;
+                  } | null);
+              postPageUrl?: string | null;
               url?: string | null;
               newTab?: boolean | null;
               icon?: (number | null) | Icon;
@@ -539,22 +779,34 @@ export interface CardBlock {
       label?: string | null;
       appearance?: ('link' | 'button' | 'dropdown') | null;
       link?: {
-        type?: ('reference' | 'custom') | null;
-        reference?: {
-          relationTo: 'pages';
-          value: number | Page;
-        } | null;
+        type?: ('reference' | 'postsPage' | 'custom') | null;
+        reference?:
+          | ({
+              relationTo: 'pages';
+              value: number | Page;
+            } | null)
+          | ({
+              relationTo: 'posts';
+              value: number | Post;
+            } | null);
+        postPageUrl?: string | null;
         url?: string | null;
         newTab?: boolean | null;
       };
       items?:
         | {
             label: string;
-            type?: ('reference' | 'custom') | null;
-            reference?: {
-              relationTo: 'pages';
-              value: number | Page;
-            } | null;
+            type?: ('reference' | 'postsPage' | 'custom') | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: number | Page;
+                } | null)
+              | ({
+                  relationTo: 'posts';
+                  value: number | Post;
+                } | null);
+            postPageUrl?: string | null;
             url?: string | null;
             newTab?: boolean | null;
             icon?: (number | null) | Icon;
@@ -1012,210 +1264,6 @@ export interface TableBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "posts".
- */
-export interface Post {
-  id: number;
-  title: string;
-  /**
-   * Brief summary of the post for listings and previews
-   */
-  excerpt?: string | null;
-  author?: (number | null) | User;
-  categories?: (number | Category)[] | null;
-  hero: {
-    layout: 'fullscreen' | 'with-image' | 'text-only';
-    heroTitle?: string | null;
-    heroDescription?: string | null;
-    card?: {
-      enableTitle?: boolean | null;
-      enableAction?: boolean | null;
-      enableDescription?: boolean | null;
-      enableContent?: boolean | null;
-      enableFooter?: boolean | null;
-      title?: string | null;
-      actionPlacement?: ('header' | 'footer') | null;
-      action: {
-        nav?: {
-          label?: string | null;
-          appearance?: ('link' | 'button' | 'dropdown') | null;
-          link?: {
-            type?: ('reference' | 'custom') | null;
-            reference?: {
-              relationTo: 'pages';
-              value: number | Page;
-            } | null;
-            url?: string | null;
-            newTab?: boolean | null;
-          };
-          items?:
-            | {
-                label: string;
-                type?: ('reference' | 'custom') | null;
-                reference?: {
-                  relationTo: 'pages';
-                  value: number | Page;
-                } | null;
-                url?: string | null;
-                newTab?: boolean | null;
-                icon?: (number | null) | Icon;
-                placement?: ('before' | 'after') | null;
-                iconStyles?: (number | Style)[] | null;
-                id?: string | null;
-              }[]
-            | null;
-          buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
-          buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
-          styles?: (number | Style)[] | null;
-          icon?: (number | null) | Icon;
-          placement?: ('before' | 'after') | null;
-          iconStyles?: (number | Style)[] | null;
-        };
-        id?: string | null;
-      }[];
-      description?: string | null;
-      content?: {
-        root: {
-          type: string;
-          children: {
-            type: any;
-            version: number;
-            [k: string]: unknown;
-          }[];
-          direction: ('ltr' | 'rtl') | null;
-          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-          indent: number;
-          version: number;
-        };
-        [k: string]: unknown;
-      } | null;
-      footer?: string | null;
-      cardStyles?: (number | Style)[] | null;
-      titleStyles?: (number | Style)[] | null;
-      actionStyles?: (number | Style)[] | null;
-      descriptionStyles?: (number | Style)[] | null;
-      cardContentStyles?: (number | Style)[] | null;
-      footerStyles?: (number | Style)[] | null;
-      animate?: {
-        /**
-         * Choose an animation effect
-         */
-        type?: ('none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight') | null;
-        /**
-         * Animation duration
-         */
-        duration?: number | null;
-        /**
-         * Delay before animation starts
-         */
-        delay?: number | null;
-        /**
-         * Trigger when element enters viewport
-         */
-        animateOnScroll?: boolean | null;
-        /**
-         * Only animate first time (uncheck to re-animate)
-         */
-        animateOnce?: boolean | null;
-        /**
-         * How much of element must be visible to trigger (0-1)
-         */
-        viewportAmount?: number | null;
-      };
-    };
-    media?: (number | null) | Media;
-    wrapperStyles?: (number | Style)[] | null;
-    contentStyles?: (number | Style)[] | null;
-    fullscreenStyles?: (number | Style)[] | null;
-    /**
-     * Styles applied to the entire hero section
-     */
-    containerStyles?: (number | Style)[] | null;
-    heroTitleStyles?: (number | Style)[] | null;
-    heroDescriptionStyles?: (number | Style)[] | null;
-  };
-  layout?:
-    | {
-        blocks?:
-          | (
-              | ContentBlock
-              | CallToActionBlock
-              | CardBlock
-              | TabBlock
-              | AccordionBlock
-              | DividerBlock
-              | FormBlock
-              | TableBlock
-            )[]
-          | null;
-        container?: boolean | null;
-        gapSize: 'none' | 'small' | 'medium' | 'large' | 'xlarge';
-        styles?: (number | Style)[] | null;
-        id?: string | null;
-      }[]
-    | null;
-  meta?: {
-    title?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (number | null) | Media;
-    description?: string | null;
-  };
-  publishedAt?: string | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  name?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories".
- */
-export interface Category {
-  id: number;
-  name: string;
-  description?: string | null;
-  color?: ('default' | 'secondary' | 'destructive' | 'outline') | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "testimonials".
  */
 export interface Testimonial {
@@ -1518,6 +1566,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 type?: T;
                                 reference?: T;
+                                postPageUrl?: T;
                                 url?: T;
                                 newTab?: T;
                               };
@@ -1527,6 +1576,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 type?: T;
                                 reference?: T;
+                                postPageUrl?: T;
                                 url?: T;
                                 newTab?: T;
                                 icon?: T;
@@ -1647,6 +1697,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
                       | {
                           type?: T;
                           reference?: T;
+                          postPageUrl?: T;
                           url?: T;
                           newTab?: T;
                         };
@@ -1656,6 +1707,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
                           label?: T;
                           type?: T;
                           reference?: T;
+                          postPageUrl?: T;
                           url?: T;
                           newTab?: T;
                           icon?: T;
@@ -1725,6 +1777,7 @@ export interface CardBlockSelect<T extends boolean = true> {
                 | {
                     type?: T;
                     reference?: T;
+                    postPageUrl?: T;
                     url?: T;
                     newTab?: T;
                   };
@@ -1734,6 +1787,7 @@ export interface CardBlockSelect<T extends boolean = true> {
                     label?: T;
                     type?: T;
                     reference?: T;
+                    postPageUrl?: T;
                     url?: T;
                     newTab?: T;
                     icon?: T;
@@ -1915,6 +1969,7 @@ export interface PostsSelect<T extends boolean = true> {
                             | {
                                 type?: T;
                                 reference?: T;
+                                postPageUrl?: T;
                                 url?: T;
                                 newTab?: T;
                               };
@@ -1924,6 +1979,7 @@ export interface PostsSelect<T extends boolean = true> {
                                 label?: T;
                                 type?: T;
                                 reference?: T;
+                                postPageUrl?: T;
                                 url?: T;
                                 newTab?: T;
                                 icon?: T;
@@ -2423,22 +2479,34 @@ export interface NavigationBar {
           label?: string | null;
           appearance?: ('link' | 'button' | 'dropdown') | null;
           link?: {
-            type?: ('reference' | 'custom') | null;
-            reference?: {
-              relationTo: 'pages';
-              value: number | Page;
-            } | null;
+            type?: ('reference' | 'postsPage' | 'custom') | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: number | Page;
+                } | null)
+              | ({
+                  relationTo: 'posts';
+                  value: number | Post;
+                } | null);
+            postPageUrl?: string | null;
             url?: string | null;
             newTab?: boolean | null;
           };
           items?:
             | {
                 label: string;
-                type?: ('reference' | 'custom') | null;
-                reference?: {
-                  relationTo: 'pages';
-                  value: number | Page;
-                } | null;
+                type?: ('reference' | 'postsPage' | 'custom') | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: number | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: number | Post;
+                    } | null);
+                postPageUrl?: string | null;
                 url?: string | null;
                 newTab?: boolean | null;
                 icon?: (number | null) | Icon;
@@ -2463,22 +2531,34 @@ export interface NavigationBar {
           label?: string | null;
           appearance?: ('link' | 'button' | 'dropdown') | null;
           link?: {
-            type?: ('reference' | 'custom') | null;
-            reference?: {
-              relationTo: 'pages';
-              value: number | Page;
-            } | null;
+            type?: ('reference' | 'postsPage' | 'custom') | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: number | Page;
+                } | null)
+              | ({
+                  relationTo: 'posts';
+                  value: number | Post;
+                } | null);
+            postPageUrl?: string | null;
             url?: string | null;
             newTab?: boolean | null;
           };
           items?:
             | {
                 label: string;
-                type?: ('reference' | 'custom') | null;
-                reference?: {
-                  relationTo: 'pages';
-                  value: number | Page;
-                } | null;
+                type?: ('reference' | 'postsPage' | 'custom') | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: number | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: number | Post;
+                    } | null);
+                postPageUrl?: string | null;
                 url?: string | null;
                 newTab?: boolean | null;
                 icon?: (number | null) | Icon;
@@ -2556,22 +2636,34 @@ export interface Footer {
                       label?: string | null;
                       appearance?: ('link' | 'button' | 'dropdown') | null;
                       link?: {
-                        type?: ('reference' | 'custom') | null;
-                        reference?: {
-                          relationTo: 'pages';
-                          value: number | Page;
-                        } | null;
+                        type?: ('reference' | 'postsPage' | 'custom') | null;
+                        reference?:
+                          | ({
+                              relationTo: 'pages';
+                              value: number | Page;
+                            } | null)
+                          | ({
+                              relationTo: 'posts';
+                              value: number | Post;
+                            } | null);
+                        postPageUrl?: string | null;
                         url?: string | null;
                         newTab?: boolean | null;
                       };
                       items?:
                         | {
                             label: string;
-                            type?: ('reference' | 'custom') | null;
-                            reference?: {
-                              relationTo: 'pages';
-                              value: number | Page;
-                            } | null;
+                            type?: ('reference' | 'postsPage' | 'custom') | null;
+                            reference?:
+                              | ({
+                                  relationTo: 'pages';
+                                  value: number | Page;
+                                } | null)
+                              | ({
+                                  relationTo: 'posts';
+                                  value: number | Post;
+                                } | null);
+                            postPageUrl?: string | null;
                             url?: string | null;
                             newTab?: boolean | null;
                             icon?: (number | null) | Icon;
@@ -2695,6 +2787,7 @@ export interface NavigationBarSelect<T extends boolean = true> {
                 | {
                     type?: T;
                     reference?: T;
+                    postPageUrl?: T;
                     url?: T;
                     newTab?: T;
                   };
@@ -2704,6 +2797,7 @@ export interface NavigationBarSelect<T extends boolean = true> {
                     label?: T;
                     type?: T;
                     reference?: T;
+                    postPageUrl?: T;
                     url?: T;
                     newTab?: T;
                     icon?: T;
@@ -2733,6 +2827,7 @@ export interface NavigationBarSelect<T extends boolean = true> {
                 | {
                     type?: T;
                     reference?: T;
+                    postPageUrl?: T;
                     url?: T;
                     newTab?: T;
                   };
@@ -2742,6 +2837,7 @@ export interface NavigationBarSelect<T extends boolean = true> {
                     label?: T;
                     type?: T;
                     reference?: T;
+                    postPageUrl?: T;
                     url?: T;
                     newTab?: T;
                     icon?: T;
@@ -2800,6 +2896,7 @@ export interface FooterSelect<T extends boolean = true> {
                             | {
                                 type?: T;
                                 reference?: T;
+                                postPageUrl?: T;
                                 url?: T;
                                 newTab?: T;
                               };
@@ -2809,6 +2906,7 @@ export interface FooterSelect<T extends boolean = true> {
                                 label?: T;
                                 type?: T;
                                 reference?: T;
+                                postPageUrl?: T;
                                 url?: T;
                                 newTab?: T;
                                 icon?: T;
@@ -2922,22 +3020,34 @@ export interface NavigationBlock {
     label?: string | null;
     appearance?: ('link' | 'button' | 'dropdown') | null;
     link?: {
-      type?: ('reference' | 'custom') | null;
-      reference?: {
-        relationTo: 'pages';
-        value: number | Page;
-      } | null;
+      type?: ('reference' | 'postsPage' | 'custom') | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      postPageUrl?: string | null;
       url?: string | null;
       newTab?: boolean | null;
     };
     items?:
       | {
           label: string;
-          type?: ('reference' | 'custom') | null;
-          reference?: {
-            relationTo: 'pages';
-            value: number | Page;
-          } | null;
+          type?: ('reference' | 'postsPage' | 'custom') | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          postPageUrl?: string | null;
           url?: string | null;
           newTab?: boolean | null;
           icon?: (number | null) | Icon;

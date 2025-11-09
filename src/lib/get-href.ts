@@ -1,4 +1,7 @@
 export function getHref(link: any) {
+  if (link.type === "postPage") {
+    return `/${link?.postPageUrl}`
+  }
   return link?.type === 'custom'
     ? link.url
     : link?.reference?.relationTo === 'pages'

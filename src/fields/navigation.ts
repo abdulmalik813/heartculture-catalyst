@@ -1,19 +1,8 @@
 import type { Field, GroupField } from 'payload'
 import deepMerge from '@/lib/deep-merge'
 import { icon } from './icon'
-import { getCachedGlobal } from '@/lib/get-globals'
-import { Setting } from '@/payload-types'
 
 type NavType = (options?: { overrides?: Partial<GroupField> }) => Field
-
-const settings = (await getCachedGlobal('settings', 1, false)) as Setting
-
-const { enablePost, postSlug } = settings
-
-const relationToCollections = ['pages']
-if (enablePost) {
-  relationToCollections.push('posts')
-}
 
 const navFields: Field[] = [
   {
@@ -30,8 +19,20 @@ const navFields: Field[] = [
         label: 'Link Type',
         options: [
           { label: 'Internal Page', value: 'reference' },
+          { label: 'Posts Page', value: 'postsPage' },
           { label: 'External URL', value: 'custom' },
         ],
+        validate: async (value: any, { req }: any) => {
+          if (value === 'postsPage') {
+            const settings = await req.payload.findGlobal({
+              slug: 'settings',
+            })
+            if (!settings?.enablePost) {
+              return 'Posts must be enabled in settings to use Posts Page'
+            }
+          }
+          return true
+        },
       },
       {
         name: 'reference',
@@ -39,8 +40,41 @@ const navFields: Field[] = [
         admin: {
           condition: (_, data) => data?.type === 'reference',
         },
-        relationTo: relationToCollections,
-        required: true,
+        relationTo: ['pages', 'posts'],
+        filterOptions: async ({ req, relationTo }) => {
+          const settings = await req.payload.findGlobal({
+            slug: 'settings',
+          })
+
+          if (!settings?.enablePost && relationTo === 'posts') {
+            return {
+              id: {
+                exists: false,
+              },
+            }
+          }
+          return true
+        },
+      },
+      {
+        name: 'postPageUrl',
+        type: 'text',
+        admin: {
+          condition: () => false,
+        },
+        hooks: {
+          beforeChange: [
+            async ({ req, siblingData }) => {
+              if (siblingData?.type === 'posts') {
+                const settings = await req.payload.findGlobal({
+                  slug: 'settings',
+                })
+                return settings?.postSlug || 'posts'
+              }
+              return undefined
+            },
+          ],
+        },
       },
       {
         name: 'url',
