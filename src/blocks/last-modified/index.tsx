@@ -1,5 +1,8 @@
 import { Page, Post, LastModifiedBlock, Setting } from '@/payload-types'
 import { SearchParams } from '@/types/search-params'
+import { AnimateWrapper } from '@/components/animate-wrapper'
+import { Card, CardContent } from '@/components/ui/card'
+import { joinStyles } from '@/lib/make-styles'
 
 export function LastModifiedBlockUI({
   searchParams,
@@ -21,11 +24,15 @@ export function LastModifiedBlockUI({
   }).format(new Date(updatedAt))
 
   return (
-    <div className="text-right">
-      <p className="text-sm text-muted-foreground">
-        Last modified on {formattedDate}
-        {page.author && typeof page.author === 'object' && page.author?.name && <> by {page.author.name}</>}
-      </p>
-    </div>
+    <AnimateWrapper animate={lastModifiedBlock.animate}>
+      <Card className={joinStyles(lastModifiedBlock.cardStyles)}>
+        <CardContent className={joinStyles(lastModifiedBlock.cardContentStyles)}>
+          Last modified on {formattedDate}
+          {page.author && typeof page.author === 'object' && page.author?.name && (
+            <> by {page.author.name}</>
+          )}
+        </CardContent>
+      </Card>
+    </AnimateWrapper>
   )
 }

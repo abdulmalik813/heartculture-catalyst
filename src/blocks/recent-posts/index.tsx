@@ -12,6 +12,14 @@ import { Page, Post, RecentPostsBlock, Setting } from '@/payload-types'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { SearchParams } from '@/types/search-params'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from '@/components/ui/card'
+import { joinStyles } from '@/lib/make-styles'
+import { AnimateWrapper } from '@/components/animate-wrapper'
 
 export async function RecentPostsBlockUI({
   searchParams,
@@ -36,35 +44,45 @@ export async function RecentPostsBlockUI({
   })
 
   return (
-    <div>
-      <h3 className="text-2xl font-bold mb-4">Recent Posts</h3>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Post Title</TableHead>
-            <TableHead>Categories</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {recentPosts.docs.map((post) => (
-            <TableRow key={post.id}>
-              <TableCell>
-                <Link href={`/posts/${post.slug}`}>{post.title}</Link>
-              </TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  {post.categories?.map(
-                    (category) =>
-                      typeof category === 'object' && (
-                        <Badge key={category.id}>{category.name}</Badge>
-                      ),
-                  )}
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+    <AnimateWrapper animate={recentPostsBlock.animate}>
+      <Card className={joinStyles(recentPostsBlock.cardStyles)}>
+        {recentPostsBlock.enableTitle && recentPostsBlock.title && (
+          <CardHeader>
+            <CardTitle className={joinStyles(recentPostsBlock.titleStyles)}>
+              {recentPostsBlock.title}
+            </CardTitle>
+          </CardHeader>
+        )}
+        <CardContent className={joinStyles(recentPostsBlock.contentStyles)}>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Post Title</TableHead>
+                <TableHead>Categories</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {recentPosts.docs.map((post) => (
+                <TableRow key={post.id}>
+                  <TableCell>
+                    <Link href={`/posts/${post.slug}`}>{post.title}</Link>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-2">
+                      {post.categories?.map(
+                        (category) =>
+                          typeof category === 'object' && (
+                            <Badge key={category.id}>{category.name}</Badge>
+                          ),
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </AnimateWrapper>
   )
 }

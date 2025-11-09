@@ -1,18 +1,85 @@
 import { grid } from '@/fields/grid'
 import { Block } from 'payload'
+import { animate } from '@/fields/animate'
 
 export const RecentPostsBlock: Block = {
   slug: 'recentPostsBlock',
   interfaceName: 'RecentPostsBlock',
   dbName: 'recent_posts',
   fields: [
-    grid(),
     {
-      name: 'numberOfPosts',
-      type: 'number',
-      label: 'Number of Posts',
-      defaultValue: 5,
-      required: true,
+      type: 'tabs',
+      tabs: [
+        {
+          label: 'Layout',
+          fields: [grid()],
+        },
+        {
+          label: 'Configuration',
+          fields: [
+            {
+              name: 'enableTitle',
+              type: 'checkbox',
+              label: 'Enable Title',
+              defaultValue: true,
+            },
+            {
+              name: 'numberOfPosts',
+              type: 'number',
+              label: 'Number of Posts',
+              defaultValue: 5,
+              required: true,
+            },
+          ],
+        },
+        {
+          label: 'Card',
+          fields: [
+            {
+              name: 'title',
+              type: 'text',
+              required: true,
+              label: 'Card Title',
+              admin: {
+                condition: (_, data) => data.enableTitle,
+              },
+            },
+          ],
+        },
+        {
+          label: 'Styles',
+          fields: [
+            {
+              name: 'cardStyles',
+              type: 'relationship',
+              relationTo: 'styles',
+              hasMany: true,
+              label: 'Card Container Styles',
+            },
+            {
+              name: 'titleStyles',
+              type: 'relationship',
+              relationTo: 'styles',
+              hasMany: true,
+              label: 'Title Styles',
+              admin: {
+                condition: (_, data) => data.enableTitle,
+              },
+            },
+            {
+              name: 'contentStyles',
+              type: 'relationship',
+              relationTo: 'styles',
+              hasMany: true,
+              label: 'Content Styles',
+            },
+          ],
+        },
+        {
+          label: 'Animation',
+          fields: [animate()],
+        },
+      ],
     },
   ],
   graphQL: {

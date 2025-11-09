@@ -1268,6 +1268,34 @@ export interface TableBlock {
 export interface LastModifiedBlock {
   gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
   gridStyles?: (number | Style)[] | null;
+  cardStyles?: (number | Style)[] | null;
+  cardContentStyles?: (number | Style)[] | null;
+  animate?: {
+    /**
+     * Choose an animation effect
+     */
+    type?: ('none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight') | null;
+    /**
+     * Animation duration
+     */
+    duration?: number | null;
+    /**
+     * Delay before animation starts
+     */
+    delay?: number | null;
+    /**
+     * Trigger when element enters viewport
+     */
+    animateOnScroll?: boolean | null;
+    /**
+     * Only animate first time (uncheck to re-animate)
+     */
+    animateOnce?: boolean | null;
+    /**
+     * How much of element must be visible to trigger (0-1)
+     */
+    viewportAmount?: number | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'lastModifiedBlock';
@@ -1279,7 +1307,38 @@ export interface LastModifiedBlock {
 export interface RecentPostsBlock {
   gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
   gridStyles?: (number | Style)[] | null;
+  enableTitle?: boolean | null;
   numberOfPosts: number;
+  title?: string | null;
+  cardStyles?: (number | Style)[] | null;
+  titleStyles?: (number | Style)[] | null;
+  contentStyles?: (number | Style)[] | null;
+  animate?: {
+    /**
+     * Choose an animation effect
+     */
+    type?: ('none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight') | null;
+    /**
+     * Animation duration
+     */
+    duration?: number | null;
+    /**
+     * Delay before animation starts
+     */
+    delay?: number | null;
+    /**
+     * Trigger when element enters viewport
+     */
+    animateOnScroll?: boolean | null;
+    /**
+     * Only animate first time (uncheck to re-animate)
+     */
+    animateOnce?: boolean | null;
+    /**
+     * How much of element must be visible to trigger (0-1)
+     */
+    viewportAmount?: number | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'recentPostsBlock';
@@ -1956,6 +2015,18 @@ export interface TableBlockSelect<T extends boolean = true> {
 export interface LastModifiedBlockSelect<T extends boolean = true> {
   gridSize?: T;
   gridStyles?: T;
+  cardStyles?: T;
+  cardContentStyles?: T;
+  animate?:
+    | T
+    | {
+        type?: T;
+        duration?: T;
+        delay?: T;
+        animateOnScroll?: T;
+        animateOnce?: T;
+        viewportAmount?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -2093,7 +2164,22 @@ export interface PostsSelect<T extends boolean = true> {
 export interface RecentPostsBlockSelect<T extends boolean = true> {
   gridSize?: T;
   gridStyles?: T;
+  enableTitle?: T;
   numberOfPosts?: T;
+  title?: T;
+  cardStyles?: T;
+  titleStyles?: T;
+  contentStyles?: T;
+  animate?:
+    | T
+    | {
+        type?: T;
+        duration?: T;
+        delay?: T;
+        animateOnScroll?: T;
+        animateOnce?: T;
+        viewportAmount?: T;
+      };
   id?: T;
   blockName?: T;
 }
