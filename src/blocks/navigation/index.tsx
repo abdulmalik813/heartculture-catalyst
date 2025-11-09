@@ -29,7 +29,7 @@ function getIconData(item: any) {
 type DropdownItem = NonNullable<NonNullable<NavigationBlock['nav']>['items']>[number]
 
 type LinkItem = {
-  type?: ('reference' | 'custom' | 'postsPage') | null
+  type?: ('reference' | 'custom' | 'postPage') | null
   newTab?: boolean | null
   icon?: any
   iconStyles?: any
@@ -60,7 +60,11 @@ function LinkWithIcon({
       {...relProps}
       className={joinStyles(
         className,
-        hasIcon ? (!dropdownItem ? 'flex items-center gap-2' : 'flex flex-row items-center gap-2') : '',
+        hasIcon
+          ? !dropdownItem
+            ? 'flex items-center gap-2'
+            : 'flex flex-row items-center gap-2'
+          : '',
       )}
       prefetch={!isExternal}
     >
@@ -118,7 +122,13 @@ export function NavigationBlockUI({
     const href = getHref(dropdownItem)
     if (!href) return null
     return (
-      <LinkWithIcon href={href} item={dropdownItem} label={dropdownItem.label ?? ''} className={className} dropdownItem />
+      <LinkWithIcon
+        href={href}
+        item={dropdownItem}
+        label={dropdownItem.label ?? ''}
+        className={className}
+        dropdownItem
+      />
     )
   }
 

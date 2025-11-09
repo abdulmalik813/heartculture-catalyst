@@ -19,11 +19,11 @@ const navFields: Field[] = [
         label: 'Link Type',
         options: [
           { label: 'Internal Page', value: 'reference' },
-          { label: 'Posts Page', value: 'postsPage' },
+          { label: 'Posts Page', value: 'postPage' },
           { label: 'External URL', value: 'custom' },
         ],
         validate: async (value: any, { req }: any) => {
-          if (value === 'postsPage') {
+          if (value === 'postPage') {
             const settings = await req.payload.findGlobal({
               slug: 'settings',
             })
@@ -65,7 +65,7 @@ const navFields: Field[] = [
         hooks: {
           beforeChange: [
             async ({ req, siblingData }) => {
-              if (siblingData?.type === 'posts') {
+              if (siblingData?.type === 'postPage') {
                 const settings = await req.payload.findGlobal({
                   slug: 'settings',
                 })

@@ -126,7 +126,7 @@ export interface Page {
           label?: string | null;
           appearance?: ('link' | 'button' | 'dropdown') | null;
           link?: {
-            type?: ('reference' | 'postsPage' | 'custom') | null;
+            type?: ('reference' | 'postPage' | 'custom') | null;
             reference?:
               | ({
                   relationTo: 'pages';
@@ -143,7 +143,7 @@ export interface Page {
           items?:
             | {
                 label: string;
-                type?: ('reference' | 'postsPage' | 'custom') | null;
+                type?: ('reference' | 'postPage' | 'custom') | null;
                 reference?:
                   | ({
                       relationTo: 'pages';
@@ -300,7 +300,7 @@ export interface Post {
           label?: string | null;
           appearance?: ('link' | 'button' | 'dropdown') | null;
           link?: {
-            type?: ('reference' | 'postsPage' | 'custom') | null;
+            type?: ('reference' | 'postPage' | 'custom') | null;
             reference?:
               | ({
                   relationTo: 'pages';
@@ -317,7 +317,7 @@ export interface Post {
           items?:
             | {
                 label: string;
-                type?: ('reference' | 'postsPage' | 'custom') | null;
+                type?: ('reference' | 'postPage' | 'custom') | null;
                 reference?:
                   | ({
                       relationTo: 'pages';
@@ -658,7 +658,7 @@ export interface CallToActionBlock {
         label?: string | null;
         appearance?: ('link' | 'button' | 'dropdown') | null;
         link?: {
-          type?: ('reference' | 'postsPage' | 'custom') | null;
+          type?: ('reference' | 'postPage' | 'custom') | null;
           reference?:
             | ({
                 relationTo: 'pages';
@@ -675,7 +675,7 @@ export interface CallToActionBlock {
         items?:
           | {
               label: string;
-              type?: ('reference' | 'postsPage' | 'custom') | null;
+              type?: ('reference' | 'postPage' | 'custom') | null;
               reference?:
                 | ({
                     relationTo: 'pages';
@@ -779,7 +779,7 @@ export interface CardBlock {
       label?: string | null;
       appearance?: ('link' | 'button' | 'dropdown') | null;
       link?: {
-        type?: ('reference' | 'postsPage' | 'custom') | null;
+        type?: ('reference' | 'postPage' | 'custom') | null;
         reference?:
           | ({
               relationTo: 'pages';
@@ -796,7 +796,7 @@ export interface CardBlock {
       items?:
         | {
             label: string;
-            type?: ('reference' | 'postsPage' | 'custom') | null;
+            type?: ('reference' | 'postPage' | 'custom') | null;
             reference?:
               | ({
                   relationTo: 'pages';
@@ -2479,7 +2479,7 @@ export interface NavigationBar {
           label?: string | null;
           appearance?: ('link' | 'button' | 'dropdown') | null;
           link?: {
-            type?: ('reference' | 'postsPage' | 'custom') | null;
+            type?: ('reference' | 'postPage' | 'custom') | null;
             reference?:
               | ({
                   relationTo: 'pages';
@@ -2496,7 +2496,7 @@ export interface NavigationBar {
           items?:
             | {
                 label: string;
-                type?: ('reference' | 'postsPage' | 'custom') | null;
+                type?: ('reference' | 'postPage' | 'custom') | null;
                 reference?:
                   | ({
                       relationTo: 'pages';
@@ -2531,7 +2531,7 @@ export interface NavigationBar {
           label?: string | null;
           appearance?: ('link' | 'button' | 'dropdown') | null;
           link?: {
-            type?: ('reference' | 'postsPage' | 'custom') | null;
+            type?: ('reference' | 'postPage' | 'custom') | null;
             reference?:
               | ({
                   relationTo: 'pages';
@@ -2548,7 +2548,7 @@ export interface NavigationBar {
           items?:
             | {
                 label: string;
-                type?: ('reference' | 'postsPage' | 'custom') | null;
+                type?: ('reference' | 'postPage' | 'custom') | null;
                 reference?:
                   | ({
                       relationTo: 'pages';
@@ -2636,7 +2636,7 @@ export interface Footer {
                       label?: string | null;
                       appearance?: ('link' | 'button' | 'dropdown') | null;
                       link?: {
-                        type?: ('reference' | 'postsPage' | 'custom') | null;
+                        type?: ('reference' | 'postPage' | 'custom') | null;
                         reference?:
                           | ({
                               relationTo: 'pages';
@@ -2653,7 +2653,7 @@ export interface Footer {
                       items?:
                         | {
                             label: string;
-                            type?: ('reference' | 'postsPage' | 'custom') | null;
+                            type?: ('reference' | 'postPage' | 'custom') | null;
                             reference?:
                               | ({
                                   relationTo: 'pages';
@@ -3020,7 +3020,7 @@ export interface NavigationBlock {
     label?: string | null;
     appearance?: ('link' | 'button' | 'dropdown') | null;
     link?: {
-      type?: ('reference' | 'postsPage' | 'custom') | null;
+      type?: ('reference' | 'postPage' | 'custom') | null;
       reference?:
         | ({
             relationTo: 'pages';
@@ -3037,7 +3037,7 @@ export interface NavigationBlock {
     items?:
       | {
           label: string;
-          type?: ('reference' | 'postsPage' | 'custom') | null;
+          type?: ('reference' | 'postPage' | 'custom') | null;
           reference?:
             | ({
                 relationTo: 'pages';
