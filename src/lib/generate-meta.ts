@@ -6,9 +6,8 @@ import { mergeOpenGraph } from './merge-open-graph'
 import { getServerSideURL } from './get-url'
 import { getAppSettings } from '@/constants/app'
 
-const getImageURL = async (image?: Media | Config['db']['defaultIDType'] | null) => {
+const getImageURL = async (appData: any, image?: Media) => {
   const serverUrl = getServerSideURL()
-  const appData = await getAppSettings()
   let url = appData.fallbackImage
 
   if (image && typeof image === 'object' && 'url' in image) {
@@ -21,10 +20,9 @@ const getImageURL = async (image?: Media | Config['db']['defaultIDType'] | null)
 }
 
 export const generateMeta = async (doc: Partial<Page> | Partial<Post> | null, post: boolean, settings: Setting): Promise<Metadata> => {
-  const ogImage = await getImageURL(doc?.meta?.image)
   const appData = await getAppSettings()
   const title = doc?.meta?.title ? doc?.meta?.title : appData.appTitle
-
+  const ogImage = await getImageURL(appData, doc?.meta?.image as Media)
   return {
     description: doc?.meta?.description,
     alternates: {
@@ -49,8 +47,7 @@ export const generateMeta = async (doc: Partial<Page> | Partial<Post> | null, po
 export const generatePostsListingMeta  = async (settings: Setting): Promise<Metadata> => {
   const { postMetaTitle, postMetaDescription, postMetaImage, postSlug } = settings
   const appData = await getAppSettings()
-  
-  const ogImage = await getImageURL(postMetaImage)
+  const ogImage = await getImageURL(appData, postMetaImage as Media)
   const title = postMetaTitle || appData.appTitle
   const description = postMetaDescription || appData.appTitle
   const slug = postSlug || 'posts'
