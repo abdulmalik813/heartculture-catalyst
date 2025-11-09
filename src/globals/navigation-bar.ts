@@ -12,21 +12,10 @@ export const NavigationBar: GlobalConfig = {
   },
   admin: {
     livePreview: {
-      url: ({ req }) =>
-        generatePreviewPath({
-          slug: 'home',
-          collection: 'pages',
-          req,
-        }),
+      url: () => generatePreviewPath(),
     },
-    preview: (_, { req }) =>
-      generatePreviewPath({
-        slug: 'home',
-        collection: 'pages',
-        req,
-      }),
+    preview: () => generatePreviewPath(),
   },
-
   fields: [
     {
       type: 'tabs',

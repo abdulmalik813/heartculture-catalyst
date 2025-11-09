@@ -84,48 +84,20 @@ export const Posts: CollectionConfig<'posts'> = {
     livePreview: {
       url: async ({ data, req }) => {
         if (!req.payload) return ''
-
-        try {
-          const settings = await req.payload.findGlobal({
-            slug: 'settings',
-          })
-          const postSlug = settings?.postSlug || 'posts'
-
-          return generatePreviewPath({
-            slug: `${postSlug}/${data?.slug}`,
-            collection: 'posts',
-            req,
-          })
-        } catch {
-          return generatePreviewPath({
-            slug: data?.slug,
-            collection: 'posts',
-            req,
-          })
-        }
-      },
-    },
-    preview: async (data, { req }) => {
-      if (!req.payload) return ''
-
-      try {
         const settings = await req.payload.findGlobal({
           slug: 'settings',
         })
         const postSlug = settings?.postSlug || 'posts'
-
-        return generatePreviewPath({
-          slug: `${postSlug}/${data?.slug}`,
-          collection: 'posts',
-          req,
-        })
-      } catch {
-        return generatePreviewPath({
-          slug: data?.slug as string,
-          collection: 'posts',
-          req,
-        })
-      }
+        return generatePreviewPath(`${postSlug}/${data?.slug}`)
+      },
+    },
+    preview: async (data, { req }) => {
+      if (!req.payload) return ''
+      const settings = await req.payload.findGlobal({
+        slug: 'settings',
+      })
+      const postSlug = settings?.postSlug || 'posts'
+      return generatePreviewPath(`${postSlug}/${data?.slug}`)
     },
   },
   defaultPopulate: {

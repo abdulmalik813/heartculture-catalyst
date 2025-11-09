@@ -33,19 +33,11 @@ export const Pages: CollectionConfig<'pages'> = {
     defaultColumns: ['title', 'slug', 'updatedAt'],
     useAsTitle: 'title',
     livePreview: {
-      url: ({ data, req }) =>
-        generatePreviewPath({
-          slug: data?.slug,
-          collection: 'pages',
-          req,
-        }),
+      url: ({ data }) => generatePreviewPath(`${data?.slug}`),
     },
-    preview: (data, { req }) =>
-      generatePreviewPath({
-        slug: data?.slug as string,
-        collection: 'pages',
-        req,
-      }),
+    preview: async (data) => {
+      return generatePreviewPath(`${data?.slug}`)
+    },
   },
   defaultPopulate: {
     title: true,
@@ -88,7 +80,7 @@ export const Pages: CollectionConfig<'pages'> = {
                             AccordionBlock(false),
                             DividerBlock(false),
                             FormBlock(false),
-                            TableBlock(false)
+                            TableBlock(false),
                           ],
                           required: false,
                         },

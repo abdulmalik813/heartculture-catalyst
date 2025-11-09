@@ -1,26 +1,9 @@
 import { PAYLOAD } from '@/constants/init'
-import { PayloadRequest, CollectionSlug } from 'payload'
 
-const collectionPrefixMap: Partial<Record<CollectionSlug, string>> = {
-  pages: '',
-}
-
-type Props = {
-  collection: keyof typeof collectionPrefixMap
-  slug: string
-  req: PayloadRequest
-}
-
-export const generatePreviewPath = ({ collection, slug }: Props) => {
-  // Allow empty strings, e.g. for the homepage
-  if (slug === undefined || slug === null) {
-    return null
-  }
+export const generatePreviewPath = (path: string = "home") => {
 
   const encodedParams = new URLSearchParams({
-    slug,
-    collection,
-    path: `${collectionPrefixMap[collection]}/${slug}`,
+    path,
     previewSecret: PAYLOAD.PREVIEW,
   })
 
