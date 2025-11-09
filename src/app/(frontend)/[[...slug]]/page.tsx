@@ -146,29 +146,43 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
     return <PayloadRedirects url={url} />
   }
 
-  const renderSchema = async () => {
-    const schemas: any[] = []
-    if (isPostListingPage) {
-      schemas.push(await imageSchema(settings?.postMetaImage as Media, settings))
-    } else {
-      schemas.push(await imageSchema(page?.meta?.image as Media, settings))
-    }
+const renderSchema = async () => {
+  const schemas: any[] = []
+  
+  if (isItAPost && page) {
+    schemas.push(await articleSchema(page as Post, settings))
+  }
 
-    if (isItAPost && page) {
-      schemas.push(await articleSchema(page as Post, settings))
-    }
+  if (isPostListingPage) {
+    schemas.push(await imageSchema(settings?.postMetaImage as Media, settings))
+  } else {
+    schemas.push(await imageSchema(page?.meta?.image as Media, settings))
+  }
 
-    return schemas.map((schema, index) => (
+  if (schemas.length === 0) return null
+
+  if (schemas.length > 1) {
+    return (
       <Script
-        key={index}
         type="application/ld+json"
         strategy="lazyOnload"
-        id={`schema-${index}`}
       >
-        {JSON.stringify(schema)}
+        {JSON.stringify({
+          '@context': 'https://schema.org',
+          '@graph': schemas
+        })}
       </Script>
-    ))
+    )
   }
+  return (
+    <Script
+      type="application/ld+json"
+      strategy="lazyOnload"
+    >
+      {JSON.stringify(schemas[0])}
+    </Script>
+  )
+}
 
   return (
     <article className="min-h-[70vh]">
