@@ -7,9 +7,9 @@ export const articleSchema = async (props: Post) => {
   const author = props.author as User
   const social = (await getCachedGlobal('social')) as Social
 
-  const socialLinks = Object.values(social)
-    .filter((value) => typeof value === 'string' && value.length > 0)
-    .filter((value) => value.startsWith('http')) as string[]
+  const socialLinks = [social.facebook, social.instagram, social.linkedin, social.x, social.youtube, social.tiktok].filter(
+    (link) => link,
+  )
 
   return {
     '@context': 'https://schema.org',
@@ -30,7 +30,7 @@ export const imageSchema = (props: Media) => {
   return {
     '@context': 'https://schema.org',
     '@type': 'ImageObject',
-    contentUrl: `${process.env.S3_ENDPOINT}/${props.filename}`,
+    contentUrl: `${getServerSideURL()}/${props.url}`,
     creditText: props.creditText,
   }
 }

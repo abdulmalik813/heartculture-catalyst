@@ -12,8 +12,10 @@ import { cn } from '@/lib/utils'
 import { BlockRenderer } from '@/components/block-renderer'
 import { Hero } from '@/components/hero'
 import { getCachedGlobal } from '@/lib/get-globals'
-import { Page, Post, Setting } from '@/payload-types'
+import { Media, Page, Post, Setting } from '@/payload-types'
 import PostListingPage from '@/components/post-listing'
+import { articleSchema, imageSchema } from '@/components/schema'
+import Script from 'next/script'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -35,7 +37,7 @@ export async function generateStaticParams() {
 
   if (isPostEnabled) {
     const postSlug = settings.postSlug || 'posts'
-    
+
     const posts = await payload.find({
       collection: 'posts',
       draft: false,
@@ -80,21 +82,21 @@ const gapClasses = {
 
 function isPostRoute(slugArray: string[] | undefined, postSlug: string): boolean {
   if (!slugArray || slugArray.length === 0) return false
-  
+
   const postSlugParts = postSlug.split('/').filter(Boolean)
-  
+
   if (slugArray.length < postSlugParts.length) return false
-  
+
   return postSlugParts.every((part, index) => slugArray[index] === part)
 }
 
 function extractPostSlug(slugArray: string[], postSlug: string): string | null {
   const postSlugParts = postSlug.split('/').filter(Boolean)
-  
+
   if (slugArray.length === postSlugParts.length) {
     return null
   }
-  
+
   return slugArray.slice(postSlugParts.length).join('/')
 }
 
@@ -108,29 +110,26 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
 
   let page: Post | Page | null = null
   let isPostListingPage = false
-  
+  let isItAPost = false
   if (isPostEnabled) {
     const postSlug = settings.postSlug || 'posts'
-    
+
     if (isPostRoute(param?.slug, postSlug)) {
       const postItemSlug = extractPostSlug(param.slug!, postSlug)
-      
+
       if (postItemSlug === null) {
         isPostListingPage = true
       } else if (postItemSlug) {
-        try {
-          page = await queryBySlug({
-            slug: postItemSlug,
-            collection: 'posts',
-            draft,
-          })
-        } catch (error) {
-          console.error('Error fetching post:', error)
-        }
+        isItAPost = true
+        page = await queryBySlug({
+          slug: postItemSlug,
+          collection: 'posts',
+          draft,
+        })
       }
     }
   }
-  
+
   if (!page && !isPostListingPage) {
     try {
       page = await queryBySlug({
@@ -149,6 +148,15 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
 
   if (!page && !isPostListingPage) {
     return <PayloadRedirects url={url} />
+  }
+
+  const renderPostSchema = (post: Post) => {
+    const schema = [
+      imageSchema(post.meta?.image as Media),
+      articleSchema(post)
+    ]
+
+    return <Script type={'application/ld+json'} strategy='lazyOnload'>{JSON.stringify(schema)}</Script>
   }
 
   return (
@@ -177,6 +185,7 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
                 </div>
               </div>
             ))}
+            {isItAPost && renderPostSchema(page)}
           </>
         )
       )}
@@ -194,10 +203,10 @@ export async function generateMetadata({ params }: SlugProps): Promise<Metadata>
 
   if (isPostEnabled) {
     const postSlug = settings.postSlug || 'posts'
-    
+
     if (isPostRoute(param?.slug, postSlug)) {
       const postItemSlug = extractPostSlug(param.slug!, postSlug)
-      
+
       if (postItemSlug === null) {
         return generatePostsListingMeta(settings)
       } else if (postItemSlug) {
@@ -213,7 +222,7 @@ export async function generateMetadata({ params }: SlugProps): Promise<Metadata>
       }
     }
   }
-  
+
   if (!page) {
     try {
       page = await queryBySlug({

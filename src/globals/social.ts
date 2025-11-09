@@ -1,9 +1,12 @@
 import { revalidateSocial } from '@/hooks/revalidate-globals'
 import { GlobalConfig } from 'payload'
 
-const Social: GlobalConfig = {
+export const Social: GlobalConfig = {
   slug: 'social',
   label: 'Social Media',
+  access: {
+    read: () => true,
+  },
   fields: [
     {
       name: 'facebook',
@@ -29,10 +32,20 @@ const Social: GlobalConfig = {
       type: 'text',
       required: false,
     },
+    {
+      name: 'youtube',
+      label: 'YouTube URL',
+      type: 'text',
+      required: false,
+    },
+    {
+      name: 'tiktok',
+      label: 'TikTok URL',
+      type: 'text',
+      required: false,
+    },
   ],
   hooks: {
     afterChange: [revalidateSocial],
   },
 }
-
-export default Social

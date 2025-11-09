@@ -63,11 +63,13 @@ export interface Config {
     navigationBar: NavigationBar;
     footer: Footer;
     settings: Setting;
+    social: Social;
   };
   globalsSelect: {
     navigationBar: NavigationBarSelect<false> | NavigationBarSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     settings: SettingsSelect<false> | SettingsSelect<true>;
+    social: SocialSelect<false> | SocialSelect<true>;
   };
   locale: null;
   user: User & {
@@ -2773,6 +2775,21 @@ export interface Setting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "social".
+ */
+export interface Social {
+  id: number;
+  facebook?: string | null;
+  instagram?: string | null;
+  x?: string | null;
+  linkedin?: string | null;
+  youtube?: string | null;
+  tiktok?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "navigationBar_select".
  */
 export interface NavigationBarSelect<T extends boolean = true> {
@@ -2975,6 +2992,21 @@ export interface SettingsSelect<T extends boolean = true> {
       };
   theme?: T;
   _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "social_select".
+ */
+export interface SocialSelect<T extends boolean = true> {
+  facebook?: T;
+  instagram?: T;
+  x?: T;
+  linkedin?: T;
+  youtube?: T;
+  tiktok?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
