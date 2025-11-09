@@ -47,16 +47,16 @@ export async function generateStaticParams() {
       },
     })
 
-    params.push({ slug: postSlug.split('/') })
+    params.push({ slug: postSlug.split('/').filter(Boolean) })
 
     posts.docs?.forEach(({ slug }) => {
       const correctSlug = `${postSlug}/${slug}`
-      params.push({ slug: correctSlug?.split('/') })
+      params.push({ slug: correctSlug.split('/').filter(Boolean) })
     })
   }
 
   pages.docs?.forEach(({ slug }) => {
-    params.push({ slug: slug?.split('/') })
+    params.push({ slug: slug?.split('/').filter(Boolean) || [] })
   })
 
   params.push({ slug: [] })
@@ -76,56 +76,85 @@ const gapClasses = {
   medium: 'gap-4',
   large: 'gap-6',
   xlarge: 'gap-8',
+} as const
+
+function isPostRoute(slugArray: string[] | undefined, postSlug: string): boolean {
+  if (!slugArray || slugArray.length === 0) return false
+  
+  const postSlugParts = postSlug.split('/').filter(Boolean)
+  
+  if (slugArray.length < postSlugParts.length) return false
+  
+  return postSlugParts.every((part, index) => slugArray[index] === part)
+}
+
+function extractPostSlug(slugArray: string[], postSlug: string): string | null {
+  const postSlugParts = postSlug.split('/').filter(Boolean)
+  
+  if (slugArray.length === postSlugParts.length) {
+    return null
+  }
+  
+  return slugArray.slice(postSlugParts.length).join('/')
 }
 
 export default async function Slug({ params, searchParams }: Readonly<SlugProps>) {
   const { isEnabled: draft } = await draftMode()
-  const settings = ((await getCachedGlobal('settings', 1, draft)) as Setting)
+  const settings = (await getCachedGlobal('settings', 1, draft)) as Setting
   const isPostEnabled = settings.enablePost
   const param = await params
   const slug = param?.slug ? param.slug.join('/') : 'home'
   const url = '/' + slug
 
   let page: Post | Page | null = null
-  let isPostPage = false
+  let isPostListingPage = false
   
   if (isPostEnabled) {
     const postSlug = settings.postSlug || 'posts'
     
-    if (param?.slug?.includes(postSlug)) {
-      if (param?.slug.length === 1 && param?.slug[0] === postSlug) {
-        isPostPage = true
-      } else if (param?.slug[0] === postSlug) {
-        const postItemSlug = param?.slug.slice(1).join('/')
-        page = await queryBySlug({
-          slug: postItemSlug,
-          collection: 'posts',
-          draft,
-        })
+    if (isPostRoute(param?.slug, postSlug)) {
+      const postItemSlug = extractPostSlug(param.slug!, postSlug)
+      
+      if (postItemSlug === null) {
+        isPostListingPage = true
+      } else if (postItemSlug) {
+        try {
+          page = await queryBySlug({
+            slug: postItemSlug,
+            collection: 'posts',
+            draft,
+          })
+        } catch (error) {
+          console.error('Error fetching post:', error)
+        }
       }
     }
   }
   
-  if (!page && !isPostPage) {
-    page = await queryBySlug({
-      slug,
-      collection: 'pages',
-      draft,
-    })
+  if (!page && !isPostListingPage) {
+    try {
+      page = await queryBySlug({
+        slug,
+        collection: 'pages',
+        draft,
+      })
+    } catch (error) {
+      console.error('Error fetching page:', error)
+    }
   }
 
-  if (!page && slug === 'home') {
+  if (!page && slug === 'home' && !isPostListingPage) {
     notFound()
   }
 
-  if (!page && !isPostPage) {
+  if (!page && !isPostListingPage) {
     return <PayloadRedirects url={url} />
   }
 
   return (
     <article className="min-h-[70vh]">
       <PayloadRedirects disableNotFound url={url} />
-      {isPostPage ? (
+      {isPostListingPage ? (
         <PostListingPage searchParams={searchParams} />
       ) : (
         page && (
@@ -166,26 +195,35 @@ export async function generateMetadata({ params }: SlugProps): Promise<Metadata>
   if (isPostEnabled) {
     const postSlug = settings.postSlug || 'posts'
     
-    if (param?.slug?.includes(postSlug)) {
-      if (param?.slug.length === 1 && param?.slug[0] === postSlug) {
+    if (isPostRoute(param?.slug, postSlug)) {
+      const postItemSlug = extractPostSlug(param.slug!, postSlug)
+      
+      if (postItemSlug === null) {
         return generatePostsListingMeta(settings)
-      } else if (param?.slug[0] === postSlug) {
-        const postItemSlug = param?.slug.slice(1).join('/')
-        page = await queryBySlug({
-          slug: postItemSlug,
-          collection: 'posts',
-          draft: false,
-        })
+      } else if (postItemSlug) {
+        try {
+          page = await queryBySlug({
+            slug: postItemSlug,
+            collection: 'posts',
+            draft: false,
+          })
+        } catch (error) {
+          console.error('Error fetching post metadata:', error)
+        }
       }
     }
   }
   
   if (!page) {
-    page = await queryBySlug({
-      slug,
-      collection: 'pages',
-      draft: false,
-    })
+    try {
+      page = await queryBySlug({
+        slug,
+        collection: 'pages',
+        draft: false,
+      })
+    } catch (error) {
+      console.error('Error fetching page metadata:', error)
+    }
   }
 
   return generateMeta({ doc: page })
