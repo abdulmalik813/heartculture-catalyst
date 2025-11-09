@@ -19,16 +19,16 @@ const navFields: Field[] = [
         label: 'Link Type',
         options: [
           { label: 'Internal Page', value: 'reference' },
-          { label: 'Posts Page', value: 'postPage' },
+          { label: 'Post Listing Page', value: 'postListingPage' },
           { label: 'External URL', value: 'custom' },
         ],
         validate: async (value: any, { req }: any) => {
-          if (value === 'postPage') {
+          if (value === 'postListingPage') {
             const settings = await req.payload.findGlobal({
               slug: 'settings',
             })
             if (!settings?.enablePost) {
-              return 'Posts must be enabled in settings to use Posts Page'
+              return 'Posts must be enabled in settings to use Post Listing Page'
             }
           }
           return true
@@ -57,7 +57,7 @@ const navFields: Field[] = [
         },
       },
       {
-        name: 'postPageUrl',
+        name: 'postListingPageUrl',
         type: 'text',
         admin: {
           condition: () => false,
@@ -65,7 +65,7 @@ const navFields: Field[] = [
         hooks: {
           beforeChange: [
             async ({ req, siblingData }) => {
-              if (siblingData?.type === 'postPage') {
+              if (siblingData?.type === 'postListingPage') {
                 const settings = await req.payload.findGlobal({
                   slug: 'settings',
                 })

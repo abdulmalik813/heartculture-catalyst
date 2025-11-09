@@ -17,7 +17,14 @@ import {
   PaginationEllipsis,
 } from '@/components/ui/pagination'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 
 interface PostProps {
   searchParams: SearchParams
@@ -31,7 +38,7 @@ export default async function PostListingPage({ searchParams }: Readonly<PostPro
 
   const settings = (await getCachedGlobal('settings', 1, false)) as Setting
   const postSlug = settings.postSlug || 'posts'
-  const postPageTitle = settings.postPageTitle || 'Blog'
+  const postListingPageTitle = settings.postListingPageTitle || 'Blog'
 
   const payload = await getPayload({ config: configPromise })
 
@@ -174,13 +181,13 @@ export default async function PostListingPage({ searchParams }: Readonly<PostPro
       items.push(
         <PaginationItem key="1">
           <PaginationLink href={buildUrl(1)}>1</PaginationLink>
-        </PaginationItem>
+        </PaginationItem>,
       )
       if (startPage > 2) {
         items.push(
           <PaginationItem key="ellipsis-start">
             <PaginationEllipsis />
-          </PaginationItem>
+          </PaginationItem>,
         )
       }
     }
@@ -191,7 +198,7 @@ export default async function PostListingPage({ searchParams }: Readonly<PostPro
           <PaginationLink href={buildUrl(i)} isActive={currentPage === i}>
             {i}
           </PaginationLink>
-        </PaginationItem>
+        </PaginationItem>,
       )
     }
 
@@ -200,13 +207,13 @@ export default async function PostListingPage({ searchParams }: Readonly<PostPro
         items.push(
           <PaginationItem key="ellipsis-end">
             <PaginationEllipsis />
-          </PaginationItem>
+          </PaginationItem>,
         )
       }
       items.push(
         <PaginationItem key={totalPages}>
           <PaginationLink href={buildUrl(totalPages)}>{totalPages}</PaginationLink>
-        </PaginationItem>
+        </PaginationItem>,
       )
     }
 
@@ -216,7 +223,7 @@ export default async function PostListingPage({ searchParams }: Readonly<PostPro
   return (
     <div className="container mx-auto py-12 px-4">
       <div className="mb-12 space-y-6">
-        <h1 className="text-4xl font-bold">{postPageTitle}</h1>
+        <h1 className="text-4xl font-bold">{postListingPageTitle}</h1>
 
         <form action={`/${postSlug}`} method="get">
           <div className="relative max-w-2xl">
@@ -243,10 +250,7 @@ export default async function PostListingPage({ searchParams }: Readonly<PostPro
             </Link>
             {allCategories.docs.map((cat) => (
               <Link key={cat.id} href={`/${postSlug}?category=${cat.slug}`}>
-                <Button 
-                  variant={category === cat.slug ? (cat.color as any) : 'outline'} 
-                  size="sm"
-                >
+                <Button variant={category === cat.slug ? (cat.color as any) : 'outline'} size="sm">
                   {cat.name}
                 </Button>
               </Link>
@@ -266,9 +270,7 @@ export default async function PostListingPage({ searchParams }: Readonly<PostPro
               <span className="text-sm text-muted-foreground">in</span>
             )}
             {selectedCategory && (
-              <Badge variant={selectedCategory.color as any}>
-                {selectedCategory.name}
-              </Badge>
+              <Badge variant={selectedCategory.color as any}>{selectedCategory.name}</Badge>
             )}
             <Link href={`/${postSlug}`} className="ml-auto">
               <Button variant="ghost" size="sm">
@@ -302,7 +304,7 @@ export default async function PostListingPage({ searchParams }: Readonly<PostPro
                       </CardDescription>
                     )}
                   </CardHeader>
-                  
+
                   <CardContent className="flex-1">
                     <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mb-4">
                       {post.publishedAt && (
@@ -320,12 +322,15 @@ export default async function PostListingPage({ searchParams }: Readonly<PostPro
                     {categories.length > 0 && (
                       <div className="flex flex-wrap gap-2">
                         {categories.map((cat: any) => (
-                          <Link 
-                            key={cat.id} 
+                          <Link
+                            key={cat.id}
                             href={`/${postSlug}?category=${cat.slug}`}
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <Badge variant={cat.color || 'default'} className="cursor-pointer hover:opacity-80">
+                            <Badge
+                              variant={cat.color || 'default'}
+                              className="cursor-pointer hover:opacity-80"
+                            >
                               {cat.name}
                             </Badge>
                           </Link>
@@ -350,7 +355,7 @@ export default async function PostListingPage({ searchParams }: Readonly<PostPro
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious 
+                  <PaginationPrevious
                     href={currentPage > 1 ? buildUrl(currentPage - 1) : undefined}
                     className={currentPage <= 1 ? 'pointer-events-none opacity-50' : ''}
                   />
@@ -359,7 +364,7 @@ export default async function PostListingPage({ searchParams }: Readonly<PostPro
                 {renderPaginationItems()}
 
                 <PaginationItem>
-                  <PaginationNext 
+                  <PaginationNext
                     href={currentPage < totalPages ? buildUrl(currentPage + 1) : undefined}
                     className={currentPage >= totalPages ? 'pointer-events-none opacity-50' : ''}
                   />
@@ -373,8 +378,8 @@ export default async function PostListingPage({ searchParams }: Readonly<PostPro
           <CardContent className="pt-6">
             <p className="text-muted-foreground text-lg">
               {searchQuery || category
-                ? `No ${postPageTitle.toLowerCase()} found matching your criteria.`
-                : `No ${postPageTitle.toLowerCase()} available yet.`}
+                ? `No ${postListingPageTitle.toLowerCase()} found matching your criteria.`
+                : `No ${postListingPageTitle.toLowerCase()} available yet.`}
             </p>
             {(searchQuery || category) && (
               <Link href={`/${postSlug}`} className="inline-block mt-4">

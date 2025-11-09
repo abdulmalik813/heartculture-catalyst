@@ -96,7 +96,7 @@ export const Settings: GlobalConfig = {
               },
             },
             {
-              name: 'postPageTitle',
+              name: 'postListingPageTitle',
               type: 'text',
               required: true,
               admin: {

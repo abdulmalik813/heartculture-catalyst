@@ -1,6 +1,6 @@
 export function getHref(link: any) {
-  if (link.type === "postPage") {
-    return `/${link?.postPageUrl}`
+  if (link.type === 'postListingPage') {
+    return `/${link?.postListingPageUrl}`
   }
   return link?.type === 'custom'
     ? link.url

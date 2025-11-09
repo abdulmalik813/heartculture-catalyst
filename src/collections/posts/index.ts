@@ -31,7 +31,7 @@ const checkPostEnabled = async (payload: Payload): Promise<boolean> => {
   try {
     const settings = (await getCachedGlobal('settings', 1, true)) as Setting
     cachedPostEnabled = settings?.enablePost ?? false
-    cachedPostLabel = settings?.postPageTitle || 'Posts'
+    cachedPostLabel = settings?.postListingPageTitle || 'Posts'
     return cachedPostEnabled
   } catch {
     cachedPostEnabled = false

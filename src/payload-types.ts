@@ -126,7 +126,7 @@ export interface Page {
           label?: string | null;
           appearance?: ('link' | 'button' | 'dropdown') | null;
           link?: {
-            type?: ('reference' | 'postPage' | 'custom') | null;
+            type?: ('reference' | 'postListingPage' | 'custom') | null;
             reference?:
               | ({
                   relationTo: 'pages';
@@ -136,14 +136,14 @@ export interface Page {
                   relationTo: 'posts';
                   value: number | Post;
                 } | null);
-            postPageUrl?: string | null;
+            postListingPageUrl?: string | null;
             url?: string | null;
             newTab?: boolean | null;
           };
           items?:
             | {
                 label: string;
-                type?: ('reference' | 'postPage' | 'custom') | null;
+                type?: ('reference' | 'postListingPage' | 'custom') | null;
                 reference?:
                   | ({
                       relationTo: 'pages';
@@ -153,7 +153,7 @@ export interface Page {
                       relationTo: 'posts';
                       value: number | Post;
                     } | null);
-                postPageUrl?: string | null;
+                postListingPageUrl?: string | null;
                 url?: string | null;
                 newTab?: boolean | null;
                 icon?: (number | null) | Icon;
@@ -300,7 +300,7 @@ export interface Post {
           label?: string | null;
           appearance?: ('link' | 'button' | 'dropdown') | null;
           link?: {
-            type?: ('reference' | 'postPage' | 'custom') | null;
+            type?: ('reference' | 'postListingPage' | 'custom') | null;
             reference?:
               | ({
                   relationTo: 'pages';
@@ -310,14 +310,14 @@ export interface Post {
                   relationTo: 'posts';
                   value: number | Post;
                 } | null);
-            postPageUrl?: string | null;
+            postListingPageUrl?: string | null;
             url?: string | null;
             newTab?: boolean | null;
           };
           items?:
             | {
                 label: string;
-                type?: ('reference' | 'postPage' | 'custom') | null;
+                type?: ('reference' | 'postListingPage' | 'custom') | null;
                 reference?:
                   | ({
                       relationTo: 'pages';
@@ -327,7 +327,7 @@ export interface Post {
                       relationTo: 'posts';
                       value: number | Post;
                     } | null);
-                postPageUrl?: string | null;
+                postListingPageUrl?: string | null;
                 url?: string | null;
                 newTab?: boolean | null;
                 icon?: (number | null) | Icon;
@@ -658,7 +658,7 @@ export interface CallToActionBlock {
         label?: string | null;
         appearance?: ('link' | 'button' | 'dropdown') | null;
         link?: {
-          type?: ('reference' | 'postPage' | 'custom') | null;
+          type?: ('reference' | 'postListingPage' | 'custom') | null;
           reference?:
             | ({
                 relationTo: 'pages';
@@ -668,14 +668,14 @@ export interface CallToActionBlock {
                 relationTo: 'posts';
                 value: number | Post;
               } | null);
-          postPageUrl?: string | null;
+          postListingPageUrl?: string | null;
           url?: string | null;
           newTab?: boolean | null;
         };
         items?:
           | {
               label: string;
-              type?: ('reference' | 'postPage' | 'custom') | null;
+              type?: ('reference' | 'postListingPage' | 'custom') | null;
               reference?:
                 | ({
                     relationTo: 'pages';
@@ -685,7 +685,7 @@ export interface CallToActionBlock {
                     relationTo: 'posts';
                     value: number | Post;
                   } | null);
-              postPageUrl?: string | null;
+              postListingPageUrl?: string | null;
               url?: string | null;
               newTab?: boolean | null;
               icon?: (number | null) | Icon;
@@ -779,7 +779,7 @@ export interface CardBlock {
       label?: string | null;
       appearance?: ('link' | 'button' | 'dropdown') | null;
       link?: {
-        type?: ('reference' | 'postPage' | 'custom') | null;
+        type?: ('reference' | 'postListingPage' | 'custom') | null;
         reference?:
           | ({
               relationTo: 'pages';
@@ -789,14 +789,14 @@ export interface CardBlock {
               relationTo: 'posts';
               value: number | Post;
             } | null);
-        postPageUrl?: string | null;
+        postListingPageUrl?: string | null;
         url?: string | null;
         newTab?: boolean | null;
       };
       items?:
         | {
             label: string;
-            type?: ('reference' | 'postPage' | 'custom') | null;
+            type?: ('reference' | 'postListingPage' | 'custom') | null;
             reference?:
               | ({
                   relationTo: 'pages';
@@ -806,7 +806,7 @@ export interface CardBlock {
                   relationTo: 'posts';
                   value: number | Post;
                 } | null);
-            postPageUrl?: string | null;
+            postListingPageUrl?: string | null;
             url?: string | null;
             newTab?: boolean | null;
             icon?: (number | null) | Icon;
@@ -1566,7 +1566,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 type?: T;
                                 reference?: T;
-                                postPageUrl?: T;
+                                postListingPageUrl?: T;
                                 url?: T;
                                 newTab?: T;
                               };
@@ -1576,7 +1576,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 type?: T;
                                 reference?: T;
-                                postPageUrl?: T;
+                                postListingPageUrl?: T;
                                 url?: T;
                                 newTab?: T;
                                 icon?: T;
@@ -1697,7 +1697,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
                       | {
                           type?: T;
                           reference?: T;
-                          postPageUrl?: T;
+                          postListingPageUrl?: T;
                           url?: T;
                           newTab?: T;
                         };
@@ -1707,7 +1707,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
                           label?: T;
                           type?: T;
                           reference?: T;
-                          postPageUrl?: T;
+                          postListingPageUrl?: T;
                           url?: T;
                           newTab?: T;
                           icon?: T;
@@ -1777,7 +1777,7 @@ export interface CardBlockSelect<T extends boolean = true> {
                 | {
                     type?: T;
                     reference?: T;
-                    postPageUrl?: T;
+                    postListingPageUrl?: T;
                     url?: T;
                     newTab?: T;
                   };
@@ -1787,7 +1787,7 @@ export interface CardBlockSelect<T extends boolean = true> {
                     label?: T;
                     type?: T;
                     reference?: T;
-                    postPageUrl?: T;
+                    postListingPageUrl?: T;
                     url?: T;
                     newTab?: T;
                     icon?: T;
@@ -1969,7 +1969,7 @@ export interface PostsSelect<T extends boolean = true> {
                             | {
                                 type?: T;
                                 reference?: T;
-                                postPageUrl?: T;
+                                postListingPageUrl?: T;
                                 url?: T;
                                 newTab?: T;
                               };
@@ -1979,7 +1979,7 @@ export interface PostsSelect<T extends boolean = true> {
                                 label?: T;
                                 type?: T;
                                 reference?: T;
-                                postPageUrl?: T;
+                                postListingPageUrl?: T;
                                 url?: T;
                                 newTab?: T;
                                 icon?: T;
@@ -2479,7 +2479,7 @@ export interface NavigationBar {
           label?: string | null;
           appearance?: ('link' | 'button' | 'dropdown') | null;
           link?: {
-            type?: ('reference' | 'postPage' | 'custom') | null;
+            type?: ('reference' | 'postListingPage' | 'custom') | null;
             reference?:
               | ({
                   relationTo: 'pages';
@@ -2489,14 +2489,14 @@ export interface NavigationBar {
                   relationTo: 'posts';
                   value: number | Post;
                 } | null);
-            postPageUrl?: string | null;
+            postListingPageUrl?: string | null;
             url?: string | null;
             newTab?: boolean | null;
           };
           items?:
             | {
                 label: string;
-                type?: ('reference' | 'postPage' | 'custom') | null;
+                type?: ('reference' | 'postListingPage' | 'custom') | null;
                 reference?:
                   | ({
                       relationTo: 'pages';
@@ -2506,7 +2506,7 @@ export interface NavigationBar {
                       relationTo: 'posts';
                       value: number | Post;
                     } | null);
-                postPageUrl?: string | null;
+                postListingPageUrl?: string | null;
                 url?: string | null;
                 newTab?: boolean | null;
                 icon?: (number | null) | Icon;
@@ -2531,7 +2531,7 @@ export interface NavigationBar {
           label?: string | null;
           appearance?: ('link' | 'button' | 'dropdown') | null;
           link?: {
-            type?: ('reference' | 'postPage' | 'custom') | null;
+            type?: ('reference' | 'postListingPage' | 'custom') | null;
             reference?:
               | ({
                   relationTo: 'pages';
@@ -2541,14 +2541,14 @@ export interface NavigationBar {
                   relationTo: 'posts';
                   value: number | Post;
                 } | null);
-            postPageUrl?: string | null;
+            postListingPageUrl?: string | null;
             url?: string | null;
             newTab?: boolean | null;
           };
           items?:
             | {
                 label: string;
-                type?: ('reference' | 'postPage' | 'custom') | null;
+                type?: ('reference' | 'postListingPage' | 'custom') | null;
                 reference?:
                   | ({
                       relationTo: 'pages';
@@ -2558,7 +2558,7 @@ export interface NavigationBar {
                       relationTo: 'posts';
                       value: number | Post;
                     } | null);
-                postPageUrl?: string | null;
+                postListingPageUrl?: string | null;
                 url?: string | null;
                 newTab?: boolean | null;
                 icon?: (number | null) | Icon;
@@ -2636,7 +2636,7 @@ export interface Footer {
                       label?: string | null;
                       appearance?: ('link' | 'button' | 'dropdown') | null;
                       link?: {
-                        type?: ('reference' | 'postPage' | 'custom') | null;
+                        type?: ('reference' | 'postListingPage' | 'custom') | null;
                         reference?:
                           | ({
                               relationTo: 'pages';
@@ -2646,14 +2646,14 @@ export interface Footer {
                               relationTo: 'posts';
                               value: number | Post;
                             } | null);
-                        postPageUrl?: string | null;
+                        postListingPageUrl?: string | null;
                         url?: string | null;
                         newTab?: boolean | null;
                       };
                       items?:
                         | {
                             label: string;
-                            type?: ('reference' | 'postPage' | 'custom') | null;
+                            type?: ('reference' | 'postListingPage' | 'custom') | null;
                             reference?:
                               | ({
                                   relationTo: 'pages';
@@ -2663,7 +2663,7 @@ export interface Footer {
                                   relationTo: 'posts';
                                   value: number | Post;
                                 } | null);
-                            postPageUrl?: string | null;
+                            postListingPageUrl?: string | null;
                             url?: string | null;
                             newTab?: boolean | null;
                             icon?: (number | null) | Icon;
@@ -2728,7 +2728,7 @@ export interface Setting {
    * Toggle to enable or disable post functionality.
    */
   enablePost?: boolean | null;
-  postPageTitle?: string | null;
+  postListingPageTitle?: string | null;
   postSlug?: string | null;
   postMetaTitle?: string | null;
   postMetaDescription?: string | null;
@@ -2787,7 +2787,7 @@ export interface NavigationBarSelect<T extends boolean = true> {
                 | {
                     type?: T;
                     reference?: T;
-                    postPageUrl?: T;
+                    postListingPageUrl?: T;
                     url?: T;
                     newTab?: T;
                   };
@@ -2797,7 +2797,7 @@ export interface NavigationBarSelect<T extends boolean = true> {
                     label?: T;
                     type?: T;
                     reference?: T;
-                    postPageUrl?: T;
+                    postListingPageUrl?: T;
                     url?: T;
                     newTab?: T;
                     icon?: T;
@@ -2827,7 +2827,7 @@ export interface NavigationBarSelect<T extends boolean = true> {
                 | {
                     type?: T;
                     reference?: T;
-                    postPageUrl?: T;
+                    postListingPageUrl?: T;
                     url?: T;
                     newTab?: T;
                   };
@@ -2837,7 +2837,7 @@ export interface NavigationBarSelect<T extends boolean = true> {
                     label?: T;
                     type?: T;
                     reference?: T;
-                    postPageUrl?: T;
+                    postListingPageUrl?: T;
                     url?: T;
                     newTab?: T;
                     icon?: T;
@@ -2896,7 +2896,7 @@ export interface FooterSelect<T extends boolean = true> {
                             | {
                                 type?: T;
                                 reference?: T;
-                                postPageUrl?: T;
+                                postListingPageUrl?: T;
                                 url?: T;
                                 newTab?: T;
                               };
@@ -2906,7 +2906,7 @@ export interface FooterSelect<T extends boolean = true> {
                                 label?: T;
                                 type?: T;
                                 reference?: T;
-                                postPageUrl?: T;
+                                postListingPageUrl?: T;
                                 url?: T;
                                 newTab?: T;
                                 icon?: T;
@@ -2952,7 +2952,7 @@ export interface SettingsSelect<T extends boolean = true> {
   favIconSvg?: T;
   favIconPng?: T;
   enablePost?: T;
-  postPageTitle?: T;
+  postListingPageTitle?: T;
   postSlug?: T;
   postMetaTitle?: T;
   postMetaDescription?: T;
@@ -3020,7 +3020,7 @@ export interface NavigationBlock {
     label?: string | null;
     appearance?: ('link' | 'button' | 'dropdown') | null;
     link?: {
-      type?: ('reference' | 'postPage' | 'custom') | null;
+      type?: ('reference' | 'postListingPage' | 'custom') | null;
       reference?:
         | ({
             relationTo: 'pages';
@@ -3030,14 +3030,14 @@ export interface NavigationBlock {
             relationTo: 'posts';
             value: number | Post;
           } | null);
-      postPageUrl?: string | null;
+      postListingPageUrl?: string | null;
       url?: string | null;
       newTab?: boolean | null;
     };
     items?:
       | {
           label: string;
-          type?: ('reference' | 'postPage' | 'custom') | null;
+          type?: ('reference' | 'postListingPage' | 'custom') | null;
           reference?:
             | ({
                 relationTo: 'pages';
@@ -3047,7 +3047,7 @@ export interface NavigationBlock {
                 relationTo: 'posts';
                 value: number | Post;
               } | null);
-          postPageUrl?: string | null;
+          postListingPageUrl?: string | null;
           url?: string | null;
           newTab?: boolean | null;
           icon?: (number | null) | Icon;

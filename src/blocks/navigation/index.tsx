@@ -29,7 +29,7 @@ function getIconData(item: any) {
 type DropdownItem = NonNullable<NonNullable<NavigationBlock['nav']>['items']>[number]
 
 type LinkItem = {
-  type?: ('reference' | 'custom' | 'postPage') | null
+  type?: ('reference' | 'custom' | 'postListingPage') | null
   newTab?: boolean | null
   icon?: any
   iconStyles?: any
