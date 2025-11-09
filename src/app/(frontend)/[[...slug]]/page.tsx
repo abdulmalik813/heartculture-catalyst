@@ -158,7 +158,16 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
       schemas.push(await articleSchema(page as Post, settings))
     }
 
-    return <Script type="application/ld+json"strategy="lazyOnload">{JSON.stringify(schemas)}</Script>
+    return schemas.map((schema, index) => (
+      <Script
+        key={index}
+        type="application/ld+json"
+        strategy="lazyOnload"
+        id={`schema-${index}`}
+      >
+        {JSON.stringify(schema)}
+      </Script>
+    ))
   }
 
   return (
@@ -202,7 +211,7 @@ export async function generateMetadata({ params }: SlugProps): Promise<Metadata>
   const isPostEnabled = settings.enablePost
   const param = await params
   const slug = param?.slug ? param.slug.join('/') : 'home'
-
+  let post = false
   let page: Post | Page | null = null
 
   if (isPostEnabled) {
@@ -214,6 +223,7 @@ export async function generateMetadata({ params }: SlugProps): Promise<Metadata>
       if (postItemSlug === null) {
         return generatePostsListingMeta(settings)
       } else if (postItemSlug) {
+        post = true
         page = await queryBySlug({
           slug: postItemSlug,
           collection: 'posts',
@@ -231,7 +241,7 @@ export async function generateMetadata({ params }: SlugProps): Promise<Metadata>
     })
   }
 
-  return generateMeta({ doc: page })
+  return generateMeta(page, post,settings)
 }
 
 const queryBySlug = cache(

@@ -37,6 +37,7 @@ export const articleSchema = async (post: Post, settings: Setting) => {
       name: author.name,
       sameAs: socialLinks,
     },
+    url: `${getServerSideURL()}/${settings.postSlug}/${post.slug}`,
   }
 }
 

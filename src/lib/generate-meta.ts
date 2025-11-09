@@ -20,16 +20,16 @@ const getImageURL = async (image?: Media | Config['db']['defaultIDType'] | null)
   return url
 }
 
-export const generateMeta = async (args: { doc: Partial<Page> | Partial<Post> | null }): Promise<Metadata> => {
-  const { doc } = args
-
+export const generateMeta = async (doc: Partial<Page> | Partial<Post> | null, post: boolean, settings: Setting): Promise<Metadata> => {
   const ogImage = await getImageURL(doc?.meta?.image)
   const appData = await getAppSettings()
-
   const title = doc?.meta?.title ? doc?.meta?.title : appData.appTitle
 
   return {
     description: doc?.meta?.description,
+    alternates: {
+      canonical: `${getServerSideURL}/${post ? settings.postSlug + '/' : ''}${doc?.slug === "home" ? "" : doc?.slug}`,
+    },
     openGraph: await mergeOpenGraph({
       description: doc?.meta?.description || appData.appTitle,
       images: ogImage
@@ -40,7 +40,7 @@ export const generateMeta = async (args: { doc: Partial<Page> | Partial<Post> | 
           ]
         : undefined,
       title,
-      url: Array.isArray(doc?.slug) ? doc?.slug.join('/') : '/',
+      url: `${getServerSideURL}/${post ? settings.postSlug + '/' : ''}${doc?.slug}`,
     }),
     title,
   }
@@ -67,7 +67,7 @@ export const generatePostsListingMeta  = async (settings: Setting): Promise<Meta
           ]
         : undefined,
       title,
-      url: `/${slug}`,
+      url: `${getServerSideURL}/${slug}`,
     }),
     title,
   }

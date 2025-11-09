@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
     revalidateTag('global_navigationBar')
     revalidateTag('global_footer')
     revalidateTag('global_settings')
+    revalidateTag('global_social')
 
     const pages = await payload.find({
       collection: 'pages',
