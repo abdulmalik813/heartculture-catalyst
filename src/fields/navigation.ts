@@ -27,7 +27,7 @@ const navFields: Field[] = [
             const setting = await req.payload.findGlobal({
               slug: 'settings',
             })
-            if (!settings?.enablePost) {
+            if (!setting?.enablePost) {
               return 'Posts must be enabled in setting to use Post Listing Page'
             }
           }
@@ -46,7 +46,7 @@ const navFields: Field[] = [
             slug: 'settings',
           })
 
-          if (!settings?.enablePost && relationTo === 'posts') {
+          if (!setting?.enablePost && relationTo === 'posts') {
             return {
               id: {
                 exists: false,
@@ -54,26 +54,6 @@ const navFields: Field[] = [
             }
           }
           return true
-        },
-      },
-      {
-        name: 'postListingPageUrl',
-        type: 'text',
-        admin: {
-          condition: () => false,
-        },
-        hooks: {
-          beforeChange: [
-            async ({ req, siblingData }) => {
-              if (siblingData?.type === 'postListingPage') {
-                const setting = await req.payload.findGlobal({
-                  slug: 'settings',
-                })
-                return settings?.postSlug || 'posts'
-              }
-              return undefined
-            },
-          ],
         },
       },
       {
