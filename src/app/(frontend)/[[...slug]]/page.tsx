@@ -146,27 +146,19 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
     return <PayloadRedirects url={url} />
   }
 
-  const renderSchema = () => {
-    const schemas: any[] = [imageSchema(page?.meta?.image as Media, settings)]
-
-    if (isItAPost && page) {
-      schemas.push(articleSchema(page, settings))
+  const renderSchema = async () => {
+    const schemas: any[] = []
+    if (isPostListingPage) {
+      schemas.push(await imageSchema(settings?.postMetaImage as Media, settings))
+    } else {
+      schemas.push(await imageSchema(page?.meta?.image as Media, settings))
     }
 
-    return (
-      <Script type={'application/ld+json'} strategy="lazyOnload">
-        {JSON.stringify(schemas)}
-      </Script>
-    )
-  }
+    if (isItAPost && page) {
+      schemas.push(await articleSchema(page as Post, settings))
+    }
 
-  const renderPostListingSchema = () => {
-    const schema = [imageSchema(settings?.postMetaImage as Media, settings)]
-    return (
-      <Script type={'application/ld+json'} strategy="lazyOnload">
-        {JSON.stringify(schema)}
-      </Script>
-    )
+    return <Script type="application/ld+json"strategy="lazyOnload">{JSON.stringify(schemas)}</Script>
   }
 
   return (
@@ -174,7 +166,6 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
       <PayloadRedirects disableNotFound url={url} />
       {isPostListingPage ? (
         <>
-          {renderPostListingSchema()}
           <PostListingPage searchParams={searchParams} />
         </>
       ) : (
@@ -198,10 +189,10 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
                 </div>
               </div>
             ))}
-            {renderSchema()}
           </>
         )
       )}
+      {renderSchema()}
     </article>
   )
 }
