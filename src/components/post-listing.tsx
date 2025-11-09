@@ -28,17 +28,17 @@ import {
 
 interface PostProps {
   searchParams: SearchParams
+  setting: Setting | null
 }
 
-export default async function PostListingPage({ searchParams }: Readonly<PostProps>) {
+export default async function PostListingPage({ searchParams, setting }: Readonly<PostProps>) {
   const search = await searchParams
   const { q: searchQuery, page = '1', category } = search
   const currentPage = parseInt(page as string)
   const postsPerPage = 12
 
-  const settings = (await getCachedGlobal('settings', 1, false)) as Setting
-  const postSlug = settings.postSlug || 'posts'
-  const postListingPageTitle = settings.postListingPageTitle || 'Blog'
+  const postSlug = setting?.postSlug || 'posts'
+  const postListingPageTitle = setting?.postListingPageTitle || 'Post'
 
   const payload = await getPayload({ config: configPromise })
 

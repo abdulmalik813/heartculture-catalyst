@@ -1,4 +1,4 @@
-import { Page } from '@/payload-types'
+import { Page, Post, Setting } from '@/payload-types'
 import { SearchParams } from '@/types/search-params'
 import { CallToActionBlockUI } from '@/blocks/call-to-action'
 import { CardBlockUI } from '@/blocks/card'
@@ -7,13 +7,19 @@ import { Media } from '@/components/media'
 
 export async function Hero({
   searchParams,
+  setting,
+  page,
   hero,
 }: {
   searchParams?: SearchParams
   hero: NonNullable<Page['hero']>
+  setting: Setting | null
+  page: Page | Post | null
 }) {
   if (hero.layout === 'with-image') {
-    return <CallToActionBlockUI {...hero} searchParams={searchParams} />
+    return (
+      <CallToActionBlockUI {...hero} searchParams={searchParams} setting={setting} page={page} />
+    )
   }
 
   if (hero.layout === 'fullscreen') {
@@ -37,7 +43,14 @@ export async function Hero({
           <div className="relative order-2 md:order-1 bg-background/90 backdrop-blur-sm flex items-center min-h-0 overflow-hidden">
             <div className="w-full py-6 sm:py-8 md:py-12 px-4 sm:px-6 lg:px-8 overflow-y-auto max-h-[70vh] md:max-h-none">
               <div className="mx-auto max-w-2xl overflow-hidden">
-                {hero.card && <CardBlockUI {...hero.card} searchParams={searchParams} />}
+                {hero.card && (
+                  <CardBlockUI
+                    {...hero.card}
+                    searchParams={searchParams}
+                    setting={setting}
+                    page={page}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -50,7 +63,14 @@ export async function Hero({
           <div className="relative order-2 md:order-1 bg-background/90 backdrop-blur-sm flex items-center min-h-0 overflow-hidden">
             <div className="w-full py-4 sm:py-6 md:py-8 px-4 sm:px-6 lg:px-8 overflow-y-auto max-h-[75vh] md:max-h-none">
               <div className="mx-auto max-w-2xl overflow-hidden">
-                {hero.card && <CardBlockUI {...hero.card} searchParams={searchParams} />}
+                {hero.card && (
+                  <CardBlockUI
+                    {...hero.card}
+                    searchParams={searchParams}
+                    setting={setting}
+                    page={page}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -63,7 +83,14 @@ export async function Hero({
           <div className="relative flex-1 bg-background/90 backdrop-blur-sm flex items-center overflow-hidden">
             <div className="w-full py-3 sm:py-4 md:py-6 px-4 sm:px-6 lg:px-8 overflow-y-auto">
               <div className="mx-auto max-w-2xl overflow-hidden">
-                {hero.card && <CardBlockUI {...hero.card} searchParams={searchParams} />}
+                {hero.card && (
+                  <CardBlockUI
+                    {...hero.card}
+                    searchParams={searchParams}
+                    setting={setting}
+                    page={page}
+                  />
+                )}
               </div>
             </div>
           </div>

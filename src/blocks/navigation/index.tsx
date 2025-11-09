@@ -1,4 +1,4 @@
-import { NavigationBlock } from '@/payload-types'
+import { NavigationBlock, Page, Post, Setting } from '@/payload-types'
 import { Button } from '@/components/ui/button'
 import { joinStyles } from '@/lib/make-styles'
 import Link from 'next/link'
@@ -79,16 +79,18 @@ export function NavigationBlockUI({
   searchParams,
   dropdownItem,
   className,
+  setting,
+  page,
   ...navigationBlock
 }: Partial<NavigationBlock> & {
   className?: string
   searchParams?: SearchParams
   dropdownItem?: DropdownItem
-}) {
+} & { setting: Setting | null } & { page: Post | Page | null }) {
   const { hasIcon, iconPlacement, renderIcon } = getIconData(navigationBlock.nav)
 
   if (navigationBlock.nav?.appearance === 'button' || navigationBlock.nav?.appearance === 'link') {
-    const href = getHref(navigationBlock.nav.link)
+    const href = getHref(navigationBlock.nav.link, setting)
     if (!href) return null
 
     if (navigationBlock.nav?.appearance === 'button') {
@@ -119,7 +121,7 @@ export function NavigationBlockUI({
   }
 
   if (dropdownItem) {
-    const href = getHref(dropdownItem)
+    const href = getHref(dropdownItem, setting)
     if (!href) return null
     return (
       <LinkWithIcon
@@ -148,7 +150,7 @@ export function NavigationBlockUI({
       </Button>
       <DropdownMenuContent>
         {navigationBlock.nav?.items?.map((item, index) => {
-          const href = getHref(item)
+          const href = getHref(item, setting)
           if (!href) return null
 
           return (

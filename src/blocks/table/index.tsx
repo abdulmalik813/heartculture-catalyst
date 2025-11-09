@@ -7,15 +7,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { TableBlock } from '@/payload-types'
+import { Page, Post, Setting, TableBlock } from '@/payload-types'
 import { LexicalRenderer } from '@/components/lexical-renderer'
 import { SearchParams } from '@/types/search-params'
 import { joinStyles } from '@/lib/make-styles'
 
 export async function TableBlockUI({
   searchParams,
+  setting,
+  page,
   ...tableBlock
-}: TableBlock & { searchParams?: SearchParams }) {
+}: TableBlock & { searchParams?: SearchParams } & { setting: Setting | null } & {
+  page: Post | Page | null
+}) {
   return (
     <Table className={joinStyles(tableBlock.tableStyles)}>
       {tableBlock.caption && (
@@ -28,7 +32,12 @@ export async function TableBlockUI({
           <TableRow>
             {tableBlock.headers.map((header) => (
               <TableHead key={header.id}>
-                <LexicalRenderer content={header.header} />
+                <LexicalRenderer
+                  content={header.header}
+                  searchParams={searchParams}
+                  setting={setting}
+                  page={page}
+                />
               </TableHead>
             ))}
           </TableRow>
@@ -39,7 +48,12 @@ export async function TableBlockUI({
           <TableRow key={row.id} className={joinStyles(row.rowStyles)}>
             {row.cells.map((cell) => (
               <TableCell key={cell.id} className={joinStyles(cell.cellStyles)}>
-                <LexicalRenderer content={cell.content} />
+                <LexicalRenderer
+                  content={cell.content}
+                  searchParams={searchParams}
+                  setting={setting}
+                  page={page}
+                />
               </TableCell>
             ))}
           </TableRow>

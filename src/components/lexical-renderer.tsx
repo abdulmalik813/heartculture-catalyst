@@ -6,6 +6,9 @@ import type {
   FormBlock,
   MediaBlock,
   NavigationBlock,
+  Page,
+  Post,
+  Setting,
   Style,
   TabBlock,
   TableBlock,
@@ -35,6 +38,8 @@ interface LexicalRendererProps {
   contentStyles?: (number | Style)[] | undefined | null
   searchParams?: SearchParams
   className?: string
+  page: Post | Page | null
+  setting: Setting | null
 }
 
 type NodeTypes =
@@ -51,6 +56,8 @@ type NodeTypes =
     >
 
 function jsxConverters(
+  setting: Setting | null,
+  page: Page | Post | null,
   searchParams?: LexicalRendererProps['searchParams'],
 ): JSXConvertersFunction<NodeTypes> {
   return function ({ defaultConverters }) {
@@ -107,21 +114,76 @@ function jsxConverters(
             },
           },
         }
-        return <NavigationBlockUI {...reconstructedNode.fields} />
+        return (
+          <NavigationBlockUI
+            {...reconstructedNode.fields}
+            searchParams={searchParams}
+            setting={setting}
+            page={page}
+          />
+        )
       },
       inlineBlocks: {
         // @ts-expect-error there may be some mismatch between the expected types here
-        navigationBlock: ({ node }) => <NavigationBlockUI {...node.fields} />,
+        navigationBlock: ({ node }) => (
+          <NavigationBlockUI
+            {...node.fields}
+            searchParams={searchParams}
+            setting={setting}
+            page={page}
+          />
+        ),
       },
       blocks: {
-        mediaBlock: ({ node }) => <MediaBlockUI {...node.fields} searchParams={searchParams} />,
-        navigationBlock: ({ node }) => <NavigationBlockUI {...node.fields} />,
-        tabBlock: ({ node }) => <TabBlockUI {...node.fields} />,
-        accordionBlock: ({ node }) => <AccordionBlockUI {...node.fields} />,
-        dividerBlock: ({ node }) => <DividerBlockUI {...node.fields} />,
-        cardBlock: ({ node }) => <CardBlockUI {...node.fields} />,
-        formBlock: ({ node }) => <FormBlockUI {...node.fields} />,
-        tableBlock: ({ node }) => <TableBlockUI {...node.fields} />,
+        mediaBlock: ({ node }) => (
+          <MediaBlockUI
+            {...node.fields}
+            searchParams={searchParams}
+            setting={setting}
+            page={page}
+          />
+        ),
+        navigationBlock: ({ node }) => (
+          <NavigationBlockUI
+            {...node.fields}
+            searchParams={searchParams}
+            setting={setting}
+            page={page}
+          />
+        ),
+        tabBlock: ({ node }) => (
+          <TabBlockUI {...node.fields} searchParams={searchParams} setting={setting} page={page} />
+        ),
+        accordionBlock: ({ node }) => (
+          <AccordionBlockUI
+            {...node.fields}
+            searchParams={searchParams}
+            setting={setting}
+            page={page}
+          />
+        ),
+        dividerBlock: ({ node }) => (
+          <DividerBlockUI
+            {...node.fields}
+            searchParams={searchParams}
+            setting={setting}
+            page={page}
+          />
+        ),
+        cardBlock: ({ node }) => (
+          <CardBlockUI {...node.fields} searchParams={searchParams} setting={setting} page={page} />
+        ),
+        formBlock: ({ node }) => (
+          <FormBlockUI {...node.fields} searchParams={searchParams} setting={setting} page={page} />
+        ),
+        tableBlock: ({ node }) => (
+          <TableBlockUI
+            {...node.fields}
+            searchParams={searchParams}
+            setting={setting}
+            page={page}
+          />
+        ),
       },
     }
   }
@@ -132,11 +194,13 @@ export async function LexicalRenderer({
   searchParams,
   contentStyles,
   className,
+  setting,
+  page,
 }: LexicalRendererProps) {
   if (!content) return null
   return (
     <ConvertRichText
-      converters={jsxConverters(searchParams)}
+      converters={jsxConverters(setting, page, searchParams)}
       className={joinStyles('richtext-content', className, contentStyles)}
       data={content as DefaultTypedEditorState}
     />

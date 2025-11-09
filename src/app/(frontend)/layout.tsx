@@ -35,9 +35,9 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
   const { children } = props
 
-  const settings = (await getCachedGlobal('settings', 1, isEnabled)) as Setting
+  const setting = (await getCachedGlobal('settings', 1, isEnabled)) as Setting
 
-  const defaultFont = settings?.default
+  const defaultFont = setting?.default
   const fontData = defaultFont?.fontData && isFontData(defaultFont.fontData) 
     ? defaultFont.fontData 
     : null

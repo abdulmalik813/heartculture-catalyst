@@ -10,7 +10,7 @@ const getPostsSitemap = unstable_cache(
   async () => {
     const payload = await getPayload({ config })
     const SITE_URL = getServerSideURL()
-    const settings = (await getCachedGlobal('settings', 1, false)) as Setting
+    const setting = (await getCachedGlobal('settings', 1, false)) as Setting
     const isPostEnabled = settings.enablePost
 
     const dateFallback = new Date().toISOString()
@@ -69,7 +69,7 @@ export async function GET() {
     return getServerSideSitemap(sitemap)
   } catch (error) {
     console.error('Error in posts sitemap GET handler:', error)
-    
+
     return getServerSideSitemap([])
   }
 }

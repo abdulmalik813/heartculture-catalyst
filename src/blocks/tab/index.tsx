@@ -1,18 +1,17 @@
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/components/ui/tabs'
-import { TabBlock } from '@/payload-types'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Page, Post, Setting, TabBlock } from '@/payload-types'
 import { LexicalRenderer } from '@/components/lexical-renderer'
 import { SearchParams } from '@/types/search-params'
 import { joinStyles } from '@/lib/make-styles'
 
 export async function TabBlockUI({
   searchParams,
+  setting,
+  page,
   ...tabBlock
-}: TabBlock & { searchParams?: SearchParams }) {
+}: TabBlock & { searchParams?: SearchParams } & { setting: Setting | null } & {
+  page: Post | Page | null
+}) {
   if (!tabBlock.tabs || tabBlock.tabs.length === 0) {
     return null
   }
@@ -35,7 +34,12 @@ export async function TabBlockUI({
         if (!tab.title || !tab.content) return null
         return (
           <TabsContent value={tab.title} key={tab.id} className={joinStyles(tab.contentStyles)}>
-            <LexicalRenderer content={tab.content} />
+            <LexicalRenderer
+              content={tab.content}
+              searchParams={searchParams}
+              setting={setting}
+              page={page}
+            />
           </TabsContent>
         )
       })}

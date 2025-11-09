@@ -14,11 +14,11 @@ import { defaultLexical } from '@/fields/lexical-field'
 import { S3 } from './constants/init'
 
 const generateTitle: GenerateTitle<Page> = async ({ doc, req }) => {
-  const settings = await req.payload.findGlobal({
+  const setting = await req.payload.findGlobal({
     slug: 'settings',
   })
 
-  const title = settings?.appTitle || ''
+  const title = setting?.appTitle || ''
   return doc?.title ? `${doc.title} | ${title}` : title
 }
 

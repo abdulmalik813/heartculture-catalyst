@@ -19,8 +19,8 @@ import Script from 'next/script'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
-  const settings = (await getCachedGlobal('settings', 1, false)) as Setting
-  const isPostEnabled = settings.enablePost
+  const setting = (await getCachedGlobal('settings', 1, false)) as Setting
+  const isPostEnabled = setting.enablePost
 
   const pages = await payload.find({
     collection: 'pages',
@@ -36,7 +36,7 @@ export async function generateStaticParams() {
   const params: { slug: string[] }[] = []
 
   if (isPostEnabled) {
-    const postSlug = settings.postSlug || 'posts'
+    const postSlug = setting.postSlug || 'posts'
 
     const posts = await payload.find({
       collection: 'posts',
@@ -102,8 +102,8 @@ function extractPostSlug(slugArray: string[], postSlug: string): string | null {
 
 export default async function Slug({ params, searchParams }: Readonly<SlugProps>) {
   const { isEnabled: draft } = await draftMode()
-  const settings = (await getCachedGlobal('settings', 1, draft)) as Setting
-  const isPostEnabled = settings.enablePost
+  const setting = (await getCachedGlobal('settings', 1, draft)) as Setting
+  const isPostEnabled = setting.enablePost
   const param = await params
   const slug = param?.slug ? param.slug.join('/') : 'home'
   const url = '/' + slug
@@ -112,7 +112,7 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
   let isPostListingPage = false
   let isItAPost = false
   if (isPostEnabled) {
-    const postSlug = settings.postSlug || 'posts'
+    const postSlug = setting.postSlug || 'posts'
 
     if (isPostRoute(param?.slug, postSlug)) {
       const postItemSlug = extractPostSlug(param.slug!, postSlug)
@@ -150,13 +150,13 @@ const renderSchema = async () => {
   const schemas: any[] = []
   
   if (isItAPost && page) {
-    schemas.push(await articleSchema(page as Post, settings))
+    schemas.push(await articleSchema(page as Post, setting))
   }
 
   if (isPostListingPage) {
-    schemas.push(await imageSchema(settings?.postMetaImage as Media, settings))
+    schemas.push(await imageSchema(setting?.postMetaImage as Media, setting))
   } else {
-    schemas.push(await imageSchema(page?.meta?.image as Media, settings))
+    schemas.push(await imageSchema(page?.meta?.image as Media, setting))
   }
 
   if (schemas.length === 0) return null
@@ -189,12 +189,12 @@ const renderSchema = async () => {
       <PayloadRedirects disableNotFound url={url} />
       {isPostListingPage ? (
         <>
-          <PostListingPage searchParams={searchParams} />
+          <PostListingPage searchParams={searchParams} setting={setting}/>
         </>
       ) : (
         page && (
           <>
-            <Hero hero={page.hero} />
+            <Hero hero={page.hero} setting={setting} page={page} />
             {page.layout?.map((layout, i) => (
               <div
                 key={i}
@@ -207,7 +207,7 @@ const renderSchema = async () => {
                   )}
                 >
                   {layout.blocks?.map((block, index) => (
-                    <BlockRenderer key={index} searchParams={searchParams} block={block} />
+                    <BlockRenderer key={index} searchParams={searchParams} block={block} setting={setting} page={page} />
                   ))}
                 </div>
               </div>
@@ -221,21 +221,21 @@ const renderSchema = async () => {
 }
 
 export async function generateMetadata({ params }: SlugProps): Promise<Metadata> {
-  const settings = (await getCachedGlobal('settings', 1, false)) as Setting
-  const isPostEnabled = settings.enablePost
+  const setting = (await getCachedGlobal('settings', 1, false)) as Setting
+  const isPostEnabled = setting.enablePost
   const param = await params
   const slug = param?.slug ? param.slug.join('/') : 'home'
   let post = false
   let page: Post | Page | null = null
 
   if (isPostEnabled) {
-    const postSlug = settings.postSlug || 'posts'
+    const postSlug = setting.postSlug || 'posts'
 
     if (isPostRoute(param?.slug, postSlug)) {
       const postItemSlug = extractPostSlug(param.slug!, postSlug)
 
       if (postItemSlug === null) {
-        return generatePostsListingMeta(settings)
+        return generatePostsListingMeta(setting)
       } else if (postItemSlug) {
         post = true
         page = await queryBySlug({
@@ -255,7 +255,7 @@ export async function generateMetadata({ params }: SlugProps): Promise<Metadata>
     })
   }
 
-  return generateMeta(page, post,settings)
+  return generateMeta(page, post,setting)
 }
 
 const queryBySlug = cache(

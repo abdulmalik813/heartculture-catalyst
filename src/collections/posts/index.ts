@@ -29,9 +29,9 @@ let cachedPostLabel: string = 'Posts'
 
 const checkPostEnabled = async (payload: Payload): Promise<boolean> => {
   try {
-    const settings = (await getCachedGlobal('settings', 1, true)) as Setting
-    cachedPostEnabled = settings?.enablePost ?? false
-    cachedPostLabel = settings?.postListingPageTitle || 'Posts'
+    const setting = (await getCachedGlobal('settings', 1, true)) as Setting
+    cachedPostEnabled = setting?.enablePost ?? false
+    cachedPostLabel = setting?.postListingPageTitle || 'Posts'
     return cachedPostEnabled
   } catch {
     cachedPostEnabled = false
@@ -84,19 +84,19 @@ export const Posts: CollectionConfig<'posts'> = {
     livePreview: {
       url: async ({ data, req }) => {
         if (!req.payload) return ''
-        const settings = await req.payload.findGlobal({
+        const setting = await req.payload.findGlobal({
           slug: 'settings',
         })
-        const postSlug = settings?.postSlug || 'posts'
+        const postSlug = setting?.postSlug || 'posts'
         return generatePreviewPath(`${postSlug}/${data?.slug}`)
       },
     },
     preview: async (data, { req }) => {
       if (!req.payload) return ''
-      const settings = await req.payload.findGlobal({
+      const setting = await req.payload.findGlobal({
         slug: 'settings',
       })
-      const postSlug = settings?.postSlug || 'posts'
+      const postSlug = setting?.postSlug || 'posts'
       return generatePreviewPath(`${postSlug}/${data?.slug}`)
     },
   },

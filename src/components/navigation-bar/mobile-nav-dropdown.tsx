@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { NavigationBar, Media, Style } from '@/payload-types'
+import { NavigationBar, Media, Style, Setting } from '@/payload-types'
 import { NavigationBlockUI } from '@/blocks/navigation'
 import { MediaBlockUI } from '@/blocks/media'
 import { Button } from '@/components/ui/button'
@@ -19,6 +19,7 @@ type MobileNavDropdownProps = {
   darkLogo?: Media
   logoStyles?: (number | Style)[] | null | undefined
   useTitleWithLogo?: boolean | null
+  setting: Setting | null
 }
 
 export function MobileNavDropdown({
@@ -29,6 +30,7 @@ export function MobileNavDropdown({
   darkLogo,
   logoStyles,
   useTitleWithLogo,
+  setting
 }: MobileNavDropdownProps) {
   const [open, setOpen] = useState(false)
   const [expandedDropdowns, setExpandedDropdowns] = useState<Set<string>>(new Set())
@@ -62,12 +64,19 @@ export function MobileNavDropdown({
         <SheetHeader className="border-b px-6 py-4 text-left">
           <Link href="/" onClick={closeSheet} className="flex items-center gap-2">
             {lightLogo && (
-              <MediaBlockUI media={lightLogo} className={joinStyles('dark:hidden', logoStyles)} />
+              <MediaBlockUI
+                media={lightLogo}
+                className={joinStyles('dark:hidden', logoStyles)}
+                setting={setting}
+                page={null}
+              />
             )}
             {darkLogo && (
               <MediaBlockUI
                 media={darkLogo}
                 className={joinStyles('hidden dark:block', logoStyles)}
+                setting={setting}
+                page={null}
               />
             )}
             <SheetTitle>
@@ -83,8 +92,8 @@ export function MobileNavDropdown({
             {navigation && navigation.length > 0 && (
               <div className="space-y-1">
                 {navigation.map((navItem, index) => {
-                  const itemClassName = "w-full text-left px-4 py-3 text-sm font-medium"
-                  
+                  const itemClassName = 'w-full text-left px-4 py-3 text-sm font-medium'
+
                   if (navItem.nav?.appearance === 'dropdown') {
                     const isExpanded = expandedDropdowns.has(navItem.id || `${index}`)
                     return (
@@ -120,7 +129,11 @@ export function MobileNavDropdown({
                                     onClick={closeSheet}
                                     className={itemClassName}
                                   >
-                                    <NavigationBlockUI dropdownItem={dropdownItem}/>
+                                    <NavigationBlockUI
+                                      dropdownItem={dropdownItem}
+                                      setting={setting}
+                                      page={null}
+                                    />
                                   </motion.div>
                                 ))}
                               </div>
@@ -140,7 +153,12 @@ export function MobileNavDropdown({
                       onClick={closeSheet}
                       className={itemClassName}
                     >
-                      <NavigationBlockUI {...navItem} className={itemClassName} />
+                      <NavigationBlockUI
+                        {...navItem}
+                        className={itemClassName}
+                        setting={setting}
+                        page={null}
+                      />
                     </motion.div>
                   )
                 })}
@@ -150,8 +168,8 @@ export function MobileNavDropdown({
             {cta && cta.length > 0 && (
               <div className="space-y-1">
                 {cta.map((navItem, index) => {
-                  const itemClassName = "w-full text-left px-4 py-3 text-sm font-medium"
-                  
+                  const itemClassName = 'w-full text-left px-4 py-3 text-sm font-medium'
+
                   if (navItem.nav?.appearance === 'dropdown') {
                     const isExpanded = expandedDropdowns.has(navItem.id || `${index}`)
                     return (
@@ -187,7 +205,11 @@ export function MobileNavDropdown({
                                     onClick={closeSheet}
                                     className={itemClassName}
                                   >
-                                    <NavigationBlockUI dropdownItem={dropdownItem} />
+                                    <NavigationBlockUI
+                                      dropdownItem={dropdownItem}
+                                      setting={setting}
+                                      page={null}
+                                    />
                                   </motion.div>
                                 ))}
                               </div>
@@ -207,7 +229,12 @@ export function MobileNavDropdown({
                       onClick={closeSheet}
                       className={itemClassName}
                     >
-                      <NavigationBlockUI {...navItem} className={itemClassName} />
+                      <NavigationBlockUI
+                        {...navItem}
+                        className={itemClassName}
+                        setting={setting}
+                        page={null}
+                      />
                     </motion.div>
                   )
                 })}

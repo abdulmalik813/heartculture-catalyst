@@ -24,11 +24,11 @@ const navFields: Field[] = [
         ],
         validate: async (value: any, { req }: any) => {
           if (value === 'postListingPage') {
-            const settings = await req.payload.findGlobal({
+            const setting = await req.payload.findGlobal({
               slug: 'settings',
             })
             if (!settings?.enablePost) {
-              return 'Posts must be enabled in settings to use Post Listing Page'
+              return 'Posts must be enabled in setting to use Post Listing Page'
             }
           }
           return true
@@ -42,7 +42,7 @@ const navFields: Field[] = [
         },
         relationTo: ['pages', 'posts'],
         filterOptions: async ({ req, relationTo }) => {
-          const settings = await req.payload.findGlobal({
+          const setting = await req.payload.findGlobal({
             slug: 'settings',
           })
 
@@ -66,7 +66,7 @@ const navFields: Field[] = [
           beforeChange: [
             async ({ req, siblingData }) => {
               if (siblingData?.type === 'postListingPage') {
-                const settings = await req.payload.findGlobal({
+                const setting = await req.payload.findGlobal({
                   slug: 'settings',
                 })
                 return settings?.postSlug || 'posts'

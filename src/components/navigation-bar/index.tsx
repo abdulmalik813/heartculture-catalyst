@@ -19,32 +19,34 @@ import { MobileNavDropdown } from './mobile-nav-dropdown'
 export async function NavigationBarUI() {
   const { isEnabled } = await draftMode()
   const navBarData = (await getCachedGlobal('navigationBar', 1, isEnabled)) as NavigationBar
-  const settings = (await getCachedGlobal('settings', 1, isEnabled)) as Setting
+  const setting = (await getCachedGlobal('settings', 1, isEnabled)) as Setting
 
-  const lightLogo = settings.logo
-  const darkLogo = settings?.logoDark ?? settings.logo
+  const lightLogo = setting.logo
+  const darkLogo = setting?.logoDark ?? setting.logo
 
   if (typeof lightLogo !== 'object' || typeof darkLogo !== 'object') return null
 
   return (
     <>
-      <Banner {...navBarData.banner} />
+      <Banner {...navBarData.banner} setting={setting} />
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center gap-4">
             <Link href="/" className="flex items-center gap-2 shrink-0">
               <MediaBlockUI
                 media={lightLogo}
+                setting={setting}
+                page={null}
                 className={joinStyles('dark:hidden', navBarData.logoStyles)}
               />
               <MediaBlockUI
                 media={darkLogo}
+                setting={setting}
+                page={null}
                 className={joinStyles('hidden dark:block', navBarData.logoStyles)}
               />
-              {navBarData.useTitleWithLogo && settings.appTitle && (
-                <span className="text-lg font-semibold tracking-tight">
-                  {settings.appTitle}
-                </span>
+              {navBarData.useTitleWithLogo && setting.appTitle && (
+                <span className="text-lg font-semibold tracking-tight">{setting.appTitle}</span>
               )}
             </Link>
 
@@ -62,7 +64,11 @@ export async function NavigationBarUI() {
                             {navItem.nav.items?.map((dropdownItem, index) => (
                               <li key={index}>
                                 <NavigationMenuLink asChild>
-                                  <NavigationBlockUI dropdownItem={dropdownItem} />
+                                  <NavigationBlockUI
+                                    dropdownItem={dropdownItem}
+                                    setting={setting}
+                                    page={null}
+                                  />
                                 </NavigationMenuLink>
                               </li>
                             ))}
@@ -74,7 +80,7 @@ export async function NavigationBarUI() {
 
                   return (
                     <NavigationMenuItem key={navItem.id}>
-                      <NavigationBlockUI {...navItem} />
+                      <NavigationBlockUI {...navItem} setting={setting} page={null} />
                     </NavigationMenuItem>
                   )
                 })}
@@ -95,7 +101,11 @@ export async function NavigationBarUI() {
                             {ctaItem.nav.items?.map((dropdownItem, index) => (
                               <li key={index}>
                                 <NavigationMenuLink asChild>
-                                  <NavigationBlockUI dropdownItem={dropdownItem} />
+                                  <NavigationBlockUI
+                                    dropdownItem={dropdownItem}
+                                    setting={setting}
+                                    page={null}
+                                  />
                                 </NavigationMenuLink>
                               </li>
                             ))}
@@ -107,7 +117,7 @@ export async function NavigationBarUI() {
 
                   return (
                     <NavigationMenuItem key={ctaItem.id}>
-                      <NavigationBlockUI {...ctaItem} />
+                      <NavigationBlockUI {...ctaItem} setting={setting} page={null} />
                     </NavigationMenuItem>
                   )
                 })}
@@ -117,11 +127,12 @@ export async function NavigationBarUI() {
             <MobileNavDropdown
               navigation={navBarData.navigation}
               cta={navBarData.cta}
-              appTitle={settings.appTitle ?? undefined}
+              appTitle={setting.appTitle ?? undefined}
               lightLogo={lightLogo}
               darkLogo={darkLogo}
               logoStyles={navBarData.logoStyles}
               useTitleWithLogo={navBarData.useTitleWithLogo}
+              setting={setting}
             />
           </div>
         </div>

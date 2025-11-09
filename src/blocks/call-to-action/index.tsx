@@ -1,13 +1,17 @@
 import { CallToActionBlock } from '@/payload-types'
 import { SearchParams } from '@/types/search-params'
 import { CardBlockUI } from '@/blocks/card'
-import type { Media as MediaCollection } from '@/payload-types'
+import type { Media as MediaCollection, Page, Post, Setting } from '@/payload-types'
 import { MediaBlockUI } from '../media'
 
 export async function CallToActionBlockUI({
   searchParams,
+  setting,
+  page,
   ...callToActionBlock
-}: Partial<CallToActionBlock> & { searchParams?: SearchParams }) {
+}: Partial<CallToActionBlock> & { searchParams?: SearchParams } & { setting: Setting | null } & {
+  page: Post | Page | null
+}) {
   if (!callToActionBlock.card) return null
 
   const media = callToActionBlock.media as MediaCollection | undefined
@@ -22,7 +26,12 @@ export async function CallToActionBlockUI({
       )}
 
       <div className="w-full max-w-2xl relative z-10">
-        <CardBlockUI {...callToActionBlock.card} searchParams={searchParams} />
+        <CardBlockUI
+          {...callToActionBlock.card}
+          searchParams={searchParams}
+          setting={setting}
+          page={page}
+        />
       </div>
     </div>
   )

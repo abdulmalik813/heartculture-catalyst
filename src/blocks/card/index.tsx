@@ -6,7 +6,7 @@ import {
   CardContent,
   CardFooter,
 } from '@/components/ui/card'
-import { CardBlock } from '@/payload-types'
+import { CardBlock, Page, Post, Setting } from '@/payload-types'
 import { SearchParams } from '@/types/search-params'
 import { joinStyles } from '@/lib/make-styles'
 import { LexicalRenderer } from '@/components/lexical-renderer'
@@ -15,8 +15,12 @@ import { AnimateWrapper } from '@/components/animate-wrapper'
 
 export async function CardBlockUI({
   searchParams,
+  setting,
+  page,
   ...cardBlock
-}: Partial<CardBlock> & { searchParams?: SearchParams }) {
+}: Partial<CardBlock> & { searchParams?: SearchParams } & { setting: Setting | null } & {
+  page: Post | Page | null
+}) {
   const showActionInHeader = cardBlock.actionPlacement === 'header'
   const showActionInFooter = cardBlock.actionPlacement === 'footer'
 
@@ -43,7 +47,13 @@ export async function CardBlockUI({
               {cardBlock.enableAction && showActionInHeader && cardBlock.action && (
                 <div className={joinStyles(cardBlock.actionStyles)}>
                   {cardBlock.action.map((action, index) => (
-                    <NavigationBlockUI key={index} {...action} searchParams={searchParams} />
+                    <NavigationBlockUI
+                      key={index}
+                      {...action}
+                      searchParams={searchParams}
+                      setting={setting}
+                      page={page}
+                    />
                   ))}
                 </div>
               )}
@@ -53,7 +63,12 @@ export async function CardBlockUI({
 
         {cardBlock.enableContent && cardBlock.content && (
           <CardContent className={joinStyles(cardBlock.cardContentStyles)}>
-            <LexicalRenderer content={cardBlock.content} />
+            <LexicalRenderer
+              content={cardBlock.content}
+              searchParams={searchParams}
+              setting={setting}
+              page={page}
+            />
           </CardContent>
         )}
 
@@ -66,7 +81,13 @@ export async function CardBlockUI({
               {cardBlock.enableAction && showActionInFooter && cardBlock.action && (
                 <div className={joinStyles(cardBlock.actionStyles)}>
                   {cardBlock.action.map((action, index) => (
-                    <NavigationBlockUI key={index} {...action} searchParams={searchParams} />
+                    <NavigationBlockUI
+                      key={index}
+                      {...action}
+                      searchParams={searchParams}
+                      setting={setting}
+                      page={page}
+                    />
                   ))}
                 </div>
               )}

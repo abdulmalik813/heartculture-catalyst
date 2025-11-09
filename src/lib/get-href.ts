@@ -1,14 +1,31 @@
-export function getHref(link: any) {
+import { Setting } from '@/payload-types'
+
+export function getHref(link: any, setting: Setting | null) {
   if (link.type === 'postListingPage') {
-    return `/${link?.postListingPageUrl}`
+    const postSlug = setting?.postSlug || 'posts'
+    return `/${postSlug}`
   }
-  return link?.type === 'custom'
-    ? link.url
-    : link?.reference?.relationTo === 'pages'
-      ? typeof link.reference.value === 'object'
-        ? link.reference.value.slug === 'home'
-          ? '/'
-          : `/${link.reference.value.slug}`
-        : null
-      : null
+  
+  if (link?.type === 'custom') {
+    return link.url
+  }
+  
+  if (link?.reference?.relationTo === 'pages') {
+    if (typeof link.reference.value === 'object') {
+      return link.reference.value.slug === 'home' 
+        ? '/' 
+        : `/${link.reference.value.slug}`
+    }
+    return null
+  }
+  
+  if (link?.reference?.relationTo === 'posts') {
+    if (typeof link.reference.value === 'object') {
+      const postSlug = setting?.postSlug || 'posts'
+      return `/${postSlug}/${link.reference.value.slug}`
+    }
+    return null
+  }
+  
+  return null
 }

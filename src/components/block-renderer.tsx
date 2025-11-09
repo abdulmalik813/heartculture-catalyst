@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import type { Page, Post } from '@/payload-types'
+import type { Page, Post, Setting } from '@/payload-types'
 import { SearchParams } from '@/types/search-params'
 import { ContentBlockUI } from '@/blocks/content'
 import { cn } from '@/lib/utils'
@@ -24,6 +24,8 @@ const blockComponents = {
 type BlockRendererProps = {
   block: NonNullable<NonNullable<Page['layout']>[number]['blocks']>[number] | NonNullable<NonNullable<Post['layout']>[number]['blocks']>[number]
   searchParams?: SearchParams
+  page: Post | Page | null
+  setting: Setting | null
 }
 
 const colsSpanClasses = {
@@ -52,7 +54,7 @@ export function BlockRenderer({ block, searchParams }: BlockRendererProps) {
       >
         <Fragment>
           {/* @ts-expect-error there may be some mismatch between the expected types here */}
-          <Block {...block} searchParams={searchParams} />
+          <Block {...block} searchParams={searchParams} setting={setting} page={page} />
         </Fragment>
       </div>
     )
@@ -61,7 +63,7 @@ export function BlockRenderer({ block, searchParams }: BlockRendererProps) {
   return (
     <Fragment>
       {/* @ts-expect-error there may be some mismatch between the expected types here */}
-      <Block {...block} searchParams={searchParams} />
+      <Block {...block} searchParams={searchParams} setting={setting} page={page} />
     </Fragment>
   )
 }

@@ -8,13 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import type { FormBlock } from '@/payload-types'
+import type { FormBlock, Page, Post, Setting } from '@/payload-types'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useState } from 'react'
 import router from 'next/router'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { buildDefaultValues, buildSchema, FieldType, NormalizedFields } from './utils'
 import { FormRegistration } from './formRegistration'
 import { getClientSideURL } from '@/lib/get-url'
@@ -23,8 +23,12 @@ import { SearchParams } from '@/types/search-params'
 
 export function FormBlockUI({
   searchParams,
+  setting,
+  page,
   ...formBlock
-}: FormBlock & { searchParams?: SearchParams }) {
+}: FormBlock & { searchParams?: SearchParams } & { setting: Setting | null } & {
+  page: Post | Page | null
+}) {
   const payloadForm = typeof formBlock.form === 'number' ? null : formBlock.form
   if (!payloadForm) return null
 
@@ -84,7 +88,12 @@ export function FormBlockUI({
         <CardTitle>{payloadForm?.title}</CardTitle>
         {formBlock?.enableDescription && formBlock?.enableDescription && (
           <CardDescription>
-            <LexicalRenderer content={formBlock.description} />
+            <LexicalRenderer
+              content={formBlock.description}
+              searchParams={searchParams}
+              setting={setting}
+              page={page}
+            />
           </CardDescription>
         )}
       </CardHeader>
@@ -103,7 +112,12 @@ export function FormBlockUI({
             <Alert>
               <AlertDescription className="text-foreground">
                 {payloadForm.confirmationMessage && (
-                  <LexicalRenderer content={payloadForm.confirmationMessage} />
+                  <LexicalRenderer
+                    content={payloadForm.confirmationMessage}
+                    searchParams={searchParams}
+                    setting={setting}
+                    page={page}
+                  />
                 )}
               </AlertDescription>
             </Alert>

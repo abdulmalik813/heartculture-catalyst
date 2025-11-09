@@ -1,4 +1,8 @@
-import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionBeforeChangeHook } from 'payload'
+import type {
+  CollectionAfterChangeHook,
+  CollectionAfterDeleteHook,
+  CollectionBeforeChangeHook,
+} from 'payload'
 
 import { revalidatePath, revalidateTag } from 'next/cache'
 
@@ -10,8 +14,8 @@ export const revalidatePost: CollectionAfterChangeHook<Post> = async ({
   req: { payload, context },
 }) => {
   if (!context.disableRevalidate) {
-    const settings = await payload.findGlobal({ slug: 'settings' }) as Setting
-    const postSlug = settings.postSlug || 'posts'
+    const setting = (await payload.findGlobal({ slug: 'settings' })) as Setting
+    const postSlug = setting.postSlug || 'posts'
 
     if (doc._status === 'published') {
       const path = `/${postSlug}/${doc.slug}`
@@ -36,11 +40,14 @@ export const revalidatePost: CollectionAfterChangeHook<Post> = async ({
   return doc
 }
 
-export const revalidateDelete: CollectionAfterDeleteHook<Post> = async ({ doc, req: { payload, context } }) => {
+export const revalidateDelete: CollectionAfterDeleteHook<Post> = async ({
+  doc,
+  req: { payload, context },
+}) => {
   if (!context.disableRevalidate) {
-    const settings = await payload.findGlobal({ slug: 'settings' }) as Setting
-    const postSlug = settings.postSlug || 'posts'
-    
+    const setting = (await payload.findGlobal({ slug: 'settings' })) as Setting
+    const postSlug = setting.postSlug || 'posts'
+
     const path = `/${postSlug}/${doc?.slug}`
     revalidatePath(path)
     revalidatePath(`/${postSlug}`)

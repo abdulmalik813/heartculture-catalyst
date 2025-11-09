@@ -36,15 +36,15 @@ function generateFontClass(font: any): string | null {
 }`
 }
 
-function collectFonts(settings: Setting): FontData[] {
+function collectFonts(setting: Setting): FontData[] {
   const fonts: FontData[] = []
 
-  if (settings.default?.fontData && isFontData(settings.default.fontData)) {
-    fonts.push(settings.default.fontData)
+  if (setting.default?.fontData && isFontData(setting.default.fontData)) {
+    fonts.push(setting.default.fontData)
   }
 
-  if (settings.additionalFonts && Array.isArray(settings.additionalFonts)) {
-    settings.additionalFonts.forEach((font: any) => {
+  if (setting.additionalFonts && Array.isArray(setting.additionalFonts)) {
+    setting.additionalFonts.forEach((font: any) => {
       if (font.fontData && isFontData(font.fontData)) {
         fonts.push(font.fontData)
       }
@@ -66,24 +66,24 @@ const getCachedFontCSS = unstable_cache(
 export async function GET(req: NextRequest) {
   const { isEnabled: draft } = await draftMode()
 
-  const settings = (await getCachedGlobal('settings', 1, draft)) as Setting
+  const setting = (await getCachedGlobal('settings', 1, draft)) as Setting
   const styles = (await getCachedDocuments('styles', draft)()) as Style[]
 
-  const fonts = collectFonts(settings)
+  const fonts = collectFonts(setting)
 
   const fontsourceCSS = draft
     ? fonts.map(generateFontImport).join('\n')
     : await getCachedFontCSS(JSON.stringify(fonts))
 
   const fontClasses =
-    settings.additionalFonts?.map(generateFontClass).filter(Boolean).join('\n\n') || ''
+    setting.additionalFonts?.map(generateFontClass).filter(Boolean).join('\n\n') || ''
 
   const stylesCSS = styles
     .map((s) => s.stylesheet || '')
     .filter((css) => css.trim())
     .join('\n\n')
 
-  const css = [fontsourceCSS, fontClasses, settings.theme, stylesCSS].filter(Boolean).join('\n\n')
+  const css = [fontsourceCSS, fontClasses, setting.theme, stylesCSS].filter(Boolean).join('\n\n')
 
   return new NextResponse(css, {
     headers: {
