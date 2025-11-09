@@ -192,7 +192,7 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
             {page.layout?.map((layout, i) => (
               <div
                 key={i}
-                className={joinStyles(cn(layout.container && 'container mx-auto'), layout.styles)}
+                className={joinStyles(cn(layout.container && 'container mx-auto px-4'), layout.styles)}
               >
                 <div
                   className={cn(
