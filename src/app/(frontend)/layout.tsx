@@ -11,6 +11,7 @@ import { Metadata } from 'next'
 import { getAppSettings } from '@/constants/app'
 import { NavigationBarUI } from '@/components/navigation-bar'
 import { Footer } from '@/components/footer'
+import { isFontData } from '@/lib/is-font-data'
 
 export async function generateMetadata(): Promise<Metadata> {
   const appData = await getAppSettings()
@@ -36,13 +37,29 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
 
   const settings = (await getCachedGlobal('settings', 1, isEnabled)) as Setting
 
-  const defaultFontFamily = settings?.default?.family || 'sans-serif'
+  const defaultFont = settings?.default
+  const fontData = defaultFont?.fontData && isFontData(defaultFont.fontData) 
+    ? defaultFont.fontData 
+    : null
+  
+  const defaultFontFamily = fontData?.variable
+    ? `'${fontData.family} Variable', sans-serif`
+    : fontData?.family 
+    ? `'${fontData.family}', sans-serif`
+    : 'sans-serif'
+  
+  const fontWeight = fontData?.weight || 400
+  const fontStyle = fontData?.style || 'normal'
 
   return (
     <html
       lang="en"
       suppressHydrationWarning
-      style={{ fontFamily: `'${defaultFontFamily}', sans-serif` }}
+      style={{ 
+        fontFamily: defaultFontFamily,
+        fontWeight: fontWeight,
+        fontStyle: fontStyle
+      }}
     >
       {isEnabled && <LivePreviewListener />}
       <head>

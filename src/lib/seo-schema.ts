@@ -57,5 +57,6 @@ export const imageSchema = async (image: Media | null | undefined, settings: Set
     '@type': 'ImageObject',
     contentUrl: getMediaUrl(contentUrl),
     creditText: image?.creditText,
+    description: image?.caption 
   }
 }
