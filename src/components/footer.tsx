@@ -35,6 +35,7 @@ export async function Footer() {
                   )}
                   setting={setting}
                   page={null}
+                  searchParams={null}
                 />
                 <MediaBlockUI
                   media={darkLogo}
@@ -44,6 +45,7 @@ export async function Footer() {
                   )}
                   setting={setting}
                   page={null}
+                  searchParams={null}
                 />
                 {footerData.useLabelWithLogo && setting.appTitle && (
                   <span
@@ -60,7 +62,12 @@ export async function Footer() {
                 <div
                   className={joinStyles('text-muted-foreground max-w-sm', footerData.tagLineStyles)}
                 >
-                  <LexicalRenderer content={footerData.tagLine} setting={setting} page={null} />
+                  <LexicalRenderer
+                    content={footerData.tagLine}
+                    setting={setting}
+                    page={null}
+                    searchParams={null}
+                  />
                 </div>
               )}
             </div>
@@ -84,6 +91,7 @@ export async function Footer() {
                         {group.items?.map((item, itemIndex) => (
                           <NavigationBlockUI
                             key={itemIndex}
+                            searchParams={null}
                             {...item}
                             className={joinStyles(
                               'text-muted-foreground hover:text-foreground transition-colors text-sm',

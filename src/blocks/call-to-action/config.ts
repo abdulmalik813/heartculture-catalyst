@@ -1,6 +1,5 @@
 import { Block } from 'payload'
 import { media } from '@/fields/media'
-import { navigation } from '@/fields/navigation'
 import { grid } from '@/fields/grid'
 import { card } from '@/fields/card'
 

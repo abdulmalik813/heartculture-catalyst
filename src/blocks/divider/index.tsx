@@ -7,7 +7,7 @@ export async function DividerBlockUI({
   setting,
   page,
   ...dividerBlock
-}: DividerBlock & { searchParams?: SearchParams } & { setting: Setting | null } & {
+}: DividerBlock & { searchParams: SearchParams } & { setting: Setting | null } & {
   page: Post | Page | null
 }) {
   const classNames = joinStyles(dividerBlock.dividerStyles)

@@ -9,7 +9,7 @@ export async function CallToActionBlockUI({
   setting,
   page,
   ...callToActionBlock
-}: Partial<CallToActionBlock> & { searchParams?: SearchParams } & { setting: Setting | null } & {
+}: Partial<CallToActionBlock> & { searchParams: SearchParams } & { setting: Setting | null } & {
   page: Post | Page | null
 }) {
   if (!callToActionBlock.card) return null
@@ -21,7 +21,13 @@ export async function CallToActionBlockUI({
       {media && media.url && (
         <div className={`absolute inset-0 -z-10 overflow-hidden`}>
           {/* @ts-expect-error there may be some mismatch between the expected types here */}
-          <MediaBlockUI {...callToActionBlock} className="w-full h-full object-cover" />{' '}
+          <MediaBlockUI
+            {...callToActionBlock}
+            className="w-full h-full object-cover"
+            searchParams={searchParams}
+            setting={setting}
+            page={page}
+          />
         </div>
       )}
 

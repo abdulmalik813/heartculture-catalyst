@@ -36,6 +36,7 @@ export async function NavigationBarUI() {
               <MediaBlockUI
                 media={lightLogo}
                 setting={setting}
+                searchParams={null}
                 page={null}
                 className={joinStyles('dark:hidden', navBarData.logoStyles)}
               />
@@ -43,6 +44,7 @@ export async function NavigationBarUI() {
                 media={darkLogo}
                 setting={setting}
                 page={null}
+                searchParams={null}
                 className={joinStyles('hidden dark:block', navBarData.logoStyles)}
               />
               {navBarData.useTitleWithLogo && setting.appTitle && (
@@ -68,6 +70,7 @@ export async function NavigationBarUI() {
                                     dropdownItem={dropdownItem}
                                     setting={setting}
                                     page={null}
+                                    searchParams={null}
                                   />
                                 </NavigationMenuLink>
                               </li>
@@ -80,7 +83,12 @@ export async function NavigationBarUI() {
 
                   return (
                     <NavigationMenuItem key={navItem.id}>
-                      <NavigationBlockUI {...navItem} setting={setting} page={null} />
+                      <NavigationBlockUI
+                        {...navItem}
+                        setting={setting}
+                        page={null}
+                        searchParams={null}
+                      />
                     </NavigationMenuItem>
                   )
                 })}
@@ -103,6 +111,7 @@ export async function NavigationBarUI() {
                                 <NavigationMenuLink asChild>
                                   <NavigationBlockUI
                                     dropdownItem={dropdownItem}
+                                    searchParams={null}
                                     setting={setting}
                                     page={null}
                                   />
@@ -117,7 +126,12 @@ export async function NavigationBarUI() {
 
                   return (
                     <NavigationMenuItem key={ctaItem.id}>
-                      <NavigationBlockUI {...ctaItem} setting={setting} page={null} />
+                      <NavigationBlockUI
+                        {...ctaItem}
+                        setting={setting}
+                        page={null}
+                        searchParams={null}
+                      />
                     </NavigationMenuItem>
                   )
                 })}

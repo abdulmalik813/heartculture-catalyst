@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-import type { Media, Page, Config, Post, Setting } from '../payload-types'
+import type { Media, Page, Post, Setting } from '../payload-types'
 
 import { mergeOpenGraph } from './merge-open-graph'
 import { getServerSideURL } from './get-url'

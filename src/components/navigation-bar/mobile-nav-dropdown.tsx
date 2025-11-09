@@ -30,7 +30,7 @@ export function MobileNavDropdown({
   darkLogo,
   logoStyles,
   useTitleWithLogo,
-  setting
+  setting,
 }: MobileNavDropdownProps) {
   const [open, setOpen] = useState(false)
   const [expandedDropdowns, setExpandedDropdowns] = useState<Set<string>>(new Set())
@@ -69,6 +69,7 @@ export function MobileNavDropdown({
                 className={joinStyles('dark:hidden', logoStyles)}
                 setting={setting}
                 page={null}
+                searchParams={null}
               />
             )}
             {darkLogo && (
@@ -77,6 +78,7 @@ export function MobileNavDropdown({
                 className={joinStyles('hidden dark:block', logoStyles)}
                 setting={setting}
                 page={null}
+                searchParams={null}
               />
             )}
             <SheetTitle>
@@ -132,6 +134,7 @@ export function MobileNavDropdown({
                                     <NavigationBlockUI
                                       dropdownItem={dropdownItem}
                                       setting={setting}
+                                      searchParams={null}
                                       page={null}
                                     />
                                   </motion.div>
@@ -156,6 +159,7 @@ export function MobileNavDropdown({
                       <NavigationBlockUI
                         {...navItem}
                         className={itemClassName}
+                        searchParams={null}
                         setting={setting}
                         page={null}
                       />
@@ -209,6 +213,7 @@ export function MobileNavDropdown({
                                       dropdownItem={dropdownItem}
                                       setting={setting}
                                       page={null}
+                                      searchParams={null}
                                     />
                                   </motion.div>
                                 ))}
@@ -232,6 +237,7 @@ export function MobileNavDropdown({
                       <NavigationBlockUI
                         {...navItem}
                         className={itemClassName}
+                        searchParams={null}
                         setting={setting}
                         page={null}
                       />

@@ -11,7 +11,7 @@ export async function Hero({
   page,
   hero,
 }: {
-  searchParams?: SearchParams
+  searchParams: SearchParams
   hero: NonNullable<Page['hero']>
   setting: Setting | null
   page: Page | Post | null

@@ -15,7 +15,7 @@ export function MediaBlockUI({
   setting,
   page,
   ...mediaBlock
-}: Partial<MediaBlock> & { searchParams?: SearchParams } & { className?: string } & {
+}: Partial<MediaBlock> & { searchParams: SearchParams } & { className?: string } & {
   setting: Setting | null
 } & { page: Post | Page | null }) {
   if (!mediaBlock.media) return null

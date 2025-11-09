@@ -9,7 +9,7 @@ export async function TabBlockUI({
   setting,
   page,
   ...tabBlock
-}: TabBlock & { searchParams?: SearchParams } & { setting: Setting | null } & {
+}: TabBlock & { searchParams: SearchParams } & { setting: Setting | null } & {
   page: Post | Page | null
 }) {
   if (!tabBlock.tabs || tabBlock.tabs.length === 0) {

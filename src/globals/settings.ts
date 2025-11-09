@@ -142,7 +142,7 @@ export const Settings: GlobalConfig = {
                   }
 
                   return true
-                } catch (error) {
+                } catch {
                   return 'Error validating slug. Please try again.'
                 }
               },

@@ -1,4 +1,4 @@
-import { AlertCircle, Home, Search } from 'lucide-react'
+import { AlertCircle, Home } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -15,7 +15,7 @@ export default function NotFound() {
           </div>
           <CardTitle className="text-3xl font-bold">404 - Page Not Found</CardTitle>
           <CardDescription className="text-base mt-2">
-            The page you're looking for doesn't exist or has been moved.
+            The page you&apos;re looking for doesn&apos;t exist or has been moved.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">

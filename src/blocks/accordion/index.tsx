@@ -14,7 +14,7 @@ export async function AccordionBlockUI({
   setting,
   page,
   ...accordionBlock
-}: AccordionBlock & { searchParams?: SearchParams } & { setting: Setting | null } & {
+}: AccordionBlock & { searchParams: SearchParams } & { setting: Setting | null } & {
   page: Post | Page | null
 }) {
   return (

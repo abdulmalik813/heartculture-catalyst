@@ -7,6 +7,7 @@ import { TabBlock } from '@/blocks/tab/config'
 import { AccordionBlock } from '@/blocks/accordion/config'
 import { defaultLexicalValue } from '@/constants/default-lexical'
 import { animate } from './animate'
+import { FormBlock } from '@/blocks/form/config'
 
 export const card = (): Field[] => {
   return [
@@ -100,7 +101,7 @@ export const card = (): Field[] => {
               editor: defaultLexical({
                 features: {
                   blocks: {
-                    blocks: [MediaBlock, NavigationBlock, TabBlock(), AccordionBlock()],
+                    blocks: [MediaBlock, NavigationBlock, TabBlock(), AccordionBlock(), FormBlock()],
                     inlineBlocks: [MediaBlock, NavigationBlock],
                   },
                 },

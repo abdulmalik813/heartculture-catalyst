@@ -36,7 +36,7 @@ import { TableBlockUI } from '@/blocks/table'
 interface LexicalRendererProps {
   content?: DefaultTypedEditorState | null
   contentStyles?: (number | Style)[] | undefined | null
-  searchParams?: SearchParams
+  searchParams: SearchParams
   className?: string
   page: Post | Page | null
   setting: Setting | null
@@ -58,7 +58,7 @@ type NodeTypes =
 function jsxConverters(
   setting: Setting | null,
   page: Page | Post | null,
-  searchParams?: LexicalRendererProps['searchParams'],
+  searchParams: LexicalRendererProps['searchParams'],
 ): JSXConvertersFunction<NodeTypes> {
   return function ({ defaultConverters }) {
     return {

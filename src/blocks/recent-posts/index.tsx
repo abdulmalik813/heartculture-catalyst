@@ -12,12 +12,7 @@ import { Page, Post, RecentPostsBlock, Setting } from '@/payload-types'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { SearchParams } from '@/types/search-params'
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from '@/components/ui/card'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { joinStyles } from '@/lib/make-styles'
 import { AnimateWrapper } from '@/components/animate-wrapper'
 
@@ -26,7 +21,7 @@ export async function RecentPostsBlockUI({
   setting,
   page,
   ...recentPostsBlock
-}: Partial<RecentPostsBlock> & { searchParams?: SearchParams } & { className?: string } & {
+}: Partial<RecentPostsBlock> & { searchParams: SearchParams } & { className?: string } & {
   setting: Setting | null
 } & { page: Post | Page | null }) {
   const payload = await getPayload({ config: configPromise })

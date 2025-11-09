@@ -2,12 +2,27 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import { Spinner } from '@/components/ui/spinner'
 import { UseFormReturn } from 'react-hook-form'
 import { LexicalRenderer } from '@/components/lexical-renderer'
 import { FieldType } from './utils'
+import { Setting, Page, Post } from '@/payload-types'
+import { SearchParams } from '@/types/search-params'
 
 interface FormRegistrationProps {
   fields: FieldType[]
@@ -15,6 +30,9 @@ interface FormRegistrationProps {
   onSubmit: (values: any) => Promise<void>
   isSubmitting: boolean
   submitButtonLabel: string
+  setting: Setting | null
+  page: Page | Post | null
+  searchParams: SearchParams
 }
 
 export function FormRegistration({
@@ -22,7 +40,10 @@ export function FormRegistration({
   form,
   onSubmit,
   isSubmitting,
-  submitButtonLabel
+  submitButtonLabel,
+  page,
+  setting,
+  searchParams,
 }: FormRegistrationProps) {
   return (
     <Form {...form}>
@@ -30,7 +51,7 @@ export function FormRegistration({
         <div className="flex flex-wrap gap-4 w-full">
           {fields?.map((field) => {
             switch (field.blockType) {
-              case "text":
+              case 'text':
                 return (
                   <FormField
                     key={field.id}
@@ -58,7 +79,7 @@ export function FormRegistration({
                   />
                 )
 
-              case "email":
+              case 'email':
                 return (
                   <FormField
                     key={field.id}
@@ -86,7 +107,7 @@ export function FormRegistration({
                   />
                 )
 
-              case "textarea":
+              case 'textarea':
                 return (
                   <FormField
                     key={field.id}
@@ -113,7 +134,7 @@ export function FormRegistration({
                   />
                 )
 
-              case "number":
+              case 'number':
                 return (
                   <FormField
                     key={field.id}
@@ -141,7 +162,7 @@ export function FormRegistration({
                   />
                 )
 
-              case "date":
+              case 'date':
                 return (
                   <FormField
                     key={field.id}
@@ -156,11 +177,7 @@ export function FormRegistration({
                           </FormLabel>
                         )}
                         <FormControl>
-                          <Input
-                            type="date"
-                            {...formField}
-                            value={formField.value as string}
-                          />
+                          <Input type="date" {...formField} value={formField.value as string} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -168,7 +185,7 @@ export function FormRegistration({
                   />
                 )
 
-              case "time":
+              case 'time':
                 return (
                   <FormField
                     key={field.id}
@@ -183,11 +200,7 @@ export function FormRegistration({
                           </FormLabel>
                         )}
                         <FormControl>
-                          <Input
-                            type="time"
-                            {...formField}
-                            value={formField.value as string}
-                          />
+                          <Input type="time" {...formField} value={formField.value as string} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -195,33 +208,36 @@ export function FormRegistration({
                   />
                 )
 
-              case "checkbox":
+              case 'checkbox':
                 return (
                   <FormField
                     key={field.id}
                     control={form.control}
                     name={field.name}
                     render={({ field: formField }) => (
-                      <FormItem className={`${field.width} flex flex-row items-start`} id={field.name}>
+                      <FormItem
+                        className={`${field.width} flex flex-row items-start`}
+                        id={field.name}
+                      >
                         <FormControl>
                           <Checkbox
                             checked={formField.value as boolean}
                             onCheckedChange={formField.onChange}
                           />
                         </FormControl>
-                          {field.label && (
-                            <FormLabel className="mt-0.5">
-                              {field.label}
-                              {field.required && <span className="text-red-500 ml-1">*</span>}
-                            </FormLabel>
-                          )}
+                        {field.label && (
+                          <FormLabel className="mt-0.5">
+                            {field.label}
+                            {field.required && <span className="text-red-500 ml-1">*</span>}
+                          </FormLabel>
+                        )}
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                 )
 
-              case "select":
+              case 'select':
                 return (
                   <FormField
                     key={field.id}
@@ -235,10 +251,13 @@ export function FormRegistration({
                             {field.required && <span className="text-red-500 ml-1">*</span>}
                           </FormLabel>
                         )}
-                        <Select onValueChange={formField.onChange} defaultValue={formField.value as string}>
+                        <Select
+                          onValueChange={formField.onChange}
+                          defaultValue={formField.value as string}
+                        >
                           <FormControl>
                             <SelectTrigger className="w-full">
-                              <SelectValue placeholder={field.placeholder || "Select an option"} />
+                              <SelectValue placeholder={field.placeholder || 'Select an option'} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -255,11 +274,17 @@ export function FormRegistration({
                   />
                 )
 
-              case "message":
+              case 'message':
                 if (!field.richText) return null
                 return (
                   <div key={field.id} className={field.width}>
-                    <LexicalRenderer content={field.richText} className='text-left text-foreground' />
+                    <LexicalRenderer
+                      content={field.richText}
+                      className="text-left text-foreground"
+                      setting={setting}
+                      page={page}
+                      searchParams={searchParams}
+                    />
                   </div>
                 )
 

@@ -9,7 +9,7 @@ export function LastModifiedBlockUI({
   setting,
   page,
   ...lastModifiedBlock
-}: Partial<LastModifiedBlock> & { searchParams?: SearchParams } & { className?: string } & {
+}: Partial<LastModifiedBlock> & { searchParams: SearchParams } & { className?: string } & {
   setting: Setting | null
 } & { page: Post | Page | null }) {
   if (!page) {

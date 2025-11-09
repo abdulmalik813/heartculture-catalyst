@@ -1,6 +1,5 @@
 import { GroupField } from 'payload'
 import { media } from './media'
-import { navigation } from './navigation'
 import { card } from './card'
 
 export const hero: GroupField = {

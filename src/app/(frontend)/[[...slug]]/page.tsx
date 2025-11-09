@@ -146,55 +146,49 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
     return <PayloadRedirects url={url} />
   }
 
-const renderSchema = async () => {
-  const schemas: any[] = []
-  
-  if (isItAPost && page) {
-    schemas.push(await articleSchema(page as Post, setting))
-  }
+  const renderSchema = async () => {
+    const schemas: any[] = []
 
-  if (isPostListingPage) {
-    schemas.push(await imageSchema(setting?.postMetaImage as Media, setting))
-  } else {
-    schemas.push(await imageSchema(page?.meta?.image as Media, setting))
-  }
+    if (isItAPost && page) {
+      schemas.push(await articleSchema(page as Post, setting))
+    }
 
-  if (schemas.length === 0) return null
+    if (isPostListingPage) {
+      schemas.push(await imageSchema(setting?.postMetaImage as Media, setting))
+    } else {
+      schemas.push(await imageSchema(page?.meta?.image as Media, setting))
+    }
 
-  if (schemas.length > 1) {
+    if (schemas.length === 0) return null
+
+    if (schemas.length > 1) {
+      return (
+        <Script id="schema" type="application/ld+json" strategy="lazyOnload">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': schemas,
+          })}
+        </Script>
+      )
+    }
     return (
-      <Script
-        type="application/ld+json"
-        strategy="lazyOnload"
-      >
-        {JSON.stringify({
-          '@context': 'https://schema.org',
-          '@graph': schemas
-        })}
+      <Script id="schema" type="application/ld+json" strategy="lazyOnload">
+        {JSON.stringify(schemas[0])}
       </Script>
     )
   }
-  return (
-    <Script
-      type="application/ld+json"
-      strategy="lazyOnload"
-    >
-      {JSON.stringify(schemas[0])}
-    </Script>
-  )
-}
 
   return (
     <article className="min-h-[70vh]">
       <PayloadRedirects disableNotFound url={url} />
       {isPostListingPage ? (
         <>
-          <PostListingPage searchParams={searchParams} setting={setting}/>
+          <PostListingPage searchParams={searchParams} setting={setting} />
         </>
       ) : (
         page && (
           <>
-            <Hero hero={page.hero} setting={setting} page={page} />
+            <Hero hero={page.hero} searchParams={searchParams} setting={setting} page={page} />
             {page.layout?.map((layout, i) => (
               <div
                 key={i}
@@ -207,7 +201,13 @@ const renderSchema = async () => {
                   )}
                 >
                   {layout.blocks?.map((block, index) => (
-                    <BlockRenderer key={index} searchParams={searchParams} block={block} setting={setting} page={page} />
+                    <BlockRenderer
+                      key={index}
+                      searchParams={searchParams}
+                      block={block}
+                      setting={setting}
+                      page={page}
+                    />
                   ))}
                 </div>
               </div>
@@ -255,7 +255,7 @@ export async function generateMetadata({ params }: SlugProps): Promise<Metadata>
     })
   }
 
-  return generateMeta(page, post,setting)
+  return generateMeta(page, post, setting)
 }
 
 const queryBySlug = cache(

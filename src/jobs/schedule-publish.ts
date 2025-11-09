@@ -1,4 +1,4 @@
-import { CollectionSlug, TaskHandlerArgs, TaskInput } from "payload";
+import { TaskHandlerArgs, TaskInput } from "payload";
 
 
 export const schedulePublish = {

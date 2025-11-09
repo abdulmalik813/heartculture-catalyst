@@ -24,12 +24,11 @@ import { LastModifiedBlock } from '@/blocks/last-modified/config'
 import { RecentPostsBlock } from '@/blocks/recent-posts/config'
 import { getCachedGlobal } from '@/lib/get-globals'
 import { Setting } from '@/payload-types'
-import type { Payload } from 'payload'
 
 let cachedPostEnabled: boolean | null = null
 let cachedPostLabel: string = 'Posts'
 
-const checkPostEnabled = async (payload: Payload): Promise<boolean> => {
+const checkPostEnabled = async (): Promise<boolean> => {
   try {
     const setting = (await getCachedGlobal('settings', 1, true)) as Setting
     cachedPostEnabled = setting?.enablePost ?? false
@@ -50,25 +49,25 @@ export const Posts: CollectionConfig<'posts'> = {
   access: {
     create: async ({ req }) => {
       if (!req.payload) return false
-      await checkPostEnabled(req.payload)
+      await checkPostEnabled()
       if (!cachedPostEnabled) return false
       return authenticated({ req })
     },
     delete: async ({ req }) => {
       if (!req.payload) return false
-      await checkPostEnabled(req.payload)
+      await checkPostEnabled()
       if (!cachedPostEnabled) return false
       return authenticated({ req })
     },
     read: async ({ req }) => {
       if (!req.payload) return false
-      await checkPostEnabled(req.payload)
+      await checkPostEnabled()
       if (!cachedPostEnabled) return false
       return authenticatedOrPublished({ req })
     },
     update: async ({ req }) => {
       if (!req.payload) return false
-      await checkPostEnabled(req.payload)
+      await checkPostEnabled()
       if (!cachedPostEnabled) return false
       return authenticated({ req })
     },
@@ -79,7 +78,7 @@ export const Posts: CollectionConfig<'posts'> = {
     listSearchableFields: ['title', 'excerpt'],
     hidden: ({ user }) => {
       if (user?.payload) {
-        checkPostEnabled(user.payload)
+        checkPostEnabled()
       }
       return cachedPostEnabled === false
     },

@@ -18,7 +18,7 @@ export async function CardBlockUI({
   setting,
   page,
   ...cardBlock
-}: Partial<CardBlock> & { searchParams?: SearchParams } & { setting: Setting | null } & {
+}: Partial<CardBlock> & { searchParams: SearchParams } & { setting: Setting | null } & {
   page: Post | Page | null
 }) {
   const showActionInHeader = cardBlock.actionPlacement === 'header'

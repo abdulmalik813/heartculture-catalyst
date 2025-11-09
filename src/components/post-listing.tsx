@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import { Input } from '@/components/ui/input'
 import { SearchIcon } from 'lucide-react'
-import { getCachedGlobal } from '@/lib/get-globals'
 import { Setting } from '@/payload-types'
 import {
   Pagination,
@@ -33,7 +32,8 @@ interface PostProps {
 
 export default async function PostListingPage({ searchParams, setting }: Readonly<PostProps>) {
   const search = await searchParams
-  const { q: searchQuery, page = '1', category } = search
+
+  const { q: searchQuery, page = '1', category } = search ?? {}
   const currentPage = parseInt(page as string)
   const postsPerPage = 12
 
@@ -263,7 +263,7 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
             <span className="text-sm text-muted-foreground">Showing results for:</span>
             {searchQuery && (
               <Badge variant="secondary" className="font-medium">
-                "{searchQuery}"
+                &quot;{searchQuery}&quot;
               </Badge>
             )}
             {searchQuery && selectedCategory && (

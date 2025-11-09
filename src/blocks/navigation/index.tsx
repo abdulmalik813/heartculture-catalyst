@@ -84,7 +84,7 @@ export function NavigationBlockUI({
   ...navigationBlock
 }: Partial<NavigationBlock> & {
   className?: string
-  searchParams?: SearchParams
+  searchParams: SearchParams
   dropdownItem?: DropdownItem
 } & { setting: Setting | null } & { page: Post | Page | null }) {
   const { hasIcon, iconPlacement, renderIcon } = getIconData(navigationBlock.nav)

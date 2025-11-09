@@ -17,7 +17,7 @@ export async function TableBlockUI({
   setting,
   page,
   ...tableBlock
-}: TableBlock & { searchParams?: SearchParams } & { setting: Setting | null } & {
+}: TableBlock & { searchParams: SearchParams } & { setting: Setting | null } & {
   page: Post | Page | null
 }) {
   return (

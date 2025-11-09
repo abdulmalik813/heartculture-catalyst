@@ -26,13 +26,13 @@ export function FormBlockUI({
   setting,
   page,
   ...formBlock
-}: FormBlock & { searchParams?: SearchParams } & { setting: Setting | null } & {
+}: FormBlock & { searchParams: SearchParams } & { setting: Setting | null } & {
   page: Post | Page | null
 }) {
   const payloadForm = typeof formBlock.form === 'number' ? null : formBlock.form
-  if (!payloadForm) return null
 
-  const fields: FieldType[] = NormalizedFields(formBlock)
+  // Initialize all hooks first - BEFORE any conditional returns
+  const fields: FieldType[] = payloadForm ? NormalizedFields(formBlock) : []
   const [error, setError] = useState<{ message: string; status?: string } | undefined>()
   const [hasSubmitted, setHasSubmitted] = useState<boolean>()
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -42,6 +42,9 @@ export function FormBlockUI({
     resolver: zodResolver(formSchema),
     defaultValues: buildDefaultValues(fields),
   })
+
+  // NOW check if we should render
+  if (!payloadForm) return null
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true)
@@ -74,7 +77,7 @@ export function FormBlockUI({
       if (payloadForm?.confirmationType === 'redirect' && payloadForm?.redirect?.url) {
         router.push(payloadForm?.redirect.url)
       }
-    } catch (error) {
+    } catch {
       setError({ message: 'Something went wrong.' })
       setHasSubmitted(false)
     } finally {
@@ -101,6 +104,9 @@ export function FormBlockUI({
         <FormRegistration
           fields={fields}
           form={form}
+          searchParams={searchParams}
+          page={page}
+          setting={setting}
           onSubmit={onSubmit}
           isSubmitting={isSubmitting}
           submitButtonLabel={payloadForm.submitButtonLabel || 'Submit'}

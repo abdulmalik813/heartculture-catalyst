@@ -22,12 +22,14 @@ const blockComponents = {
   dividerBlock: DividerBlockUI,
   tableBlock: TableBlockUI,
   lastModifiedBlock: LastModifiedBlockUI,
-  recentPostsBlock: RecentPostsBlockUI
+  recentPostsBlock: RecentPostsBlockUI,
 }
 
 type BlockRendererProps = {
-  block: NonNullable<NonNullable<Page['layout']>[number]['blocks']>[number] | NonNullable<NonNullable<Post['layout']>[number]['blocks']>[number]
-  searchParams?: SearchParams
+  block:
+    | NonNullable<NonNullable<Page['layout']>[number]['blocks']>[number]
+    | NonNullable<NonNullable<Post['layout']>[number]['blocks']>[number]
+  searchParams: SearchParams
   page: Post | Page | null
   setting: Setting | null
 }

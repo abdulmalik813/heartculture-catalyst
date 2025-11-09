@@ -7,7 +7,7 @@ export async function ContentBlockUI({
   setting,
   page,
   ...contentBlock
-}: ContentBlock & { searchParams?: SearchParams } & { setting: Setting | null } & {
+}: ContentBlock & { searchParams: SearchParams } & { setting: Setting | null } & {
   page: Post | Page | null
 }) {
   return (

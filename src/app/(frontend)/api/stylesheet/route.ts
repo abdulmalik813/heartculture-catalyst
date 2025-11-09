@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { draftMode } from 'next/headers'
 import { unstable_cache } from 'next/cache'
 import { getCachedGlobal } from '@/lib/get-globals'
@@ -63,7 +63,7 @@ const getCachedFontCSS = unstable_cache(
   { tags: ['fonts-tag'], revalidate: 60 * 60 * 24 * 7 },
 )
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const { isEnabled: draft } = await draftMode()
 
   const setting = (await getCachedGlobal('settings', 1, draft)) as Setting
