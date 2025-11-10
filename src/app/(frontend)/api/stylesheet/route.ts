@@ -67,7 +67,7 @@ export async function GET() {
   const { isEnabled: draft } = await draftMode()
 
   const setting = (await getCachedGlobal('settings', 1, draft)) as Setting
-  const styles = (await getCachedDocuments('styles', draft)()) as Style[]
+  const styles = (await getCachedDocuments('styles', draft, 10000)()) as Style[]
 
   const fonts = collectFonts(setting)
 

@@ -23,12 +23,13 @@ async function getDocument(collection: Collection, slug: string, depth = 0, draf
   return page.docs[0]
 }
 
-async function getAllDocuments(collection: Collection, draft = false) {
+async function getAllDocuments(collection: Collection, draft = false, limit = 10000) {
   const payload = await getPayload({ config: configPromise })
 
   const result = await payload.find({
     collection,
     draft,
+    limit: limit
   })
 
   return result.docs
@@ -61,14 +62,15 @@ export const getCachedDocument = (
  */
 export const getCachedDocuments = (
   collection: Collection,
-  draft = false
+  draft = false,
+  limit = 10000
 ) => {
   if (draft) {
-    return () => getAllDocuments(collection, draft)
+    return () => getAllDocuments(collection, draft, limit)
   }
 
   return unstable_cache(
-    async () => getAllDocuments(collection, draft),
+    async () => getAllDocuments(collection, draft, limit),
     [`collection_${collection}`],
     {
       tags: [`collection_${collection}`],

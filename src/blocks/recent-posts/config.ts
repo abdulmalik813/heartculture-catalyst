@@ -12,11 +12,8 @@ export const RecentPostsBlock: Block = {
       tabs: [
         {
           label: 'Layout',
-          fields: [grid()],
-        },
-        {
-          label: 'Configuration',
           fields: [
+            grid(),
             {
               name: 'enableTitle',
               type: 'checkbox',
@@ -30,11 +27,6 @@ export const RecentPostsBlock: Block = {
               defaultValue: 5,
               required: true,
             },
-          ],
-        },
-        {
-          label: 'Card',
-          fields: [
             {
               name: 'title',
               type: 'text',
@@ -75,7 +67,7 @@ export const RecentPostsBlock: Block = {
               type: 'relationship',
               relationTo: 'styles',
               hasMany: true,
-            }
+            },
           ],
         },
         {

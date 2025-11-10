@@ -14,6 +14,7 @@ import { SearchParams } from '@/types/search-params'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { joinStyles } from '@/lib/make-styles'
 import { AnimateWrapper } from '@/components/animate-wrapper'
+import { Badge } from '@/components/ui/badge'
 
 export async function RecentPostsBlockUI({
   searchParams,
@@ -51,7 +52,7 @@ export async function RecentPostsBlockUI({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Post Title</TableHead>
+                <TableHead>{setting?.postListingPageTitle}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -64,6 +65,14 @@ export async function RecentPostsBlockUI({
                     >
                       {post.title}
                     </Link>
+                    <div className="flex gap-2 mt-2">
+                      {post.categories?.map(
+                        (category) =>
+                          typeof category === 'object' && (
+                            <Badge key={category.id}>{category.name}</Badge>
+                          ),
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
