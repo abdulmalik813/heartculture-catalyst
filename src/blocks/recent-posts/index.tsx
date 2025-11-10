@@ -10,7 +10,6 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { Page, Post, RecentPostsBlock, Setting } from '@/payload-types'
 import Link from 'next/link'
-import { Badge } from '@/components/ui/badge'
 import { SearchParams } from '@/types/search-params'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { joinStyles } from '@/lib/make-styles'
@@ -53,24 +52,18 @@ export async function RecentPostsBlockUI({
             <TableHeader>
               <TableRow>
                 <TableHead>Post Title</TableHead>
-                <TableHead>Categories</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {recentPosts.docs.map((post) => (
                 <TableRow key={post.id}>
-                  <TableCell>
-                    <Link href={`/posts/${post.slug}`}>{post.title}</Link>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      {post.categories?.map(
-                        (category) =>
-                          typeof category === 'object' && (
-                            <Badge key={category.id}>{category.name}</Badge>
-                          ),
-                      )}
-                    </div>
+                  <TableCell className="break-words">
+                    <Link 
+                      className={joinStyles(recentPostsBlock.linkStyles)} 
+                      href={`/${setting?.postSlug || ''}/${post.slug}`}
+                    >
+                      {post.title}
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))}

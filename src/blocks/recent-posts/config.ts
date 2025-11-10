@@ -54,14 +54,12 @@ export const RecentPostsBlock: Block = {
               type: 'relationship',
               relationTo: 'styles',
               hasMany: true,
-              label: 'Card Container Styles',
             },
             {
               name: 'titleStyles',
               type: 'relationship',
               relationTo: 'styles',
               hasMany: true,
-              label: 'Title Styles',
               admin: {
                 condition: (_, data) => data.enableTitle,
               },
@@ -71,8 +69,13 @@ export const RecentPostsBlock: Block = {
               type: 'relationship',
               relationTo: 'styles',
               hasMany: true,
-              label: 'Content Styles',
             },
+            {
+              name: 'linkStyles',
+              type: 'relationship',
+              relationTo: 'styles',
+              hasMany: true,
+            }
           ],
         },
         {

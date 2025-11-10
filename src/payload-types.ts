@@ -1309,6 +1309,7 @@ export interface RecentPostsBlock {
   cardStyles?: (number | Style)[] | null;
   titleStyles?: (number | Style)[] | null;
   contentStyles?: (number | Style)[] | null;
+  linkStyles?: (number | Style)[] | null;
   animate?: {
     /**
      * Choose an animation effect
@@ -2167,6 +2168,7 @@ export interface RecentPostsBlockSelect<T extends boolean = true> {
   cardStyles?: T;
   titleStyles?: T;
   contentStyles?: T;
+  linkStyles?: T;
   animate?:
     | T
     | {
