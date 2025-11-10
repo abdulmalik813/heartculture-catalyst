@@ -38,7 +38,7 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
   const postsPerPage = 12
 
   const postSlug = setting?.postSlug || 'posts'
-  const postListingPageTitle = setting?.postListingPageTitle || 'Post'
+  const postListingPageTitle = setting?.postListingPageTitle || 'Posts'
 
   const payload = await getPayload({ config: configPromise })
 
@@ -245,7 +245,7 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
           <div className="flex flex-wrap gap-2">
             <Link href={`/${postSlug}`}>
               <Button variant={!category ? 'default' : 'outline'} size="sm">
-                All Posts
+                All {postListingPageTitle}
               </Button>
             </Link>
             {allCategories.docs.map((cat) => (
@@ -378,8 +378,8 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
           <CardContent className="pt-6">
             <p className="text-muted-foreground text-lg">
               {searchQuery || category
-                ? `No ${postListingPageTitle.toLowerCase()} found matching your criteria.`
-                : `No ${postListingPageTitle.toLowerCase()} available yet.`}
+                ? `No ${postListingPageTitle} found matching your criteria.`
+                : `No ${postListingPageTitle} available yet.`}
             </p>
             {(searchQuery || category) && (
               <Link href={`/${postSlug}`} className="inline-block mt-4">
