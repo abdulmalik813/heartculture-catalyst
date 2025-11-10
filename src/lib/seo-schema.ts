@@ -21,7 +21,9 @@ export const pageSchema = async (page: Page, settings: Setting) => {
     medias.map((media) => mediaSchema(media as Media)),
   ).then((schemas) => schemas.filter(Boolean))
 
-  const slugParts = page?.slug?.split('/').filter(Boolean) || []
+  const isHomePage = !page?.slug || page.slug === 'home' || page.slug === ''
+  const slugParts = isHomePage ? [] : page.slug.split('/').filter(Boolean)
+
   const breadcrumbItems = [
     {
       '@type': 'ListItem',
@@ -31,19 +33,21 @@ export const pageSchema = async (page: Page, settings: Setting) => {
     },
   ]
 
-  let currentPath = ''
-  slugParts.forEach((part, index) => {
-    currentPath += `/${part}`
-    breadcrumbItems.push({
-      '@type': 'ListItem',
-      position: index + 2,
-      name: part
-        .split('-')
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' '),
-      item: `${getServerSideURL()}${currentPath}`,
+  if (!isHomePage) {
+    let currentPath = ''
+    slugParts.forEach((part, index) => {
+      currentPath += `/${part}`
+      breadcrumbItems.push({
+        '@type': 'ListItem',
+        position: index + 2,
+        name: part
+          .split('-')
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' '),
+        item: `${getServerSideURL()}${currentPath}`,
+      })
     })
-  })
+  }
 
   const publishDate = page?.publishedAt || page?.createdAt
   const modifyDate = page?.updatedAt
@@ -150,7 +154,7 @@ export const blogSchema = async (post: Post, settings: Setting) => {
 export const imageSchema = async (image: Media | null | undefined, settings: Setting) => {
   let imageToUse = null
   if (!image || !image.url) {
-    imageToUse = settings.logo as Media
+    imageToUse = settings.fallbackImage as Media
   } else {
     imageToUse = image
   }
@@ -158,8 +162,6 @@ export const imageSchema = async (image: Media | null | undefined, settings: Set
   if (!imageToUse || !imageToUse.url) {
     return undefined
   }
-
-  const uploadDate = imageToUse?.createdAt
 
   return {
     '@context': 'https://schema.org',
@@ -178,12 +180,12 @@ export const imageSchema = async (image: Media | null | undefined, settings: Set
           height: imageToUse.sizes.thumbnail.height || undefined,
         }
       : undefined,
-    creditText: image?.creditText || undefined,
-    creator: image?.creator || undefined,
-    license: image?.license || undefined,
-    copyrightNotice: image?.copyrightNotice || undefined,
-    acquireLicensePage: image?.acquireLicensePage || undefined,
-    uploadDate: uploadDate ? new Date(uploadDate).toISOString() : undefined,
+    creditText: imageToUse?.creditText || undefined,
+    creator: imageToUse?.creator || undefined,
+    license: imageToUse?.license || undefined,
+    copyrightNotice: imageToUse?.copyrightNotice || undefined,
+    acquireLicensePage: imageToUse?.acquireLicensePage || undefined,
+    uploadDate: imageToUse?.createdAt ? new Date(imageToUse?.createdAt).toISOString() : undefined,
     encodingFormat: imageToUse?.mimeType || undefined,
   }
 }
