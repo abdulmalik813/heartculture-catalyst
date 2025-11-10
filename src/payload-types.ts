@@ -1369,16 +1369,18 @@ export interface Testimonial {
  */
 export interface Redirect {
   id: number;
-  /**
-   * You will need to rebuild the website when changing this field.
-   */
   from: string;
   to?: {
-    type?: ('reference' | 'custom') | null;
-    reference?: {
-      relationTo: 'pages';
-      value: number | Page;
-    } | null;
+    type?: ('reference' | 'postListingPage' | 'custom') | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: number | Post;
+        } | null);
     url?: string | null;
   };
   updatedAt: string;

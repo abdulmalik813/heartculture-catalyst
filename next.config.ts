@@ -1,6 +1,5 @@
 import type { NextConfig } from 'next'
 import { withPayload } from '@payloadcms/next/withPayload'
-import redirects from './redirects'
 
 const getImageRemotePatterns = () => {
   const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL!
@@ -74,7 +73,6 @@ const nextConfig: NextConfig = {
     ],
   },
   reactStrictMode: true,
-  redirects,
   typescript: {
     ignoreBuildErrors: process.env.NODE_ENV === 'development',
   },

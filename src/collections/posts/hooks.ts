@@ -19,9 +19,6 @@ export const revalidatePost: CollectionAfterChangeHook<Post> = async ({
 
     if (doc._status === 'published') {
       const path = `/${postSlug}/${doc.slug}`
-
-      payload.logger.info(`Revalidating post at path: ${path}`)
-
       revalidatePath(path)
       revalidatePath(`/${postSlug}`)
       revalidateTag('posts-sitemap')
@@ -29,9 +26,6 @@ export const revalidatePost: CollectionAfterChangeHook<Post> = async ({
 
     if (previousDoc?._status === 'published' && doc._status !== 'published') {
       const oldPath = `/${postSlug}/${previousDoc.slug}`
-
-      payload.logger.info(`Revalidating old post at path: ${oldPath}`)
-
       revalidatePath(oldPath)
       revalidatePath(`/${postSlug}`)
       revalidateTag('posts-sitemap')

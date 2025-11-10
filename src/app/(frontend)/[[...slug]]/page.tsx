@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 
-import { PayloadRedirects } from '@/components/payload-redirect'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
@@ -16,6 +15,7 @@ import { Media, Page, Post, Setting } from '@/payload-types'
 import PostListingPage from '@/components/post-listing'
 import { articleSchema, imageSchema } from '@/lib/seo-schema'
 import Script from 'next/script'
+import { redirectCheck } from '@/lib/redirect'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -106,8 +106,7 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
   const isPostEnabled = setting.enablePost
   const param = await params
   const slug = param?.slug ? param.slug.join('/') : 'home'
-  const url = '/' + slug
-
+  await redirectCheck(slug, setting)
   let page: Post | Page | null = null
   let isPostListingPage = false
   let isItAPost = false
@@ -143,7 +142,7 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
   }
 
   if (!page && !isPostListingPage) {
-    return <PayloadRedirects url={url} />
+    return notFound()
   }
 
   const renderSchema = async () => {
@@ -180,7 +179,6 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
 
   return (
     <article className="min-h-[70vh]">
-      <PayloadRedirects disableNotFound url={url} />
       {isPostListingPage ? (
         <>
           <PostListingPage searchParams={searchParams} setting={setting} />
@@ -192,7 +190,10 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
             {page.layout?.map((layout, i) => (
               <div
                 key={i}
-                className={joinStyles(cn(layout.container && 'container mx-auto px-4'), layout.styles)}
+                className={joinStyles(
+                  cn(layout.container && 'container mx-auto px-4'),
+                  layout.styles,
+                )}
               >
                 <div
                   className={cn(

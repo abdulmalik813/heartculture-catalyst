@@ -47,7 +47,6 @@ export const schedulePublish = {
                 })
             }
         } catch (e) {
-            req.payload.logger.error(e)
             return { output: { success: false, skipped: true } }
         }
     }

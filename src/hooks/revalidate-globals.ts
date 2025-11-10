@@ -1,4 +1,5 @@
 import { getServerSideURL } from '@/lib/get-url'
+import { revalidateAll } from '@/lib/revalidate'
 import { Style } from '@/payload-types'
 import { revalidateTag } from 'next/cache'
 import { GlobalAfterChangeHook } from 'payload'
@@ -57,7 +58,7 @@ export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) =>
     return doc
   }
 
-  await fetch(`${getServerSideURL()}/api/revalidate`)
+  await revalidateAll()
   return doc
 }
 

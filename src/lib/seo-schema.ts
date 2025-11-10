@@ -21,7 +21,7 @@ export const articleSchema = async (post: Post, settings: Setting) => {
 
   if (!image || !image.url) {
     const logo = settings.logo as Media
-    imageUrl = logo.url || ''
+    imageUrl = logo?.url || ''
   } else {
     imageUrl = image.url
   }
@@ -47,7 +47,7 @@ export const imageSchema = async (image: Media | null | undefined, settings: Set
 
   if (!image || !image.url) {
     const logo = settings.logo as Media
-    contentUrl = logo.url || ''
+    contentUrl = logo?.url || ''
   } else {
     contentUrl = image.url
   }
@@ -57,6 +57,6 @@ export const imageSchema = async (image: Media | null | undefined, settings: Set
     '@type': 'ImageObject',
     contentUrl: getMediaUrl(contentUrl),
     creditText: image?.creditText,
-    description: image?.caption 
+    description: image?.caption,
   }
 }

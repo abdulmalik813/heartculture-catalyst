@@ -5,15 +5,16 @@ import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
 import { Plugin } from 'payload'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
-import { Page } from '@/payload-types'
+import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/lib/get-url'
 import { s3Storage } from '@payloadcms/storage-s3'
-import { revalidateRedirects } from '@/hooks/revalidate-redirects'
+import { revalidateDeletedRedirects, revalidateRedirects } from '@/hooks/revalidate-redirects'
 import { TimeBlock } from '@/fields/time'
 import { defaultLexical } from '@/fields/lexical-field'
 import { S3 } from './constants/init'
+import { navLocation } from '@/fields/nav-location'
 
-const generateTitle: GenerateTitle<Page> = async ({ doc, req }) => {
+const generateTitle: GenerateTitle<Page | Post> = async ({ doc, req }) => {
   const setting = await req.payload.findGlobal({
     slug: 'settings',
   })
@@ -22,25 +23,26 @@ const generateTitle: GenerateTitle<Page> = async ({ doc, req }) => {
   return doc?.title ? `${doc.title} | ${title}` : title
 }
 
-const generateURL: GenerateURL<Page> = ({ doc }) => {
+const generateURL: GenerateURL<Page | Post> = async ({ doc, req, collectionSlug }) => {
   const url = getServerSideURL()
-
+  if (collectionSlug === 'posts') {
+    const setting = await req.payload.findGlobal({
+      slug: 'settings',
+    })
+    return doc?.slug ? `${url}/${setting.postSlug || 'posts'}/${doc.slug}` : url
+  }
   return doc?.slug ? `${url}/${doc.slug}` : url
 }
 
 export const plugins: Plugin[] = [
   redirectsPlugin({
-    collections: ['pages'],
     overrides: {
-      // @ts-expect-error - This is a valid override, mapped fields don't resolve to the same type
       fields: ({ defaultFields }) => {
         return defaultFields.map((field) => {
-          if ('name' in field && field.name === 'from') {
+          if ('name' in field && field.name === 'to') {
             return {
               ...field,
-              admin: {
-                description: 'You will need to rebuild the website when changing this field.',
-              },
+              fields: navLocation(),
             }
           }
           return field
@@ -48,6 +50,7 @@ export const plugins: Plugin[] = [
       },
       hooks: {
         afterChange: [revalidateRedirects],
+        afterDelete: [revalidateDeletedRedirects],
       },
     },
   }),
