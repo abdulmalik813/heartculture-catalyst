@@ -21,10 +21,10 @@ import { DividerBlock } from '@/blocks/divider/config'
 import { FormBlock } from '@/blocks/form/config'
 import { TableBlock } from '@/blocks/table/config'
 import { LastModifiedBlock } from '@/blocks/last-modified/config'
-import { RecentPostsBlock } from '@/blocks/recent-posts/config'
 import { getCachedGlobal } from '@/lib/get-globals'
 import { Setting } from '@/payload-types'
 import { grid } from '@/fields/grid'
+import { RecentPostsBlock } from '@/blocks/recent-posts/config'
 
 let cachedPostEnabled: boolean | null = null
 let cachedPostLabel: string = 'Posts'
@@ -168,6 +168,7 @@ export const Posts: CollectionConfig<'posts'> = {
                                 FormBlock,
                                 TableBlock,
                                 LastModifiedBlock,
+                                RecentPostsBlock
                               ],
                               required: false,
                             },
