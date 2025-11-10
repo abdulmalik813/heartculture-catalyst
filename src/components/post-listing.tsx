@@ -231,7 +231,7 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
             <Input
               type="search"
               name="q"
-              placeholder="Search posts..."
+              placeholder={`Search ${postListingPageTitle.toLocaleLowerCase()}...`}
               defaultValue={searchQuery as string}
               className="pl-10"
             />
@@ -378,8 +378,8 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
           <CardContent className="pt-6">
             <p className="text-muted-foreground text-lg">
               {searchQuery || category
-                ? `No ${postListingPageTitle} found matching your criteria.`
-                : `No ${postListingPageTitle} available yet.`}
+                ? `No ${postListingPageTitle.toLocaleLowerCase()} found matching your criteria.`
+                : `No ${postListingPageTitle.toLocaleLowerCase()} available yet.`}
             </p>
             {(searchQuery || category) && (
               <Link href={`/${postSlug}`} className="inline-block mt-4">
