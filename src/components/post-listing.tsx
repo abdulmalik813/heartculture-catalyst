@@ -24,6 +24,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { draftMode } from 'next/headers'
 
 interface PostProps {
   searchParams: SearchParams
@@ -32,7 +33,7 @@ interface PostProps {
 
 export default async function PostListingPage({ searchParams, setting }: Readonly<PostProps>) {
   const search = await searchParams
-
+  const { isEnabled: draft } = await draftMode()
   const { q: searchQuery, page = '1', category } = search ?? {}
   const currentPage = parseInt(page as string)
   const postsPerPage = 12
@@ -42,11 +43,13 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
 
   const payload = await getPayload({ config: configPromise })
 
-  const whereClause: any = {
-    _status: {
-      equals: 'published',
-    },
-  }
+  const whereClause: any = draft
+    ? {}
+    : {
+        _status: {
+          equals: 'published',
+        },
+      }
 
   if (category) {
     const categoryDoc = await payload.find({
@@ -71,34 +74,45 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
   let selectedCategory = null
 
   if (searchQuery) {
+    const searchWhereClause: any = {
+      and: [
+        {
+          or: [
+            {
+              title: {
+                like: searchQuery as string,
+              },
+            },
+            {
+              description: {
+                like: searchQuery as string,
+              },
+            },
+          ],
+        },
+        {
+          'doc.relationTo': {
+            equals: 'posts',
+          },
+        },
+      ],
+    }
+
+    if (!draft) {
+      searchWhereClause.and.push({
+        'doc.value._status': {
+          equals: 'published',
+        },
+      })
+    }
+
     const searchResults = await payload.find({
       collection: 'search',
-      where: {
-        and: [
-          {
-            or: [
-              {
-                title: {
-                  like: searchQuery as string,
-                },
-              },
-              {
-                description: {
-                  like: searchQuery as string,
-                },
-              },
-            ],
-          },
-          {
-            'doc.relationTo': {
-              equals: 'posts',
-            },
-          },
-        ],
-      },
+      where: searchWhereClause,
       limit: postsPerPage,
       page: currentPage,
       sort: '-priority',
+      draft,
     })
 
     const postIds = searchResults.docs
@@ -106,21 +120,16 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
       .filter(Boolean)
 
     if (postIds.length > 0) {
-      const postsQuery = await payload.find({
+      posts = await payload.find({
         collection: 'posts',
         where: {
-          and: [
-            {
-              id: {
-                in: postIds,
-              },
-            },
-            whereClause,
-          ],
+          id: {
+            in: postIds,
+          },
         },
         limit: postsPerPage,
+        draft,
       })
-      posts = postsQuery
       totalDocs = searchResults.totalDocs
     } else {
       posts = { docs: [], totalDocs: 0 }
@@ -133,6 +142,7 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
       limit: postsPerPage,
       page: currentPage,
       sort: '-publishedAt',
+      draft,
     })
     totalDocs = posts.totalDocs
   }
