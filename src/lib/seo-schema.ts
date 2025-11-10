@@ -7,7 +7,7 @@ import { mediaExtractor } from '@/lib/image-extractor'
 export const pageSchema = async (page: Page, settings: Setting) => {
   const social = (await getCachedGlobal('social')) as Social
   const medias = mediaExtractor(page)
-  
+
   const socialLinks = [
     social.facebook,
     social.instagram,
@@ -18,7 +18,7 @@ export const pageSchema = async (page: Page, settings: Setting) => {
   ].filter((link) => link)
 
   const associatedMediaSchemas = await Promise.all(
-    medias.map((media) => mediaSchema(media as Media, settings))
+    medias.map((media) => mediaSchema(media as Media, settings)),
   ).then((schemas) => schemas.filter(Boolean))
 
   const slugParts = page?.slug?.split('/').filter(Boolean) || []
@@ -28,7 +28,7 @@ export const pageSchema = async (page: Page, settings: Setting) => {
       position: 1,
       name: 'Home',
       item: getServerSideURL(),
-    }
+    },
   ]
 
   let currentPath = ''
@@ -37,7 +37,10 @@ export const pageSchema = async (page: Page, settings: Setting) => {
     breadcrumbItems.push({
       '@type': 'ListItem',
       position: index + 2,
-      name: part.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+      name: part
+        .split('-')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' '),
       item: `${getServerSideURL()}${currentPath}`,
     })
   })
@@ -54,13 +57,16 @@ export const pageSchema = async (page: Page, settings: Setting) => {
     datePublished: publishDate ? new Date(publishDate).toISOString() : undefined,
     dateModified: modifyDate ? new Date(modifyDate).toISOString() : undefined,
     image: await imageSchema(page.meta?.image as Media, settings),
-    thumbnailUrl: (page.meta?.image as Media)?.url || (settings.fallbackImage as Media)?.url || undefined,
+    thumbnailUrl:
+      (page.meta?.image as Media)?.url || (settings.fallbackImage as Media)?.url || undefined,
     associatedMedia: associatedMediaSchemas.length > 0 ? associatedMediaSchemas : undefined,
-    author: page?.author ? {
-      '@type': 'Person',
-      name: (page.author as User)?.name || undefined,
-      sameAs: socialLinks.length > 0 ? socialLinks : undefined,
-    } : undefined,
+    author: page?.author
+      ? {
+          '@type': 'Person',
+          name: (page.author as User)?.name || undefined,
+          sameAs: socialLinks.length > 0 ? socialLinks : undefined,
+        }
+      : undefined,
     publisher: {
       '@type': 'Organization',
       name: settings.appTitle || undefined,
@@ -76,7 +82,7 @@ export const pageSchema = async (page: Page, settings: Setting) => {
 export const blogSchema = async (post: Post, settings: Setting) => {
   const social = (await getCachedGlobal('social')) as Social
   const medias = mediaExtractor(post)
-  
+
   const socialLinks = [
     social.facebook,
     social.instagram,
@@ -87,7 +93,7 @@ export const blogSchema = async (post: Post, settings: Setting) => {
   ].filter((link) => link)
 
   const associatedMediaSchemas = await Promise.all(
-    medias.map((media) => mediaSchema(media as Media, settings))
+    medias.map((media) => mediaSchema(media as Media, settings)),
   ).then((schemas) => schemas.filter(Boolean))
 
   const publishDate = post?.publishedAt || post?.createdAt
@@ -95,13 +101,14 @@ export const blogSchema = async (post: Post, settings: Setting) => {
 
   return {
     '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
+    '@type': ['BlogPosting', 'Article'],
     headline: post?.meta?.title || post?.title || undefined,
     description: post?.meta?.description || undefined,
     datePublished: publishDate ? new Date(publishDate).toISOString() : undefined,
     dateModified: modifyDate ? new Date(modifyDate).toISOString() : undefined,
     image: await imageSchema(post.meta?.image as Media, settings),
-    thumbnailUrl: (post.meta?.image as Media)?.url || (settings.fallbackImage as Media)?.url || undefined,
+    thumbnailUrl:
+      (post.meta?.image as Media)?.url || (settings.fallbackImage as Media)?.url || undefined,
     associatedMedia: associatedMediaSchemas.length > 0 ? associatedMediaSchemas : undefined,
     author: {
       '@type': 'Person',
@@ -163,12 +170,14 @@ export const imageSchema = async (image: Media | null | undefined, settings: Set
     description: imageToUse?.caption || undefined,
     width: imageToUse?.width || undefined,
     height: imageToUse?.height || undefined,
-    thumbnail: imageToUse?.sizes?.thumbnail?.url ? {
-      '@type': 'ImageObject',
-      contentUrl: getMediaUrl(imageToUse.sizes.thumbnail.url),
-      width: imageToUse.sizes.thumbnail.width || undefined,
-      height: imageToUse.sizes.thumbnail.height || undefined,
-    } : undefined,
+    thumbnail: imageToUse?.sizes?.thumbnail?.url
+      ? {
+          '@type': 'ImageObject',
+          contentUrl: getMediaUrl(imageToUse.sizes.thumbnail.url),
+          width: imageToUse.sizes.thumbnail.width || undefined,
+          height: imageToUse.sizes.thumbnail.height || undefined,
+        }
+      : undefined,
     creditText: image?.creditText || undefined,
     creator: image?.creator || undefined,
     license: image?.license || undefined,
@@ -212,13 +221,20 @@ export const mediaSchema = async (media: Media | null | undefined, settings: Set
     return {
       ...baseSchema,
       '@type': 'VideoObject',
-      thumbnailUrl: media.thumbnailURL ? getMediaUrl(media.thumbnailURL) : media.sizes?.thumbnail?.url ? getMediaUrl(media.sizes.thumbnail.url) : undefined,
-      thumbnail: media.thumbnailURL || media.sizes?.thumbnail?.url ? {
-        '@type': 'ImageObject',
-        contentUrl: getMediaUrl(media.thumbnailURL || media.sizes?.thumbnail?.url || ''),
-        width: media.sizes?.thumbnail?.width || undefined,
-        height: media.sizes?.thumbnail?.height || undefined,
-      } : undefined,
+      thumbnailUrl: media.thumbnailURL
+        ? getMediaUrl(media.thumbnailURL)
+        : media.sizes?.thumbnail?.url
+          ? getMediaUrl(media.sizes.thumbnail.url)
+          : undefined,
+      thumbnail:
+        media.thumbnailURL || media.sizes?.thumbnail?.url
+          ? {
+              '@type': 'ImageObject',
+              contentUrl: getMediaUrl(media.thumbnailURL || media.sizes?.thumbnail?.url || ''),
+              width: media.sizes?.thumbnail?.width || undefined,
+              height: media.sizes?.thumbnail?.height || undefined,
+            }
+          : undefined,
     }
   }
 
@@ -233,13 +249,17 @@ export const mediaSchema = async (media: Media | null | undefined, settings: Set
     return {
       ...baseSchema,
       '@type': 'ImageObject',
-      thumbnail: media.sizes?.thumbnail?.url ? {
-        '@type': 'ImageObject',
-        contentUrl: getMediaUrl(media.sizes.thumbnail.url),
-        width: media.sizes.thumbnail.width || undefined,
-        height: media.sizes.thumbnail.height || undefined,
-      } : undefined,
-      thumbnailUrl: media.sizes?.thumbnail?.url ? getMediaUrl(media.sizes.thumbnail.url) : undefined,
+      thumbnail: media.sizes?.thumbnail?.url
+        ? {
+            '@type': 'ImageObject',
+            contentUrl: getMediaUrl(media.sizes.thumbnail.url),
+            width: media.sizes.thumbnail.width || undefined,
+            height: media.sizes.thumbnail.height || undefined,
+          }
+        : undefined,
+      thumbnailUrl: media.sizes?.thumbnail?.url
+        ? getMediaUrl(media.sizes.thumbnail.url)
+        : undefined,
     }
   }
 
@@ -250,8 +270,8 @@ export const mediaSchema = async (media: Media | null | undefined, settings: Set
 }
 
 export const postListingSchema = async (settings: Setting, social?: Social) => {
-  const socialData = social || (await getCachedGlobal('social')) as Social
-  
+  const socialData = social || ((await getCachedGlobal('social')) as Social)
+
   const socialLinks = [
     socialData.facebook,
     socialData.instagram,
@@ -268,7 +288,8 @@ export const postListingSchema = async (settings: Setting, social?: Social) => {
     description: settings.postMetaDescription || undefined,
     url: `${getServerSideURL()}/${settings.postSlug}`,
     image: await imageSchema(settings.postMetaImage as Media, settings),
-    thumbnailUrl: (settings.postMetaImage as Media)?.url || (settings.fallbackImage as Media)?.url || undefined,
+    thumbnailUrl:
+      (settings.postMetaImage as Media)?.url || (settings.fallbackImage as Media)?.url || undefined,
     publisher: {
       '@type': 'Organization',
       name: settings.appTitle || undefined,
