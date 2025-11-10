@@ -81,6 +81,12 @@ export const hero: GroupField = {
               type: 'relationship',
               relationTo: 'styles',
               hasMany: true,
+              admin: {
+                condition: (data, siblingData) => {
+                  const layout = siblingData?.layout || data?.hero?.layout
+                  return layout === 'fullscreen'
+                },
+              },
             },
             {
               type: 'group',
