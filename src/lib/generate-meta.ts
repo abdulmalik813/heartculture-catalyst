@@ -1,9 +1,7 @@
 import type { Metadata } from 'next'
-
-import type { Media, Page, Post, Setting } from '../payload-types'
-
-import { mergeOpenGraph } from './merge-open-graph'
-import { getServerSideURL } from './get-url'
+import type { Media, Page, Post, Setting } from '@/payload-types'
+import { mergeOpenGraph } from '@/lib/merge-open-graph'
+import { getServerSideURL } from '@/lib/get-url'
 import { getAppSettings } from '@/constants/app'
 
 const getImageURL = async (appData: any, image?: Media) => {
@@ -21,15 +19,23 @@ const getImageURL = async (appData: any, image?: Media) => {
 
 export const generateMeta = async (doc: Partial<Page> | Partial<Post> | null, post: boolean, settings: Setting): Promise<Metadata> => {
   const appData = await getAppSettings()
+  const serverUrl = getServerSideURL()
   const title = doc?.meta?.title ? doc?.meta?.title : appData.appTitle
+  const description = doc?.meta?.description || appData.appDescription
   const ogImage = await getImageURL(appData, doc?.meta?.image as Media)
+  const slug = doc?.slug === "home" ? "" : doc?.slug
+  const url = `${serverUrl}/${post ? settings.postSlug + '/' : ''}${slug}`
+
   return {
-    description: doc?.meta?.description,
+    title,
+    description,
     alternates: {
-      canonical: `${getServerSideURL}/${post ? settings.postSlug + '/' : ''}${doc?.slug === "home" ? "" : doc?.slug}`,
+      canonical: url,
     },
     openGraph: await mergeOpenGraph({
-      description: doc?.meta?.description || appData.appTitle,
+      title,
+      description,
+      url,
       images: ogImage
         ? [
             {
@@ -37,25 +43,30 @@ export const generateMeta = async (doc: Partial<Page> | Partial<Post> | null, po
             },
           ]
         : undefined,
-      title,
-      url: `${getServerSideURL}/${post ? settings.postSlug + '/' : ''}${doc?.slug}`,
     }),
-    title,
   }
 }
 
-export const generatePostsListingMeta  = async (settings: Setting): Promise<Metadata> => {
+export const generatePostsListingMeta = async (settings: Setting): Promise<Metadata> => {
   const { postMetaTitle, postMetaDescription, postMetaImage, postSlug } = settings
   const appData = await getAppSettings()
+  const serverUrl = getServerSideURL()
   const ogImage = await getImageURL(appData, postMetaImage as Media)
   const title = postMetaTitle || appData.appTitle
-  const description = postMetaDescription || appData.appTitle
+  const description = postMetaDescription || appData.appDescription
   const slug = postSlug || 'posts'
+  const url = `${serverUrl}/${slug}`
 
   return {
+    title,
     description,
+    alternates: {
+      canonical: url,
+    },
     openGraph: await mergeOpenGraph({
+      title,
       description,
+      url,
       images: ogImage
         ? [
             {
@@ -63,9 +74,6 @@ export const generatePostsListingMeta  = async (settings: Setting): Promise<Meta
             },
           ]
         : undefined,
-      title,
-      url: `${getServerSideURL}/${slug}`,
     }),
-    title,
   }
 }

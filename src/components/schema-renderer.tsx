@@ -1,6 +1,6 @@
 import Script from 'next/script'
-import { articleSchema, imageSchema } from '@/lib/seo-schema'
-import { Media, Page, Post, Setting } from '@/payload-types'
+import { blogSchema, postListingSchema, pageSchema } from '@/lib/seo-schema'
+import { Page, Post, Setting } from '@/payload-types'
 
 interface SchemaRendererProps {
   page: Post | Page | null
@@ -15,34 +15,21 @@ export async function SchemaRenderer({
   isPostListingPage,
   setting,
 }: SchemaRendererProps) {
-  const schemas: any[] = []
-
-  if (isItAPost && page) {
-    schemas.push(await articleSchema(page as Post, setting))
-  }
+  let schema = null
 
   if (isPostListingPage) {
-    schemas.push(await imageSchema(setting?.postMetaImage as Media, setting))
+    schema = await postListingSchema(setting)
+  } else if (isItAPost && page) {
+    schema = await blogSchema(page as Post, setting)
   } else if (page) {
-    schemas.push(await imageSchema(page?.meta?.image as Media, setting))
+    schema = await pageSchema(page as Page, setting)
   }
 
-  if (schemas.length === 0) return null
-
-  if (schemas.length > 1) {
-    return (
-      <Script id="schema" type="application/ld+json" strategy="lazyOnload">
-        {JSON.stringify({
-          '@context': 'https://schema.org',
-          '@graph': schemas,
-        })}
-      </Script>
-    )
-  }
+  if (!schema) return null
 
   return (
     <Script id="schema" type="application/ld+json" strategy="lazyOnload">
-      {JSON.stringify(schemas[0])}
+      {JSON.stringify(schema)}
     </Script>
   )
 }
