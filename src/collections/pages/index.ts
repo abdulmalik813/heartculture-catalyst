@@ -80,27 +80,33 @@ export const Pages: CollectionConfig<'pages'> = {
                       label: 'Content',
                       fields: [
                         {
-                          name: 'blocks',
-                          type: 'blocks',
-                          blocks: [
-                            ContentBlock,
-                            CallToActionBlock,
-                            CardBlock,
-                            TabBlock,
-                            AccordionBlock,
-                            DividerBlock,
-                            FormBlock,
-                            TableBlock,
-                            LastModifiedBlock,
+                          name: 'grid',
+                          type: 'array',
+                          fields: [
+                            grid(),
+                            {
+                              name: 'blocks',
+                              type: 'blocks',
+                              blocks: [
+                                ContentBlock,
+                                CallToActionBlock,
+                                CardBlock,
+                                TabBlock,
+                                AccordionBlock,
+                                DividerBlock,
+                                FormBlock,
+                                TableBlock,
+                                LastModifiedBlock,
+                              ],
+                              required: false,
+                            },
                           ],
-                          required: false,
                         },
                       ],
                     },
                     {
                       label: 'Styles',
                       fields: [
-                        grid(),
                         {
                           name: 'container',
                           type: 'checkbox',

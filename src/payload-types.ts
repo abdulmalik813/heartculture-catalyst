@@ -235,21 +235,26 @@ export interface Page {
   };
   layout?:
     | {
-        blocks?:
-          | (
-              | ContentBlock
-              | CallToActionBlock
-              | CardBlock
-              | TabBlock
-              | AccordionBlock
-              | DividerBlock
-              | FormBlock
-              | TableBlock
-              | LastModifiedBlock
-            )[]
+        grid?:
+          | {
+              gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
+              gridStyles?: (number | Style)[] | null;
+              blocks?:
+                | (
+                    | ContentBlock
+                    | CallToActionBlock
+                    | CardBlock
+                    | TabBlock
+                    | AccordionBlock
+                    | DividerBlock
+                    | FormBlock
+                    | TableBlock
+                    | LastModifiedBlock
+                  )[]
+                | null;
+              id?: string | null;
+            }[]
           | null;
-        gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
-        gridStyles?: (number | Style)[] | null;
         container?: boolean | null;
         gapSize: 'none' | 'small' | 'medium' | 'large' | 'xlarge';
         styles?: (number | Style)[] | null;
@@ -431,22 +436,26 @@ export interface Post {
   };
   layout?:
     | {
-        blocks?:
-          | (
-              | ContentBlock
-              | CallToActionBlock
-              | CardBlock
-              | TabBlock
-              | AccordionBlock
-              | DividerBlock
-              | FormBlock
-              | TableBlock
-              | LastModifiedBlock
-              | RecentPostsBlock
-            )[]
+        grid?:
+          | {
+              gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
+              gridStyles?: (number | Style)[] | null;
+              blocks?:
+                | (
+                    | ContentBlock
+                    | CallToActionBlock
+                    | CardBlock
+                    | TabBlock
+                    | AccordionBlock
+                    | DividerBlock
+                    | FormBlock
+                    | TableBlock
+                    | LastModifiedBlock
+                  )[]
+                | null;
+              id?: string | null;
+            }[]
           | null;
-        gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
-        gridStyles?: (number | Style)[] | null;
         container?: boolean | null;
         gapSize: 'none' | 'small' | 'medium' | 'large' | 'xlarge';
         styles?: (number | Style)[] | null;
@@ -544,7 +553,7 @@ export interface Media {
   } | null;
   creditText?: string | null;
   creator?: string | null;
-  license?: ('MIT' | 'GPL' | 'Apache' | 'CC_BY' | 'CC_BY_SA' | 'CC_BY_ND' | 'CC_BY_NC' | 'CC0' | 'Proprietary') | null;
+  license?: string | null;
   copyrightNotice?: string | null;
   acquireLicensePage?: string | null;
   prefix?: string | null;
@@ -1288,50 +1297,6 @@ export interface LastModifiedBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "RecentPostsBlock".
- */
-export interface RecentPostsBlock {
-  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
-  gridStyles?: (number | Style)[] | null;
-  enableTitle?: boolean | null;
-  numberOfPosts: number;
-  title?: string | null;
-  cardStyles?: (number | Style)[] | null;
-  titleStyles?: (number | Style)[] | null;
-  contentStyles?: (number | Style)[] | null;
-  linkStyles?: (number | Style)[] | null;
-  animate?: {
-    /**
-     * Choose an animation effect
-     */
-    type?: ('none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight') | null;
-    /**
-     * Animation duration
-     */
-    duration?: number | null;
-    /**
-     * Delay before animation starts
-     */
-    delay?: number | null;
-    /**
-     * Trigger when element enters viewport
-     */
-    animateOnScroll?: boolean | null;
-    /**
-     * Only animate first time (uncheck to re-animate)
-     */
-    animateOnce?: boolean | null;
-    /**
-     * How much of element must be visible to trigger (0-1)
-     */
-    viewportAmount?: number | null;
-  };
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'recentPostsBlock';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "testimonials".
  */
 export interface Testimonial {
@@ -1693,21 +1658,26 @@ export interface PagesSelect<T extends boolean = true> {
   layout?:
     | T
     | {
-        blocks?:
+        grid?:
           | T
           | {
-              contentBlock?: T | ContentBlockSelect<T>;
-              callToActionBlock?: T | CallToActionBlockSelect<T>;
-              cardBlock?: T | CardBlockSelect<T>;
-              tabBlock?: T | TabBlockSelect<T>;
-              accordionBlock?: T | AccordionBlockSelect<T>;
-              dividerBlock?: T | DividerBlockSelect<T>;
-              formBlock?: T | FormBlockSelect<T>;
-              tableBlock?: T | TableBlockSelect<T>;
-              lastModifiedBlock?: T | LastModifiedBlockSelect<T>;
+              gridSize?: T;
+              gridStyles?: T;
+              blocks?:
+                | T
+                | {
+                    contentBlock?: T | ContentBlockSelect<T>;
+                    callToActionBlock?: T | CallToActionBlockSelect<T>;
+                    cardBlock?: T | CardBlockSelect<T>;
+                    tabBlock?: T | TabBlockSelect<T>;
+                    accordionBlock?: T | AccordionBlockSelect<T>;
+                    dividerBlock?: T | DividerBlockSelect<T>;
+                    formBlock?: T | FormBlockSelect<T>;
+                    tableBlock?: T | TableBlockSelect<T>;
+                    lastModifiedBlock?: T | LastModifiedBlockSelect<T>;
+                  };
+              id?: T;
             };
-        gridSize?: T;
-        gridStyles?: T;
         container?: T;
         gapSize?: T;
         styles?: T;
@@ -2096,22 +2066,26 @@ export interface PostsSelect<T extends boolean = true> {
   layout?:
     | T
     | {
-        blocks?:
+        grid?:
           | T
           | {
-              contentBlock?: T | ContentBlockSelect<T>;
-              callToActionBlock?: T | CallToActionBlockSelect<T>;
-              cardBlock?: T | CardBlockSelect<T>;
-              tabBlock?: T | TabBlockSelect<T>;
-              accordionBlock?: T | AccordionBlockSelect<T>;
-              dividerBlock?: T | DividerBlockSelect<T>;
-              formBlock?: T | FormBlockSelect<T>;
-              tableBlock?: T | TableBlockSelect<T>;
-              lastModifiedBlock?: T | LastModifiedBlockSelect<T>;
-              recentPostsBlock?: T | RecentPostsBlockSelect<T>;
+              gridSize?: T;
+              gridStyles?: T;
+              blocks?:
+                | T
+                | {
+                    contentBlock?: T | ContentBlockSelect<T>;
+                    callToActionBlock?: T | CallToActionBlockSelect<T>;
+                    cardBlock?: T | CardBlockSelect<T>;
+                    tabBlock?: T | TabBlockSelect<T>;
+                    accordionBlock?: T | AccordionBlockSelect<T>;
+                    dividerBlock?: T | DividerBlockSelect<T>;
+                    formBlock?: T | FormBlockSelect<T>;
+                    tableBlock?: T | TableBlockSelect<T>;
+                    lastModifiedBlock?: T | LastModifiedBlockSelect<T>;
+                  };
+              id?: T;
             };
-        gridSize?: T;
-        gridStyles?: T;
         container?: T;
         gapSize?: T;
         styles?: T;
@@ -2130,33 +2104,6 @@ export interface PostsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "RecentPostsBlock_select".
- */
-export interface RecentPostsBlockSelect<T extends boolean = true> {
-  gridSize?: T;
-  gridStyles?: T;
-  enableTitle?: T;
-  numberOfPosts?: T;
-  title?: T;
-  cardStyles?: T;
-  titleStyles?: T;
-  contentStyles?: T;
-  linkStyles?: T;
-  animate?:
-    | T
-    | {
-        type?: T;
-        duration?: T;
-        delay?: T;
-        animateOnScroll?: T;
-        animateOnce?: T;
-        viewportAmount?: T;
-      };
-  id?: T;
-  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -175,23 +175,26 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
                     gapClasses[layout.gapSize || 'medium'],
                   )}
                 >
-                  <div
-                    className={joinStyles(
-                      colsSpanClasses[layout.gridSize],
-                      layout.gridStyles,
-                      cn({ 'md:col-span-2': layout.gridSize !== 'full' }),
-                    )}
-                  >
-                    {layout.blocks?.map((block, index) => (
-                      <BlockRenderer
-                        key={index}
-                        searchParams={searchParams}
-                        block={block}
-                        setting={setting}
-                        page={page}
-                      />
-                    ))}
-                  </div>
+                  {layout.grid?.map((grid, index) => (
+                    <div
+                      key={index}
+                      className={joinStyles(
+                        colsSpanClasses[grid.gridSize],
+                        grid.gridStyles,
+                        cn({ 'md:col-span-2': grid.gridSize !== 'full' }),
+                      )}
+                    >
+                      {grid.blocks?.map((block, index) => (
+                        <BlockRenderer
+                          key={index}
+                          searchParams={searchParams}
+                          block={block}
+                          setting={setting}
+                          page={page}
+                        />
+                      ))}
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}

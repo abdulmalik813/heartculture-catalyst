@@ -42,18 +42,7 @@ export const Media: CollectionConfig = {
     },
     {
       name: 'license',
-      type: 'select',
-      options: [
-        { label: 'MIT License', value: 'MIT' },
-        { label: 'GNU General Public License (GPL)', value: 'GPL' },
-        { label: 'Apache License', value: 'Apache' },
-        { label: 'CC BY (Attribution)', value: 'CC_BY' },
-        { label: 'CC BY-SA (Attribution-ShareAlike)', value: 'CC_BY_SA' },
-        { label: 'CC BY-ND (Attribution-NoDerivs)', value: 'CC_BY_ND' },
-        { label: 'CC BY-NC (Attribution-NonCommercial)', value: 'CC_BY_NC' },
-        { label: 'CC0 (No Rights Reserved)', value: 'CC0' },
-        { label: 'Proprietary', value: 'Proprietary' },
-      ],
+      type: 'text',
       required: false,
     },
     {
@@ -73,7 +62,7 @@ export const Media: CollectionConfig = {
     imageSizes: [
       {
         name: 'thumbnail',
-        width: 300,
+        width: 300, 
       },
       {
         name: 'square',
