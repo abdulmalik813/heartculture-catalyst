@@ -36,8 +36,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/nighttech-services/base-app:latest
-            ghcr.io/nighttech-services/base-app:${{ steps.version.outputs.tag }}
+            ghcr.io/nighttech-services/heartculture-catalyst:latest
+            ghcr.io/nighttech-services/heartculture-catalyst:${{ steps.version.outputs.tag }}
           build-args: |
             NEXT_PUBLIC_SERVER_URL=${{ secrets.NEXT_PUBLIC_SERVER_URL }}
             PAYLOAD_SECRET=${{ secrets.PAYLOAD_SECRET }}
