@@ -7,15 +7,20 @@ import config from '@payload-config'
 export async function revalidateAll() {
   const payload = await getPayload({ config })
 
+  const collections = payload.config.collections
+  for (const collection of collections) {
+    revalidateTag(`collection_${collection.slug}`)
+  }
+
+  const globals = payload.config.globals
+  for (const global of globals) {
+    revalidateTag(`global_${global.slug}`)
+  }
+  
   revalidateTag('redirects')
-  revalidateTag('pages-sitemap')
-  revalidateTag('posts-sitemap')
-  revalidateTag('styles-tag')
-  revalidateTag('fonts-tag')
-  revalidateTag('global_navigationBar')
-  revalidateTag('global_footer')
-  revalidateTag('global_settings')
-  revalidateTag('global_social')
+  revalidateTag('pages_sitemap')
+  revalidateTag('posts_sitemap')
+  revalidateTag('fonts_tag')
 
   const pages = await payload.find({
     collection: 'pages',

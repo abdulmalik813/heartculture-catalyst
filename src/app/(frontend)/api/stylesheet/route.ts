@@ -59,8 +59,8 @@ const getCachedFontCSS = unstable_cache(
     const fonts: FontData[] = JSON.parse(fontsJson)
     return fonts.map(generateFontImport).join('\n')
   },
-  ['fontsource-css'],
-  { tags: ['fonts-tag'], revalidate: 60 * 60 * 24 * 7 },
+  ['fonts_tag'],
+  { tags: ['fonts_tag'] },
 )
 
 export async function GET() {

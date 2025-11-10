@@ -51,7 +51,7 @@ export const getCachedDocument = (
     async () => getDocument(collection, slug, depth, draft),
     [collection, slug, depth.toString()],
     {
-      tags: [`${collection}_${slug}`],
+      tags: [`collection_${collection}`],
     }
   )
 }
@@ -69,9 +69,9 @@ export const getCachedDocuments = (
 
   return unstable_cache(
     async () => getAllDocuments(collection, draft),
-    [`${collection}_tag`],
+    [`collection_${collection}`],
     {
-      tags: [`${collection}_tag`],
+      tags: [`collection_${collection}`],
     }
   )
 }

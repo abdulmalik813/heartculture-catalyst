@@ -4,7 +4,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
 module.exports = {
   siteUrl: SITE_URL,
   generateRobotsTxt: true,
-  exclude: ['/posts-sitemap.xml', '/pages-sitemap.xml', '/**'],
+  exclude: ['/posts-sitemap.xml', '/pages_sitemap.xml', '/**'],
   robotsTxtOptions: {
     policies: [
       {
@@ -12,6 +12,6 @@ module.exports = {
         disallow: '/admin/*',
       },
     ],
-    additionalSitemaps: [`${SITE_URL}/pages-sitemap.xml`, `${SITE_URL}/posts-sitemap.xml`],
+    additionalSitemaps: [`${SITE_URL}/pages_sitemap.xml`, `${SITE_URL}/posts-sitemap.xml`],
   },
 }

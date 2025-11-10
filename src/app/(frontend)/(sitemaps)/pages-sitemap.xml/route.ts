@@ -84,9 +84,9 @@ const getPagesSitemap = unstable_cache(
 
     return sitemap
   },
-  ['pages-sitemap'],
+  ['pages_sitemap'],
   {
-    tags: ['pages-sitemap'],
+    tags: ['pages_sitemap'],
   },
 )
 

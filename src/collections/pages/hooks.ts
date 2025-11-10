@@ -1,4 +1,8 @@
-import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionBeforeChangeHook } from 'payload'
+import type {
+  CollectionAfterChangeHook,
+  CollectionAfterDeleteHook,
+  CollectionBeforeChangeHook,
+} from 'payload'
 
 import { revalidatePath, revalidateTag } from 'next/cache'
 
@@ -13,13 +17,13 @@ export const revalidatePage: CollectionAfterChangeHook<Page> = ({
     if (doc._status === 'published') {
       const path = doc.slug === 'home' ? '/' : `/${doc.slug}`
       revalidatePath(path)
-      revalidateTag('pages-sitemap')
+      revalidateTag('pages_sitemap')
     }
 
     if (previousDoc?._status === 'published' && doc._status !== 'published') {
       const oldPath = previousDoc.slug === 'home' ? '/' : `/${previousDoc.slug}`
       revalidatePath(oldPath)
-      revalidateTag('pages-sitemap')
+      revalidateTag('pages_sitemap')
     }
   }
   return doc
@@ -29,7 +33,7 @@ export const revalidateDelete: CollectionAfterDeleteHook<Page> = ({ doc, req: { 
   if (!context.disableRevalidate) {
     const path = doc?.slug === 'home' ? '/' : `/${doc?.slug}`
     revalidatePath(path)
-    revalidateTag('pages-sitemap')
+    revalidateTag('pages_sitemap')
   }
 
   return doc
