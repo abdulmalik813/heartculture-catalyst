@@ -18,7 +18,7 @@ export const pageSchema = async (page: Page, settings: Setting) => {
   ].filter((link) => link)
 
   const associatedMediaSchemas = await Promise.all(
-    medias.map((media) => mediaSchema(media as Media, settings)),
+    medias.map((media) => mediaSchema(media as Media)),
   ).then((schemas) => schemas.filter(Boolean))
 
   const slugParts = page?.slug?.split('/').filter(Boolean) || []
@@ -93,7 +93,7 @@ export const blogSchema = async (post: Post, settings: Setting) => {
   ].filter((link) => link)
 
   const associatedMediaSchemas = await Promise.all(
-    medias.map((media) => mediaSchema(media as Media, settings)),
+    medias.map((media) => mediaSchema(media as Media)),
   ).then((schemas) => schemas.filter(Boolean))
 
   const publishDate = post?.publishedAt || post?.createdAt
@@ -188,7 +188,7 @@ export const imageSchema = async (image: Media | null | undefined, settings: Set
   }
 }
 
-export const mediaSchema = async (media: Media | null | undefined, settings: Setting) => {
+export const mediaSchema = async (media: Media | null | undefined) => {
   if (!media || !media.url) {
     return null
   }
