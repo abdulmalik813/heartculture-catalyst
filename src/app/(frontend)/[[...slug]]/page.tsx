@@ -16,7 +16,7 @@ import PostListingPage from '@/components/post-listing'
 import { articleSchema, imageSchema } from '@/lib/seo-schema'
 import Script from 'next/script'
 import { redirectCheck } from '@/lib/redirect'
-import { SchemaRenderer } from '@/components/render-schema'
+import { SchemaRenderer } from '@/components/schema-renderer'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
