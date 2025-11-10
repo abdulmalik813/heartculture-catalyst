@@ -16,7 +16,6 @@ export const ContentBlock: Block = {
   slug: 'contentBlock',
   interfaceName: 'ContentBlock',
   fields: [
-    grid(),
     {
       type: 'collapsible',
       label: 'Content',
@@ -36,12 +35,12 @@ export const ContentBlock: Block = {
                 blocks: [
                   MediaBlock,
                   NavigationBlock,
-                  TabBlock(),
-                  CardBlock(),
-                  AccordionBlock(),
-                  DividerBlock(),
-                  FormBlock(),
-                  TableBlock(),
+                  TabBlock,
+                  CardBlock,
+                  AccordionBlock,
+                  DividerBlock,
+                  FormBlock,
+                  TableBlock,
                 ],
                 inlineBlocks: [NavigationBlock],
               },

@@ -248,6 +248,8 @@ export interface Page {
               | LastModifiedBlock
             )[]
           | null;
+        gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
+        gridStyles?: (number | Style)[] | null;
         container?: boolean | null;
         gapSize: 'none' | 'small' | 'medium' | 'large' | 'xlarge';
         styles?: (number | Style)[] | null;
@@ -443,6 +445,8 @@ export interface Post {
               | RecentPostsBlock
             )[]
           | null;
+        gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
+        gridStyles?: (number | Style)[] | null;
         container?: boolean | null;
         gapSize: 'none' | 'small' | 'medium' | 'large' | 'xlarge';
         styles?: (number | Style)[] | null;
@@ -619,8 +623,6 @@ export interface Media {
  * via the `definition` "ContentBlock".
  */
 export interface ContentBlock {
-  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
-  gridStyles?: (number | Style)[] | null;
   contentStyles?: (number | Style)[] | null;
   content?: {
     root: {
@@ -672,8 +674,6 @@ export interface ContentBlock {
  * via the `definition` "CallToActionBlock".
  */
 export interface CallToActionBlock {
-  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
-  gridStyles?: (number | Style)[] | null;
   card: {
     enableTitle?: boolean | null;
     enableAction?: boolean | null;
@@ -792,8 +792,6 @@ export interface CallToActionBlock {
  * via the `definition` "CardBlock".
  */
 export interface CardBlock {
-  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
-  gridStyles?: (number | Style)[] | null;
   enableTitle?: boolean | null;
   enableAction?: boolean | null;
   enableDescription?: boolean | null;
@@ -907,8 +905,6 @@ export interface CardBlock {
  * via the `definition` "TabBlock".
  */
 export interface TabBlock {
-  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
-  gridStyles?: (number | Style)[] | null;
   tabs: {
     title: string;
     content: {
@@ -941,8 +937,6 @@ export interface TabBlock {
  * via the `definition` "AccordionBlock".
  */
 export interface AccordionBlock {
-  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
-  gridStyles?: (number | Style)[] | null;
   items: {
     trigger: string;
     content: {
@@ -981,8 +975,6 @@ export interface AccordionBlock {
  * via the `definition` "DividerBlock".
  */
 export interface DividerBlock {
-  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
-  gridStyles?: (number | Style)[] | null;
   type:
     | 'line'
     | 'dashed'
@@ -1013,8 +1005,6 @@ export interface DividerBlock {
  * via the `definition` "FormBlock".
  */
 export interface FormBlock {
-  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
-  gridStyles?: (number | Style)[] | null;
   form: number | Form;
   enableDescription?: boolean | null;
   description?: {
@@ -1217,8 +1207,6 @@ export interface Form {
  * via the `definition` "TableBlock".
  */
 export interface TableBlock {
-  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
-  gridStyles?: (number | Style)[] | null;
   /**
    * Optional caption displayed above or below the table
    */
@@ -1292,8 +1280,6 @@ export interface TableBlock {
  * via the `definition` "LastModifiedBlock".
  */
 export interface LastModifiedBlock {
-  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
-  gridStyles?: (number | Style)[] | null;
   cardStyles?: (number | Style)[] | null;
   cardContentStyles?: (number | Style)[] | null;
   id?: string | null;
@@ -1720,6 +1706,8 @@ export interface PagesSelect<T extends boolean = true> {
               tableBlock?: T | TableBlockSelect<T>;
               lastModifiedBlock?: T | LastModifiedBlockSelect<T>;
             };
+        gridSize?: T;
+        gridStyles?: T;
         container?: T;
         gapSize?: T;
         styles?: T;
@@ -1744,8 +1732,6 @@ export interface PagesSelect<T extends boolean = true> {
  * via the `definition` "ContentBlock_select".
  */
 export interface ContentBlockSelect<T extends boolean = true> {
-  gridSize?: T;
-  gridStyles?: T;
   contentStyles?: T;
   content?: T;
   animate?:
@@ -1766,8 +1752,6 @@ export interface ContentBlockSelect<T extends boolean = true> {
  * via the `definition` "CallToActionBlock_select".
  */
 export interface CallToActionBlockSelect<T extends boolean = true> {
-  gridSize?: T;
-  gridStyles?: T;
   card?:
     | T
     | {
@@ -1847,8 +1831,6 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
  * via the `definition` "CardBlock_select".
  */
 export interface CardBlockSelect<T extends boolean = true> {
-  gridSize?: T;
-  gridStyles?: T;
   enableTitle?: T;
   enableAction?: T;
   enableDescription?: T;
@@ -1921,8 +1903,6 @@ export interface CardBlockSelect<T extends boolean = true> {
  * via the `definition` "TabBlock_select".
  */
 export interface TabBlockSelect<T extends boolean = true> {
-  gridSize?: T;
-  gridStyles?: T;
   tabs?:
     | T
     | {
@@ -1942,8 +1922,6 @@ export interface TabBlockSelect<T extends boolean = true> {
  * via the `definition` "AccordionBlock_select".
  */
 export interface AccordionBlockSelect<T extends boolean = true> {
-  gridSize?: T;
-  gridStyles?: T;
   items?:
     | T
     | {
@@ -1963,8 +1941,6 @@ export interface AccordionBlockSelect<T extends boolean = true> {
  * via the `definition` "DividerBlock_select".
  */
 export interface DividerBlockSelect<T extends boolean = true> {
-  gridSize?: T;
-  gridStyles?: T;
   type?: T;
   height?: T;
   color?: T;
@@ -1978,8 +1954,6 @@ export interface DividerBlockSelect<T extends boolean = true> {
  * via the `definition` "FormBlock_select".
  */
 export interface FormBlockSelect<T extends boolean = true> {
-  gridSize?: T;
-  gridStyles?: T;
   form?: T;
   enableDescription?: T;
   description?: T;
@@ -1991,8 +1965,6 @@ export interface FormBlockSelect<T extends boolean = true> {
  * via the `definition` "TableBlock_select".
  */
 export interface TableBlockSelect<T extends boolean = true> {
-  gridSize?: T;
-  gridStyles?: T;
   caption?: T;
   showHeader?: T;
   headers?:
@@ -2026,8 +1998,6 @@ export interface TableBlockSelect<T extends boolean = true> {
  * via the `definition` "LastModifiedBlock_select".
  */
 export interface LastModifiedBlockSelect<T extends boolean = true> {
-  gridSize?: T;
-  gridStyles?: T;
   cardStyles?: T;
   cardContentStyles?: T;
   id?: T;
@@ -2140,6 +2110,8 @@ export interface PostsSelect<T extends boolean = true> {
               lastModifiedBlock?: T | LastModifiedBlockSelect<T>;
               recentPostsBlock?: T | RecentPostsBlockSelect<T>;
             };
+        gridSize?: T;
+        gridStyles?: T;
         container?: T;
         gapSize?: T;
         styles?: T;

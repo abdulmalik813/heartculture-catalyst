@@ -21,6 +21,7 @@ import { DividerBlock } from '@/blocks/divider/config'
 import { FormBlock } from '@/blocks/form/config'
 import { TableBlock } from '@/blocks/table/config'
 import { LastModifiedBlock } from '@/blocks/last-modified/config'
+import { grid } from '@/fields/grid'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
@@ -84,12 +85,12 @@ export const Pages: CollectionConfig<'pages'> = {
                           blocks: [
                             ContentBlock,
                             CallToActionBlock,
-                            CardBlock(false),
-                            TabBlock(false),
-                            AccordionBlock(false),
-                            DividerBlock(false),
-                            FormBlock(false),
-                            TableBlock(false),
+                            CardBlock,
+                            TabBlock,
+                            AccordionBlock,
+                            DividerBlock,
+                            FormBlock,
+                            TableBlock,
                             LastModifiedBlock,
                           ],
                           required: false,
@@ -99,6 +100,7 @@ export const Pages: CollectionConfig<'pages'> = {
                     {
                       label: 'Styles',
                       fields: [
+                        grid(),
                         {
                           name: 'container',
                           type: 'checkbox',

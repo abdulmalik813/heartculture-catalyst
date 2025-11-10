@@ -1,16 +1,15 @@
 import { Block } from 'payload'
-import { grid } from '@/fields/grid'
 import { defaultLexical } from '@/fields/lexical-field'
 import { MediaBlock } from '../media/config'
 import { NavigationBlock } from '../navigation/config'
 import { defaultLexicalValue } from '@/constants/default-lexical'
+import { AccordionBlock } from '../accordion/config'
 
-export const TabBlock = (disableGrid: boolean = true): Block => ({
+export const TabBlock: Block = {
   slug: 'tabBlock',
   interfaceName: 'TabBlock',
   dbName: 'tab',
   fields: [
-    ...(disableGrid ? [] : [grid()]),
     {
       type: 'tabs',
       tabs: [
@@ -43,7 +42,7 @@ export const TabBlock = (disableGrid: boolean = true): Block => ({
                           editor: defaultLexical({
                             features: {
                               blocks: {
-                                blocks: [MediaBlock, NavigationBlock],
+                                blocks: [MediaBlock, NavigationBlock, AccordionBlock],
                                 inlineBlocks: [MediaBlock, NavigationBlock],
                               },
                             },
@@ -101,4 +100,4 @@ export const TabBlock = (disableGrid: boolean = true): Block => ({
   graphQL: {
     singularName: 'TabBlockTabBlock',
   },
-})
+}

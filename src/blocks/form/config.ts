@@ -2,11 +2,10 @@ import { grid } from '@/fields/grid'
 import { defaultLexical } from '@/fields/lexical-field'
 import type { Block } from 'payload'
 
-export const FormBlock = (disableGrid: boolean = true): Block => ({
+export const FormBlock: Block = {
   slug: 'formBlock',
   interfaceName: 'FormBlock',
   fields: [
-    ...(disableGrid ? [] : [grid()]),
     {
       name: 'form',
       type: 'relationship',
@@ -33,4 +32,4 @@ export const FormBlock = (disableGrid: boolean = true): Block => ({
     plural: 'Form Blocks',
     singular: 'Form Block',
   },
-})
+}

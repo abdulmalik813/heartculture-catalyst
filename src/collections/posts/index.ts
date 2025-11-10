@@ -24,6 +24,7 @@ import { LastModifiedBlock } from '@/blocks/last-modified/config'
 import { RecentPostsBlock } from '@/blocks/recent-posts/config'
 import { getCachedGlobal } from '@/lib/get-globals'
 import { Setting } from '@/payload-types'
+import { grid } from '@/fields/grid'
 
 let cachedPostEnabled: boolean | null = null
 let cachedPostLabel: string = 'Posts'
@@ -155,12 +156,12 @@ export const Posts: CollectionConfig<'posts'> = {
                           blocks: [
                             ContentBlock,
                             CallToActionBlock,
-                            CardBlock(false),
-                            TabBlock(false),
-                            AccordionBlock(false),
-                            DividerBlock(false),
-                            FormBlock(false),
-                            TableBlock(false),
+                            CardBlock,
+                            TabBlock,
+                            AccordionBlock,
+                            DividerBlock,
+                            FormBlock,
+                            TableBlock,
                             LastModifiedBlock,
                             RecentPostsBlock,
                           ],
@@ -171,6 +172,7 @@ export const Posts: CollectionConfig<'posts'> = {
                     {
                       label: 'Styles',
                       fields: [
+                        grid(),
                         {
                           name: 'container',
                           type: 'checkbox',

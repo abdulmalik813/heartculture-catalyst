@@ -1,12 +1,11 @@
 import { Block } from 'payload'
 import { grid } from '@/fields/grid'
 
-export const DividerBlock = (disableGrid: boolean = true): Block => ({
+export const DividerBlock: Block = {
   slug: 'dividerBlock',
   interfaceName: 'DividerBlock',
   dbName: 'divider',
   fields: [
-    ...(disableGrid ? [] : [grid()]),
     {
       name: 'type',
       type: 'select',
@@ -78,4 +77,4 @@ export const DividerBlock = (disableGrid: boolean = true): Block => ({
   graphQL: {
     singularName: 'DividerBlock',
   },
-})
+}

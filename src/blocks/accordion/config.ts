@@ -5,12 +5,11 @@ import { MediaBlock } from '../media/config'
 import { NavigationBlock } from '../navigation/config'
 import { defaultLexicalValue } from '@/constants/default-lexical'
 
-export const AccordionBlock = (disableGrid: boolean = true): Block => ({
+export const AccordionBlock: Block = {
   slug: 'accordionBlock',
   interfaceName: 'AccordionBlock',
   dbName: 'accordion',
   fields: [
-    ...(disableGrid ? [] : [grid()]),
     {
       type: 'tabs',
       tabs: [
@@ -109,4 +108,4 @@ export const AccordionBlock = (disableGrid: boolean = true): Block => ({
   graphQL: {
     singularName: 'AccordionBlockAccordionBlock',
   },
-})
+}

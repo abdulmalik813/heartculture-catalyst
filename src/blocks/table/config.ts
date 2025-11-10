@@ -5,12 +5,11 @@ import { MediaBlock } from '../media/config'
 import { NavigationBlock } from '../navigation/config'
 import { defaultLexicalValue } from '@/constants/default-lexical'
 
-export const TableBlock = (disableGrid: boolean = true): Block => ({
+export const TableBlock: Block = {
   slug: 'tableBlock',
   interfaceName: 'TableBlock',
   dbName: 'table',
   fields: [
-    ...(disableGrid ? [] : [grid()]),
     {
       type: 'tabs',
       tabs: [
@@ -173,4 +172,4 @@ export const TableBlock = (disableGrid: boolean = true): Block => ({
   graphQL: {
     singularName: 'TableBlockTableBlock',
   },
-})
+}

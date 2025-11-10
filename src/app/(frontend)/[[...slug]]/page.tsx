@@ -79,6 +79,13 @@ const gapClasses = {
   xlarge: 'gap-8',
 } as const
 
+const colsSpanClasses = {
+  full: 'col-span-4 lg:col-span-12',
+  half: 'col-span-4 lg:col-span-6',
+  'one-third': 'col-span-4 lg:col-span-4',
+  'two-thirds': 'col-span-4 lg:col-span-8',
+}
+
 function isPostRoute(slugArray: string[] | undefined, postSlug: string): boolean {
   if (!slugArray || slugArray.length === 0) return false
 
@@ -168,15 +175,23 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
                     gapClasses[layout.gapSize || 'medium'],
                   )}
                 >
-                  {layout.blocks?.map((block, index) => (
-                    <BlockRenderer
-                      key={index}
-                      searchParams={searchParams}
-                      block={block}
-                      setting={setting}
-                      page={page}
-                    />
-                  ))}
+                  <div
+                    className={joinStyles(
+                      colsSpanClasses[layout.gridSize],
+                      layout.gridStyles,
+                      cn({ 'md:col-span-2': layout.gridSize !== 'full' }),
+                    )}
+                  >
+                    {layout.blocks?.map((block, index) => (
+                      <BlockRenderer
+                        key={index}
+                        searchParams={searchParams}
+                        block={block}
+                        setting={setting}
+                        page={page}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             ))}

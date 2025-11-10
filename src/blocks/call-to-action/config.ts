@@ -8,7 +8,6 @@ export const CallToActionBlock: Block = {
   interfaceName: 'CallToActionBlock',
   dbName: 'cta',
   fields: [
-    grid(),
     {
       type: 'tabs',
       tabs: [
