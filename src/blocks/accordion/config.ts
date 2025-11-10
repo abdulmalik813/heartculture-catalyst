@@ -1,5 +1,4 @@
 import { Block } from 'payload'
-import { grid } from '@/fields/grid'
 import { defaultLexical } from '@/fields/lexical-field'
 import { MediaBlock } from '../media/config'
 import { NavigationBlock } from '../navigation/config'

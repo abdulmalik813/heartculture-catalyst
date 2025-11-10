@@ -1,11 +1,9 @@
-import { SearchParams } from '@/types/search-params'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import { Input } from '@/components/ui/input'
 import { SearchIcon } from 'lucide-react'
-import { Setting } from '@/payload-types'
 import {
   Pagination,
   PaginationContent,
@@ -24,26 +22,21 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { draftMode } from 'next/headers'
+import { GlobalData } from '@/types/global-data'
 
-interface PostProps {
-  searchParams: SearchParams
-  setting: Setting | null
-}
 
-export default async function PostListingPage({ searchParams, setting }: Readonly<PostProps>) {
-  const search = await searchParams
-  const { isEnabled: draft } = await draftMode()
+export default async function PostListingPage({ globalData }: {globalData: GlobalData }) {
+  const search = await globalData.searchParams
   const { q: searchQuery, page = '1', category } = search ?? {}
   const currentPage = parseInt(page as string)
   const postsPerPage = 12
 
-  const postSlug = setting?.postSlug || 'posts'
-  const postListingPageTitle = setting?.postListingPageTitle || 'Posts'
+  const postSlug = globalData.setting?.postSlug || 'posts'
+  const postListingPageTitle = globalData.setting?.postListingPageTitle || 'Posts'
 
   const payload = await getPayload({ config: configPromise })
 
-  const whereClause: any = draft
+  const whereClause: any = globalData.draft
     ? {}
     : {
         _status: {
@@ -98,7 +91,7 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
       ],
     }
 
-    if (!draft) {
+    if (!globalData.draft) {
       searchWhereClause.and.push({
         'doc.value._status': {
           equals: 'published',
@@ -112,7 +105,7 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
       limit: postsPerPage,
       page: currentPage,
       sort: '-priority',
-      draft,
+      draft: globalData?.draft,
     })
 
     const postIds = searchResults.docs
@@ -128,7 +121,7 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
           },
         },
         limit: postsPerPage,
-        draft,
+        draft: globalData.draft,
       })
       totalDocs = searchResults.totalDocs
     } else {
@@ -142,7 +135,7 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
       limit: postsPerPage,
       page: currentPage,
       sort: '-publishedAt',
-      draft,
+      draft: globalData.draft,
     })
     totalDocs = posts.totalDocs
   }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { NavigationBar, Media, Style, Setting } from '@/payload-types'
+import { NavigationBar, Media, Style } from '@/payload-types'
 import { NavigationBlockUI } from '@/blocks/navigation'
 import { MediaBlockUI } from '@/blocks/media'
 import { Button } from '@/components/ui/button'
@@ -10,6 +10,7 @@ import { Menu, ChevronDown } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { joinStyles } from '@/lib/make-styles'
 import Link from 'next/link'
+import { GlobalData } from '@/types/global-data'
 
 type MobileNavDropdownProps = {
   navigation?: NavigationBar['navigation']
@@ -19,7 +20,7 @@ type MobileNavDropdownProps = {
   darkLogo?: Media
   logoStyles?: (number | Style)[] | null | undefined
   useTitleWithLogo?: boolean | null
-  setting: Setting | null
+  globalData: GlobalData
 }
 
 export function MobileNavDropdown({
@@ -30,7 +31,7 @@ export function MobileNavDropdown({
   darkLogo,
   logoStyles,
   useTitleWithLogo,
-  setting,
+  globalData,
 }: MobileNavDropdownProps) {
   const [open, setOpen] = useState(false)
   const [expandedDropdowns, setExpandedDropdowns] = useState<Set<string>>(new Set())
@@ -67,18 +68,14 @@ export function MobileNavDropdown({
               <MediaBlockUI
                 media={lightLogo}
                 className={joinStyles('dark:hidden', logoStyles)}
-                setting={setting}
-                page={null}
-                searchParams={null}
+                globalData={globalData}
               />
             )}
             {darkLogo && (
               <MediaBlockUI
                 media={darkLogo}
                 className={joinStyles('hidden dark:block', logoStyles)}
-                setting={setting}
-                page={null}
-                searchParams={null}
+                globalData={globalData}
               />
             )}
             <SheetTitle>
@@ -133,9 +130,7 @@ export function MobileNavDropdown({
                                   >
                                     <NavigationBlockUI
                                       dropdownItem={dropdownItem}
-                                      setting={setting}
-                                      searchParams={null}
-                                      page={null}
+                                      globalData={globalData}
                                     />
                                   </motion.div>
                                 ))}
@@ -158,9 +153,7 @@ export function MobileNavDropdown({
                       <NavigationBlockUI
                         {...navItem}
                         className={joinStyles(itemClassName, 'text-left')}
-                        searchParams={null}
-                        setting={setting}
-                        page={null}
+                        globalData={globalData}
                       />
                     </motion.div>
                   )
@@ -210,9 +203,7 @@ export function MobileNavDropdown({
                                   >
                                     <NavigationBlockUI
                                       dropdownItem={dropdownItem}
-                                      setting={setting}
-                                      page={null}
-                                      searchParams={null}
+                                      globalData={globalData}
                                     />
                                   </motion.div>
                                 ))}
@@ -236,9 +227,7 @@ export function MobileNavDropdown({
                       <NavigationBlockUI
                         {...navItem}
                         className={itemClassName}
-                        searchParams={null}
-                        setting={setting}
-                        page={null}
+                        globalData={globalData}
                       />
                     </motion.div>
                   )

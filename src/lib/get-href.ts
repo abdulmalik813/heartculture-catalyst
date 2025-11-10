@@ -1,6 +1,6 @@
 import { Setting } from '@/payload-types'
 
-export function getHref(link: any, setting: Setting | null) {
+export function getHref(link: any, setting: Setting | null | undefined) {
   if (link.type === 'postListingPage') {
     const postSlug = setting?.postSlug || 'posts'
     return `/${postSlug}`

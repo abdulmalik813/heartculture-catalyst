@@ -6,13 +6,11 @@ import { Setting } from '@/payload-types'
 
 
 let cachedPostEnabled: boolean | null = null
-let cachedPostLabel: string = 'Posts'
 
 const checkPostEnabled = async (): Promise<boolean> => {
   try {
     const setting = (await getCachedGlobal('settings', 1, true)) as Setting
     cachedPostEnabled = setting?.enablePost ?? false
-    cachedPostLabel = setting?.postListingPageTitle || 'Posts'
     return cachedPostEnabled
   } catch {
     cachedPostEnabled = false

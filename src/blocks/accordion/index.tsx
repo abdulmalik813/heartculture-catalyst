@@ -4,19 +4,15 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-import { AccordionBlock, Page, Post, Setting } from '@/payload-types'
+import { AccordionBlock } from '@/payload-types'
 import { LexicalRenderer } from '@/components/lexical-renderer'
-import { SearchParams } from '@/types/search-params'
 import { joinStyles } from '@/lib/make-styles'
+import { GlobalData } from '@/types/global-data'
 
 export async function AccordionBlockUI({
-  searchParams,
-  setting,
-  page,
+  globalData,
   ...accordionBlock
-}: AccordionBlock & { searchParams: SearchParams } & { setting: Setting | null } & {
-  page: Post | Page | null
-}) {
+}: AccordionBlock & { globalData: GlobalData }) {
   return (
     <Accordion type="single" collapsible className={joinStyles(accordionBlock.accordionStyles)}>
       {accordionBlock.items.map((item) => (
@@ -31,9 +27,7 @@ export async function AccordionBlockUI({
           <AccordionContent className={joinStyles(item.contentStyles)}>
             <LexicalRenderer
               content={item.content}
-              searchParams={searchParams}
-              setting={setting}
-              page={page}
+              globalData={globalData}
             />
           </AccordionContent>
         </AccordionItem>

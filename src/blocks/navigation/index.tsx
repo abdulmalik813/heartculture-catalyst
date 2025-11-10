@@ -1,4 +1,4 @@
-import { NavigationBlock, Page, Post, Setting } from '@/payload-types'
+import { NavigationBlock } from '@/payload-types'
 import { Button } from '@/components/ui/button'
 import { joinStyles } from '@/lib/make-styles'
 import Link from 'next/link'
@@ -8,9 +8,9 @@ import {
   DropdownMenu,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu'
-import { SearchParams } from '@/types/search-params'
 import { IconRender } from '@/components/icon-renderer'
 import { getHref } from '@/lib/get-href'
+import { GlobalData } from '@/types/global-data'
 
 function getIconData(item: any) {
   const icon = typeof item?.icon === 'object' ? item?.icon : null
@@ -78,20 +78,17 @@ function LinkWithIcon({
 }
 
 export function NavigationBlockUI({
-  searchParams,
+  globalData,
   dropdownItem,
   className,
-  setting,
-  page,
   ...navigationBlock
 }: Partial<NavigationBlock> & {
   className?: string
-  searchParams: SearchParams
   dropdownItem?: DropdownItem
-} & { setting: Setting | null } & { page: Post | Page | null }) {
+} & { globalData: GlobalData }) {
   const { hasIcon, iconPlacement, renderIcon } = getIconData(navigationBlock.nav)
   if (navigationBlock.nav?.appearance === 'button' || navigationBlock.nav?.appearance === 'link') {
-    const href = getHref(navigationBlock.nav.link, setting)
+    const href = getHref(navigationBlock.nav.link, globalData.setting)
     if (!href) return null
 
     if (navigationBlock.nav?.appearance === 'button') {
@@ -122,7 +119,7 @@ export function NavigationBlockUI({
   }
 
   if (dropdownItem) {
-    const href = getHref(dropdownItem, setting)
+    const href = getHref(dropdownItem, globalData.setting)
     if (!href) return null
     return (
       <LinkWithIcon
@@ -151,7 +148,7 @@ export function NavigationBlockUI({
       </Button>
       <DropdownMenuContent>
         {navigationBlock.nav?.items?.map((item) => {
-          const href = getHref(item, setting)
+          const href = getHref(item, globalData.setting)
           if (!href) return null
 
           return (

@@ -7,19 +7,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Page, Post, Setting, TableBlock } from '@/payload-types'
+import { TableBlock } from '@/payload-types'
 import { LexicalRenderer } from '@/components/lexical-renderer'
-import { SearchParams } from '@/types/search-params'
 import { joinStyles } from '@/lib/make-styles'
+import { GlobalData } from '@/types/global-data'
 
 export async function TableBlockUI({
-  searchParams,
-  setting,
-  page,
+  globalData,
   ...tableBlock
-}: TableBlock & { searchParams: SearchParams } & { setting: Setting | null } & {
-  page: Post | Page | null
-}) {
+}: TableBlock & { globalData: GlobalData }) {
   return (
     <Table className={joinStyles(tableBlock.tableStyles)}>
       {tableBlock.caption && (
@@ -34,9 +30,7 @@ export async function TableBlockUI({
               <TableHead key={header.id}>
                 <LexicalRenderer
                   content={header.header}
-                  searchParams={searchParams}
-                  setting={setting}
-                  page={page}
+                  globalData={globalData}
                 />
               </TableHead>
             ))}
@@ -50,9 +44,7 @@ export async function TableBlockUI({
               <TableCell key={cell.id} className={joinStyles(cell.cellStyles)}>
                 <LexicalRenderer
                   content={cell.content}
-                  searchParams={searchParams}
-                  setting={setting}
-                  page={page}
+                  globalData={globalData}
                 />
               </TableCell>
             ))}

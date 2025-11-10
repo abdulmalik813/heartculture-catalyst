@@ -31,7 +31,7 @@ export async function GET(req: NextRequest): Promise<Response> {
       req: req as unknown as PayloadRequest,
       headers: req.headers,
     })
-  } catch (error) {
+  } catch {
     return new Response('You are not allowed to preview this page', { status: 403 })
   }
 

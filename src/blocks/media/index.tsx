@@ -1,23 +1,19 @@
 import { MediaBlock } from '@/payload-types'
 import { Media } from '@/components/media'
 import { joinStyles } from '@/lib/make-styles'
-import type { Media as MediaCollection, Page, Post, Setting } from '@/payload-types'
+import type { Media as MediaCollection } from '@/payload-types'
 import Link from 'next/link'
 import { getServerSideURL } from '@/lib/get-url'
 import { Button } from '@/components/ui/button'
 import { LexicalRenderer } from '@/components/lexical-renderer'
-import { SearchParams } from '@/types/search-params'
 import { browserPlayableTypes } from '@/constants/browser-media'
+import { GlobalData } from '@/types/global-data'
 
 export function MediaBlockUI({
-  searchParams,
+  globalData,
   className,
-  setting,
-  page,
   ...mediaBlock
-}: Partial<MediaBlock> & { searchParams: SearchParams } & { className?: string } & {
-  setting: Setting | null
-} & { page: Post | Page | null }) {
+}: Partial<MediaBlock> & { className?: string } & { globalData: GlobalData }) {
   if (!mediaBlock.media) return null
 
   const media: MediaCollection = mediaBlock.media as MediaCollection
@@ -40,9 +36,7 @@ export function MediaBlockUI({
           {media?.caption && (
             <LexicalRenderer
               content={media.caption}
-              searchParams={searchParams}
-              setting={setting}
-              page={page}
+              globalData={globalData}
             />
           )}
         </Button>

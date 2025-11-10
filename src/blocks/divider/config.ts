@@ -1,5 +1,4 @@
 import { Block } from 'payload'
-import { grid } from '@/fields/grid'
 
 export const DividerBlock: Block = {
   slug: 'dividerBlock',

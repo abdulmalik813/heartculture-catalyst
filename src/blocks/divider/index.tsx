@@ -1,15 +1,11 @@
 import { joinStyles } from '@/lib/make-styles'
-import { DividerBlock, Page, Post, Setting } from '@/payload-types'
-import { SearchParams } from '@/types/search-params'
+import { DividerBlock } from '@/payload-types'
+import { GlobalData } from '@/types/global-data'
 
 export async function DividerBlockUI({
-  searchParams,
-  setting,
-  page,
+  globalData,
   ...dividerBlock
-}: DividerBlock & { searchParams: SearchParams } & { setting: Setting | null } & {
-  page: Post | Page | null
-}) {
+}: DividerBlock & { globalData: GlobalData }) {
   const classNames = joinStyles(dividerBlock.dividerStyles)
   const { type, height, color, flip } = dividerBlock
 

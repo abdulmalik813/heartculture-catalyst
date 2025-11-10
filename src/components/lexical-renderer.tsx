@@ -6,9 +6,6 @@ import type {
   FormBlock,
   MediaBlock,
   NavigationBlock,
-  Page,
-  Post,
-  Setting,
   Style,
   TabBlock,
   TableBlock,
@@ -25,21 +22,19 @@ import {
 import { joinStyles } from '@/lib/make-styles'
 import { MediaBlockUI } from '@/blocks/media'
 import { NavigationBlockUI } from '../blocks/navigation'
-import { SearchParams } from '@/types/search-params'
 import { TabBlockUI } from '@/blocks/tab'
 import { AccordionBlockUI } from '@/blocks/accordion'
 import { DividerBlockUI } from '@/blocks/divider'
 import { CardBlockUI } from '@/blocks/card'
 import { FormBlockUI } from '@/blocks/form'
 import { TableBlockUI } from '@/blocks/table'
+import { GlobalData } from '@/types/global-data'
 
 interface LexicalRendererProps {
   content?: DefaultTypedEditorState | null
   contentStyles?: (number | Style)[] | undefined | null
-  searchParams: SearchParams
+  globalData: GlobalData
   className?: string
-  page: Post | Page | null
-  setting: Setting | null
 }
 
 type NodeTypes =
@@ -55,11 +50,7 @@ type NodeTypes =
       | TableBlock
     >
 
-function jsxConverters(
-  setting: Setting | null,
-  page: Page | Post | null,
-  searchParams: LexicalRendererProps['searchParams'],
-): JSXConvertersFunction<NodeTypes> {
+function jsxConverters(globalData: GlobalData): JSXConvertersFunction<NodeTypes> {
   return function ({ defaultConverters }) {
     return {
       ...defaultConverters,
@@ -114,23 +105,14 @@ function jsxConverters(
             },
           },
         }
-        return (
-          <NavigationBlockUI
-            {...reconstructedNode.fields}
-            searchParams={searchParams}
-            setting={setting}
-            page={page}
-          />
-        )
+        return <NavigationBlockUI {...reconstructedNode.fields} globalData={globalData} />
       },
       inlineBlocks: {
         // @ts-expect-error there may be some mismatch between the expected types here
         navigationBlock: ({ node }) => (
           <NavigationBlockUI
             {...node.fields}
-            searchParams={searchParams}
-            setting={setting}
-            page={page}
+            globalData={globalData}
           />
         ),
       },
@@ -138,50 +120,40 @@ function jsxConverters(
         mediaBlock: ({ node }) => (
           <MediaBlockUI
             {...node.fields}
-            searchParams={searchParams}
-            setting={setting}
-            page={page}
+            globalData={globalData}
           />
         ),
         navigationBlock: ({ node }) => (
           <NavigationBlockUI
             {...node.fields}
-            searchParams={searchParams}
-            setting={setting}
-            page={page}
+            globalData={globalData}
           />
         ),
         tabBlock: ({ node }) => (
-          <TabBlockUI {...node.fields} searchParams={searchParams} setting={setting} page={page} />
+          <TabBlockUI {...node.fields} globalData={globalData} />
         ),
         accordionBlock: ({ node }) => (
           <AccordionBlockUI
             {...node.fields}
-            searchParams={searchParams}
-            setting={setting}
-            page={page}
+            globalData={globalData}
           />
         ),
         dividerBlock: ({ node }) => (
           <DividerBlockUI
             {...node.fields}
-            searchParams={searchParams}
-            setting={setting}
-            page={page}
+            globalData={globalData}
           />
         ),
         cardBlock: ({ node }) => (
-          <CardBlockUI {...node.fields} searchParams={searchParams} setting={setting} page={page} />
+          <CardBlockUI {...node.fields} globalData={globalData} />
         ),
         formBlock: ({ node }) => (
-          <FormBlockUI {...node.fields} searchParams={searchParams} setting={setting} page={page} />
+          <FormBlockUI {...node.fields} globalData={globalData} />
         ),
         tableBlock: ({ node }) => (
           <TableBlockUI
             {...node.fields}
-            searchParams={searchParams}
-            setting={setting}
-            page={page}
+            globalData={globalData}
           />
         ),
       },
@@ -191,15 +163,13 @@ function jsxConverters(
 
 export async function LexicalRenderer({
   content,
-  searchParams,
   className,
-  setting,
-  page,
+  globalData
 }: LexicalRendererProps) {
   if (!content) return null
   return (
     <ConvertRichText
-      converters={jsxConverters(setting, page, searchParams)}
+      converters={jsxConverters(globalData)}
       className={joinStyles('richtext-content break-words', className)}
       data={content as DefaultTypedEditorState}
     />

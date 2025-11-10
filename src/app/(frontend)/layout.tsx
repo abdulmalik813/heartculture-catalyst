@@ -9,8 +9,6 @@ import { Setting } from '@/payload-types'
 import { getCachedGlobal } from '@/lib/get-globals'
 import { Metadata } from 'next'
 import { getAppSettings } from '@/constants/app'
-import { NavigationBarUI } from '@/components/navigation-bar'
-import { Footer } from '@/components/footer'
 import { isFontData } from '@/lib/is-font-data'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -72,9 +70,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
               preview: isEnabled,
             }}
           />
-          <NavigationBarUI />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          {children}
         </ThemeProvider>
       </body>
     </html>

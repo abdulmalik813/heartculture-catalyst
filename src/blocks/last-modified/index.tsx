@@ -1,23 +1,18 @@
-import { Page, Post, LastModifiedBlock, Setting } from '@/payload-types'
-import { SearchParams } from '@/types/search-params'
-import { AnimateWrapper } from '@/components/animate-wrapper'
+import { LastModifiedBlock } from '@/payload-types'
 import { Card, CardContent } from '@/components/ui/card'
 import { joinStyles } from '@/lib/make-styles'
 import { TIMEZONES } from '@/constants/init'
+import { GlobalData } from '@/types/global-data'
 
 export function LastModifiedBlockUI({
-  searchParams,
-  setting,
-  page,
+  globalData,
   ...lastModifiedBlock
-}: Partial<LastModifiedBlock> & { searchParams: SearchParams } & { className?: string } & {
-  setting: Setting | null
-} & { page: Post | Page | null }) {
-  if (!page) {
+}: Partial<LastModifiedBlock> & { globalData: GlobalData }) {
+  if (!globalData.page) {
     return <></>
   }
 
-  const { updatedAt } = page
+  const { updatedAt } = globalData.page
   const timeZone = TIMEZONES.DEFAULT_TIMEZONE
 
   const formattedDate = new Intl.DateTimeFormat('en-US', {
@@ -30,8 +25,8 @@ export function LastModifiedBlockUI({
     <Card className={joinStyles(lastModifiedBlock.cardStyles)}>
       <CardContent className={joinStyles(lastModifiedBlock.cardContentStyles)}>
         Last modified on {formattedDate}
-        {page.author && typeof page.author === 'object' && page.author?.name && (
-          <> by {page.author.name}</>
+        {globalData.page.author && typeof globalData.page.author === 'object' && globalData.page.author?.name && (
+          <> by {globalData.page.author.name}</>
         )}
       </CardContent>
     </Card>

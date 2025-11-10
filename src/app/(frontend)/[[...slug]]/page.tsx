@@ -15,6 +15,10 @@ import { Page, Post, Setting } from '@/payload-types'
 import PostListingPage from '@/components/post-listing'
 import { redirectCheck } from '@/lib/redirect'
 import { SchemaRenderer } from '@/components/schema-renderer'
+import { GlobalData } from '@/types/global-data'
+import { Footer } from '@/components/footer'
+import { NavigationBarUI } from '@/components/navigation-bar'
+import { SlugProps } from '@/types/slug-props'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -62,13 +66,6 @@ export async function generateStaticParams() {
 
   params.push({ slug: [] })
   return params
-}
-
-interface SlugProps {
-  params: Promise<{
-    slug?: string[]
-  }>
-  searchParams: Promise<Record<string, string | string[] | undefined | null>>
 }
 
 const gapClasses = {
@@ -151,63 +148,71 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
     return notFound()
   }
 
+  const globalData: GlobalData = {
+    page,
+    setting,
+    searchParams,
+    draft,
+    slug
+  }
+
   return (
-    <article className="min-h-[70vh]">
-      {isPostListingPage ? (
-        <>
-          <PostListingPage searchParams={searchParams} setting={setting} />
-        </>
-      ) : (
-        page && (
-          <>
-            <Hero hero={page.hero} searchParams={searchParams} setting={setting} page={page} />
-            {page.layout?.map((layout, i) => (
-              <div
-                key={i}
-                className={joinStyles(
-                  cn(layout.container && 'container mx-auto px-4'),
-                  layout.styles,
-                )}
-              >
-                <div
-                  className={cn(
-                    'grid grid-cols-4 lg:grid-cols-12',
-                    gapClasses[layout.gapSize || 'medium'],
-                  )}
-                >
-                  {layout.grid?.map((grid, index) => (
+    <>
+      <NavigationBarUI globalData={globalData} />
+      <main className="flex-1">
+        <article className="min-h-[70vh]">
+          {isPostListingPage ? (
+            <>
+              <PostListingPage globalData={globalData} />
+            </>
+          ) : (
+            page && (
+              <>
+                <Hero hero={page.hero} globalData={globalData} />
+                {page.layout?.map((layout, i) => (
+                  <div
+                    key={i}
+                    className={joinStyles(
+                      cn(layout.container && 'container mx-auto px-4'),
+                      layout.styles,
+                    )}
+                  >
                     <div
-                      key={index}
-                      className={joinStyles(
-                        colsSpanClasses[grid.gridSize],
-                        grid.gridStyles,
-                        cn({ 'md:col-span-2': grid.gridSize !== 'full' }),
+                      className={cn(
+                        'grid grid-cols-4 lg:grid-cols-12',
+                        gapClasses[layout.gapSize || 'medium'],
                       )}
                     >
-                      {grid.blocks?.map((block, index) => (
-                        <BlockRenderer
+                      {layout.grid?.map((grid, index) => (
+                        <div
                           key={index}
-                          searchParams={searchParams}
-                          block={block}
-                          setting={setting}
-                          page={page}
-                        />
+                          className={joinStyles(
+                            colsSpanClasses[grid.gridSize],
+                            grid.gridStyles,
+                            cn({ 'md:col-span-2': grid.gridSize !== 'full' }),
+                          )}
+                        >
+                          {grid.blocks?.map((block, index) => (
+                            <BlockRenderer key={index} block={block} globalData={globalData} />
+                          ))}
+                        </div>
                       ))}
                     </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </>
-        )
-      )}
-      <SchemaRenderer
-        page={page}
-        isItAPost={isItAPost}
-        isPostListingPage={isPostListingPage}
-        setting={setting}
-      />
-    </article>
+                  </div>
+                ))}
+              </>
+            )
+          )}
+          <SchemaRenderer
+            page={page}
+            isItAPost={isItAPost}
+            isPostListingPage={isPostListingPage}
+            setting={setting}
+          />
+        </article>
+      </main>
+      <Footer globalData={globalData} />
+    </>
   )
 }
 

@@ -1,4 +1,3 @@
-import { grid } from '@/fields/grid'
 import { defaultLexical } from '@/fields/lexical-field'
 import type { Block } from 'payload'
 

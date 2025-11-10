@@ -6,21 +6,17 @@ import {
   CardContent,
   CardFooter,
 } from '@/components/ui/card'
-import { CardBlock, Page, Post, Setting } from '@/payload-types'
-import { SearchParams } from '@/types/search-params'
+import { CardBlock } from '@/payload-types'
 import { joinStyles } from '@/lib/make-styles'
 import { LexicalRenderer } from '@/components/lexical-renderer'
 import { NavigationBlockUI } from '@/blocks/navigation'
 import { AnimateWrapper } from '@/components/animate-wrapper'
+import { GlobalData } from '@/types/global-data'
 
 export async function CardBlockUI({
-  searchParams,
-  setting,
-  page,
+  globalData,
   ...cardBlock
-}: Partial<CardBlock> & { searchParams: SearchParams } & { setting: Setting | null } & {
-  page: Post | Page | null
-}) {
+}: Partial<CardBlock> & { globalData: GlobalData }) {
   const showActionInHeader = cardBlock.actionPlacement === 'header'
   const showActionInFooter = cardBlock.actionPlacement === 'footer'
 
@@ -50,9 +46,7 @@ export async function CardBlockUI({
                     <NavigationBlockUI
                       key={index}
                       {...action}
-                      searchParams={searchParams}
-                      setting={setting}
-                      page={page}
+                      globalData={globalData}
                     />
                   ))}
                 </div>
@@ -65,9 +59,7 @@ export async function CardBlockUI({
           <CardContent className={joinStyles(cardBlock.cardContentStyles)}>
             <LexicalRenderer
               content={cardBlock.content}
-              searchParams={searchParams}
-              setting={setting}
-              page={page}
+              globalData={globalData}
             />
           </CardContent>
         )}
@@ -84,9 +76,7 @@ export async function CardBlockUI({
                     <NavigationBlockUI
                       key={index}
                       {...action}
-                      searchParams={searchParams}
-                      setting={setting}
-                      page={page}
+                      globalData={globalData}
                     />
                   ))}
                 </div>

@@ -8,22 +8,18 @@ import {
 } from '@/components/ui/table'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
-import { Page, Post, RecentPostsBlock, Setting } from '@/payload-types'
+import { RecentPostsBlock } from '@/payload-types'
 import Link from 'next/link'
-import { SearchParams } from '@/types/search-params'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { joinStyles } from '@/lib/make-styles'
 import { AnimateWrapper } from '@/components/animate-wrapper'
 import { Badge } from '@/components/ui/badge'
+import { GlobalData } from '@/types/global-data'
 
 export async function RecentPostsBlockUI({
-  searchParams,
-  setting,
-  page,
+  globalData,
   ...recentPostsBlock
-}: Partial<RecentPostsBlock> & { searchParams: SearchParams } & { className?: string } & {
-  setting: Setting | null
-} & { page: Post | Page | null }) {
+}: Partial<RecentPostsBlock> & { globalData: GlobalData }) {
   const payload = await getPayload({ config: configPromise })
 
   const recentPosts = await payload.find({
@@ -31,7 +27,7 @@ export async function RecentPostsBlockUI({
     limit: recentPostsBlock.numberOfPosts,
     where: {
       id: {
-        not_equals: page?.id,
+        not_equals: globalData?.page?.id,
       },
     },
     sort: '-publishedAt',
@@ -52,7 +48,7 @@ export async function RecentPostsBlockUI({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{setting?.postListingPageTitle}</TableHead>
+                <TableHead>{globalData?.setting?.postListingPageTitle}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -61,7 +57,7 @@ export async function RecentPostsBlockUI({
                   <TableCell className="break-words">
                     <Link 
                       className={joinStyles(recentPostsBlock.linkStyles)} 
-                      href={`/${setting?.postSlug || ''}/${post.slug}`}
+                      href={`/${globalData?.setting?.postSlug || ''}/${post.slug}`}
                     >
                       {post.title}
                     </Link>

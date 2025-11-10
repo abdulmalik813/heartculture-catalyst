@@ -1,24 +1,20 @@
-import { Page, Post, Setting } from '@/payload-types'
-import { SearchParams } from '@/types/search-params'
+import { Page } from '@/payload-types'
 import { CallToActionBlockUI } from '@/blocks/call-to-action'
 import { CardBlockUI } from '@/blocks/card'
 import { joinStyles } from '@/lib/make-styles'
 import { Media } from '@/components/media'
+import { GlobalData } from '@/types/global-data'
 
 export async function Hero({
-  searchParams,
-  setting,
-  page,
   hero,
+  globalData,
 }: {
-  searchParams: SearchParams
   hero: NonNullable<Page['hero']>
-  setting: Setting | null
-  page: Page | Post | null
+  globalData: GlobalData
 }) {
   if (hero.layout === 'with-image') {
     return (
-      <CallToActionBlockUI {...hero} searchParams={searchParams} setting={setting} page={page} />
+      <CallToActionBlockUI {...hero} globalData={globalData} />
     )
   }
 
@@ -46,9 +42,7 @@ export async function Hero({
                 {hero.card && (
                   <CardBlockUI
                     {...hero.card}
-                    searchParams={searchParams}
-                    setting={setting}
-                    page={page}
+                    globalData={globalData}
                   />
                 )}
               </div>
@@ -66,9 +60,7 @@ export async function Hero({
                 {hero.card && (
                   <CardBlockUI
                     {...hero.card}
-                    searchParams={searchParams}
-                    setting={setting}
-                    page={page}
+                    globalData={globalData}
                   />
                 )}
               </div>
@@ -86,9 +78,7 @@ export async function Hero({
                 {hero.card && (
                   <CardBlockUI
                     {...hero.card}
-                    searchParams={searchParams}
-                    setting={setting}
-                    page={page}
+                    globalData={globalData}
                   />
                 )}
               </div>

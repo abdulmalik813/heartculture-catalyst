@@ -46,7 +46,7 @@ export const schedulePublish = {
                     draft: false
                 })
             }
-        } catch (e) {
+        } catch {
             return { output: { success: false, skipped: true } }
         }
     }

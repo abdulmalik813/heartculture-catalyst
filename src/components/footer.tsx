@@ -1,17 +1,16 @@
 import { getCachedGlobal } from '@/lib/get-globals'
 import { Footer as FooterType, Setting } from '@/payload-types'
-import { draftMode } from 'next/headers'
 import Link from 'next/link'
 import { MediaBlockUI } from '@/blocks/media'
 import { NavigationBlockUI } from '@/blocks/navigation'
 import { LexicalRenderer } from '@/components/lexical-renderer'
 import { joinStyles } from '@/lib/make-styles'
 import { ThemeToggle } from './theme/theme-toggle'
+import { GlobalData } from '@/types/global-data'
 
-export async function Footer() {
-  const { isEnabled } = await draftMode()
-  const footerData = (await getCachedGlobal('footer', 1, isEnabled)) as FooterType
-  const setting = (await getCachedGlobal('settings', 1, isEnabled)) as Setting
+export async function Footer({ globalData }: { globalData: GlobalData }) {
+  const setting = (await getCachedGlobal('settings', 1, globalData.draft)) as Setting
+  const footerData = (await getCachedGlobal('footer', 1, globalData.draft)) as FooterType
 
   const lightLogo = setting.logo
   const darkLogo = setting?.logoDark ?? setting.logo
@@ -47,9 +46,7 @@ export async function Footer() {
                   'dark:hidden transition-transform group-hover:scale-105',
                   footerData.logoStyles,
                 )}
-                setting={setting}
-                page={null}
-                searchParams={null}
+                globalData={globalData}
               />
               <MediaBlockUI
                 media={darkLogo}
@@ -57,9 +54,7 @@ export async function Footer() {
                   'hidden dark:block transition-transform group-hover:scale-105',
                   footerData.logoStyles,
                 )}
-                setting={setting}
-                page={null}
-                searchParams={null}
+                globalData={globalData}
               />
               {footerData.useLabelWithLogo && setting.appTitle && (
                 <span
@@ -75,9 +70,7 @@ export async function Footer() {
               >
                 <LexicalRenderer
                   content={footerData.tagLine}
-                  setting={setting}
-                  page={null}
-                  searchParams={null}
+                  globalData={globalData}
                 />
               </div>
             )}
@@ -101,14 +94,12 @@ export async function Footer() {
                     {group.items?.map((item, itemIndex) => (
                       <NavigationBlockUI
                         key={itemIndex}
-                        searchParams={null}
                         {...item}
                         className={joinStyles(
                           'text-muted-foreground hover:text-foreground transition-colors text-sm',
                           footerData.linkStyles,
                         )}
-                        setting={setting}
-                        page={null}
+                        globalData={globalData}
                       />
                     ))}
                   </nav>

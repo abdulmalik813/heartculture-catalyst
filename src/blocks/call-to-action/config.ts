@@ -1,6 +1,5 @@
 import { Block } from 'payload'
 import { media } from '@/fields/media'
-import { grid } from '@/fields/grid'
 import { card } from '@/fields/card'
 
 export const CallToActionBlock: Block = {

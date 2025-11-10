@@ -1,6 +1,5 @@
 import { getCachedGlobal } from '@/lib/get-globals'
 import { NavigationBar, Setting } from '@/payload-types'
-import { draftMode } from 'next/headers'
 import { Banner } from './banner'
 import Link from 'next/link'
 import {
@@ -15,11 +14,11 @@ import { NavigationBlockUI } from '@/blocks/navigation'
 import { MediaBlockUI } from '@/blocks/media'
 import { joinStyles } from '@/lib/make-styles'
 import { MobileNavDropdown } from './mobile-nav-dropdown'
+import { GlobalData } from '@/types/global-data'
 
-export async function NavigationBarUI() {
-  const { isEnabled } = await draftMode()
-  const navBarData = (await getCachedGlobal('navigationBar', 1, isEnabled)) as NavigationBar
-  const setting = (await getCachedGlobal('settings', 1, isEnabled)) as Setting
+export async function NavigationBarUI({ globalData }: { globalData: GlobalData }) {
+  const navBarData = (await getCachedGlobal('navigationBar', 1, globalData.draft)) as NavigationBar
+  const setting = (await getCachedGlobal('settings', 1, globalData.draft)) as Setting
 
   const lightLogo = setting.logo
   const darkLogo = setting?.logoDark ?? setting.logo
@@ -35,16 +34,12 @@ export async function NavigationBarUI() {
             <Link href="/" className="flex items-center gap-2 shrink-0">
               <MediaBlockUI
                 media={lightLogo}
-                setting={setting}
-                searchParams={null}
-                page={null}
+                globalData={globalData}
                 className={joinStyles('dark:hidden', navBarData.logoStyles)}
               />
               <MediaBlockUI
                 media={darkLogo}
-                setting={setting}
-                page={null}
-                searchParams={null}
+                globalData={globalData}
                 className={joinStyles('hidden dark:block', navBarData.logoStyles)}
               />
               {navBarData.useTitleWithLogo && setting.appTitle && (
@@ -69,9 +64,7 @@ export async function NavigationBarUI() {
                                   <NavigationBlockUI
                                     key={dropdownItem.id}
                                     dropdownItem={dropdownItem}
-                                    setting={setting}
-                                    page={null}
-                                    searchParams={null}
+                                    globalData={globalData}
                                   />
                                 </NavigationMenuLink>
                               </li>
@@ -86,9 +79,7 @@ export async function NavigationBarUI() {
                     <NavigationMenuItem key={navItem.id}>
                       <NavigationBlockUI
                         {...navItem}
-                        setting={setting}
-                        page={null}
-                        searchParams={null}
+                        globalData={globalData}
                       />
                     </NavigationMenuItem>
                   )
@@ -113,9 +104,7 @@ export async function NavigationBarUI() {
                                   <NavigationBlockUI
                                     key={dropdownItem.id}
                                     dropdownItem={dropdownItem}
-                                    searchParams={null}
-                                    setting={setting}
-                                    page={null}
+                                    globalData={globalData}
                                   />
                                 </NavigationMenuLink>
                               </li>
@@ -128,12 +117,7 @@ export async function NavigationBarUI() {
 
                   return (
                     <NavigationMenuItem key={ctaItem.id}>
-                      <NavigationBlockUI
-                        {...ctaItem}
-                        setting={setting}
-                        page={null}
-                        searchParams={null}
-                      />
+                      <NavigationBlockUI {...ctaItem} globalData={globalData} />
                     </NavigationMenuItem>
                   )
                 })}
@@ -148,7 +132,7 @@ export async function NavigationBarUI() {
               darkLogo={darkLogo}
               logoStyles={navBarData.logoStyles}
               useTitleWithLogo={navBarData.useTitleWithLogo}
-              setting={setting}
+              globalData={globalData}
             />
           </div>
         </div>

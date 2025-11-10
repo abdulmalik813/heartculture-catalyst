@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import type { FormBlock, Page, Post, Setting } from '@/payload-types'
+import type { FormBlock } from '@/payload-types'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -19,16 +19,12 @@ import { buildDefaultValues, buildSchema, FieldType, NormalizedFields } from './
 import { FormRegistration } from './formRegistration'
 import { getClientSideURL } from '@/lib/get-url'
 import { LexicalRenderer } from '@/components/lexical-renderer'
-import { SearchParams } from '@/types/search-params'
+import { GlobalData } from '@/types/global-data'
 
 export function FormBlockUI({
-  searchParams,
-  setting,
-  page,
+  globalData,
   ...formBlock
-}: FormBlock & { searchParams: SearchParams } & { setting: Setting | null } & {
-  page: Post | Page | null
-}) {
+}: FormBlock & { globalData: GlobalData }) {
   const payloadForm = typeof formBlock.form === 'number' ? null : formBlock.form
 
   // Initialize all hooks first - BEFORE any conditional returns
@@ -93,9 +89,7 @@ export function FormBlockUI({
           <CardDescription>
             <LexicalRenderer
               content={formBlock.description}
-              searchParams={searchParams}
-              setting={setting}
-              page={page}
+              globalData={globalData}
             />
           </CardDescription>
         )}
@@ -104,9 +98,7 @@ export function FormBlockUI({
         <FormRegistration
           fields={fields}
           form={form}
-          searchParams={searchParams}
-          page={page}
-          setting={setting}
+          globalData={globalData}
           onSubmit={onSubmit}
           isSubmitting={isSubmitting}
           submitButtonLabel={payloadForm.submitButtonLabel || 'Submit'}
@@ -120,9 +112,7 @@ export function FormBlockUI({
                 {payloadForm.confirmationMessage && (
                   <LexicalRenderer
                     content={payloadForm.confirmationMessage}
-                    searchParams={searchParams}
-                    setting={setting}
-                    page={page}
+                    globalData={globalData}
                   />
                 )}
               </AlertDescription>

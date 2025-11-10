@@ -21,8 +21,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { UseFormReturn } from 'react-hook-form'
 import { LexicalRenderer } from '@/components/lexical-renderer'
 import { FieldType } from './utils'
-import { Setting, Page, Post } from '@/payload-types'
-import { SearchParams } from '@/types/search-params'
+import { GlobalData } from '@/types/global-data'
 
 interface FormRegistrationProps {
   fields: FieldType[]
@@ -30,9 +29,7 @@ interface FormRegistrationProps {
   onSubmit: (values: any) => Promise<void>
   isSubmitting: boolean
   submitButtonLabel: string
-  setting: Setting | null
-  page: Page | Post | null
-  searchParams: SearchParams
+  globalData: GlobalData
 }
 
 export function FormRegistration({
@@ -41,9 +38,7 @@ export function FormRegistration({
   onSubmit,
   isSubmitting,
   submitButtonLabel,
-  page,
-  setting,
-  searchParams,
+  globalData,
 }: FormRegistrationProps) {
   return (
     <Form {...form}>
@@ -281,9 +276,7 @@ export function FormRegistration({
                     <LexicalRenderer
                       content={field.richText}
                       className="text-left text-foreground"
-                      setting={setting}
-                      page={page}
-                      searchParams={searchParams}
+                      globalData={globalData}
                     />
                   </div>
                 )
