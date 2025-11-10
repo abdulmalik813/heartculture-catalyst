@@ -539,6 +539,10 @@ export interface Media {
     [k: string]: unknown;
   } | null;
   creditText?: string | null;
+  creator?: string | null;
+  license?: ('MIT' | 'GPL' | 'Apache' | 'CC_BY' | 'CC_BY_SA' | 'CC_BY_ND' | 'CC_BY_NC' | 'CC0' | 'Proprietary') | null;
+  copyrightNotice?: string | null;
+  acquireLicensePage?: string | null;
   prefix?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -2226,6 +2230,10 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
   creditText?: T;
+  creator?: T;
+  license?: T;
+  copyrightNotice?: T;
+  acquireLicensePage?: T;
   prefix?: T;
   updatedAt?: T;
   createdAt?: T;

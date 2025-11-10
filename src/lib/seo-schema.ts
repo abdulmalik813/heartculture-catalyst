@@ -1,11 +1,9 @@
 import { getCachedGlobal } from '@/lib/get-globals'
 import { getServerSideURL } from '@/lib/get-url'
 import type { Post, Media, User, Social, Setting } from '@/payload-types'
-import { getMediaUrl } from './get-media-url'
+import { getMediaUrl } from '@/lib/get-media-url'
 
 export const articleSchema = async (post: Post, settings: Setting) => {
-  const image = post.meta?.image as Media | undefined
-  const author = post.author as User
   const social = (await getCachedGlobal('social')) as Social
 
   const socialLinks = [
@@ -17,25 +15,17 @@ export const articleSchema = async (post: Post, settings: Setting) => {
     social.tiktok,
   ].filter((link) => link)
 
-  let imageUrl: string
-
-  if (!image || !image.url) {
-    const logo = settings.logo as Media
-    imageUrl = logo?.url || ''
-  } else {
-    imageUrl = image.url
-  }
-
   return {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
-    headline: post?.title,
+    headline: post?.meta?.title || '',
+    description: post?.meta?.description || '',
     datePublished: new Date(post?.createdAt),
     dateModified: new Date(post?.updatedAt),
-    image: [getMediaUrl(imageUrl)],
+    image: [imageSchema(post.meta?.image as Media, settings)],
     author: {
       '@type': 'Person',
-      name: author?.name,
+      name: (post.author as User)?.name || '',
       sameAs: socialLinks,
     },
     url: `${getServerSideURL()}/${settings.postSlug}/${post?.slug}`,
@@ -43,20 +33,22 @@ export const articleSchema = async (post: Post, settings: Setting) => {
 }
 
 export const imageSchema = async (image: Media | null | undefined, settings: Setting) => {
-  let contentUrl: string
-
+  let imageToUse = null
   if (!image || !image.url) {
-    const logo = settings.logo as Media
-    contentUrl = logo?.url || ''
+    imageToUse = settings.logo as Media
   } else {
-    contentUrl = image.url
+    imageToUse = image
   }
 
   return {
     '@context': 'https://schema.org',
     '@type': 'ImageObject',
-    contentUrl: getMediaUrl(contentUrl),
-    creditText: image?.creditText,
-    description: image?.caption,
+    contentUrl: getMediaUrl(imageToUse?.url || ''),
+    creditText: image?.creditText || '',
+    description: image?.caption || '',
+    creator: image?.creator || '',
+    license: image?.license || '',
+    copyrightNotice: image?.copyrightNotice || '',
+    acquireLicensePage: image?.acquireLicensePage || ''
   }
 }
