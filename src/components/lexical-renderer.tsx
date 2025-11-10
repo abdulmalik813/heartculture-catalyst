@@ -200,7 +200,7 @@ export async function LexicalRenderer({
   return (
     <ConvertRichText
       converters={jsxConverters(setting, page, searchParams)}
-      className={joinStyles('richtext-content', className)}
+      className={joinStyles('richtext-content break-words', className)}
       data={content as DefaultTypedEditorState}
     />
   )
