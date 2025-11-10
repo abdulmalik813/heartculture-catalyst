@@ -310,7 +310,7 @@ export const postListingSchema = async (settings: Setting, social?: Social) => {
         {
           '@type': 'ListItem',
           position: 2,
-          name: settings.postListingPageTitle || 'Blog',
+          name: settings.postListingPageTitle || 'Posts',
           item: `${getServerSideURL()}/${settings.postSlug}`,
         },
       ],
