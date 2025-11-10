@@ -325,7 +325,6 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
                           <Link
                             key={cat.id}
                             href={`/${postSlug}?category=${cat.slug}`}
-                            onClick={(e) => e.stopPropagation()}
                           >
                             <Badge
                               variant={cat.color || 'default'}
