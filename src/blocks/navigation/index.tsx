@@ -29,8 +29,10 @@ function getIconData(item: any) {
 type DropdownItem = NonNullable<NonNullable<NavigationBlock['nav']>['items']>[number]
 
 type LinkItem = {
-  type?: ('reference' | 'custom' | 'postListingPage') | null
-  newTab?: boolean | null
+  link?: {
+    type?: ('reference' | 'custom' | 'postListingPage') | null
+    newTab?: boolean | null
+  }
   icon?: any
   iconStyles?: any
   placement?: string | null
@@ -50,8 +52,8 @@ function LinkWithIcon({
   className?: string
   dropdownItem?: boolean
 }) {
-  const isExternal = item?.type === 'custom'
-  const relProps = item?.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {}
+  const isExternal = item?.link?.type === 'custom'
+  const relProps = item?.link?.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {}
   const { hasIcon, iconPlacement, renderIcon } = getIconData(item)
 
   return (
@@ -88,7 +90,6 @@ export function NavigationBlockUI({
   dropdownItem?: DropdownItem
 } & { setting: Setting | null } & { page: Post | Page | null }) {
   const { hasIcon, iconPlacement, renderIcon } = getIconData(navigationBlock.nav)
-
   if (navigationBlock.nav?.appearance === 'button' || navigationBlock.nav?.appearance === 'link') {
     const href = getHref(navigationBlock.nav.link, setting)
     if (!href) return null
