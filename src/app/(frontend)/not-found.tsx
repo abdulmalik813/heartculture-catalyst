@@ -1,4 +1,4 @@
-import { AlertCircle, Home, Link } from 'lucide-react'
+import { AlertCircle, Home } from 'lucide-react'
 import { Footer } from '@/components/footer'
 import { NavigationBarUI } from '@/components/navigation-bar'
 import { GlobalData } from '@/types/global-data'
@@ -8,12 +8,13 @@ import { draftMode } from 'next/headers'
 import { SlugProps } from '@/types/slug-props'
 import { CardHeader, CardTitle, CardDescription, CardContent, Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
-export default async function Loading({ params, searchParams }: Readonly<SlugProps>) {
+export default async function NotFound({ params, searchParams }: Readonly<SlugProps>) {
   const param = await params
   const page = null
-  const setting = (await getCachedGlobal('settings', 1, false)) as Setting
   const { isEnabled: draft } = await draftMode()
+  const setting = (await getCachedGlobal('settings', 1, draft)) as Setting
   const slug = param?.slug ? param.slug.join('/') : 'home'
 
   const globalData: GlobalData = {

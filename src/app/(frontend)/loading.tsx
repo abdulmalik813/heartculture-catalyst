@@ -11,8 +11,8 @@ import { SlugProps } from '@/types/slug-props'
 export default async function Loading({ params, searchParams }: Readonly<SlugProps>) {
   const param = await params
   const page = null
-  const setting = (await getCachedGlobal('settings', 1, false)) as Setting
   const { isEnabled: draft } = await draftMode()
+  const setting = (await getCachedGlobal('settings', 1, draft)) as Setting
   const slug = param?.slug ? param.slug.join('/') : 'home'
 
   const globalData: GlobalData = {
