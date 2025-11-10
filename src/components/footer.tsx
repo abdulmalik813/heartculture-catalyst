@@ -18,13 +18,28 @@ export async function Footer() {
 
   if (typeof lightLogo !== 'object' || typeof darkLogo !== 'object') return null
 
+  const numColumns = footerData.columns?.length || 0
+  
+  const getGridClass = () => {
+    switch (numColumns) {
+      case 1:
+        return 'sm:grid-cols-2'
+      case 2:
+        return 'sm:grid-cols-3'
+      case 3:
+        return 'sm:grid-cols-2 lg:grid-cols-4'
+      default:
+        return 'sm:grid-cols-2'
+    }
+  }
+
   return (
     <footer className="container mx-auto px-4 mt-auto bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="border-t" />
 
       <div className="py-6">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
-          <div className="lg:col-span-4 flex flex-col gap-3">
+        <div className={joinStyles('grid grid-cols-1 gap-6 lg:gap-8', getGridClass())}>
+          <div className="flex flex-col gap-3">
             <Link href="/" className="flex items-center gap-3 shrink-0 group">
               <MediaBlockUI
                 media={lightLogo}
@@ -68,41 +83,39 @@ export async function Footer() {
             )}
           </div>
 
-          <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {footerData.columns?.map((column, columnIndex) => (
-              <div key={columnIndex} className="flex flex-col gap-4">
-                {column.groups?.map((group, groupIndex) => (
-                  <div key={groupIndex} className="flex flex-col gap-2">
-                    {group.groupLabel && (
-                      <h3
+          {footerData.columns?.map((column, columnIndex) => (
+            <div key={columnIndex} className="flex flex-col gap-4">
+              {column.groups?.map((group, groupIndex) => (
+                <div key={groupIndex} className="flex flex-col gap-2">
+                  {group.groupLabel && (
+                    <h3
+                      className={joinStyles(
+                        'font-semibold text-sm uppercase tracking-wider text-foreground',
+                        footerData.groupLabelStyles,
+                      )}
+                    >
+                      {group.groupLabel}
+                    </h3>
+                  )}
+                  <nav className="flex flex-col gap-1.5">
+                    {group.items?.map((item, itemIndex) => (
+                      <NavigationBlockUI
+                        key={itemIndex}
+                        searchParams={null}
+                        {...item}
                         className={joinStyles(
-                          'font-semibold text-sm uppercase tracking-wider text-foreground',
-                          footerData.groupLabelStyles,
+                          'text-muted-foreground hover:text-foreground transition-colors text-sm',
+                          footerData.linkStyles,
                         )}
-                      >
-                        {group.groupLabel}
-                      </h3>
-                    )}
-                    <nav className="flex flex-col gap-1.5">
-                      {group.items?.map((item, itemIndex) => (
-                        <NavigationBlockUI
-                          key={itemIndex}
-                          searchParams={null}
-                          {...item}
-                          className={joinStyles(
-                            'text-muted-foreground hover:text-foreground transition-colors text-sm',
-                            footerData.linkStyles,
-                          )}
-                          setting={setting}
-                          page={null}
-                        />
-                      ))}
-                    </nav>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
+                        setting={setting}
+                        page={null}
+                      />
+                    ))}
+                  </nav>
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
 
