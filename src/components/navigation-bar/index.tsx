@@ -64,7 +64,7 @@ export async function NavigationBarUI() {
                         <NavigationMenuContent>
                           <ul className="grid w-[240px] gap-1 p-2">
                             {navItem.nav.items?.map((dropdownItem, index) => (
-                              <li key={index}>
+                              <li key={index++}>
                                 <NavigationMenuLink asChild>
                                   <NavigationBlockUI
                                     dropdownItem={dropdownItem}
@@ -107,7 +107,7 @@ export async function NavigationBarUI() {
                         <NavigationMenuContent>
                           <ul className="grid w-[240px] gap-1 p-2">
                             {ctaItem.nav.items?.map((dropdownItem, index) => (
-                              <li key={index}>
+                              <li key={index++}>
                                 <NavigationMenuLink asChild>
                                   <NavigationBlockUI
                                     dropdownItem={dropdownItem}

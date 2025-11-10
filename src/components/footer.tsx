@@ -19,7 +19,7 @@ export async function Footer() {
   if (typeof lightLogo !== 'object' || typeof darkLogo !== 'object') return null
 
   const numColumns = footerData.columns?.length || 0
-  
+
   const getGridClass = () => {
     switch (numColumns) {
       case 1:
