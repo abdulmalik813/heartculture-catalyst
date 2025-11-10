@@ -149,13 +149,13 @@ export function NavigationBlockUI({
         </DropdownMenuTrigger>
       </Button>
       <DropdownMenuContent>
-        {navigationBlock.nav?.items?.map((item, index) => {
+        {navigationBlock.nav?.items?.map((item) => {
           const href = getHref(item, setting)
           if (!href) return null
 
           return (
-            <DropdownMenuItem key={index} asChild>
-              <LinkWithIcon href={href} item={item} label={item.label ?? ''} />
+            <DropdownMenuItem key={item.id} asChild>
+              <LinkWithIcon href={href} item={item} label={item.label ?? ''} key={item.id} />
             </DropdownMenuItem>
           )
         })}

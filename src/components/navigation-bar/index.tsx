@@ -63,10 +63,11 @@ export async function NavigationBarUI() {
                         </NavigationMenuTrigger>
                         <NavigationMenuContent>
                           <ul className="grid w-[240px] gap-1 p-2">
-                            {navItem.nav.items?.map((dropdownItem, index) => (
-                              <li key={index++}>
-                                <NavigationMenuLink asChild>
+                            {navItem.nav.items?.map((dropdownItem) => (
+                              <li key={dropdownItem.id}>
+                                <NavigationMenuLink key={dropdownItem.id} asChild>
                                   <NavigationBlockUI
+                                    key={dropdownItem.id}
                                     dropdownItem={dropdownItem}
                                     setting={setting}
                                     page={null}
@@ -106,10 +107,11 @@ export async function NavigationBarUI() {
                         </NavigationMenuTrigger>
                         <NavigationMenuContent>
                           <ul className="grid w-[240px] gap-1 p-2">
-                            {ctaItem.nav.items?.map((dropdownItem, index) => (
-                              <li key={index++}>
-                                <NavigationMenuLink asChild>
+                            {ctaItem.nav.items?.map((dropdownItem) => (
+                              <li key={dropdownItem.id}>
+                                <NavigationMenuLink key={dropdownItem.id} asChild>
                                   <NavigationBlockUI
+                                    key={dropdownItem.id}
                                     dropdownItem={dropdownItem}
                                     searchParams={null}
                                     setting={setting}
