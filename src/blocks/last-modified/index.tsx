@@ -3,6 +3,7 @@ import { SearchParams } from '@/types/search-params'
 import { AnimateWrapper } from '@/components/animate-wrapper'
 import { Card, CardContent } from '@/components/ui/card'
 import { joinStyles } from '@/lib/make-styles'
+import { TIMEZONES } from '@/constants/init'
 
 export function LastModifiedBlockUI({
   searchParams,
@@ -17,10 +18,12 @@ export function LastModifiedBlockUI({
   }
 
   const { updatedAt } = page
+  const timeZone = TIMEZONES.DEFAULT_TIMEZONE
 
   const formattedDate = new Intl.DateTimeFormat('en-US', {
     dateStyle: 'medium',
     timeStyle: 'short',
+    timeZone: timeZone,
   }).format(new Date(updatedAt))
 
   return (
