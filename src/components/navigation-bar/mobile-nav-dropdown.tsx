@@ -154,11 +154,10 @@ export function MobileNavDropdown({
                       animate={{ x: 0, opacity: 1 }}
                       transition={{ delay: index * 0.05 }}
                       onClick={closeSheet}
-                      className={itemClassName}
                     >
                       <NavigationBlockUI
                         {...navItem}
-                        className={itemClassName}
+                        className={joinStyles(itemClassName, 'text-left')}
                         searchParams={null}
                         setting={setting}
                         page={null}
