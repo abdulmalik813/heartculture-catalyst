@@ -40,6 +40,7 @@ export function BlockRenderer({ block, searchParams, setting, page }: BlockRende
 
   return (
     <Fragment>
+      {/* @ts-expect-error there may be some mismatch between the expected types here */}
       <Block {...block} searchParams={searchParams} setting={setting} page={page} />
     </Fragment>
   )
