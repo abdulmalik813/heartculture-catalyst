@@ -42,14 +42,14 @@ function sanitizeAlias(alias: string): string {
     .replace(/[^a-z0-9-]/g, '')
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '')
-    .slice(0, 5);
+    .slice(0, 10);
   
   if (!sanitized) {
     return 'item';
   }
   
   if (/^[0-9-]/.test(sanitized)) {
-    return 'c' + sanitized.slice(0, 4);
+    return 'c' + sanitized.slice(0, 9);
   }
   
   return sanitized;
