@@ -58,34 +58,34 @@ export const plugins: Plugin[] = [
     generateTitle,
     generateURL,
   }),
-searchPlugin({
-  collections: ['posts'],
-  defaultPriorities: {
-    posts: 10,
-    pages: 20,
-  },
-  searchOverrides: {
-    fields: ({ defaultFields }) => [
-      ...defaultFields,
-      {
-        name: 'description',
-        type: 'textarea',
-        admin: {
-          readOnly: true,
+  searchPlugin({
+    collections: ['posts'],
+    defaultPriorities: {
+      posts: 10,
+      pages: 20,
+    },
+    searchOverrides: {
+      fields: ({ defaultFields }) => [
+        ...defaultFields,
+        {
+          name: 'description',
+          type: 'textarea',
+          admin: {
+            readOnly: true,
+          },
         },
-      },
-    ],
-  },
-  beforeSync: ({ originalDoc, searchDoc }) => {
-    if ('meta' in originalDoc && originalDoc.meta && 'description' in originalDoc.meta) {
-      return {
-        ...searchDoc,
-        description: originalDoc.meta.description || '',
+      ],
+    },
+    beforeSync: ({ originalDoc, searchDoc }) => {
+      if ('meta' in originalDoc && originalDoc.meta && 'description' in originalDoc.meta) {
+        return {
+          ...searchDoc,
+          description: originalDoc.meta.description || '',
+        }
       }
-    }
-    return searchDoc
-  },
-}),
+      return searchDoc
+    },
+  }),
   formBuilderPlugin({
     fields: {
       payment: false,

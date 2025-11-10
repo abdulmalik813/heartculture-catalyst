@@ -322,10 +322,7 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
                     {categories.length > 0 && (
                       <div className="flex flex-wrap gap-2">
                         {categories.map((cat: any) => (
-                          <Link
-                            key={cat.id}
-                            href={`/${postSlug}?category=${cat.slug}`}
-                          >
+                          <Link key={cat.id} href={`/${postSlug}?category=${cat.slug}`}>
                             <Badge
                               variant={cat.color || 'default'}
                               className="cursor-pointer hover:opacity-80"
