@@ -304,10 +304,6 @@ export interface User {
 export interface Post {
   id: number;
   title: string;
-  /**
-   * Brief summary of the post for listings and previews
-   */
-  excerpt?: string | null;
   author?: (number | null) | User;
   categories?: (number | Category)[] | null;
   hero: {
@@ -1400,7 +1396,7 @@ export interface Search {
     relationTo: 'posts';
     value: number | Post;
   };
-  excerpt?: string | null;
+  description?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -2038,7 +2034,6 @@ export interface LastModifiedBlockSelect<T extends boolean = true> {
  */
 export interface PostsSelect<T extends boolean = true> {
   title?: T;
-  excerpt?: T;
   author?: T;
   categories?: T;
   hero?:
@@ -2377,7 +2372,7 @@ export interface SearchSelect<T extends boolean = true> {
   title?: T;
   priority?: T;
   doc?: T;
-  excerpt?: T;
+  description?: T;
   updatedAt?: T;
   createdAt?: T;
 }

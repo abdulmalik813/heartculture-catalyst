@@ -83,7 +83,7 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
                 },
               },
               {
-                excerpt: {
+                description: {
                   like: searchQuery as string,
                 },
               },
@@ -298,9 +298,9 @@ export default async function PostListingPage({ searchParams, setting }: Readonl
                         {post.title}
                       </CardTitle>
                     </Link>
-                    {post.excerpt && (
+                    {post?.meta?.description && (
                       <CardDescription className="line-clamp-3 mt-2">
-                        {post.excerpt}
+                        {post.meta.description}
                       </CardDescription>
                     )}
                   </CardHeader>

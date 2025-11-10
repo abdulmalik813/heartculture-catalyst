@@ -75,7 +75,7 @@ export const Posts: CollectionConfig<'posts'> = {
   admin: {
     defaultColumns: ['title', 'slug', 'publishedAt', 'updatedAt'],
     useAsTitle: 'title',
-    listSearchableFields: ['title', 'excerpt'],
+    listSearchableFields: ['title'],
     hidden: ({ user }) => {
       if (user?.payload) {
         checkPostEnabled()
@@ -111,14 +111,6 @@ export const Posts: CollectionConfig<'posts'> = {
       name: 'title',
       type: 'text',
       required: true,
-    },
-    {
-      name: 'excerpt',
-      type: 'textarea',
-      label: 'Excerpt',
-      admin: {
-        description: 'Brief summary of the post for listings and previews',
-      },
     },
     {
       name: 'author',
