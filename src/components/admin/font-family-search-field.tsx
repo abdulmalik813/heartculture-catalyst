@@ -351,9 +351,7 @@ export function FontFamilySearchField({ path }: { path: string }) {
             {selectedFont.variable ? (
               <input
                 type="number"
-                min="0"
                 max="900"
-                step="1"
                 value={selectedWeight || 400}
                 onChange={(e) => {
                   const val = parseInt(e.target.value)
