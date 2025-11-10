@@ -32,7 +32,7 @@ export const Footer: GlobalConfig = {
               name: 'columns',
               type: 'array',
               label: 'Footer Columns',
-              maxRows: 2,
+              maxRows: 3,
               fields: [
                 {
                   name: 'groups',
