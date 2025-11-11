@@ -11,7 +11,7 @@ export async function GET(request: NextRequest): Promise<Response> {
   const path = searchParams.get('path')
 
   if (path) {
-    redirect(`${getServerSideURL}/${path}`)
+    redirect(`/${path}`)
   }
 
   redirect(getServerSideURL())

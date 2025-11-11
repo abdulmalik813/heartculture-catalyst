@@ -1,5 +1,4 @@
 import { PAYLOAD } from '@/constants/init'
-import { getServerSideURL } from './get-url'
 
 export const generatePreviewPath = (path: string = "home") => {
 
@@ -8,5 +7,5 @@ export const generatePreviewPath = (path: string = "home") => {
     previewSecret: PAYLOAD.PREVIEW,
   })
 
-  return `${getServerSideURL()}/api/draft/enable?${encodedParams.toString()}`
+  return `/api/draft/enable?${encodedParams.toString()}`
 }
