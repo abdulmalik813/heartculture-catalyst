@@ -236,16 +236,16 @@ export const mediaSchema = async (media: Media | null | undefined) => {
       '@type': 'VideoObject',
       thumbnailUrl: media.videoThumbnail
         ? getMediaUrl(videoThumbnail.thumbnailURL)
-        : videoThumbnail.sizes?.thumbnail?.url
-          ? getMediaUrl(videoThumbnail.sizes.thumbnail.url)
+        : videoThumbnail?.sizes?.thumbnail?.url
+          ? getMediaUrl(videoThumbnail?.sizes?.thumbnail?.url)
           : undefined,
       thumbnail:
         media.thumbnailURL || media.sizes?.thumbnail?.url
           ? {
               '@type': 'ImageObject',
-              contentUrl: getMediaUrl(videoThumbnail.thumbnailURL || videoThumbnail.sizes?.thumbnail?.url || ''),
-              width: videoThumbnail.sizes?.thumbnail?.width || undefined,
-              height: videoThumbnail.sizes?.thumbnail?.height || undefined,
+              contentUrl: getMediaUrl(videoThumbnail.thumbnailURL || videoThumbnail?.sizes?.thumbnail?.url || ''),
+              width: videoThumbnail?.sizes?.thumbnail?.width || undefined,
+              height: videoThumbnail?.sizes?.thumbnail?.height || undefined,
             }
           : undefined,
     }
