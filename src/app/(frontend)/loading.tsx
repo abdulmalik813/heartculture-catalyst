@@ -9,8 +9,27 @@ import { draftMode } from 'next/headers'
 import { SlugProps } from '@/types/slug-props'
 import { AdminBar } from '@/components/admin-bar'
 import { LivePreviewListener } from '@/components/live-preview-listener'
+import { Metadata } from 'next'
+
+export async function generateMetadata({ params }: SlugProps): Promise<Metadata> {
+  const setting = (await getCachedGlobal('settings', 1, false)) as Setting
+  const param = await params
+  const slug = param?.slug ? param.slug.join('/') : 'home'
+  const siteName = setting.appTitle || 'Loading...'
+  const title = slug === 'home' ? `Loading | ${siteName}` : `Loading - ${slug} | ${siteName}`
+
+  return {
+    title,
+    description: 'Loading content...',
+    robots: {
+      index: false,
+      follow: false,
+    },
+  }
+}
 
 export default async function Loading({ params, searchParams }: Readonly<SlugProps>) {
+  
   const param = await params
   const page = null
   const { isEnabled: draft } = await draftMode()
@@ -23,6 +42,7 @@ export default async function Loading({ params, searchParams }: Readonly<SlugPro
     searchParams,
     draft,
     slug,
+    user: null
   }
 
   return (

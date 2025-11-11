@@ -4,15 +4,20 @@ import { NavigationBarUI } from '@/components/navigation-bar'
 import { PageContext } from '@/types/page-context'
 import { Setting } from '@/payload-types'
 import { getCachedGlobal } from '@/lib/get-globals'
-import { draftMode } from 'next/headers'
+import { draftMode, headers } from 'next/headers'
 import { SlugProps } from '@/types/slug-props'
 import { CardHeader, CardTitle, CardDescription, CardContent, Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { AdminBar } from '@/components/admin-bar'
 import { LivePreviewListener } from '@/components/live-preview-listener'
+import { getPayload } from 'payload'
+import configPromise from '@payload-config'
 
 export default async function NotFound({ params, searchParams }: Readonly<SlugProps>) {
+  const payload = await getPayload({ config: configPromise })
+  const headersList = await headers()
+  const { user } = await payload.auth({ headers: headersList })
   const param = await params
   const page = null
   const { isEnabled: draft } = await draftMode()
@@ -25,6 +30,7 @@ export default async function NotFound({ params, searchParams }: Readonly<SlugPr
     searchParams,
     draft,
     slug,
+    user,
   }
 
   return (
