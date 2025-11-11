@@ -13,7 +13,6 @@ export const RecentPostsBlock: Block = {
         {
           label: 'Layout',
           fields: [
-            grid(),
             {
               name: 'enableTitle',
               type: 'checkbox',

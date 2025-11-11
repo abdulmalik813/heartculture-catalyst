@@ -1287,8 +1287,6 @@ export interface LastModifiedBlock {
  * via the `definition` "RecentPostsBlock".
  */
 export interface RecentPostsBlock {
-  gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
-  gridStyles?: (number | Style)[] | null;
   enableTitle?: boolean | null;
   numberOfPosts: number;
   title?: string | null;
@@ -2142,8 +2140,6 @@ export interface PostsSelect<T extends boolean = true> {
  * via the `definition` "RecentPostsBlock_select".
  */
 export interface RecentPostsBlockSelect<T extends boolean = true> {
-  gridSize?: T;
-  gridStyles?: T;
   enableTitle?: T;
   numberOfPosts?: T;
   title?: T;
