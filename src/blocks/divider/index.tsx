@@ -1,11 +1,11 @@
 import { joinStyles } from '@/lib/make-styles'
 import { DividerBlock } from '@/payload-types'
-import { GlobalData } from '@/types/global-data'
+import { PageContext } from '@/types/page-context'
 
 export async function DividerBlockUI({
-  globalData,
+  pageContext,
   ...dividerBlock
-}: DividerBlock & { globalData: GlobalData }) {
+}: DividerBlock & { pageContext: PageContext }) {
   const classNames = joinStyles(dividerBlock.dividerStyles)
   const { type, height, color, flip } = dividerBlock
 

@@ -19,7 +19,7 @@ import { NavigationBar } from '@/globals/navigation-bar'
 import { Footer } from '@/globals/footer'
 import { Posts } from '@/collections/posts'
 import { Categories } from '@/collections/categories'
-import { Testimonials } from './collections/testimonials'
+import { Testimonials } from '@/collections/testimonials'
 import { Social } from '@/globals/social'
 
 const filename = fileURLToPath(import.meta.url)

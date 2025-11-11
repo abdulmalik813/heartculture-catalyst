@@ -2,7 +2,7 @@ import type { CollectionConfig } from 'payload'
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
 import { slugField } from 'payload'
-import { revalidatePost, revalidateDelete, populatePublishedAt } from './hooks'
+import { revalidatePost, revalidateDelete, populatePublishedAt } from '@/collections/posts/hooks'
 import {
   MetaDescriptionField,
   MetaImageField,

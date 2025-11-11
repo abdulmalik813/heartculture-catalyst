@@ -1,5 +1,5 @@
 import { CollectionBeforeChangeHook, CollectionAfterChangeHook, CollectionAfterDeleteHook } from "payload"
-import type { Style } from '../../payload-types'
+import type { Style } from '@/payload-types'
 import FormData from 'form-data'
 import axios from 'axios'
 import { revalidateTag } from "next/cache"

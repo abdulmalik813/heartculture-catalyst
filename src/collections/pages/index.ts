@@ -2,7 +2,7 @@ import type { CollectionConfig } from 'payload'
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
 import { slugField } from 'payload'
-import { revalidatePage, revalidateDelete, populatePublishedAt } from './hooks'
+import { revalidatePage, revalidateDelete, populatePublishedAt } from '@/collections/pages/hooks'
 import {
   MetaDescriptionField,
   MetaImageField,

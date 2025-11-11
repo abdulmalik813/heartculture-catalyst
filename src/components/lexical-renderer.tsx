@@ -21,19 +21,19 @@ import {
 } from '@payloadcms/richtext-lexical/react'
 import { joinStyles } from '@/lib/make-styles'
 import { MediaBlockUI } from '@/blocks/media'
-import { NavigationBlockUI } from '../blocks/navigation'
+import { NavigationBlockUI } from '@/blocks/navigation'
 import { TabBlockUI } from '@/blocks/tab'
 import { AccordionBlockUI } from '@/blocks/accordion'
 import { DividerBlockUI } from '@/blocks/divider'
 import { CardBlockUI } from '@/blocks/card'
 import { FormBlockUI } from '@/blocks/form'
 import { TableBlockUI } from '@/blocks/table'
-import { GlobalData } from '@/types/global-data'
+import { PageContext } from '@/types/page-context'
 
 interface LexicalRendererProps {
   content?: DefaultTypedEditorState | null
   contentStyles?: (number | Style)[] | undefined | null
-  globalData: GlobalData
+  pageContext: PageContext
   className?: string
 }
 
@@ -50,7 +50,7 @@ type NodeTypes =
       | TableBlock
     >
 
-function jsxConverters(globalData: GlobalData): JSXConvertersFunction<NodeTypes> {
+function jsxConverters(pageContext: PageContext): JSXConvertersFunction<NodeTypes> {
   return function ({ defaultConverters }) {
     return {
       ...defaultConverters,
@@ -105,71 +105,37 @@ function jsxConverters(globalData: GlobalData): JSXConvertersFunction<NodeTypes>
             },
           },
         }
-        return <NavigationBlockUI {...reconstructedNode.fields} globalData={globalData} />
+        return <NavigationBlockUI {...reconstructedNode.fields} pageContext={pageContext} />
       },
       inlineBlocks: {
         // @ts-expect-error there may be some mismatch between the expected types here
         navigationBlock: ({ node }) => (
-          <NavigationBlockUI
-            {...node.fields}
-            globalData={globalData}
-          />
+          <NavigationBlockUI {...node.fields} pageContext={pageContext} />
         ),
       },
       blocks: {
-        mediaBlock: ({ node }) => (
-          <MediaBlockUI
-            {...node.fields}
-            globalData={globalData}
-          />
-        ),
+        mediaBlock: ({ node }) => <MediaBlockUI {...node.fields} pageContext={pageContext} />,
         navigationBlock: ({ node }) => (
-          <NavigationBlockUI
-            {...node.fields}
-            globalData={globalData}
-          />
+          <NavigationBlockUI {...node.fields} pageContext={pageContext} />
         ),
-        tabBlock: ({ node }) => (
-          <TabBlockUI {...node.fields} globalData={globalData} />
-        ),
+        tabBlock: ({ node }) => <TabBlockUI {...node.fields} pageContext={pageContext} />,
         accordionBlock: ({ node }) => (
-          <AccordionBlockUI
-            {...node.fields}
-            globalData={globalData}
-          />
+          <AccordionBlockUI {...node.fields} pageContext={pageContext} />
         ),
-        dividerBlock: ({ node }) => (
-          <DividerBlockUI
-            {...node.fields}
-            globalData={globalData}
-          />
-        ),
-        cardBlock: ({ node }) => (
-          <CardBlockUI {...node.fields} globalData={globalData} />
-        ),
-        formBlock: ({ node }) => (
-          <FormBlockUI {...node.fields} globalData={globalData} />
-        ),
-        tableBlock: ({ node }) => (
-          <TableBlockUI
-            {...node.fields}
-            globalData={globalData}
-          />
-        ),
+        dividerBlock: ({ node }) => <DividerBlockUI {...node.fields} pageContext={pageContext} />,
+        cardBlock: ({ node }) => <CardBlockUI {...node.fields} pageContext={pageContext} />,
+        formBlock: ({ node }) => <FormBlockUI {...node.fields} pageContext={pageContext} />,
+        tableBlock: ({ node }) => <TableBlockUI {...node.fields} pageContext={pageContext} />,
       },
     }
   }
 }
 
-export async function LexicalRenderer({
-  content,
-  className,
-  globalData
-}: LexicalRendererProps) {
+export async function LexicalRenderer({ content, className, pageContext }: LexicalRendererProps) {
   if (!content) return null
   return (
     <ConvertRichText
-      converters={jsxConverters(globalData)}
+      converters={jsxConverters(pageContext)}
       className={joinStyles('richtext-content break-words', className)}
       data={content as DefaultTypedEditorState}
     />

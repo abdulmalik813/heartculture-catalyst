@@ -1,6 +1,6 @@
 import { GroupField } from 'payload'
-import { media } from './media'
-import { card } from './card'
+import { media } from '@/fields/media'
+import { card } from '@/fields/card'
 
 export const hero: GroupField = {
   type: 'group',

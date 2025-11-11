@@ -7,13 +7,13 @@ import { getServerSideURL } from '@/lib/get-url'
 import { Button } from '@/components/ui/button'
 import { LexicalRenderer } from '@/components/lexical-renderer'
 import { browserPlayableTypes } from '@/constants/browser-media'
-import { GlobalData } from '@/types/global-data'
+import { PageContext } from '@/types/page-context'
 
 export function MediaBlockUI({
-  globalData,
+  pageContext,
   className,
   ...mediaBlock
-}: Partial<MediaBlock> & { className?: string } & { globalData: GlobalData }) {
+}: Partial<MediaBlock> & { className?: string } & { pageContext: PageContext }) {
   if (!mediaBlock.media) return null
 
   const media: MediaCollection = mediaBlock.media as MediaCollection
@@ -33,12 +33,7 @@ export function MediaBlockUI({
     <div className={joinStyles(mediaBlock.wrapperStyles)}>
       <Link href={getServerSideURL() + media.url}>
         <Button className={joinStyles(className, mediaBlock.contentStyles)}>
-          {media?.caption && (
-            <LexicalRenderer
-              content={media.caption}
-              globalData={globalData}
-            />
-          )}
+          {media?.caption && <LexicalRenderer content={media.caption} pageContext={pageContext} />}
         </Button>
       </Link>
     </div>

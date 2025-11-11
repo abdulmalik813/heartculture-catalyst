@@ -1,7 +1,7 @@
 import { AlertCircle, Home } from 'lucide-react'
 import { Footer } from '@/components/footer'
 import { NavigationBarUI } from '@/components/navigation-bar'
-import { GlobalData } from '@/types/global-data'
+import { PageContext } from '@/types/page-context'
 import { Setting } from '@/payload-types'
 import { getCachedGlobal } from '@/lib/get-globals'
 import { draftMode } from 'next/headers'
@@ -9,6 +9,8 @@ import { SlugProps } from '@/types/slug-props'
 import { CardHeader, CardTitle, CardDescription, CardContent, Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { AdminBar } from '@/components/admin-bar'
+import { LivePreviewListener } from '@/components/live-preview-listener'
 
 export default async function NotFound({ params, searchParams }: Readonly<SlugProps>) {
   const param = await params
@@ -17,7 +19,7 @@ export default async function NotFound({ params, searchParams }: Readonly<SlugPr
   const setting = (await getCachedGlobal('settings', 1, draft)) as Setting
   const slug = param?.slug ? param.slug.join('/') : 'home'
 
-  const globalData: GlobalData = {
+  const pageContext: PageContext = {
     page,
     setting,
     searchParams,
@@ -27,7 +29,9 @@ export default async function NotFound({ params, searchParams }: Readonly<SlugPr
 
   return (
     <>
-      <NavigationBarUI globalData={globalData} />
+      {draft && <LivePreviewListener />}
+      <AdminBar pageContext={pageContext} />
+      <NavigationBarUI pageContext={pageContext} />
       <main className="flex-1">
         <article className="min-h-[70vh] flex items-center justify-center px-4">
           <Card className="w-full max-w-md">
@@ -53,7 +57,7 @@ export default async function NotFound({ params, searchParams }: Readonly<SlugPr
           </Card>
         </article>
       </main>
-      <Footer globalData={globalData} />
+      <Footer pageContext={pageContext} />
     </>
   )
 }

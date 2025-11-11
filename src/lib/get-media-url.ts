@@ -1,4 +1,4 @@
-import { getClientSideURL } from './get-url'
+import { getClientSideURL } from '@/lib/get-url'
 
 export const getMediaUrl = (url: string | null | undefined, cacheTag?: string | null): string => {
   if (!url) return ''

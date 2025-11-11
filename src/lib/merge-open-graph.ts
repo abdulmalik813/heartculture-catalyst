@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { getServerSideURL } from './get-url'
+import { getServerSideURL } from '@/lib/get-url'
 import { getAppSettings } from '@/constants/app'
 
 export const mergeOpenGraph = async (og?: Metadata['openGraph']): Promise<Metadata['openGraph']> => {

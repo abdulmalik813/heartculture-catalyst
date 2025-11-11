@@ -11,12 +11,12 @@ import { joinStyles } from '@/lib/make-styles'
 import { LexicalRenderer } from '@/components/lexical-renderer'
 import { NavigationBlockUI } from '@/blocks/navigation'
 import { AnimateWrapper } from '@/components/animate-wrapper'
-import { GlobalData } from '@/types/global-data'
+import { PageContext } from '@/types/page-context'
 
 export async function CardBlockUI({
-  globalData,
+  pageContext,
   ...cardBlock
-}: Partial<CardBlock> & { globalData: GlobalData }) {
+}: Partial<CardBlock> & { pageContext: PageContext }) {
   const showActionInHeader = cardBlock.actionPlacement === 'header'
   const showActionInFooter = cardBlock.actionPlacement === 'footer'
 
@@ -43,11 +43,7 @@ export async function CardBlockUI({
               {cardBlock.enableAction && showActionInHeader && cardBlock.action && (
                 <div className={joinStyles(cardBlock.actionStyles)}>
                   {cardBlock.action.map((action, index) => (
-                    <NavigationBlockUI
-                      key={index}
-                      {...action}
-                      globalData={globalData}
-                    />
+                    <NavigationBlockUI key={index} {...action} pageContext={pageContext} />
                   ))}
                 </div>
               )}
@@ -57,10 +53,7 @@ export async function CardBlockUI({
 
         {cardBlock.enableContent && cardBlock.content && (
           <CardContent className={joinStyles(cardBlock.cardContentStyles)}>
-            <LexicalRenderer
-              content={cardBlock.content}
-              globalData={globalData}
-            />
+            <LexicalRenderer content={cardBlock.content} pageContext={pageContext} />
           </CardContent>
         )}
 
@@ -73,11 +66,7 @@ export async function CardBlockUI({
               {cardBlock.enableAction && showActionInFooter && cardBlock.action && (
                 <div className={joinStyles(cardBlock.actionStyles)}>
                   {cardBlock.action.map((action, index) => (
-                    <NavigationBlockUI
-                      key={index}
-                      {...action}
-                      globalData={globalData}
-                    />
+                    <NavigationBlockUI key={index} {...action} pageContext={pageContext} />
                   ))}
                 </div>
               )}

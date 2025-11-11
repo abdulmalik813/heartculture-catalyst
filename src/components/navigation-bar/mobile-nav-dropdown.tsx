@@ -10,7 +10,7 @@ import { Menu, ChevronDown } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { joinStyles } from '@/lib/make-styles'
 import Link from 'next/link'
-import { GlobalData } from '@/types/global-data'
+import { PageContext } from '@/types/page-context'
 
 type MobileNavDropdownProps = {
   navigation?: NavigationBar['navigation']
@@ -20,7 +20,7 @@ type MobileNavDropdownProps = {
   darkLogo?: Media
   logoStyles?: (number | Style)[] | null | undefined
   useTitleWithLogo?: boolean | null
-  globalData: GlobalData
+  pageContext: PageContext
 }
 
 export function MobileNavDropdown({
@@ -31,7 +31,7 @@ export function MobileNavDropdown({
   darkLogo,
   logoStyles,
   useTitleWithLogo,
-  globalData,
+  pageContext,
 }: MobileNavDropdownProps) {
   const [open, setOpen] = useState(false)
   const [expandedDropdowns, setExpandedDropdowns] = useState<Set<string>>(new Set())
@@ -68,14 +68,14 @@ export function MobileNavDropdown({
               <MediaBlockUI
                 media={lightLogo}
                 className={joinStyles('dark:hidden', logoStyles)}
-                globalData={globalData}
+                pageContext={pageContext}
               />
             )}
             {darkLogo && (
               <MediaBlockUI
                 media={darkLogo}
                 className={joinStyles('hidden dark:block', logoStyles)}
-                globalData={globalData}
+                pageContext={pageContext}
               />
             )}
             <SheetTitle>
@@ -130,7 +130,7 @@ export function MobileNavDropdown({
                                   >
                                     <NavigationBlockUI
                                       dropdownItem={dropdownItem}
-                                      globalData={globalData}
+                                      pageContext={pageContext}
                                     />
                                   </motion.div>
                                 ))}
@@ -153,7 +153,7 @@ export function MobileNavDropdown({
                       <NavigationBlockUI
                         {...navItem}
                         className={joinStyles(itemClassName, 'text-left')}
-                        globalData={globalData}
+                        pageContext={pageContext}
                       />
                     </motion.div>
                   )
@@ -203,7 +203,7 @@ export function MobileNavDropdown({
                                   >
                                     <NavigationBlockUI
                                       dropdownItem={dropdownItem}
-                                      globalData={globalData}
+                                      pageContext={pageContext}
                                     />
                                   </motion.div>
                                 ))}
@@ -227,7 +227,7 @@ export function MobileNavDropdown({
                       <NavigationBlockUI
                         {...navItem}
                         className={itemClassName}
-                        globalData={globalData}
+                        pageContext={pageContext}
                       />
                     </motion.div>
                   )

@@ -2,12 +2,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { TabBlock } from '@/payload-types'
 import { LexicalRenderer } from '@/components/lexical-renderer'
 import { joinStyles } from '@/lib/make-styles'
-import { GlobalData } from '@/types/global-data'
+import { PageContext } from '@/types/page-context'
 
 export async function TabBlockUI({
-  globalData,
+  pageContext,
   ...tabBlock
-}: TabBlock & { globalData: GlobalData }) {
+}: TabBlock & { pageContext: PageContext }) {
   if (!tabBlock.tabs || tabBlock.tabs.length === 0) {
     return null
   }
@@ -30,10 +30,7 @@ export async function TabBlockUI({
         if (!tab.title || !tab.content) return null
         return (
           <TabsContent value={tab.title} key={tab.id} className={joinStyles(tab.contentStyles)}>
-            <LexicalRenderer
-              content={tab.content}
-              globalData={globalData}
-            />
+            <LexicalRenderer content={tab.content} pageContext={pageContext} />
           </TabsContent>
         )
       })}

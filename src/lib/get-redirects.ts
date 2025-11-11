@@ -1,7 +1,7 @@
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { unstable_cache } from 'next/cache'
-import { getServerSideURL } from './get-url'
+import { getServerSideURL } from '@/lib/get-url'
 
 export async function getRedirects(depth = 1) {
   const payload = await getPayload({ config: configPromise })

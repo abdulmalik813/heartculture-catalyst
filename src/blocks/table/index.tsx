@@ -10,12 +10,12 @@ import {
 import { TableBlock } from '@/payload-types'
 import { LexicalRenderer } from '@/components/lexical-renderer'
 import { joinStyles } from '@/lib/make-styles'
-import { GlobalData } from '@/types/global-data'
+import { PageContext } from '@/types/page-context'
 
 export async function TableBlockUI({
-  globalData,
+  pageContext,
   ...tableBlock
-}: TableBlock & { globalData: GlobalData }) {
+}: TableBlock & { pageContext: PageContext }) {
   return (
     <Table className={joinStyles(tableBlock.tableStyles)}>
       {tableBlock.caption && (
@@ -28,10 +28,7 @@ export async function TableBlockUI({
           <TableRow>
             {tableBlock.headers.map((header) => (
               <TableHead key={header.id}>
-                <LexicalRenderer
-                  content={header.header}
-                  globalData={globalData}
-                />
+                <LexicalRenderer content={header.header} pageContext={pageContext} />
               </TableHead>
             ))}
           </TableRow>
@@ -42,10 +39,7 @@ export async function TableBlockUI({
           <TableRow key={row.id} className={joinStyles(row.rowStyles)}>
             {row.cells.map((cell) => (
               <TableCell key={cell.id} className={joinStyles(cell.cellStyles)}>
-                <LexicalRenderer
-                  content={cell.content}
-                  globalData={globalData}
-                />
+                <LexicalRenderer content={cell.content} pageContext={pageContext} />
               </TableCell>
             ))}
           </TableRow>

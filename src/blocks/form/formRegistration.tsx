@@ -20,8 +20,8 @@ import {
 import { Spinner } from '@/components/ui/spinner'
 import { UseFormReturn } from 'react-hook-form'
 import { LexicalRenderer } from '@/components/lexical-renderer'
-import { FieldType } from './utils'
-import { GlobalData } from '@/types/global-data'
+import { FieldType } from '@/blocks/form/utils'
+import { PageContext } from '@/types/page-context'
 
 interface FormRegistrationProps {
   fields: FieldType[]
@@ -29,7 +29,7 @@ interface FormRegistrationProps {
   onSubmit: (values: any) => Promise<void>
   isSubmitting: boolean
   submitButtonLabel: string
-  globalData: GlobalData
+  pageContext: PageContext
 }
 
 export function FormRegistration({
@@ -38,7 +38,7 @@ export function FormRegistration({
   onSubmit,
   isSubmitting,
   submitButtonLabel,
-  globalData,
+  pageContext,
 }: FormRegistrationProps) {
   return (
     <Form {...form}>
@@ -276,7 +276,7 @@ export function FormRegistration({
                     <LexicalRenderer
                       content={field.richText}
                       className="text-left text-foreground"
-                      globalData={globalData}
+                      pageContext={pageContext}
                     />
                   </div>
                 )

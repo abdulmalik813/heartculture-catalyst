@@ -1,5 +1,5 @@
 import { APP_URL } from '@/constants/init'
-import canUseDOM from './can-use-dom'
+import canUseDOM from '@/lib/can-use-dom'
 
 export const getServerSideURL = () => {
   return APP_URL

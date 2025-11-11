@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { IconRender } from '@/components/icon-renderer'
 import { getHref } from '@/lib/get-href'
-import { GlobalData } from '@/types/global-data'
+import { PageContext } from '@/types/page-context'
 
 function getIconData(item: any) {
   const icon = typeof item?.icon === 'object' ? item?.icon : null
@@ -78,17 +78,17 @@ function LinkWithIcon({
 }
 
 export function NavigationBlockUI({
-  globalData,
+  pageContext,
   dropdownItem,
   className,
   ...navigationBlock
 }: Partial<NavigationBlock> & {
   className?: string
   dropdownItem?: DropdownItem
-} & { globalData: GlobalData }) {
+} & { pageContext: PageContext }) {
   const { hasIcon, iconPlacement, renderIcon } = getIconData(navigationBlock.nav)
   if (navigationBlock.nav?.appearance === 'button' || navigationBlock.nav?.appearance === 'link') {
-    const href = getHref(navigationBlock.nav.link, globalData.setting)
+    const href = getHref(navigationBlock.nav.link, pageContext.setting)
     if (!href) return null
 
     if (navigationBlock.nav?.appearance === 'button') {
@@ -119,7 +119,7 @@ export function NavigationBlockUI({
   }
 
   if (dropdownItem) {
-    const href = getHref(dropdownItem, globalData.setting)
+    const href = getHref(dropdownItem, pageContext.setting)
     if (!href) return null
     return (
       <LinkWithIcon
@@ -148,7 +148,7 @@ export function NavigationBlockUI({
       </Button>
       <DropdownMenuContent>
         {navigationBlock.nav?.items?.map((item) => {
-          const href = getHref(item, globalData.setting)
+          const href = getHref(item, pageContext.setting)
           if (!href) return null
 
           return (

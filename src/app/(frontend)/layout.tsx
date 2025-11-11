@@ -1,10 +1,8 @@
 import React from 'react'
 import './theme.css'
 import { draftMode } from 'next/headers'
-import { AdminBar } from '@/components/admin-bar'
 import { ThemeProvider } from '@/components/theme/theme-provider'
 import { getServerSideURL } from '@/lib/get-url'
-import { LivePreviewListener } from '@/components/live-preview-listener'
 import { Setting } from '@/payload-types'
 import { getCachedGlobal } from '@/lib/get-globals'
 import { Metadata } from 'next'
@@ -59,17 +57,11 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
         fontStyle: fontStyle
       }}
     >
-      {isEnabled && <LivePreviewListener />}
       <head>
         <link href={`${getServerSideURL()}/api/stylesheet`} rel="stylesheet" />
       </head>
       <body className="flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <AdminBar
-            adminBarProps={{
-              preview: isEnabled,
-            }}
-          />
           {children}
         </ThemeProvider>
       </body>

@@ -1,9 +1,9 @@
 import { Block } from 'payload'
 import { defaultLexical } from '@/fields/lexical-field'
-import { MediaBlock } from '../media/config'
-import { NavigationBlock } from '../navigation/config'
+import { MediaBlock } from '@/blocks/media/config'
+import { NavigationBlock } from '@/blocks/navigation/config'
 import { defaultLexicalValue } from '@/constants/default-lexical'
-import { AccordionBlock } from '../accordion/config'
+import { AccordionBlock } from '@/blocks/accordion/config'
 
 export const TabBlock: Block = {
   slug: 'tabBlock',

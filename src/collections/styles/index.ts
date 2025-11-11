@@ -1,7 +1,7 @@
 import { anyone } from '@/access/anyone'
 import { authenticated } from '@/access/authenticated'
 import { CollectionConfig } from 'payload'
-import { generateStylesheet, revalidateCache, revalidateDelete } from './hooks'
+import { generateStylesheet, revalidateCache, revalidateDelete } from '@/collections/styles/hooks'
 
 export const Styles: CollectionConfig<'styles'> = {
   slug: 'styles',

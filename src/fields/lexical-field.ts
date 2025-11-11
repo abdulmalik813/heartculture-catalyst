@@ -22,7 +22,7 @@ import {
   type LexicalEditorProps,
 } from '@payloadcms/richtext-lexical'
 import deepMerge from '@/lib/deep-merge'
-import { navigation } from './navigation'
+import { navigation } from '@/fields/navigation'
 
 type FeatureConfig = {
   paragraph?: boolean | Parameters<typeof ParagraphFeature>[0]

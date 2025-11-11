@@ -1,12 +1,12 @@
 import { Field } from 'payload'
-import { defaultLexical } from './lexical-field'
-import { navigation } from './navigation'
+import { defaultLexical } from '@/fields/lexical-field'
+import { navigation } from '@/fields/navigation'
 import { MediaBlock } from '@/blocks/media/config'
 import { NavigationBlock } from '@/blocks/navigation/config'
 import { TabBlock } from '@/blocks/tab/config'
 import { AccordionBlock } from '@/blocks/accordion/config'
 import { defaultLexicalValue } from '@/constants/default-lexical'
-import { animate } from './animate'
+import { animate } from '@/fields/animate'
 import { FormBlock } from '@/blocks/form/config'
 
 export const card = (): Field[] => {

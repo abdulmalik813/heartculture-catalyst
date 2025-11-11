@@ -2,17 +2,17 @@ import { LastModifiedBlock } from '@/payload-types'
 import { Card, CardContent } from '@/components/ui/card'
 import { joinStyles } from '@/lib/make-styles'
 import { TIMEZONES } from '@/constants/init'
-import { GlobalData } from '@/types/global-data'
+import { PageContext } from '@/types/page-context'
 
 export function LastModifiedBlockUI({
-  globalData,
+  pageContext,
   ...lastModifiedBlock
-}: Partial<LastModifiedBlock> & { globalData: GlobalData }) {
-  if (!globalData.page) {
+}: Partial<LastModifiedBlock> & { pageContext: PageContext }) {
+  if (!pageContext.page) {
     return <></>
   }
 
-  const { updatedAt } = globalData.page
+  const { updatedAt } = pageContext.page
   const timeZone = TIMEZONES.DEFAULT_TIMEZONE
 
   const formattedDate = new Intl.DateTimeFormat('en-US', {
@@ -25,9 +25,9 @@ export function LastModifiedBlockUI({
     <Card className={joinStyles(lastModifiedBlock.cardStyles)}>
       <CardContent className={joinStyles(lastModifiedBlock.cardContentStyles)}>
         Last modified on {formattedDate}
-        {globalData.page.author && typeof globalData.page.author === 'object' && globalData.page.author?.name && (
-          <> by {globalData.page.author.name}</>
-        )}
+        {pageContext.page.author &&
+          typeof pageContext.page.author === 'object' &&
+          pageContext.page.author?.name && <> by {pageContext.page.author.name}</>}
       </CardContent>
     </Card>
   )

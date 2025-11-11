@@ -1,8 +1,12 @@
 import { joinStyles } from '@/lib/make-styles'
 import { LexicalRenderer } from '@/components/lexical-renderer'
-import { NavigationBar, Setting } from '@/payload-types'
+import { NavigationBar } from '@/payload-types'
+import { PageContext } from '@/types/page-context'
 
-export async function Banner({ setting, ...banner }: Partial<NavigationBar['banner']>& { setting: Setting }) {
+export async function Banner({
+  pageContext,
+  ...banner
+}: Partial<NavigationBar['banner']> & { pageContext: PageContext }) {
   if (!banner.enableBanner) {
     return null
   }
@@ -11,7 +15,7 @@ export async function Banner({ setting, ...banner }: Partial<NavigationBar['bann
     <div className={joinStyles(banner.bannerStyles)}>
       {banner.content && (
         <div className={joinStyles(banner.contentStyles)}>
-          <LexicalRenderer content={banner.content} searchParams={null} setting={setting} page={null} />
+          <LexicalRenderer content={banner.content} pageContext={pageContext} />
         </div>
       )}
     </div>

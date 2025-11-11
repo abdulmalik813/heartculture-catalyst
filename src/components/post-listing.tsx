@@ -22,21 +22,20 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { GlobalData } from '@/types/global-data'
+import { PageContext } from '@/types/page-context'
 
-
-export default async function PostListingPage({ globalData }: {globalData: GlobalData }) {
-  const search = await globalData.searchParams
+export default async function PostListingPage({ pageContext }: { pageContext: PageContext }) {
+  const search = await pageContext.searchParams
   const { q: searchQuery, page = '1', category } = search ?? {}
   const currentPage = parseInt(page as string)
   const postsPerPage = 12
 
-  const postSlug = globalData.setting?.postSlug || 'posts'
-  const postListingPageTitle = globalData.setting?.postListingPageTitle || 'Posts'
+  const postSlug = pageContext.setting?.postSlug || 'posts'
+  const postListingPageTitle = pageContext.setting?.postListingPageTitle || 'Posts'
 
   const payload = await getPayload({ config: configPromise })
 
-  const whereClause: any = globalData.draft
+  const whereClause: any = pageContext.draft
     ? {}
     : {
         _status: {
@@ -91,7 +90,7 @@ export default async function PostListingPage({ globalData }: {globalData: Globa
       ],
     }
 
-    if (!globalData.draft) {
+    if (!pageContext.draft) {
       searchWhereClause.and.push({
         'doc.value._status': {
           equals: 'published',
@@ -105,7 +104,7 @@ export default async function PostListingPage({ globalData }: {globalData: Globa
       limit: postsPerPage,
       page: currentPage,
       sort: '-priority',
-      draft: globalData?.draft,
+      draft: pageContext?.draft,
     })
 
     const postIds = searchResults.docs
@@ -121,7 +120,7 @@ export default async function PostListingPage({ globalData }: {globalData: Globa
           },
         },
         limit: postsPerPage,
-        draft: globalData.draft,
+        draft: pageContext.draft,
       })
       totalDocs = searchResults.totalDocs
     } else {
@@ -135,7 +134,7 @@ export default async function PostListingPage({ globalData }: {globalData: Globa
       limit: postsPerPage,
       page: currentPage,
       sort: '-publishedAt',
-      draft: globalData.draft,
+      draft: pageContext.draft,
     })
     totalDocs = posts.totalDocs
   }

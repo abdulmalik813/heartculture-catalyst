@@ -2,11 +2,13 @@ import { Loader2 } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Footer } from '@/components/footer'
 import { NavigationBarUI } from '@/components/navigation-bar'
-import { GlobalData } from '@/types/global-data'
+import { PageContext } from '@/types/page-context'
 import { Setting } from '@/payload-types'
 import { getCachedGlobal } from '@/lib/get-globals'
 import { draftMode } from 'next/headers'
 import { SlugProps } from '@/types/slug-props'
+import { AdminBar } from '@/components/admin-bar'
+import { LivePreviewListener } from '@/components/live-preview-listener'
 
 export default async function Loading({ params, searchParams }: Readonly<SlugProps>) {
   const param = await params
@@ -15,7 +17,7 @@ export default async function Loading({ params, searchParams }: Readonly<SlugPro
   const setting = (await getCachedGlobal('settings', 1, draft)) as Setting
   const slug = param?.slug ? param.slug.join('/') : 'home'
 
-  const globalData: GlobalData = {
+  const pageContext: PageContext = {
     page,
     setting,
     searchParams,
@@ -25,7 +27,9 @@ export default async function Loading({ params, searchParams }: Readonly<SlugPro
 
   return (
     <>
-      <NavigationBarUI globalData={globalData} />
+      {draft && <LivePreviewListener />}
+      <AdminBar pageContext={pageContext} />
+      <NavigationBarUI pageContext={pageContext} />
       <main className="flex-1">
         <article className="min-h-[70vh]">
           <div className="w-full h-64 bg-muted animate-pulse mb-8" />
@@ -57,7 +61,7 @@ export default async function Loading({ params, searchParams }: Readonly<SlugPro
           </div>
         </article>
       </main>
-      <Footer globalData={globalData} />
+      <Footer pageContext={pageContext} />
     </>
   )
 }

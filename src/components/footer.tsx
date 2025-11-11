@@ -5,12 +5,12 @@ import { MediaBlockUI } from '@/blocks/media'
 import { NavigationBlockUI } from '@/blocks/navigation'
 import { LexicalRenderer } from '@/components/lexical-renderer'
 import { joinStyles } from '@/lib/make-styles'
-import { ThemeToggle } from './theme/theme-toggle'
-import { GlobalData } from '@/types/global-data'
+import { ThemeToggle } from '@/components/theme/theme-toggle'
+import { PageContext } from '@/types/page-context'
 
-export async function Footer({ globalData }: { globalData: GlobalData }) {
-  const setting = (await getCachedGlobal('settings', 1, globalData.draft)) as Setting
-  const footerData = (await getCachedGlobal('footer', 1, globalData.draft)) as FooterType
+export async function Footer({ pageContext }: { pageContext: PageContext }) {
+  const setting = (await getCachedGlobal('settings', 1, pageContext.draft)) as Setting
+  const footerData = (await getCachedGlobal('footer', 1, pageContext.draft)) as FooterType
 
   const lightLogo = setting.logo
   const darkLogo = setting?.logoDark ?? setting.logo
@@ -46,7 +46,7 @@ export async function Footer({ globalData }: { globalData: GlobalData }) {
                   'dark:hidden transition-transform group-hover:scale-105',
                   footerData.logoStyles,
                 )}
-                globalData={globalData}
+                pageContext={pageContext}
               />
               <MediaBlockUI
                 media={darkLogo}
@@ -54,7 +54,7 @@ export async function Footer({ globalData }: { globalData: GlobalData }) {
                   'hidden dark:block transition-transform group-hover:scale-105',
                   footerData.logoStyles,
                 )}
-                globalData={globalData}
+                pageContext={pageContext}
               />
               {footerData.useLabelWithLogo && setting.appTitle && (
                 <span
@@ -68,10 +68,7 @@ export async function Footer({ globalData }: { globalData: GlobalData }) {
               <div
                 className={joinStyles('text-muted-foreground max-w-sm', footerData.tagLineStyles)}
               >
-                <LexicalRenderer
-                  content={footerData.tagLine}
-                  globalData={globalData}
-                />
+                <LexicalRenderer content={footerData.tagLine} pageContext={pageContext} />
               </div>
             )}
           </div>
@@ -99,7 +96,7 @@ export async function Footer({ globalData }: { globalData: GlobalData }) {
                           'text-muted-foreground hover:text-foreground transition-colors text-sm',
                           footerData.linkStyles,
                         )}
-                        globalData={globalData}
+                        pageContext={pageContext}
                       />
                     ))}
                   </nav>

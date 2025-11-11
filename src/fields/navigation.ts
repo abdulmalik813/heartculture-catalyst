@@ -1,7 +1,7 @@
 import type { Field, GroupField } from 'payload'
 import deepMerge from '@/lib/deep-merge'
-import { icon } from './icon'
-import { navLocation } from './nav-location'
+import { icon } from '@/fields/icon'
+import { navLocation } from '@/fields/nav-location'
 
 type NavType = (options?: { overrides?: Partial<GroupField> }) => Field
 

@@ -1,13 +1,13 @@
 import { CallToActionBlock } from '@/payload-types'
 import { CardBlockUI } from '@/blocks/card'
 import type { Media as MediaCollection } from '@/payload-types'
-import { MediaBlockUI } from '../media'
-import { GlobalData } from '@/types/global-data'
+import { MediaBlockUI } from '@/blocks/media'
+import { PageContext } from '@/types/page-context'
 
 export async function CallToActionBlockUI({
-  globalData,
+  pageContext,
   ...callToActionBlock
-}: Partial<CallToActionBlock> & { globalData: GlobalData }) {
+}: Partial<CallToActionBlock> & { pageContext: PageContext }) {
   if (!callToActionBlock.card) return null
 
   const media = callToActionBlock.media as MediaCollection | undefined
@@ -20,16 +20,13 @@ export async function CallToActionBlockUI({
           <MediaBlockUI
             {...callToActionBlock}
             className="w-full h-full object-cover"
-            globalData={globalData}
+            pageContext={pageContext}
           />
         </div>
       )}
 
       <div className="w-full max-w-2xl relative z-10">
-        <CardBlockUI
-          {...callToActionBlock.card}
-            globalData={globalData}
-        />
+        <CardBlockUI {...callToActionBlock.card} pageContext={pageContext} />
       </div>
     </div>
   )

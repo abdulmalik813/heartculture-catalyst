@@ -15,10 +15,12 @@ import { Page, Post, Setting } from '@/payload-types'
 import PostListingPage from '@/components/post-listing'
 import { redirectCheck } from '@/lib/redirect'
 import { SchemaRenderer } from '@/components/schema-renderer'
-import { GlobalData } from '@/types/global-data'
+import { PageContext } from '@/types/page-context'
 import { Footer } from '@/components/footer'
 import { NavigationBarUI } from '@/components/navigation-bar'
 import { SlugProps } from '@/types/slug-props'
+import { LivePreviewListener } from '@/components/live-preview-listener'
+import { AdminBar } from '@/components/admin-bar'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -103,7 +105,7 @@ function extractPostSlug(slugArray: string[], postSlug: string): string | null {
   return slugArray.slice(postSlugParts.length).join('/')
 }
 
-export default async function Slug({ params, searchParams }: Readonly<SlugProps>) {
+export default async function PageRoute({ params, searchParams }: Readonly<SlugProps>) {
   const { isEnabled: draft } = await draftMode()
   const setting = (await getCachedGlobal('settings', 1, draft)) as Setting
   const isPostEnabled = setting.enablePost
@@ -148,27 +150,31 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
     return notFound()
   }
 
-  const globalData: GlobalData = {
+  const pageContext: PageContext = {
     page,
     setting,
     searchParams,
     draft,
-    slug
+    slug,
+    isItAPost,
+    isPostListingPage,
   }
 
   return (
     <>
-      <NavigationBarUI globalData={globalData} />
+      {draft && <LivePreviewListener />}
+      <AdminBar pageContext={pageContext} />
+      <NavigationBarUI pageContext={pageContext} />
       <main className="flex-1">
         <article className="min-h-[70vh]">
           {isPostListingPage ? (
             <>
-              <PostListingPage globalData={globalData} />
+              <PostListingPage pageContext={pageContext} />
             </>
           ) : (
             page && (
               <>
-                <Hero hero={page.hero} globalData={globalData} />
+                <Hero hero={page.hero} pageContext={pageContext} />
                 {page.layout?.map((layout, i) => (
                   <div
                     key={i}
@@ -193,7 +199,7 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
                           )}
                         >
                           {grid.blocks?.map((block, index) => (
-                            <BlockRenderer key={index} block={block} globalData={globalData} />
+                            <BlockRenderer key={index} block={block} pageContext={pageContext} />
                           ))}
                         </div>
                       ))}
@@ -203,15 +209,10 @@ export default async function Slug({ params, searchParams }: Readonly<SlugProps>
               </>
             )
           )}
-          <SchemaRenderer
-            page={page}
-            isItAPost={isItAPost}
-            isPostListingPage={isPostListingPage}
-            setting={setting}
-          />
+          <SchemaRenderer pageContext={pageContext} />
         </article>
       </main>
-      <Footer globalData={globalData} />
+      <Footer pageContext={pageContext} />
     </>
   )
 }

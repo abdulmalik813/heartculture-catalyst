@@ -15,16 +15,16 @@ import * as z from 'zod'
 import { useState } from 'react'
 import router from 'next/router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { buildDefaultValues, buildSchema, FieldType, NormalizedFields } from './utils'
-import { FormRegistration } from './formRegistration'
+import { buildDefaultValues, buildSchema, FieldType, NormalizedFields } from '@/blocks/form/utils'
+import { FormRegistration } from '@/blocks/form/formRegistration'
 import { getClientSideURL } from '@/lib/get-url'
 import { LexicalRenderer } from '@/components/lexical-renderer'
-import { GlobalData } from '@/types/global-data'
+import { PageContext } from '@/types/page-context'
 
 export function FormBlockUI({
-  globalData,
+  pageContext,
   ...formBlock
-}: FormBlock & { globalData: GlobalData }) {
+}: FormBlock & { pageContext: PageContext }) {
   const payloadForm = typeof formBlock.form === 'number' ? null : formBlock.form
 
   // Initialize all hooks first - BEFORE any conditional returns
@@ -87,10 +87,7 @@ export function FormBlockUI({
         <CardTitle>{payloadForm?.title}</CardTitle>
         {formBlock?.enableDescription && formBlock?.enableDescription && (
           <CardDescription>
-            <LexicalRenderer
-              content={formBlock.description}
-              globalData={globalData}
-            />
+            <LexicalRenderer content={formBlock.description} pageContext={pageContext} />
           </CardDescription>
         )}
       </CardHeader>
@@ -98,7 +95,7 @@ export function FormBlockUI({
         <FormRegistration
           fields={fields}
           form={form}
-          globalData={globalData}
+          pageContext={pageContext}
           onSubmit={onSubmit}
           isSubmitting={isSubmitting}
           submitButtonLabel={payloadForm.submitButtonLabel || 'Submit'}
@@ -112,7 +109,7 @@ export function FormBlockUI({
                 {payloadForm.confirmationMessage && (
                   <LexicalRenderer
                     content={payloadForm.confirmationMessage}
-                    globalData={globalData}
+                    pageContext={pageContext}
                   />
                 )}
               </AlertDescription>

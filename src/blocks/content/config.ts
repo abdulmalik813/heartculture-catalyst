@@ -7,8 +7,8 @@ import { CardBlock } from '@/blocks/card/config'
 import { AccordionBlock } from '@/blocks/accordion/config'
 import { DividerBlock } from '@/blocks/divider/config'
 import { defaultLexicalValue } from '@/constants/default-lexical'
-import { FormBlock } from '../form/config'
-import { TableBlock } from '../table/config'
+import { FormBlock } from '@/blocks/form/config'
+import { TableBlock } from '@/blocks/table/config'
 import { animate } from '@/fields/animate'
 
 export const ContentBlock: Block = {
@@ -53,7 +53,7 @@ export const ContentBlock: Block = {
       label: 'Animate',
       type: 'collapsible',
       admin: {
-        initCollapsed: true
+        initCollapsed: true,
       },
       fields: [animate()],
     },

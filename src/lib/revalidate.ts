@@ -1,6 +1,6 @@
 import { Setting } from '@/payload-types'
 import { revalidateTag, revalidatePath } from 'next/cache'
-import { getCachedGlobal } from './get-globals'
+import { getCachedGlobal } from '@/lib/get-globals'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 

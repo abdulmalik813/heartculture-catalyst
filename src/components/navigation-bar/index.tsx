@@ -1,6 +1,6 @@
 import { getCachedGlobal } from '@/lib/get-globals'
 import { NavigationBar, Setting } from '@/payload-types'
-import { Banner } from './banner'
+import { Banner } from '@/components/navigation-bar/banner'
 import Link from 'next/link'
 import {
   NavigationMenu,
@@ -13,12 +13,12 @@ import {
 import { NavigationBlockUI } from '@/blocks/navigation'
 import { MediaBlockUI } from '@/blocks/media'
 import { joinStyles } from '@/lib/make-styles'
-import { MobileNavDropdown } from './mobile-nav-dropdown'
-import { GlobalData } from '@/types/global-data'
+import { MobileNavDropdown } from '@/components/navigation-bar/mobile-nav-dropdown'
+import { PageContext } from '@/types/page-context'
 
-export async function NavigationBarUI({ globalData }: { globalData: GlobalData }) {
-  const navBarData = (await getCachedGlobal('navigationBar', 1, globalData.draft)) as NavigationBar
-  const setting = (await getCachedGlobal('settings', 1, globalData.draft)) as Setting
+export async function NavigationBarUI({ pageContext }: { pageContext: PageContext }) {
+  const navBarData = (await getCachedGlobal('navigationBar', 1, pageContext.draft)) as NavigationBar
+  const setting = (await getCachedGlobal('settings', 1, pageContext.draft)) as Setting
 
   const lightLogo = setting.logo
   const darkLogo = setting?.logoDark ?? setting.logo
@@ -27,19 +27,19 @@ export async function NavigationBarUI({ globalData }: { globalData: GlobalData }
 
   return (
     <>
-      <Banner {...navBarData.banner} setting={setting} />
+      <Banner {...navBarData.banner} pageContext={pageContext} />
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center gap-4">
             <Link href="/" className="flex items-center gap-2 shrink-0">
               <MediaBlockUI
                 media={lightLogo}
-                globalData={globalData}
+                pageContext={pageContext}
                 className={joinStyles('dark:hidden', navBarData.logoStyles)}
               />
               <MediaBlockUI
                 media={darkLogo}
-                globalData={globalData}
+                pageContext={pageContext}
                 className={joinStyles('hidden dark:block', navBarData.logoStyles)}
               />
               {navBarData.useTitleWithLogo && setting.appTitle && (
@@ -64,7 +64,7 @@ export async function NavigationBarUI({ globalData }: { globalData: GlobalData }
                                   <NavigationBlockUI
                                     key={dropdownItem.id}
                                     dropdownItem={dropdownItem}
-                                    globalData={globalData}
+                                    pageContext={pageContext}
                                   />
                                 </NavigationMenuLink>
                               </li>
@@ -77,10 +77,7 @@ export async function NavigationBarUI({ globalData }: { globalData: GlobalData }
 
                   return (
                     <NavigationMenuItem key={navItem.id}>
-                      <NavigationBlockUI
-                        {...navItem}
-                        globalData={globalData}
-                      />
+                      <NavigationBlockUI {...navItem} pageContext={pageContext} />
                     </NavigationMenuItem>
                   )
                 })}
@@ -104,7 +101,7 @@ export async function NavigationBarUI({ globalData }: { globalData: GlobalData }
                                   <NavigationBlockUI
                                     key={dropdownItem.id}
                                     dropdownItem={dropdownItem}
-                                    globalData={globalData}
+                                    pageContext={pageContext}
                                   />
                                 </NavigationMenuLink>
                               </li>
@@ -117,7 +114,7 @@ export async function NavigationBarUI({ globalData }: { globalData: GlobalData }
 
                   return (
                     <NavigationMenuItem key={ctaItem.id}>
-                      <NavigationBlockUI {...ctaItem} globalData={globalData} />
+                      <NavigationBlockUI {...ctaItem} pageContext={pageContext} />
                     </NavigationMenuItem>
                   )
                 })}
@@ -132,7 +129,7 @@ export async function NavigationBarUI({ globalData }: { globalData: GlobalData }
               darkLogo={darkLogo}
               logoStyles={navBarData.logoStyles}
               useTitleWithLogo={navBarData.useTitleWithLogo}
-              globalData={globalData}
+              pageContext={pageContext}
             />
           </div>
         </div>

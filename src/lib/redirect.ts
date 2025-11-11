@@ -1,6 +1,6 @@
 import { getCachedRedirects } from '@/lib/get-redirects'
 import { Setting } from '@/payload-types'
-import { getHref } from './get-href'
+import { getHref } from '@/lib/get-href'
 import { redirect } from 'next/navigation'
 
 export async function redirectCheck(slug: string, setting: Setting | null) {

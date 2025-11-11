@@ -14,12 +14,12 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { joinStyles } from '@/lib/make-styles'
 import { AnimateWrapper } from '@/components/animate-wrapper'
 import { Badge } from '@/components/ui/badge'
-import { GlobalData } from '@/types/global-data'
+import { PageContext } from '@/types/page-context'
 
 export async function RecentPostsBlockUI({
-  globalData,
+  pageContext,
   ...recentPostsBlock
-}: Partial<RecentPostsBlock> & { globalData: GlobalData }) {
+}: Partial<RecentPostsBlock> & { pageContext: PageContext }) {
   const payload = await getPayload({ config: configPromise })
 
   const recentPosts = await payload.find({
@@ -27,7 +27,7 @@ export async function RecentPostsBlockUI({
     limit: recentPostsBlock.numberOfPosts,
     where: {
       id: {
-        not_equals: globalData?.page?.id,
+        not_equals: pageContext?.page?.id,
       },
     },
     sort: '-publishedAt',
@@ -48,16 +48,16 @@ export async function RecentPostsBlockUI({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{globalData?.setting?.postListingPageTitle}</TableHead>
+                <TableHead>{pageContext?.setting?.postListingPageTitle}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {recentPosts.docs.map((post) => (
                 <TableRow key={post.id}>
                   <TableCell className="break-words">
-                    <Link 
-                      className={joinStyles(recentPostsBlock.linkStyles)} 
-                      href={`/${globalData?.setting?.postSlug || ''}/${post.slug}`}
+                    <Link
+                      className={joinStyles(recentPostsBlock.linkStyles)}
+                      href={`/${pageContext?.setting?.postSlug || ''}/${post.slug}`}
                     >
                       {post.title}
                     </Link>

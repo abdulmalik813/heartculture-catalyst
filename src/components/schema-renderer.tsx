@@ -1,20 +1,10 @@
 import Script from 'next/script'
 import { blogSchema, postListingSchema, pageSchema } from '@/lib/seo-schema'
-import { Page, Post, Setting } from '@/payload-types'
+import { Post, Page } from '@/payload-types'
+import { PageContext } from '@/types/page-context'
 
-interface SchemaRendererProps {
-  page: Post | Page | null
-  isItAPost: boolean
-  isPostListingPage: boolean
-  setting: Setting
-}
-
-export async function SchemaRenderer({
-  page,
-  isItAPost,
-  isPostListingPage,
-  setting,
-}: SchemaRendererProps) {
+export async function SchemaRenderer({ pageContext }: { pageContext: PageContext }) {
+  const { page, isItAPost, isPostListingPage, setting } = pageContext
   let schema = null
 
   if (isPostListingPage) {

@@ -7,12 +7,12 @@ import {
 import { AccordionBlock } from '@/payload-types'
 import { LexicalRenderer } from '@/components/lexical-renderer'
 import { joinStyles } from '@/lib/make-styles'
-import { GlobalData } from '@/types/global-data'
+import { PageContext } from '@/types/page-context'
 
 export async function AccordionBlockUI({
-  globalData,
+  pageContext,
   ...accordionBlock
-}: AccordionBlock & { globalData: GlobalData }) {
+}: AccordionBlock & { pageContext: PageContext }) {
   return (
     <Accordion type="single" collapsible className={joinStyles(accordionBlock.accordionStyles)}>
       {accordionBlock.items.map((item) => (
@@ -25,10 +25,7 @@ export async function AccordionBlockUI({
             {item.trigger}
           </AccordionTrigger>
           <AccordionContent className={joinStyles(item.contentStyles)}>
-            <LexicalRenderer
-              content={item.content}
-              globalData={globalData}
-            />
+            <LexicalRenderer content={item.content} pageContext={pageContext} />
           </AccordionContent>
         </AccordionItem>
       ))}
