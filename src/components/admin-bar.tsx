@@ -5,9 +5,16 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { generatePreviewPath } from '@/lib/generate-preview-path'
+import { getPayload } from 'payload'
+import { headers } from 'next/headers'
+import configPromise from '@payload-config'
 
 export async function AdminBar({ pageContext }: { pageContext: PageContext }) {
-  if (!pageContext.user) return null
+  const payload = await getPayload({ config: configPromise })
+  const headersList = await headers()
+  const { user } = await payload.auth({ headers: headersList })
+
+  if (!user) return null
 
   const serverUrl = getServerSideURL()
   const collection = pageContext.isItAPost ? 'posts' : 'pages'

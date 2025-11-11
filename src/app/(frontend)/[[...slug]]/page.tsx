@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
-import { draftMode, headers } from 'next/headers'
+import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 import { generateMeta, generatePostsListingMeta } from '@/lib/generate-meta'
 import { notFound } from 'next/navigation'
@@ -106,9 +106,6 @@ function extractPostSlug(slugArray: string[], postSlug: string): string | null {
 
 export default async function PageRoute({ params, searchParams }: Readonly<SlugProps>) {
   const { isEnabled: draft } = await draftMode()
-  const payload = await getPayload({ config: configPromise })
-  const headersList = await headers()
-  const { user } = await payload.auth({ headers: headersList })
   
   const setting = (await getCachedGlobal('settings', 1, draft)) as Setting
   const isPostEnabled = setting.enablePost
@@ -161,9 +158,7 @@ export default async function PageRoute({ params, searchParams }: Readonly<SlugP
     slug,
     isItAPost,
     isPostListingPage,
-    user
   }
-
   return (
     <>
       <AdminBar pageContext={pageContext} />

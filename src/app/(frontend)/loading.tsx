@@ -41,7 +41,6 @@ export default async function Loading({ params, searchParams }: Readonly<SlugPro
     searchParams,
     draft,
     slug,
-    user: null
   }
 
   return (
