@@ -188,7 +188,7 @@ function MobileMenu({
                       <NavigationBlockUI
                         {...ctaItem}
                         pageContext={pageContext}
-                        className="w-full justify-center text-sm h-10 rounded-lg"
+                        className="w-full justify-center text-sm h-10 rounded-lg my-4"
                       />
                     </div>
                   </SheetClose>
@@ -253,7 +253,9 @@ export async function NavigationBarUI({ pageContext }: { pageContext: PageContex
                           {item.nav?.label}
                         </NavigationMenuTrigger>
                         <NavigationMenuContent className="left-0">
-                          <ul className={joinStyles("grid gap-1 p-2  grid-cols-1", item.nav?.styles)}>
+                          <ul
+                            className={joinStyles('grid gap-1 p-2  grid-cols-1', item.nav?.styles)}
+                          >
                             {item.nav?.items?.map((dropdownItem) => (
                               <li key={dropdownItem.id}>
                                 <div className="block rounded-lg p-2.5 hover:bg-accent transition-colors duration-200 group">
