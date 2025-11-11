@@ -44,13 +44,7 @@ export const TestimonialBlock: Block = {
       hasMany: true,
       label: 'Testimonials',
     },
-    navigation({
-      overrides: {
-        admin: {
-          condition: (_, siblingData) => siblingData?.type === 'carousel',
-        },
-      },
-    }),
+    navigation(),
   ],
   graphQL: {
     singularName: 'TestimonialBlock',

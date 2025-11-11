@@ -41,7 +41,7 @@ const animationVariants: Record<string, Variants> = {
 
 export function AnimateWrapper({ animate, children, className }: AnimateProps) {
   if (!animate || !animate.type || animate.type === 'none') {
-    return <>{children}</>
+    return <div className={className}>{children}</div>
   }
 
   const {
