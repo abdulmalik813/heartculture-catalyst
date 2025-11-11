@@ -1,4 +1,3 @@
-import { grid } from '@/fields/grid'
 import { Block } from 'payload'
 import { animate } from '@/fields/animate'
 

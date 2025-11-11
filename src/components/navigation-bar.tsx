@@ -32,7 +32,6 @@ import { Button } from '@/components/ui/button'
 import { Menu } from 'lucide-react'
 import { NavigationBlockUI } from '@/blocks/navigation'
 
-// Banner Component
 function Banner({
   pageContext,
   ...banner
@@ -52,7 +51,6 @@ function Banner({
   )
 }
 
-// Logo Link Component
 function LogoLink({
   lightLogo,
   darkLogo,
@@ -91,7 +89,6 @@ function LogoLink({
   )
 }
 
-// Mobile Menu Component
 function MobileMenu({
   navigation,
   cta,
@@ -112,7 +109,7 @@ function MobileMenu({
   pageContext: PageContext
 }) {
   return (
-    <Drawer>
+    <Drawer dismissible={false}>
       <DrawerTrigger asChild>
         <Button
           variant="ghost"

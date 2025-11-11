@@ -109,7 +109,7 @@ export default async function PageRoute({ params, searchParams }: Readonly<SlugP
   const payload = await getPayload({ config: configPromise })
   const headersList = await headers()
   const { user } = await payload.auth({ headers: headersList })
-  
+
   const setting = (await getCachedGlobal('settings', 1, draft)) as Setting
   const isPostEnabled = setting.enablePost
   const param = await params
@@ -161,7 +161,7 @@ export default async function PageRoute({ params, searchParams }: Readonly<SlugP
     slug,
     isItAPost,
     isPostListingPage,
-    user
+    user,
   }
 
   return (

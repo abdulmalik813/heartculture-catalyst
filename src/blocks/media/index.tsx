@@ -5,7 +5,6 @@ import type { Media as MediaCollection } from '@/payload-types'
 import Link from 'next/link'
 import { getServerSideURL } from '@/lib/get-url'
 import { Button } from '@/components/ui/button'
-import { LexicalRenderer } from '@/components/lexical-renderer'
 import { browserPlayableTypes } from '@/constants/browser-media'
 import { PageContext } from '@/types/page-context'
 

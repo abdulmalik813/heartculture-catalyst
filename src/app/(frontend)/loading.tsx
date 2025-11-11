@@ -28,7 +28,6 @@ export async function generateMetadata({ params }: SlugProps): Promise<Metadata>
 }
 
 export default async function Loading({ params, searchParams }: Readonly<SlugProps>) {
-  
   const param = await params
   const page = null
   const { isEnabled: draft } = await draftMode()
