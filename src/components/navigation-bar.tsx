@@ -145,7 +145,12 @@ function MobileMenu({
 
                 if (appearance === 'dropdown') {
                   return (
-                    <Accordion key={item.id || index} type="single" collapsible className="border-none">
+                    <Accordion
+                      key={item.id || index}
+                      type="single"
+                      collapsible
+                      className="border-none"
+                    >
                       <AccordionItem value={`item-${index}`} className="border-none">
                         <AccordionTrigger className="px-3 py-2 text-sm font-medium hover:bg-accent rounded-lg hover:no-underline transition-colors duration-200">
                           {item.nav?.label}
@@ -249,7 +254,7 @@ export async function NavigationBarUI({ pageContext }: { pageContext: PageContex
                           {item.nav?.label}
                         </NavigationMenuTrigger>
                         <NavigationMenuContent className="left-0">
-                          <ul className="grid gap-1 p-2 w-[400px] md:w-[500px] lg:w-[600px] md:grid-cols-2">
+                          <ul className="grid gap-1 p-2 w-[400px] grid-cols-1">
                             {item.nav?.items?.map((dropdownItem) => (
                               <li key={dropdownItem.id}>
                                 <div className="block rounded-lg p-2.5 hover:bg-accent transition-colors duration-200 group">
@@ -286,7 +291,11 @@ export async function NavigationBarUI({ pageContext }: { pageContext: PageContex
                 ))}
               </div>
             )}
-            <MobileMenu navBarData={navBarData} pageContext={pageContext} appTitle={setting.appTitle} />
+            <MobileMenu
+              navBarData={navBarData}
+              pageContext={pageContext}
+              appTitle={setting.appTitle}
+            />
           </div>
         </div>
       </header>
