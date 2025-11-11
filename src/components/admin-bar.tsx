@@ -33,7 +33,7 @@ export function AdminBar({ pageContext }: { pageContext: PageContext }) {
 
       <div className={cn('md:block border-b', show ? 'block' : 'hidden')}>
         <div className="flex h-12 items-center justify-between px-4">
-          <div className="flex items-center gap-4">
+          {/* <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm" className="gap-2" asChild>
               <Link href={`${serverUrl}/admin`}>
                 <LayoutDashboard className="h-4 w-4" />
@@ -68,7 +68,7 @@ export function AdminBar({ pageContext }: { pageContext: PageContext }) {
                 </Link>
               </Button>
             )}
-          </div>
+          </div> */}
 
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" className="gap-2" asChild>
