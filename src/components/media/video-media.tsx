@@ -3,6 +3,7 @@
 import { cn } from '@/lib/utils'
 import React from 'react'
 import Video from 'next-video'
+
 import type { Props as MediaProps } from '@/components/media/types'
 import { getMediaUrl } from '@/lib/get-media-url'
 

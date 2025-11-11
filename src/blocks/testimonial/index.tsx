@@ -313,11 +313,6 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
 
         <p className="text-foreground/80">{testimonial.content}</p>
 
-        {testimonial.date && (
-          <p className="text-xs text-muted-foreground mt-4">
-            {new Date(testimonial.date).toLocaleDateString()}
-          </p>
-        )}
       </CardContent>
     </Card>
   )

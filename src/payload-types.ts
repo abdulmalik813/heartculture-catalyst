@@ -251,6 +251,7 @@ export interface Page {
                     | TableBlock
                     | LastModifiedBlock
                     | TestimonialBlock
+                    | GalleryBlock
                   )[]
                 | null;
               id?: string | null;
@@ -1426,9 +1427,23 @@ export interface Testimonial {
   avatar?: (number | null) | Media;
   content: string;
   rating?: number | null;
-  date?: string | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "GalleryBlock".
+ */
+export interface GalleryBlock {
+  gallery?:
+    | {
+        image: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'galleryBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1791,6 +1806,7 @@ export interface PagesSelect<T extends boolean = true> {
                     tableBlock?: T | TableBlockSelect<T>;
                     lastModifiedBlock?: T | LastModifiedBlockSelect<T>;
                     testimonialBlock?: T | TestimonialBlockSelect<T>;
+                    galleryBlock?: T | GalleryBlockSelect<T>;
                   };
               id?: T;
             };
@@ -2150,6 +2166,20 @@ export interface TestimonialBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "GalleryBlock_select".
+ */
+export interface GalleryBlockSelect<T extends boolean = true> {
+  gallery?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
@@ -2474,7 +2504,6 @@ export interface TestimonialsSelect<T extends boolean = true> {
   avatar?: T;
   content?: T;
   rating?: T;
-  date?: T;
   updatedAt?: T;
   createdAt?: T;
 }
