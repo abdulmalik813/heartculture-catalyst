@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useState } from 'react'
-import router from 'next/router'
+import { useRouter } from 'next/navigation' // Changed from 'next/router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { buildDefaultValues, buildSchema, FieldType, NormalizedFields } from '@/blocks/form/utils'
 import { FormRegistration } from '@/blocks/form/formRegistration'
@@ -26,8 +26,8 @@ export function FormBlockUI({
   ...formBlock
 }: FormBlock & { pageContext: PageContext }) {
   const payloadForm = typeof formBlock.form === 'number' ? null : formBlock.form
+  const router = useRouter() // Now using the hook
 
-  // Initialize all hooks first - BEFORE any conditional returns
   const fields: FieldType[] = payloadForm ? NormalizedFields(formBlock) : []
   const [error, setError] = useState<{ message: string; status?: string } | undefined>()
   const [hasSubmitted, setHasSubmitted] = useState<boolean>()
@@ -39,7 +39,6 @@ export function FormBlockUI({
     defaultValues: buildDefaultValues(fields),
   })
 
-  // NOW check if we should render
   if (!payloadForm) return null
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
