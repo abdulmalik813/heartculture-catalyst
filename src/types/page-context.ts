@@ -1,4 +1,4 @@
-import { Page, Post, Setting } from '@/payload-types'
+import { Page, Post, Setting, User } from '@/payload-types'
 import { SearchParams } from '@/types/search-params'
 
 export type PageContext = {
@@ -9,4 +9,5 @@ export type PageContext = {
   slug?: string | null
   isItAPost?: boolean | null
   isPostListingPage?: boolean | null
+  user?: User | null
 }

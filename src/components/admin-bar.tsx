@@ -5,17 +5,9 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { generatePreviewPath } from '@/lib/generate-preview-path'
-import { getPayload } from 'payload'
-import { headers } from 'next/headers'
-import configPromise from '@payload-config'
 
 export async function AdminBar({ pageContext }: { pageContext: PageContext }) {
-  const payload = await getPayload({ config: configPromise })
-  const headersList = await headers()
-  const { user } = await payload.auth({ headers: headersList })
-
-  if (!user) return null
-
+  if (!pageContext.user) return null
   const serverUrl = getServerSideURL()
   const collection = pageContext.isItAPost ? 'posts' : 'pages'
 
@@ -39,7 +31,10 @@ export async function AdminBar({ pageContext }: { pageContext: PageContext }) {
               className="gap-2 text-destructive hover:text-destructive/90"
               asChild
             >
-              <Link prefetch={false} href={`/api/draft/disable?path=${encodeURIComponent(pageContext.slug || '')}`}>
+              <Link 
+                href={`/api/draft/disable?path=${encodeURIComponent(pageContext.slug || '')}`}
+                prefetch={false}
+              >
                 <XCircle className="h-4 w-4" />
                 <span>Exit Preview</span>
               </Link>
@@ -51,7 +46,10 @@ export async function AdminBar({ pageContext }: { pageContext: PageContext }) {
               className="gap-2 text-primary hover:text-primary/90"
               asChild
             >
-              <Link prefetch={false} href={generatePreviewPath(pageContext.slug || '')}>
+              <Link 
+                href={generatePreviewPath(pageContext.slug || '')}
+                prefetch={false}
+              >
                 <Eye className="h-4 w-4" />
                 <span>Enable Preview</span>
               </Link>
