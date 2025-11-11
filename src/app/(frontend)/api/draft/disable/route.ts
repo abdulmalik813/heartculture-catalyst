@@ -1,3 +1,4 @@
+import { getServerSideURL } from '@/lib/get-url'
 import { draftMode } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { NextRequest } from 'next/server'
@@ -10,8 +11,8 @@ export async function GET(request: NextRequest): Promise<Response> {
   const path = searchParams.get('path')
 
   if (path) {
-    redirect(`/${path}`)
+    redirect(`${getServerSideURL}/${path}`)
   }
 
-  redirect('/')
+  redirect(getServerSideURL())
 }

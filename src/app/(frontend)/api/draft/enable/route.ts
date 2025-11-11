@@ -7,6 +7,7 @@ import { NextRequest } from 'next/server'
 
 import configPromise from '@payload-config'
 import { PAYLOAD } from '@/constants/init'
+import { getServerSideURL } from '@/lib/get-url'
 
 export async function GET(req: NextRequest): Promise<Response> {
   const payload = await getPayload({ config: configPromise })
@@ -44,5 +45,5 @@ export async function GET(req: NextRequest): Promise<Response> {
 
   draft.enable()
 
-  redirect(`/${path}`)
+  redirect(`${getServerSideURL()}/${path}`)
 }
