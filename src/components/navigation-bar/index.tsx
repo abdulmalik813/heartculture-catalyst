@@ -31,26 +31,24 @@ export async function NavigationBarUI({ pageContext }: { pageContext: PageContex
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center gap-4">
-            <Link href="/" className="flex items-center gap-2 shrink-0 h-full">
-              <div className="h-full py-2">
-                <MediaBlockUI
-                  media={lightLogo}
-                  pageContext={pageContext}
-                  className={joinStyles('dark:hidden h-full w-auto', navBarData.logoStyles)}
-                />
-                <MediaBlockUI
-                  media={darkLogo}
-                  pageContext={pageContext}
-                  className={joinStyles('hidden dark:block h-full w-auto', navBarData.logoStyles)}
-                />
-              </div>
+            <Link href="/" className="flex items-center gap-2 shrink-0">
+              <MediaBlockUI
+                media={lightLogo}
+                pageContext={pageContext}
+                className={joinStyles('dark:hidden', navBarData.logoStyles)}
+              />
+              <MediaBlockUI
+                media={darkLogo}
+                pageContext={pageContext}
+                className={joinStyles('hidden dark:block', navBarData.logoStyles)}
+              />
               {navBarData.useTitleWithLogo && setting.appTitle && (
                 <span className="text-lg font-semibold tracking-tight">{setting.appTitle}</span>
               )}
             </Link>
 
-            <NavigationMenu className="hidden lg:flex z-50 mx-auto">
-              <NavigationMenuList className="flex-wrap">
+            <NavigationMenu viewport={false} className="hidden lg:flex z-50 mx-auto">
+              <NavigationMenuList className="flex-wrap gap-1">
                 {navBarData.navigation?.map((navItem) => {
                   if (navItem.nav?.appearance === 'dropdown') {
                     return (
@@ -59,7 +57,7 @@ export async function NavigationBarUI({ pageContext }: { pageContext: PageContex
                           {navItem.nav.label}
                         </NavigationMenuTrigger>
                         <NavigationMenuContent>
-                          <ul className="grid grid-cols-1 w-[240px] p-2">
+                          <ul className="grid w-[240px] gap-1 p-2">
                             {navItem.nav.items?.map((dropdownItem) => (
                               <li key={dropdownItem.id}>
                                 <NavigationMenuLink key={dropdownItem.id} asChild>
@@ -86,8 +84,8 @@ export async function NavigationBarUI({ pageContext }: { pageContext: PageContex
               </NavigationMenuList>
             </NavigationMenu>
 
-            <NavigationMenu className="hidden lg:flex z-50">
-              <NavigationMenuList className="flex-wrap">
+            <NavigationMenu viewport={false} className="hidden lg:flex z-50">
+              <NavigationMenuList className="flex-wrap gap-1">
                 {navBarData?.cta?.map((ctaItem) => {
                   if (ctaItem.nav?.appearance === 'dropdown') {
                     return (
@@ -96,7 +94,7 @@ export async function NavigationBarUI({ pageContext }: { pageContext: PageContex
                           {ctaItem.nav.label}
                         </NavigationMenuTrigger>
                         <NavigationMenuContent>
-                          <ul className="grid grid-cols-1 w-[240px] p-2">
+                          <ul className="grid w-[240px] gap-1 p-2">
                             {ctaItem.nav.items?.map((dropdownItem) => (
                               <li key={dropdownItem.id}>
                                 <NavigationMenuLink key={dropdownItem.id} asChild>
