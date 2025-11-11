@@ -11,7 +11,6 @@ export async function AdminBar({ pageContext }: { pageContext: PageContext }) {
 
   const serverUrl = getServerSideURL()
   const collection = pageContext.isItAPost ? 'posts' : 'pages'
-  const path = pageContext.slug === 'home' ? '/' : `/${pageContext.slug}`
 
   return (
     <div className="hidden md:block border-b">
@@ -33,7 +32,7 @@ export async function AdminBar({ pageContext }: { pageContext: PageContext }) {
               className="gap-2 text-destructive hover:text-destructive/90"
               asChild
             >
-              <Link href={`/api/draft/disable?path=${encodeURIComponent(path)}`}>
+              <Link href={`/api/draft/disable?path=${encodeURIComponent(pageContext.slug || '')}`}>
                 <XCircle className="h-4 w-4" />
                 <span>Exit Preview</span>
               </Link>
@@ -45,7 +44,7 @@ export async function AdminBar({ pageContext }: { pageContext: PageContext }) {
               className="gap-2 text-primary hover:text-primary/90"
               asChild
             >
-              <Link href={generatePreviewPath(path)}>
+              <Link href={generatePreviewPath(pageContext.slug || '')}>
                 <Eye className="h-4 w-4" />
                 <span>Enable Preview</span>
               </Link>

@@ -44,5 +44,5 @@ export async function GET(req: NextRequest): Promise<Response> {
 
   draft.enable()
 
-  redirect(`/${path}`)
+  redirect(`/${path === "home" ? '' : path}`)
 }
