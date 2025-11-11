@@ -9,6 +9,7 @@ import type {
   Style,
   TabBlock,
   TableBlock,
+  TestimonialBlock,
 } from '@/payload-types'
 import {
   DefaultNodeTypes,
@@ -29,6 +30,7 @@ import { CardBlockUI } from '@/blocks/card'
 import { FormBlockUI } from '@/blocks/form'
 import { TableBlockUI } from '@/blocks/table'
 import { PageContext } from '@/types/page-context'
+import { TestimonialBlockUI } from '@/blocks/testimonial'
 
 interface LexicalRendererProps {
   content?: DefaultTypedEditorState | null
@@ -48,6 +50,7 @@ type NodeTypes =
       | FormBlock
       | CardBlock
       | TableBlock
+      | TestimonialBlock
     >
 
 function jsxConverters(pageContext: PageContext): JSXConvertersFunction<NodeTypes> {
@@ -126,6 +129,7 @@ function jsxConverters(pageContext: PageContext): JSXConvertersFunction<NodeType
         cardBlock: ({ node }) => <CardBlockUI {...node.fields} pageContext={pageContext} />,
         formBlock: ({ node }) => <FormBlockUI {...node.fields} pageContext={pageContext} />,
         tableBlock: ({ node }) => <TableBlockUI {...node.fields} pageContext={pageContext} />,
+        testimonialBlock: ({ node }) => <TestimonialBlockUI {...node.fields} pageContext={pageContext} />,
       },
     }
   }

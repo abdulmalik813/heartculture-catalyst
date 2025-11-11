@@ -11,6 +11,7 @@ import { LastModifiedBlockUI } from '@/blocks/last-modified'
 import { RecentPostsBlockUI } from '@/blocks/recent-posts'
 import { FormBlockUI } from '@/blocks/form'
 import { PageContext } from '@/types/page-context'
+import { TestimonialBlockUI } from '@/blocks/testimonial'
 
 const blockComponents = {
   contentBlock: ContentBlockUI,
@@ -23,6 +24,7 @@ const blockComponents = {
   tableBlock: TableBlockUI,
   lastModifiedBlock: LastModifiedBlockUI,
   recentPostsBlock: RecentPostsBlockUI,
+  testimonialBlock: TestimonialBlockUI,
 }
 
 type BlockRendererProps = {
