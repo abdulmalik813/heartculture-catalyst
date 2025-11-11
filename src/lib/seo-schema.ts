@@ -181,7 +181,12 @@ export const imageSchema = async (image: Media | null | undefined, settings: Set
         }
       : undefined,
     creditText: imageToUse?.creditText || undefined,
-    creator: imageToUse?.creator || undefined,
+    creator: imageToUse?.creator
+      ? {
+          '@type': 'Person',
+          name: imageToUse.creator,
+        }
+      : undefined,
     license: imageToUse?.license || undefined,
     copyrightNotice: imageToUse?.copyrightNotice || undefined,
     acquireLicensePage: imageToUse?.acquireLicensePage || undefined,
@@ -213,7 +218,12 @@ export const mediaSchema = async (media: Media | null | undefined) => {
     height: media.height || undefined,
     uploadDate: uploadDate ? new Date(uploadDate).toISOString() : undefined,
     creditText: media.creditText || undefined,
-    creator: media.creator || undefined,
+    creator: media?.creator
+      ? {
+          '@type': 'Person',
+          name: media.creator,
+        }
+      : undefined,
     license: media.license || undefined,
     copyrightNotice: media.copyrightNotice || undefined,
     acquireLicensePage: media.acquireLicensePage || undefined,
