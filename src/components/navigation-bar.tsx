@@ -76,10 +76,12 @@ function LogoLink({
       <MediaBlockUI
         media={lightLogo}
         pageContext={pageContext}
+        priority
         className={joinStyles('dark:hidden transition-all duration-200', logoStyles)}
       />
       <MediaBlockUI
         media={darkLogo}
+        priority
         pageContext={pageContext}
         className={joinStyles('hidden dark:block transition-all duration-200', logoStyles)}
       />

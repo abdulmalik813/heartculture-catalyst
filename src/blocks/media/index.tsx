@@ -11,8 +11,9 @@ import { PageContext } from '@/types/page-context'
 export function MediaBlockUI({
   pageContext,
   className,
+  priority,
   ...mediaBlock
-}: Partial<MediaBlock> & { className?: string } & { pageContext: PageContext }) {
+}: Partial<MediaBlock> & { className?: string } & { pageContext: PageContext } & { priority?: boolean | false }) {
   if (!mediaBlock.media) return null
 
   const media: MediaCollection = mediaBlock.media as MediaCollection
@@ -22,6 +23,7 @@ export function MediaBlockUI({
     return (
       <Media
         className={joinStyles(mediaBlock.wrapperStyles)}
+        priority={priority}
         imgClassName={joinStyles(className, mediaBlock.contentStyles)}
         videoClassName={joinStyles(mediaBlock.contentStyles)}
         resource={media}

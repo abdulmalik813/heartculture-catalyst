@@ -42,6 +42,7 @@ export async function Footer({ pageContext }: { pageContext: PageContext }) {
             <Link href="/" className="flex items-center gap-3 shrink-0 group">
               <MediaBlockUI
                 media={lightLogo}
+                priority
                 className={joinStyles(
                   'dark:hidden transition-transform group-hover:scale-105',
                   footerData.logoStyles,
