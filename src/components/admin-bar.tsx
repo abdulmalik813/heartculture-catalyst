@@ -44,7 +44,7 @@ export async function AdminBar({ pageContext }: { pageContext: PageContext }) {
               className="gap-2 text-primary hover:text-primary/90"
               asChild
             >
-              <Link href="/api/draft/enable">
+              <Link href="/api/draft/enable?path=${encodeURIComponent(path)}">
                 <Eye className="h-4 w-4" />
                 <span>Enable Preview</span>
               </Link>
