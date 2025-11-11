@@ -1,6 +1,6 @@
 import { PageContext } from '@/types/page-context'
 import { getServerSideURL } from '@/lib/get-url'
-import { PlusCircle, LayoutDashboard, XCircle } from 'lucide-react'
+import { PlusCircle, LayoutDashboard, XCircle, Eye } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -10,7 +10,7 @@ export async function AdminBar({ pageContext }: { pageContext: PageContext }) {
 
   const serverUrl = getServerSideURL()
   const collection = pageContext.isItAPost ? 'posts' : 'pages'
-  const redirectUrl = pageContext.slug === 'home' ? '/' : `/${pageContext.slug}`
+  const path = pageContext.slug === 'home' ? '/' : `/${pageContext.slug}`
 
   return (
     <div className="hidden lg:block border-b">
@@ -23,21 +23,32 @@ export async function AdminBar({ pageContext }: { pageContext: PageContext }) {
             </Link>
           </Button>
 
-          {pageContext.draft && (
-            <>
-              <Separator orientation="vertical" className="h-6" />
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-2 text-yellow-600 hover:text-yellow-700 dark:text-yellow-400 dark:hover:text-yellow-300"
-                asChild
-              >
-                <Link href={`/api/draft/exit-preview?redirect=${encodeURIComponent(redirectUrl)}`}>
-                  <XCircle className="h-4 w-4" />
-                  <span>Exit Preview</span>
-                </Link>
-              </Button>
-            </>
+          <Separator orientation="vertical" className="h-6" />
+          
+          {pageContext.draft ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-destructive hover:text-destructive/90"
+              asChild
+            >
+              <Link href={`/api/draft/disable?path=${encodeURIComponent(path)}`}>
+                <XCircle className="h-4 w-4" />
+                <span>Exit Preview</span>
+              </Link>
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-primary hover:text-primary/90"
+              asChild
+            >
+              <Link href="/api/draft/enable">
+                <Eye className="h-4 w-4" />
+                <span>Enable Preview</span>
+              </Link>
+            </Button>
           )}
         </div>
 

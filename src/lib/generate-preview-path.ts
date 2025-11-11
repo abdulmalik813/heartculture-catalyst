@@ -7,5 +7,5 @@ export const generatePreviewPath = (path: string = "home") => {
     previewSecret: PAYLOAD.PREVIEW,
   })
 
-  return `/api/draft/preview?${encodedParams.toString()}`
+  return `/api/draft/enable?${encodedParams.toString()}`
 }

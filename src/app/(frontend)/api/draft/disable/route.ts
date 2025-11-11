@@ -7,10 +7,10 @@ export async function GET(request: NextRequest): Promise<Response> {
   draft.disable()
   
   const { searchParams } = new URL(request.url)
-  const redirectUrl = searchParams.get('redirect')
+  const path = searchParams.get('path')
   
-  if (redirectUrl) {
-    redirect(redirectUrl)
+  if (path) {
+    redirect(path)
   }
   
   redirect('/')
