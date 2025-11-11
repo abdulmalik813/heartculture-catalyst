@@ -161,7 +161,7 @@ export default async function PageRoute({ params, searchParams }: Readonly<SlugP
   }
   return (
     <>
-      <AdminBar pageContext={pageContext} />
+      {/* <AdminBar pageContext={pageContext} /> */}
       <NavigationBarUI pageContext={pageContext} />
       <main className="flex-1">
         <article className="min-h-[70vh]">
