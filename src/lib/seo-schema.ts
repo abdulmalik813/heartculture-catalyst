@@ -18,7 +18,7 @@ export const pageSchema = async (page: Page, settings: Setting) => {
   ].filter((link) => link)
 
   const associatedMediaSchemas = await Promise.all(
-    medias.map((media) => mediaSchema(media as Media)),
+    medias.map((media) => mediaSchema(media as Media, settings)),
   ).then((schemas) => schemas.filter(Boolean))
 
   const isHomePage = !page?.slug || page.slug === 'home' || page.slug === ''
@@ -97,7 +97,7 @@ export const blogSchema = async (post: Post, settings: Setting) => {
   ].filter((link) => link)
 
   const associatedMediaSchemas = await Promise.all(
-    medias.map((media) => mediaSchema(media as Media)),
+    medias.map((media) => mediaSchema(media as Media, settings)),
   ).then((schemas) => schemas.filter(Boolean))
 
   const publishDate = post?.publishedAt || post?.createdAt
@@ -195,7 +195,7 @@ export const imageSchema = async (image: Media | null | undefined, settings: Set
   }
 }
 
-export const mediaSchema = async (media: Media | null | undefined) => {
+export const mediaSchema = async (media: Media | null | undefined, settings: Setting) => {
   if (!media || !media.url) {
     return null
   }
@@ -230,20 +230,25 @@ export const mediaSchema = async (media: Media | null | undefined) => {
   }
 
   if (isVideo) {
-    const videoThumbnail = (media.videoThumbnail as Thumbnail) || null
+    const videoThumbnail =
+      (media.videoThumbnail as Thumbnail) || (settings.fallbackImage as Media) || null
     return {
       ...baseSchema,
       '@type': 'VideoObject',
-      thumbnailUrl: media.videoThumbnail
-        ? getMediaUrl(videoThumbnail.thumbnailURL)
-        : videoThumbnail?.sizes?.thumbnail?.url
-          ? getMediaUrl(videoThumbnail?.sizes?.thumbnail?.url)
-          : undefined,
+      thumbnailUrl: videoThumbnail
+        ? getMediaUrl(
+            videoThumbnail?.thumbnailURL ||
+              videoThumbnail?.sizes?.thumbnail?.url ||
+              videoThumbnail?.url,
+          )
+        : undefined,
       thumbnail:
-        media.thumbnailURL || media.sizes?.thumbnail?.url
+        videoThumbnail.thumbnailURL || videoThumbnail?.sizes?.thumbnail?.url || videoThumbnail?.url
           ? {
               '@type': 'ImageObject',
-              contentUrl: getMediaUrl(videoThumbnail.thumbnailURL || videoThumbnail?.sizes?.thumbnail?.url || ''),
+              contentUrl: getMediaUrl(
+                videoThumbnail.thumbnailURL || videoThumbnail?.sizes?.thumbnail?.url || '',
+              ),
               width: videoThumbnail?.sizes?.thumbnail?.width || undefined,
               height: videoThumbnail?.sizes?.thumbnail?.height || undefined,
             }
