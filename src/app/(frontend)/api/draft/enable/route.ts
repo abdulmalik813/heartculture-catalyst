@@ -1,7 +1,7 @@
 import type { PayloadRequest } from 'payload'
 import { getPayload } from 'payload'
 
-import { draftMode } from 'next/headers'
+import { draftMode, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { NextRequest } from 'next/server'
 
@@ -28,11 +28,11 @@ export async function GET(req: NextRequest): Promise<Response> {
   let user
 
   try {
-    user = await payload.auth({
-      req: req as unknown as PayloadRequest,
-      headers: req.headers,
-    })
-  } catch {
+    const headersList = await headers()
+    const authResult = await payload.auth({ headers: headersList })
+    user = authResult.user
+  } catch (error) {
+    console.error('Auth error:', error)
     return new Response('You are not allowed to preview this page', { status: 403 })
   }
 
