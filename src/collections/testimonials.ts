@@ -10,6 +10,10 @@ export const Testimonials: CollectionConfig = {
     read: authenticatedOrPublished,
     update: authenticated,
   },
+  admin: {
+    useAsTitle: 'name',
+    listSearchableFields: ['name', 'company', 'publishedAt', 'updatedAt'],
+  },
   fields: [
     {
       name: 'type',
@@ -61,6 +65,6 @@ export const Testimonials: CollectionConfig = {
       type: 'number',
       min: 1,
       max: 5,
-    }
+    },
   ],
 }
