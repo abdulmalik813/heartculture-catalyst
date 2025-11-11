@@ -19,6 +19,7 @@ import { buildDefaultValues, buildSchema, FieldType, NormalizedFields } from '@/
 import { FormRegistration } from '@/blocks/form/formRegistration'
 import { getClientSideURL } from '@/lib/get-url'
 import { PageContext } from '@/types/page-context'
+import { joinStyles } from '@/lib/make-styles'
 
 export function FormBlockClient({
   pageContext,
@@ -86,11 +87,13 @@ export function FormBlockClient({
   }
 
   return (
-    <Card className="w-full">
+    <Card className={joinStyles(formBlock.cardStyles)}>
       <CardHeader>
-        <CardTitle>{payloadForm?.title}</CardTitle>
+        <CardTitle className={joinStyles(formBlock.titleStyles)}>{payloadForm?.title}</CardTitle>
         {formBlock?.enableDescription && (
-          <CardDescription>{renderedDescription}</CardDescription>
+          <CardDescription className={joinStyles(formBlock.descriptionStyles)}>
+            {renderedDescription}
+          </CardDescription>
         )}
       </CardHeader>
       <CardContent>

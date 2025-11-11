@@ -1019,6 +1019,9 @@ export interface FormBlock {
     };
     [k: string]: unknown;
   } | null;
+  cardStyles?: (number | Style)[] | null;
+  titleStyles?: (number | Style)[] | null;
+  descriptionStyles?: (number | Style)[] | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'formBlock';
@@ -2017,6 +2020,9 @@ export interface FormBlockSelect<T extends boolean = true> {
   form?: T;
   enableDescription?: T;
   description?: T;
+  cardStyles?: T;
+  titleStyles?: T;
+  descriptionStyles?: T;
   id?: T;
   blockName?: T;
 }
