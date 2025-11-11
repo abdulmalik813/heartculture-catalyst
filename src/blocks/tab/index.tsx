@@ -16,16 +16,18 @@ export async function TabBlockUI({
 
   return (
     <Tabs defaultValue={defaultTabValue} className={joinStyles(tabBlock.tabStyles)}>
-      <TabsList className={joinStyles(tabBlock.tabListStyles)}>
-        {tabBlock.tabs.map((tab) => {
-          if (!tab.title) return null
-          return (
-            <TabsTrigger value={tab.title} key={tab.id} className={joinStyles(tab.titleStyles)}>
-              {tab.title}
-            </TabsTrigger>
-          )
-        })}
-      </TabsList>
+      <div className="flex justify-center">
+        <TabsList className={joinStyles(tabBlock.tabListStyles)}>
+          {tabBlock.tabs.map((tab) => {
+            if (!tab.title) return null
+            return (
+              <TabsTrigger value={tab.title} key={tab.id} className={joinStyles(tab.titleStyles)}>
+                {tab.title}
+              </TabsTrigger>
+            )
+          })}
+        </TabsList>
+      </div>
       {tabBlock.tabs.map((tab) => {
         if (!tab.title || !tab.content) return null
         return (

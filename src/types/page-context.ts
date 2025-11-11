@@ -9,5 +9,4 @@ export type PageContext = {
   slug?: string | null
   isItAPost?: boolean | null
   isPostListingPage?: boolean | null
-  user?: User | null
 }

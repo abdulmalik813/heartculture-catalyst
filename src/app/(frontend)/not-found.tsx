@@ -17,6 +17,7 @@ export default async function NotFound({ params, searchParams }: Readonly<SlugPr
   const payload = await getPayload({ config: configPromise })
   const headersList = await headers()
   const { user } = await payload.auth({ headers: headersList })
+  if (!user) return null
   const param = await params
   const page = null
   const { isEnabled: draft } = await draftMode()
@@ -29,7 +30,6 @@ export default async function NotFound({ params, searchParams }: Readonly<SlugPr
     searchParams,
     draft,
     slug,
-    user,
   }
 
   return (
