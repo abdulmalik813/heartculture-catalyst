@@ -1422,9 +1422,6 @@ export interface Testimonial {
   type: 'individual' | 'company';
   name: string;
   position?: string | null;
-  /**
-   * Company name (for individuals) or leave empty for companies
-   */
   company?: string | null;
   avatar?: (number | null) | Media;
   content: string;

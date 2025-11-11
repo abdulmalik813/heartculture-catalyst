@@ -36,14 +36,14 @@ export const Testimonials: CollectionConfig = {
       name: 'position',
       type: 'text',
       admin: {
-        condition: (data) => data.type === 'individual',
+        condition: (data) => data.type === 'company',
       },
     },
     {
       name: 'company',
       type: 'text',
       admin: {
-        description: 'Company name (for individuals) or leave empty for companies',
+        condition: (data) => data.type === 'company',
       },
     },
     {
@@ -64,7 +64,7 @@ export const Testimonials: CollectionConfig = {
     },
     {
       name: 'date',
-      type: 'date'
+      type: 'date',
     },
-  ]
+  ],
 }
