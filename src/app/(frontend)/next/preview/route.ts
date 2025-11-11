@@ -1,13 +1,12 @@
 import type { PayloadRequest } from 'payload'
 import { getPayload } from 'payload'
 
-import { draftMode, headers } from 'next/headers'
+import { draftMode } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { NextRequest } from 'next/server'
 
 import configPromise from '@payload-config'
 import { PAYLOAD } from '@/constants/init'
-import { getServerSideURL } from '@/lib/get-url'
 
 export async function GET(req: NextRequest): Promise<Response> {
   const payload = await getPayload({ config: configPromise })
@@ -28,11 +27,11 @@ export async function GET(req: NextRequest): Promise<Response> {
   let user
 
   try {
-    const headersList = await headers()
-    const authResult = await payload.auth({ headers: headersList })
-    user = authResult.user
+    user = await payload.auth({
+      req: req as unknown as PayloadRequest,
+      headers: req.headers,
+    })
   } catch (error) {
-    console.error('Auth error:', error)
     return new Response('You are not allowed to preview this page', { status: 403 })
   }
 
@@ -45,5 +44,5 @@ export async function GET(req: NextRequest): Promise<Response> {
 
   draft.enable()
 
-  redirect(`${getServerSideURL()}/${path}`)
+  redirect(`/${path}`)
 }

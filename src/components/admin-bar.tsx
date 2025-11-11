@@ -32,7 +32,7 @@ export async function AdminBar({ pageContext }: { pageContext: PageContext }) {
               className="gap-2 text-destructive hover:text-destructive/90"
               asChild
             >
-              <Link href={`${serverUrl}/api/draft/disable?path=${encodeURIComponent(pageContext.slug || '')}`}>
+              <Link href={`/next/exit-preview?path=${encodeURIComponent(pageContext.slug || '')}`}>
                 <XCircle className="h-4 w-4" />
                 <span>Exit Preview</span>
               </Link>
@@ -44,7 +44,7 @@ export async function AdminBar({ pageContext }: { pageContext: PageContext }) {
               className="gap-2 text-primary hover:text-primary/90"
               asChild
             >
-              <Link href={`${serverUrl}/${generatePreviewPath(pageContext.slug || '')}`}>
+              <Link href={generatePreviewPath(pageContext.slug || '')}>
                 <Eye className="h-4 w-4" />
                 <span>Enable Preview</span>
               </Link>
