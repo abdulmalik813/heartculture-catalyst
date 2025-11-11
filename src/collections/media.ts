@@ -45,6 +45,16 @@ export const Media: CollectionConfig = {
       type: 'text',
       required: false,
     },
+    {
+      name: 'videoThumbnail',
+      type: 'upload',
+      relationTo: 'thumbnails',
+      required: false,
+      admin: {
+        condition: (_, data) => data?.mimeType?.startsWith('video/'),
+        description: 'Upload a thumbnail image for this video',
+      },
+    },
   ],
   upload: {
     adminThumbnail: 'thumbnail',
@@ -52,7 +62,7 @@ export const Media: CollectionConfig = {
     imageSizes: [
       {
         name: 'thumbnail',
-        width: 300, 
+        width: 300,
       },
       {
         name: 'square',

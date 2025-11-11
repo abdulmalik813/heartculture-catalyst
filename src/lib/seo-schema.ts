@@ -1,6 +1,6 @@
 import { getCachedGlobal } from '@/lib/get-globals'
 import { getServerSideURL } from '@/lib/get-url'
-import type { Page, Media, User, Social, Setting, Post } from '@/payload-types'
+import type { Page, Media, User, Social, Setting, Post, Thumbnail } from '@/payload-types'
 import { getMediaUrl } from '@/lib/get-media-url'
 import { mediaExtractor } from '@/lib/image-extractor'
 
@@ -230,21 +230,22 @@ export const mediaSchema = async (media: Media | null | undefined) => {
   }
 
   if (isVideo) {
+    const videoThumbnail = (media.videoThumbnail as Thumbnail) || null
     return {
       ...baseSchema,
       '@type': 'VideoObject',
-      thumbnailUrl: media.thumbnailURL
-        ? getMediaUrl(media.thumbnailURL)
-        : media.sizes?.thumbnail?.url
-          ? getMediaUrl(media.sizes.thumbnail.url)
+      thumbnailUrl: media.videoThumbnail
+        ? getMediaUrl(videoThumbnail.thumbnailURL)
+        : videoThumbnail.sizes?.thumbnail?.url
+          ? getMediaUrl(videoThumbnail.sizes.thumbnail.url)
           : undefined,
       thumbnail:
         media.thumbnailURL || media.sizes?.thumbnail?.url
           ? {
               '@type': 'ImageObject',
-              contentUrl: getMediaUrl(media.thumbnailURL || media.sizes?.thumbnail?.url || ''),
-              width: media.sizes?.thumbnail?.width || undefined,
-              height: media.sizes?.thumbnail?.height || undefined,
+              contentUrl: getMediaUrl(videoThumbnail.thumbnailURL || videoThumbnail.sizes?.thumbnail?.url || ''),
+              width: videoThumbnail.sizes?.thumbnail?.width || undefined,
+              height: videoThumbnail.sizes?.thumbnail?.height || undefined,
             }
           : undefined,
     }

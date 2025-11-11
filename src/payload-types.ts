@@ -25,6 +25,7 @@ export interface Config {
     categories: Category;
     users: User;
     media: Media;
+    thumbnails: Thumbnail;
     styles: Style;
     icons: Icon;
     testimonials: Testimonial;
@@ -44,6 +45,7 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    thumbnails: ThumbnailsSelect<false> | ThumbnailsSelect<true>;
     styles: StylesSelect<false> | StylesSelect<true>;
     icons: IconsSelect<false> | IconsSelect<true>;
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
@@ -545,6 +547,10 @@ export interface Media {
   license?: string | null;
   copyrightNotice?: string | null;
   acquireLicensePage?: string | null;
+  /**
+   * Upload a thumbnail image for this video
+   */
+  videoThumbnail?: (number | null) | Thumbnail;
   prefix?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -607,6 +613,43 @@ export interface Media {
       filename?: string | null;
     };
     og?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "thumbnails".
+ */
+export interface Thumbnail {
+  id: number;
+  alt: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
       url?: string | null;
       width?: number | null;
       height?: number | null;
@@ -1623,6 +1666,10 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
+        relationTo: 'thumbnails';
+        value: number | Thumbnail;
+      } | null)
+    | ({
         relationTo: 'styles';
         value: number | Style;
       } | null)
@@ -2384,6 +2431,7 @@ export interface MediaSelect<T extends boolean = true> {
   license?: T;
   copyrightNotice?: T;
   acquireLicensePage?: T;
+  videoThumbnail?: T;
   prefix?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -2460,6 +2508,48 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
         og?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "thumbnails_select".
+ */
+export interface ThumbnailsSelect<T extends boolean = true> {
+  alt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
           | T
           | {
               url?: T;
