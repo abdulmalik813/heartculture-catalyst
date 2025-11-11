@@ -14,8 +14,10 @@ export async function SchemaRenderer({ pageContext }: { pageContext: PageContext
 
   const schemas = []
 
-  const websiteSchemaData = await websiteSchema(setting)
-  schemas.push(websiteSchemaData)
+  if (setting.enablePost) {
+    const websiteSchemaData = await websiteSchema(setting)
+    schemas.push(websiteSchemaData)
+  }
 
   const organizationSchemaData = await organizationSchema(setting)
   schemas.push(organizationSchemaData)

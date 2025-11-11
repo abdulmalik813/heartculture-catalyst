@@ -36,7 +36,7 @@ const extractPlainText = (content: any, maxLength: number = 500): string => {
   return text.substring(0, maxLength).trim()
 }
 
-export const pageSchema = async (page: Page, settings: Setting) => {
+export const pageSchema = async (page: Page, setting: Setting) => {
   const social = (await getCachedGlobal('social')) as Social
   const medias = mediaExtractor(page)
 
@@ -93,9 +93,9 @@ export const pageSchema = async (page: Page, settings: Setting) => {
     inLanguage: 'en-US',
     datePublished: publishDate ? new Date(publishDate).toISOString() : undefined,
     dateModified: modifyDate ? new Date(modifyDate).toISOString() : undefined,
-    image: await imageSchema(page.meta?.image as Media, settings),
+    image: await imageSchema(page.meta?.image as Media, setting),
     thumbnailUrl:
-      (page.meta?.image as Media)?.url || (settings.fallbackImage as Media)?.url || undefined,
+      (page.meta?.image as Media)?.url || (setting.fallbackImage as Media)?.url || undefined,
     associatedMedia: associatedMediaSchemas.length > 0 ? associatedMediaSchemas : undefined,
     author: page?.author
       ? {
@@ -107,9 +107,9 @@ export const pageSchema = async (page: Page, settings: Setting) => {
       : undefined,
     publisher: {
       '@type': 'Organization',
-      name: settings.appTitle || undefined,
+      name: setting.appTitle || undefined,
       url: getServerSideURL(),
-      logo: await imageSchema(settings.logo as Media, settings),
+      logo: await imageSchema(setting.logo as Media, setting),
       sameAs: socialLinks.length > 0 ? socialLinks : undefined,
     },
     breadcrumb: {
@@ -130,7 +130,7 @@ export const pageSchema = async (page: Page, settings: Setting) => {
   }
 }
 
-export const blogSchema = async (post: Post, settings: Setting) => {
+export const blogSchema = async (post: Post, setting: Setting) => {
   const social = (await getCachedGlobal('social')) as Social
   const medias = mediaExtractor(post)
 
@@ -191,9 +191,9 @@ export const blogSchema = async (post: Post, settings: Setting) => {
     inLanguage: 'en-US',
     datePublished: publishDate ? new Date(publishDate).toISOString() : undefined,
     dateModified: modifyDate ? new Date(modifyDate).toISOString() : undefined,
-    image: await imageSchema(post.meta?.image as Media, settings),
+    image: await imageSchema(post.meta?.image as Media, setting),
     thumbnailUrl:
-      (post.meta?.image as Media)?.url || (settings.fallbackImage as Media)?.url || undefined,
+      (post.meta?.image as Media)?.url || (setting.fallbackImage as Media)?.url || undefined,
     associatedMedia: associatedMediaSchemas.length > 0 ? associatedMediaSchemas : undefined,
     wordCount: wordCount > 0 ? wordCount : undefined,
     articleBody: articleBody || undefined,
@@ -207,15 +207,15 @@ export const blogSchema = async (post: Post, settings: Setting) => {
     },
     publisher: {
       '@type': 'Organization',
-      name: settings.appTitle || undefined,
+      name: setting.appTitle || undefined,
       url: getServerSideURL(),
-      logo: await imageSchema(settings.logo as Media, settings),
+      logo: await imageSchema(setting.logo as Media, setting),
       sameAs: socialLinks.length > 0 ? socialLinks : undefined,
     },
-    url: `${getServerSideURL()}/${settings.postSlug}/${post?.slug}`,
+    url: `${getServerSideURL()}/${setting.postSlug}/${post?.slug}`,
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `${getServerSideURL()}/${settings.postSlug}/${post?.slug}`,
+      '@id': `${getServerSideURL()}/${setting.postSlug}/${post?.slug}`,
     },
     breadcrumb: {
       '@type': 'BreadcrumbList',
@@ -229,14 +229,14 @@ export const blogSchema = async (post: Post, settings: Setting) => {
         {
           '@type': 'ListItem',
           position: 2,
-          name: settings.postListingPageTitle || 'Blog',
-          item: `${getServerSideURL()}/${settings.postSlug}`,
+          name: setting.postListingPageTitle || 'Blog',
+          item: `${getServerSideURL()}/${setting.postSlug}`,
         },
         {
           '@type': 'ListItem',
           position: 3,
           name: post?.title || undefined,
-          item: `${getServerSideURL()}/${settings.postSlug}/${post?.slug}`,
+          item: `${getServerSideURL()}/${setting.postSlug}/${post?.slug}`,
         },
       ],
     },
@@ -248,16 +248,16 @@ export const blogSchema = async (post: Post, settings: Setting) => {
       '@type': 'ReadAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: `${getServerSideURL()}/${settings.postSlug}/${post?.slug}`,
+        urlTemplate: `${getServerSideURL()}/${setting.postSlug}/${post?.slug}`,
       },
     },
   }
 }
 
-export const imageSchema = async (image: Media | null | undefined, settings: Setting) => {
+export const imageSchema = async (image: Media | null | undefined, setting: Setting) => {
   let imageToUse = null
   if (!image || !image.url) {
-    imageToUse = settings.fallbackImage as Media
+    imageToUse = setting.fallbackImage as Media
   } else {
     imageToUse = image
   }
@@ -386,7 +386,7 @@ export const mediaSchema = async (media: Media | null | undefined) => {
   }
 }
 
-export const postListingSchema = async (settings: Setting, social?: Social) => {
+export const postListingSchema = async (setting: Setting, social?: Social) => {
   const socialData = social || ((await getCachedGlobal('social')) as Social)
 
   const socialLinks = [
@@ -401,18 +401,18 @@ export const postListingSchema = async (settings: Setting, social?: Social) => {
   return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: settings.postListingPageTitle || 'Posts',
-    description: settings.postMetaDescription || undefined,
-    url: `${getServerSideURL()}/${settings.postSlug}`,
+    name: setting.postListingPageTitle || 'Posts',
+    description: setting.postMetaDescription || undefined,
+    url: `${getServerSideURL()}/${setting.postSlug}`,
     inLanguage: 'en-US',
-    image: await imageSchema(settings.postMetaImage as Media, settings),
+    image: await imageSchema(setting.postMetaImage as Media, setting),
     thumbnailUrl:
-      (settings.postMetaImage as Media)?.url || (settings.fallbackImage as Media)?.url || undefined,
+      (setting.postMetaImage as Media)?.url || (setting.fallbackImage as Media)?.url || undefined,
     publisher: {
       '@type': 'Organization',
-      name: settings.appTitle || undefined,
+      name: setting.appTitle || undefined,
       url: getServerSideURL(),
-      logo: await imageSchema(settings.logo as Media, settings),
+      logo: await imageSchema(setting.logo as Media, setting),
       sameAs: socialLinks.length > 0 ? socialLinks : undefined,
     },
     breadcrumb: {
@@ -427,15 +427,15 @@ export const postListingSchema = async (settings: Setting, social?: Social) => {
         {
           '@type': 'ListItem',
           position: 2,
-          name: settings.postListingPageTitle || 'Posts',
-          item: `${getServerSideURL()}/${settings.postSlug}`,
+          name: setting.postListingPageTitle || 'Posts',
+          item: `${getServerSideURL()}/${setting.postSlug}`,
         },
       ],
     },
   }
 }
 
-export const websiteSchema = async (settings: Setting) => {
+export const websiteSchema = async (setting: Setting) => {
   const social = (await getCachedGlobal('social')) as Social
   
   const socialLinks = [
@@ -450,29 +450,29 @@ export const websiteSchema = async (settings: Setting) => {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: settings.appTitle || undefined,
-    description: settings.appDescription || undefined,
+    name: setting.appTitle || undefined,
+    description: setting.appDescription || undefined,
     url: getServerSideURL(),
     inLanguage: 'en-US',
     publisher: {
       '@type': 'Organization',
-      name: settings.appTitle || undefined,
+      name: setting.appTitle || undefined,
       url: getServerSideURL(),
-      logo: await imageSchema(settings.logo as Media, settings),
+      logo: await imageSchema(setting.logo as Media, setting),
       sameAs: socialLinks.length > 0 ? socialLinks : undefined,
     },
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: `${getServerSideURL()}/search?q={search_term_string}`,
+        urlTemplate: `${getServerSideURL()}/${setting?.postSlug}?q={search_term_string}`,
       },
       'query-input': 'required name=search_term_string',
     },
   }
 }
 
-export const organizationSchema = async (settings: Setting) => {
+export const organizationSchema = async (setting: Setting) => {
   const social = (await getCachedGlobal('social')) as Social
   
   const socialLinks = [
@@ -487,10 +487,10 @@ export const organizationSchema = async (settings: Setting) => {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: settings.appTitle || undefined,
-    description: settings.appDescription || undefined,
+    name: setting.appTitle || undefined,
+    description: setting.appDescription || undefined,
     url: getServerSideURL(),
-    logo: await imageSchema(settings.logo as Media, settings),
+    logo: await imageSchema(setting.logo as Media, setting),
     sameAs: socialLinks.length > 0 ? socialLinks : undefined,
   }
 }
