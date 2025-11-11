@@ -1,8 +1,40 @@
 import { getCachedGlobal } from '@/lib/get-globals'
 import { getServerSideURL } from '@/lib/get-url'
-import type { Page, Media, User, Social, Setting, Post } from '@/payload-types'
+import type { Page, Media, User, Social, Setting, Post, Category } from '@/payload-types'
 import { getMediaUrl } from '@/lib/get-media-url'
 import { mediaExtractor } from '@/lib/image-extractor'
+
+const calculateWordCount = (content: any): number => {
+  if (!content?.root?.children) return 0
+  
+  const extractText = (node: any): string => {
+    if (!node) return ''
+    if (node.text) return node.text
+    if (node.children) {
+      return node.children.map(extractText).join(' ')
+    }
+    return ''
+  }
+  
+  const text = content.root.children.map(extractText).join(' ')
+  return text.split(/\s+/).filter(Boolean).length
+}
+
+const extractPlainText = (content: any, maxLength: number = 500): string => {
+  if (!content?.root?.children) return ''
+  
+  const extractText = (node: any): string => {
+    if (!node) return ''
+    if (node.text) return node.text
+    if (node.children) {
+      return node.children.map(extractText).join(' ')
+    }
+    return ''
+  }
+  
+  const text = content.root.children.map(extractText).join(' ')
+  return text.substring(0, maxLength).trim()
+}
 
 export const pageSchema = async (page: Page, settings: Setting) => {
   const social = (await getCachedGlobal('social')) as Social
@@ -58,6 +90,7 @@ export const pageSchema = async (page: Page, settings: Setting) => {
     name: page?.meta?.title || page?.title || undefined,
     description: page?.meta?.description || undefined,
     url: `${getServerSideURL()}/${page?.slug}`,
+    inLanguage: 'en-US',
     datePublished: publishDate ? new Date(publishDate).toISOString() : undefined,
     dateModified: modifyDate ? new Date(modifyDate).toISOString() : undefined,
     image: await imageSchema(page.meta?.image as Media, settings),
@@ -68,17 +101,31 @@ export const pageSchema = async (page: Page, settings: Setting) => {
       ? {
           '@type': 'Person',
           name: (page.author as User)?.name || undefined,
+          url: `${getServerSideURL()}/author/${(page.author as User)?.id}`,
           sameAs: socialLinks.length > 0 ? socialLinks : undefined,
         }
       : undefined,
     publisher: {
       '@type': 'Organization',
       name: settings.appTitle || undefined,
+      url: getServerSideURL(),
       logo: await imageSchema(settings.logo as Media, settings),
+      sameAs: socialLinks.length > 0 ? socialLinks : undefined,
     },
     breadcrumb: {
       '@type': 'BreadcrumbList',
       itemListElement: breadcrumbItems,
+    },
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['.page-title', '.page-content', '.hero-title', '.hero-description'],
+    },
+    potentialAction: {
+      '@type': 'ReadAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${getServerSideURL()}/${page?.slug}`,
+      },
     },
   }
 }
@@ -103,28 +150,73 @@ export const blogSchema = async (post: Post, settings: Setting) => {
   const publishDate = post?.publishedAt || post?.createdAt
   const modifyDate = post?.updatedAt
 
+  let wordCount = 0
+  let articleBody = ''
+  
+  if (post?.layout) {
+    for (const section of post.layout) {
+      if (section.grid) {
+        for (const gridItem of section.grid) {
+          if (gridItem.blocks) {
+            for (const block of gridItem.blocks) {
+              if (block.blockType === 'contentBlock' && block.content) {
+                wordCount += calculateWordCount(block.content)
+                if (!articleBody) {
+                  articleBody = extractPlainText(block.content)
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  const keywords = post?.categories
+    ?.map((cat) => (typeof cat === 'object' ? cat.name : ''))
+    .filter(Boolean)
+    .join(', ')
+
+  const articleSection = post?.categories?.[0]
+    ? typeof post.categories[0] === 'object'
+      ? post.categories[0].name
+      : undefined
+    : undefined
+
   return {
     '@context': 'https://schema.org',
     '@type': ['BlogPosting', 'Article'],
     headline: post?.meta?.title || post?.title || undefined,
     description: post?.meta?.description || undefined,
+    inLanguage: 'en-US',
     datePublished: publishDate ? new Date(publishDate).toISOString() : undefined,
     dateModified: modifyDate ? new Date(modifyDate).toISOString() : undefined,
     image: await imageSchema(post.meta?.image as Media, settings),
     thumbnailUrl:
       (post.meta?.image as Media)?.url || (settings.fallbackImage as Media)?.url || undefined,
     associatedMedia: associatedMediaSchemas.length > 0 ? associatedMediaSchemas : undefined,
+    wordCount: wordCount > 0 ? wordCount : undefined,
+    articleBody: articleBody || undefined,
+    articleSection: articleSection,
+    keywords: keywords || undefined,
     author: {
       '@type': 'Person',
       name: (post.author as User)?.name || undefined,
+      url: `${getServerSideURL()}/author/${(post.author as User)?.id}`,
       sameAs: socialLinks.length > 0 ? socialLinks : undefined,
     },
     publisher: {
       '@type': 'Organization',
       name: settings.appTitle || undefined,
+      url: getServerSideURL(),
       logo: await imageSchema(settings.logo as Media, settings),
+      sameAs: socialLinks.length > 0 ? socialLinks : undefined,
     },
     url: `${getServerSideURL()}/${settings.postSlug}/${post?.slug}`,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${getServerSideURL()}/${settings.postSlug}/${post?.slug}`,
+    },
     breadcrumb: {
       '@type': 'BreadcrumbList',
       itemListElement: [
@@ -148,6 +240,17 @@ export const blogSchema = async (post: Post, settings: Setting) => {
         },
       ],
     },
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['.article-headline', '.article-content', '.hero-title'],
+    },
+    potentialAction: {
+      '@type': 'ReadAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${getServerSideURL()}/${settings.postSlug}/${post?.slug}`,
+      },
+    },
   }
 }
 
@@ -169,6 +272,7 @@ export const imageSchema = async (image: Media | null | undefined, settings: Set
     contentUrl: getMediaUrl(imageToUse.url),
     url: getMediaUrl(imageToUse.url),
     name: imageToUse?.alt || imageToUse?.filename || undefined,
+    alternateName: imageToUse?.filename || undefined,
     description: imageToUse?.caption || undefined,
     width: imageToUse?.width || undefined,
     height: imageToUse?.height || undefined,
@@ -211,6 +315,7 @@ export const mediaSchema = async (media: Media | null | undefined) => {
     contentUrl: getMediaUrl(media.url),
     url: getMediaUrl(media.url),
     name: media.alt || media.filename || undefined,
+    alternateName: media.filename || undefined,
     description: media.caption || undefined,
     encodingFormat: media.mimeType || undefined,
     contentSize: media.filesize ? `${media.filesize}` : undefined,
@@ -299,12 +404,14 @@ export const postListingSchema = async (settings: Setting, social?: Social) => {
     name: settings.postListingPageTitle || 'Posts',
     description: settings.postMetaDescription || undefined,
     url: `${getServerSideURL()}/${settings.postSlug}`,
+    inLanguage: 'en-US',
     image: await imageSchema(settings.postMetaImage as Media, settings),
     thumbnailUrl:
       (settings.postMetaImage as Media)?.url || (settings.fallbackImage as Media)?.url || undefined,
     publisher: {
       '@type': 'Organization',
       name: settings.appTitle || undefined,
+      url: getServerSideURL(),
       logo: await imageSchema(settings.logo as Media, settings),
       sameAs: socialLinks.length > 0 ? socialLinks : undefined,
     },
@@ -325,5 +432,65 @@ export const postListingSchema = async (settings: Setting, social?: Social) => {
         },
       ],
     },
+  }
+}
+
+export const websiteSchema = async (settings: Setting) => {
+  const social = (await getCachedGlobal('social')) as Social
+  
+  const socialLinks = [
+    social.facebook,
+    social.instagram,
+    social.linkedin,
+    social.x,
+    social.youtube,
+    social.tiktok,
+  ].filter((link) => link)
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: settings.appTitle || undefined,
+    description: settings.appDescription || undefined,
+    url: getServerSideURL(),
+    inLanguage: 'en-US',
+    publisher: {
+      '@type': 'Organization',
+      name: settings.appTitle || undefined,
+      url: getServerSideURL(),
+      logo: await imageSchema(settings.logo as Media, settings),
+      sameAs: socialLinks.length > 0 ? socialLinks : undefined,
+    },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${getServerSideURL()}/search?q={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  }
+}
+
+export const organizationSchema = async (settings: Setting) => {
+  const social = (await getCachedGlobal('social')) as Social
+  
+  const socialLinks = [
+    social.facebook,
+    social.instagram,
+    social.linkedin,
+    social.x,
+    social.youtube,
+    social.tiktok,
+  ].filter((link) => link)
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: settings.appTitle || undefined,
+    description: settings.appDescription || undefined,
+    url: getServerSideURL(),
+    logo: await imageSchema(settings.logo as Media, settings),
+    sameAs: socialLinks.length > 0 ? socialLinks : undefined,
   }
 }
