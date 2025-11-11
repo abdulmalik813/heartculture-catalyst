@@ -106,7 +106,7 @@ function extractPostSlug(slugArray: string[], postSlug: string): string | null {
 
 export default async function PageRoute({ params, searchParams }: Readonly<SlugProps>) {
   const { isEnabled: draft } = await draftMode()
-  
+
   const setting = (await getCachedGlobal('settings', 1, draft)) as Setting
   const isPostEnabled = setting.enablePost
   const param = await params
@@ -161,7 +161,7 @@ export default async function PageRoute({ params, searchParams }: Readonly<SlugP
   }
   return (
     <>
-      {/* <AdminBar pageContext={pageContext} /> */}
+      <AdminBar pageContext={pageContext} />
       <NavigationBarUI pageContext={pageContext} />
       <main className="flex-1">
         <article className="min-h-[70vh]">
