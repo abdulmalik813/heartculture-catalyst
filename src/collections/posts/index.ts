@@ -76,7 +76,7 @@ export const Posts: CollectionConfig<'posts'> = {
   admin: {
     defaultColumns: ['title', 'slug', 'publishedAt', 'updatedAt'],
     useAsTitle: 'title',
-    listSearchableFields: ['title'],
+    listSearchableFields: ['title', 'slug', 'publishedAt', 'updatedAt'],
     hidden: ({ user }) => {
       if (user?.payload) {
         checkPostEnabled()

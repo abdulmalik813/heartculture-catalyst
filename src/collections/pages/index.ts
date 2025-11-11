@@ -34,7 +34,7 @@ export const Pages: CollectionConfig<'pages'> = {
     update: authenticated,
   },
   admin: {
-    defaultColumns: ['title', 'slug', 'updatedAt'],
+    defaultColumns: ['title', 'slug', 'publishedAt', 'updatedAt'],
     useAsTitle: 'title',
     livePreview: {
       url: ({ data }) => generatePreviewPath(`${data?.slug}`),
@@ -42,11 +42,13 @@ export const Pages: CollectionConfig<'pages'> = {
     preview: async (data) => {
       return generatePreviewPath(`${data?.slug}`)
     },
+    listSearchableFields: ['title', 'slug', 'publishedAt', 'updatedAt'],
   },
   defaultPopulate: {
     title: true,
     slug: true,
   },
+
   fields: [
     {
       name: 'title',
@@ -100,7 +102,7 @@ export const Pages: CollectionConfig<'pages'> = {
                                 TableBlock,
                                 LastModifiedBlock,
                                 TestimonialBlock,
-                                GalleryBlock
+                                GalleryBlock,
                               ],
                               required: false,
                             },
