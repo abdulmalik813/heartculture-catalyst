@@ -250,6 +250,7 @@ export interface Page {
                     | FormBlock
                     | TableBlock
                     | LastModifiedBlock
+                    | TestimonialBlock
                   )[]
                 | null;
               id?: string | null;
@@ -1326,6 +1327,65 @@ export interface RecentPostsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonialBlock".
+ */
+export interface TestimonialBlock {
+  title?: string | null;
+  titleStyles?: (number | Style)[] | null;
+  type?: ('carousel' | 'grid') | null;
+  testimonialStyles?: (number | Style)[] | null;
+  testimonials: (number | Testimonial)[];
+  nav?: {
+    label?: string | null;
+    appearance?: ('link' | 'button' | 'dropdown') | null;
+    link?: {
+      type?: ('reference' | 'postListingPage' | 'custom') | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+      newTab?: boolean | null;
+    };
+    items?:
+      | {
+          label: string;
+          type?: ('reference' | 'postListingPage' | 'custom') | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          newTab?: boolean | null;
+          icon?: (number | null) | Icon;
+          placement?: ('before' | 'after') | null;
+          iconStyles?: (number | Style)[] | null;
+          id?: string | null;
+        }[]
+      | null;
+    buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+    buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+    styles?: (number | Style)[] | null;
+    icon?: (number | null) | Icon;
+    placement?: ('before' | 'after') | null;
+    iconStyles?: (number | Style)[] | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'testimonialBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "testimonials".
  */
 export interface Testimonial {
@@ -1704,6 +1764,7 @@ export interface PagesSelect<T extends boolean = true> {
                     formBlock?: T | FormBlockSelect<T>;
                     tableBlock?: T | TableBlockSelect<T>;
                     lastModifiedBlock?: T | LastModifiedBlockSelect<T>;
+                    testimonialBlock?: T | TestimonialBlockSelect<T>;
                   };
               id?: T;
             };
@@ -1999,6 +2060,52 @@ export interface TableBlockSelect<T extends boolean = true> {
 export interface LastModifiedBlockSelect<T extends boolean = true> {
   cardStyles?: T;
   cardContentStyles?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonialBlock_select".
+ */
+export interface TestimonialBlockSelect<T extends boolean = true> {
+  title?: T;
+  titleStyles?: T;
+  type?: T;
+  testimonialStyles?: T;
+  testimonials?: T;
+  nav?:
+    | T
+    | {
+        label?: T;
+        appearance?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              reference?: T;
+              url?: T;
+              newTab?: T;
+            };
+        items?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              reference?: T;
+              url?: T;
+              newTab?: T;
+              icon?: T;
+              placement?: T;
+              iconStyles?: T;
+              id?: T;
+            };
+        buttonType?: T;
+        buttonSize?: T;
+        styles?: T;
+        icon?: T;
+        placement?: T;
+        iconStyles?: T;
+      };
   id?: T;
   blockName?: T;
 }

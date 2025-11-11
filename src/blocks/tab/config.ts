@@ -4,6 +4,7 @@ import { MediaBlock } from '@/blocks/media/config'
 import { NavigationBlock } from '@/blocks/navigation/config'
 import { defaultLexicalValue } from '@/constants/default-lexical'
 import { AccordionBlock } from '@/blocks/accordion/config'
+import { TestimonialBlock } from '@/blocks/testimonial/config'
 
 export const TabBlock: Block = {
   slug: 'tabBlock',
@@ -42,7 +43,7 @@ export const TabBlock: Block = {
                           editor: defaultLexical({
                             features: {
                               blocks: {
-                                blocks: [MediaBlock, NavigationBlock, AccordionBlock],
+                                blocks: [MediaBlock, NavigationBlock, AccordionBlock, TestimonialBlock],
                                 inlineBlocks: [MediaBlock, NavigationBlock],
                               },
                             },
@@ -98,6 +99,6 @@ export const TabBlock: Block = {
     },
   ],
   graphQL: {
-    singularName: 'TabBlockTabBlock',
+    singularName: 'TabBlock',
   },
 }

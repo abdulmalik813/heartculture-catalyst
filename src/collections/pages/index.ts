@@ -22,6 +22,7 @@ import { FormBlock } from '@/blocks/form/config'
 import { TableBlock } from '@/blocks/table/config'
 import { LastModifiedBlock } from '@/blocks/last-modified/config'
 import { grid } from '@/fields/grid'
+import { TestimonialBlock } from '@/blocks/testimonial/config'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
@@ -97,6 +98,7 @@ export const Pages: CollectionConfig<'pages'> = {
                                 FormBlock,
                                 TableBlock,
                                 LastModifiedBlock,
+                                TestimonialBlock
                               ],
                               required: false,
                             },

@@ -70,20 +70,20 @@ function LogoLink({
   return (
     <Link
       href="/"
-      className="group flex items-center gap-2 shrink-0 transition-opacity duration-200 hover:opacity-80"
+      className="group flex items-center gap-2 shrink-0"
       aria-label="Home"
     >
       <MediaBlockUI
         media={lightLogo}
         pageContext={pageContext}
         priority
-        className={joinStyles('dark:hidden transition-all duration-200', logoStyles)}
+        className={joinStyles('dark:hidden transition-transform group-hover:scale-105', logoStyles)}
       />
       <MediaBlockUI
         media={darkLogo}
         priority
         pageContext={pageContext}
-        className={joinStyles('hidden dark:block transition-all duration-200', logoStyles)}
+        className={joinStyles('hidden dark:block transition-transform group-hover:scale-105', logoStyles)}
       />
       {useTitleWithLogo && appTitle && (
         <span className={joinStyles('text-lg font-semibold tracking-tight', titleStyles)}>
@@ -257,7 +257,7 @@ export async function NavigationBarUI({ pageContext }: { pageContext: PageContex
                           {item.nav?.label}
                         </NavigationMenuTrigger>
                         <NavigationMenuContent className="left-0">
-                          <ul className="grid gap-1 p-2 w-[400px] grid-cols-1">
+                          <ul className="grid gap-1 p-2 grid-cols-1">
                             {item.nav?.items?.map((dropdownItem) => (
                               <li key={dropdownItem.id}>
                                 <div className="block rounded-lg p-2.5 hover:bg-accent transition-colors duration-200 group">
