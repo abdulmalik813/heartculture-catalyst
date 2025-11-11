@@ -25,8 +25,10 @@ export async function CallToActionBlockUI({
         </div>
       )}
 
-      <div className="w-full max-w-2xl relative z-10">
-        <CardBlockUI {...callToActionBlock.card} pageContext={pageContext} />
+      <div className="flex items-center justify-center w-full">
+        <div className="w-full max-w-2xl scale-75 sm:scale-90 md:scale-100">
+          <CardBlockUI {...callToActionBlock.card} pageContext={pageContext} />
+        </div>
       </div>
     </div>
   )
