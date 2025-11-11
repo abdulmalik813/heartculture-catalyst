@@ -33,7 +33,7 @@ export function MediaBlockUI({
     <div className={joinStyles(mediaBlock.wrapperStyles)}>
       <Link href={getServerSideURL() + media.url}>
         <Button className={joinStyles(className, mediaBlock.contentStyles)}>
-          {media?.caption && <LexicalRenderer content={media.caption} pageContext={pageContext} />}
+          {media?.caption}
         </Button>
       </Link>
     </div>
