@@ -87,12 +87,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     })
     
     console.log('✓ Authentication call completed')
-    console.log('User result:', user ? {
-      id: user.id,
-      email: user.email,
-      collection: user.collection,
-      _strategy: user._strategy,
-    } : 'null/undefined')
+    console.log('User result:', user)
     
   } catch (error) {
     console.error('✗ Authentication failed with error')
