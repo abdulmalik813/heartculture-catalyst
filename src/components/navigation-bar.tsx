@@ -16,6 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
   SheetClose,
+  SheetDescription,
 } from '@/components/ui/sheet'
 import {
   Accordion,
@@ -116,13 +117,13 @@ function MobileMenu({
       <SheetContent
         side="right"
         className="w-full sm:max-w-md overflow-y-auto p-0 border-l"
-        aria-describedby="Navigation Menu"
       >
         <div className="px-6 py-6">
           <SheetHeader className="mb-6">
             <SheetTitle className="text-left text-lg font-semibold">
               {appTitle || 'Menu'}
             </SheetTitle>
+            <SheetDescription />
           </SheetHeader>
           <nav>
             <div className="space-y-1">
