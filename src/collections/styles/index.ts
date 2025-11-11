@@ -40,13 +40,7 @@ export const Styles: CollectionConfig<'styles'> = {
       label: 'Class name',
       required: true,
       admin: {
-        description: 'This cannot be changed after creation',
-      },
-      access: {
-        update: ({ id }) => !id,
-      },
-      hooks: {
-        afterChange: [],
+        description: 'Changing this will require Site revalidation.',
       },
     },
     {

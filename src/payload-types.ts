@@ -521,7 +521,7 @@ export interface Style {
   alias: string;
   tailwind?: boolean | null;
   /**
-   * This cannot be changed after creation
+   * Changing this will require Site revalidation.
    */
   className: string;
   /**
