@@ -12,6 +12,7 @@ import { RecentPostsBlockUI } from '@/blocks/recent-posts'
 import { FormBlockUI } from '@/blocks/form'
 import { PageContext } from '@/types/page-context'
 import { TestimonialBlockUI } from '@/blocks/testimonial'
+import { GalleryBlockUI } from '@/blocks/gallery'
 
 const blockComponents = {
   contentBlock: ContentBlockUI,
@@ -25,6 +26,7 @@ const blockComponents = {
   lastModifiedBlock: LastModifiedBlockUI,
   recentPostsBlock: RecentPostsBlockUI,
   testimonialBlock: TestimonialBlockUI,
+  galleryBlock: GalleryBlockUI,
 }
 
 type BlockRendererProps = {

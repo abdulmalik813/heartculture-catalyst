@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 import { Media } from '@/components/media'
 import { PageContext } from '@/types/page-context'
 
-export async function DividerBlockUI({
+export async function GalleryBlockUI({
   pageContext,
   ...galleryBlock
 }: GalleryBlock & { pageContext: PageContext }) {
