@@ -120,6 +120,14 @@ export const plugins: Plugin[] = [
           },
         },
       },
+      thumbnails: {
+        prefix: 'thumbnails',
+        signedDownloads: {
+          shouldUseSignedURL: ({ filename }) => {
+            return filename.endsWith('.mp4')
+          },
+        },
+      },
     },
     bucket: S3.BUCKET,
     clientUploads: true,
