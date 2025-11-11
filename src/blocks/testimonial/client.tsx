@@ -1,0 +1,324 @@
+'use client'
+
+import { Card, CardContent } from '@/components/ui/card'
+import { TestimonialBlock, Testimonial } from '@/payload-types'
+import { joinStyles } from '@/lib/make-styles'
+import { NavigationBlockUI } from '@/blocks/navigation'
+import { PageContext } from '@/types/page-context'
+import { Star, User, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Media } from '@/components/media'
+
+interface TestimonialBlockClientProps {
+  block: Partial<TestimonialBlock>
+  testimonials: Testimonial[]
+  pageContext: PageContext
+}
+
+export function TestimonialBlockClient({
+  block,
+  testimonials,
+  pageContext,
+}: TestimonialBlockClientProps) {
+  return (
+    <div className="w-full">
+      {block.title && (
+        <h2 className={joinStyles(block.titleStyles)}>{block.title}</h2>
+      )}
+      
+      {block.type === 'carousel' ? (
+        <TestimonialCarousel 
+          testimonials={testimonials} 
+          testimonialStyles={block.testimonialStyles}
+          nav={block.nav}
+          pageContext={pageContext}
+        />
+      ) : (
+        <TestimonialGrid 
+          testimonials={testimonials} 
+          testimonialStyles={block.testimonialStyles}
+        />
+      )}
+    </div>
+  )
+}
+
+function TestimonialCarousel({ 
+  testimonials, 
+  testimonialStyles,
+  nav,
+  pageContext
+}: { 
+  testimonials: Testimonial[]
+  testimonialStyles?: TestimonialBlock['testimonialStyles']
+  nav?: TestimonialBlock['nav']
+  pageContext: PageContext
+}) {
+  const [active, setActive] = useState(0)
+
+  const handleNext = () => {
+    setActive((prev) => (prev + 1) % testimonials.length)
+  }
+
+  const handlePrev = () => {
+    setActive((prev) => (prev - 1 + testimonials.length) % testimonials.length)
+  }
+
+  useEffect(() => {
+    if (testimonials.length === 0) return
+    const interval = setInterval(handleNext, 7000)
+    return () => clearInterval(interval)
+  }, [testimonials.length])
+
+  if (testimonials.length === 0) return null
+
+  const getStyle = (index: number) => {
+    const offset = (index - active + testimonials.length) % testimonials.length
+    if (offset === 0) {
+      return {
+        transform: 'rotate(0deg) scale(1) translateY(0) translateX(0)',
+        opacity: 1,
+        zIndex: 30,
+        filter: 'blur(0px)',
+      }
+    }
+    if (offset === 1) {
+      return {
+        transform: 'rotate(3deg) scale(0.96) translateY(3%) translateX(2%)',
+        opacity: 0.7,
+        zIndex: 20,
+        filter: 'blur(0.5px)',
+      }
+    }
+    if (offset === testimonials.length - 1) {
+      return {
+        transform: 'rotate(-3deg) scale(0.96) translateY(3%) translateX(-2%)',
+        opacity: 0,
+        zIndex: 10,
+        filter: 'blur(1px)',
+      }
+    }
+    return {
+      transform: `rotate(${Math.min(offset * 2, 8)}deg) scale(${1 - Math.min(offset * 0.05, 0.15)}) translateY(${Math.min(offset * 3, 8)}%)`,
+      opacity: 0,
+      zIndex: 1,
+      filter: 'blur(2px)',
+    }
+  }
+
+  const getTitle = (testimonial: Testimonial) => {
+    if (testimonial.type === 'company') {
+      return testimonial.company || testimonial.name
+    }
+    return testimonial.name
+  }
+
+  const getSubtitle = (testimonial: Testimonial) => {
+    if (testimonial.type === 'individual') {
+      const parts = []
+      if (testimonial.position) parts.push(testimonial.position)
+      if (testimonial.company) parts.push(testimonial.company)
+      return parts.join(' • ')
+    }
+    return testimonial.position || null
+  }
+
+  const truncateContent = (content: string) => {
+    if (content.length <= 200) return content
+    return content.substring(0, 200) + '...'
+  }
+
+  const getInitial = (name: string) => {
+    return name.charAt(0).toUpperCase()
+  }
+
+  return (
+    <div className={`mx-auto max-w-sm px-4 py-12 md:max-w-4xl md:px-8 md:py-15 lg:px-12 ${joinStyles(testimonialStyles)}`}>
+      <div className="relative grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-20">
+        <div>
+          <div className="relative h-80 w-full bg-muted rounded-3xl">
+            {testimonials.map((testimonial, index) => (
+              <div
+                key={testimonial.id}
+                className="absolute inset-0 transition-all duration-700 ease-out"
+                style={getStyle(index)}
+              >
+                <Card className="h-full w-full shadow-lg flex items-center justify-center border-0">
+                  <CardContent className="p-0 h-full w-full">
+                    {testimonial.avatar ? (
+                      <div className="flex h-full w-full items-center justify-center p-8">
+                        <Media
+                          resource={testimonial.avatar}
+                          imgClassName="max-h-full max-w-full object-contain rounded-3xl"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center rounded-3xl bg-gradient-to-br from-muted to-muted/80">
+                        <div className="flex h-32 w-32 items-center justify-center rounded-full bg-background/50">
+                          {testimonial.name ? (
+                            <span className="text-6xl font-bold text-muted-foreground">
+                              {getInitial(testimonial.name)}
+                            </span>
+                          ) : (
+                            <User className="h-16 w-16 text-muted-foreground" strokeWidth={1.5} />
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex flex-col justify-between py-4">
+          <div className="min-h-[280px] md:min-h-[320px]">
+            <div className="flex items-center gap-3 min-h-[32px]">
+              <h3 className="text-2xl font-bold text-foreground">
+                {getTitle(testimonials[active])}
+              </h3>
+              {testimonials[active]?.rating !== null && testimonials[active]?.rating !== undefined && (
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      className={i < (testimonials[active]?.rating || 0) ? "h-5 w-5 fill-primary text-primary" : "h-5 w-5 fill-muted text-muted-foreground"}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="mt-1 min-h-[20px]">
+              {getSubtitle(testimonials[active]) && (
+                <p className="text-sm text-muted-foreground">{getSubtitle(testimonials[active])}</p>
+              )}
+            </div>
+
+            <div className="mt-8 min-h-[160px]">
+              {testimonials[active]?.content && (
+                <p className="text-lg text-foreground">
+                  {truncateContent(testimonials[active]?.content || '')}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="flex justify-center gap-4 md:justify-start">
+            <button
+              onClick={handlePrev}
+              className="group flex h-12 w-12 items-center justify-center rounded-full bg-muted transition-colors hover:bg-muted/80"
+              aria-label="Previous testimonial"
+            >
+              <ChevronLeft className="h-6 w-6 text-foreground transition-transform duration-300 group-hover:rotate-12" />
+            </button>
+            <button
+              onClick={handleNext}
+              className="group flex h-12 w-12 items-center justify-center rounded-full bg-muted transition-colors hover:bg-muted/80"
+              aria-label="Next testimonial"
+            >
+              <ChevronRight className="h-6 w-6 text-foreground transition-transform duration-300 group-hover:-rotate-12" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {nav && (
+        <div className="flex justify-center mt-8">
+          <NavigationBlockUI {...nav} pageContext={pageContext} />
+        </div>
+      )}
+    </div>
+  )
+}
+
+function TestimonialGrid({ 
+  testimonials, 
+  testimonialStyles 
+}: { 
+  testimonials: Testimonial[]
+  testimonialStyles?: TestimonialBlock['testimonialStyles']
+}) {
+  return (
+    <div className={`columns-1 md:columns-2 lg:columns-3 gap-6 mt-8 ${joinStyles(testimonialStyles)}`}>
+      {testimonials.map((testimonial) => (
+        <div key={testimonial.id} className="mb-6 break-inside-avoid">
+          <TestimonialCard testimonial={testimonial} />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
+  const getTitle = (testimonial: Testimonial) => {
+    if (testimonial.type === 'company') {
+      return testimonial.company || testimonial.name
+    }
+    return testimonial.name
+  }
+
+  const getSubtitle = (testimonial: Testimonial) => {
+    if (testimonial.type === 'individual') {
+      const parts = []
+      if (testimonial.position) parts.push(testimonial.position)
+      if (testimonial.company) parts.push(testimonial.company)
+      return parts.join(' • ')
+    }
+    return testimonial.position || null
+  }
+
+  const getInitial = (name: string) => {
+    return name.charAt(0).toUpperCase()
+  }
+
+  return (
+    <Card className="h-full">
+      <CardContent className="p-6">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="aspect-square bg-muted flex items-center justify-center rounded-full w-16 h-16 shrink-0">
+            {testimonial.avatar ? (
+              <Media
+                resource={testimonial.avatar}
+                imgClassName="w-full h-full object-cover rounded-full"
+              />
+            ) : (
+              testimonial.name ? (
+                <span className="text-2xl font-bold text-muted-foreground">
+                  {getInitial(testimonial.name)}
+                </span>
+              ) : (
+                <User className="text-muted-foreground" size={32} />
+              )
+            )}
+          </div>
+          <div className="flex-1">
+            <h3 className="font-semibold text-lg text-foreground">
+              {getTitle(testimonial)}
+            </h3>
+            {getSubtitle(testimonial) && (
+              <p className="text-sm text-muted-foreground">
+                {getSubtitle(testimonial)}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {testimonial.rating !== null && testimonial.rating !== undefined && (
+          <div className="flex gap-1 mb-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Star
+                key={i}
+                className={i < (testimonial.rating || 0) ? "h-5 w-5 fill-primary text-primary" : "h-5 w-5 fill-muted text-muted-foreground"}
+              />
+            ))}
+          </div>
+        )}
+
+        <p className="text-foreground/80">{testimonial.content}</p>
+
+      </CardContent>
+    </Card>
+  )
+}
