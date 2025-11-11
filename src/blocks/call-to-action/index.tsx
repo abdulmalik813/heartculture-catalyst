@@ -13,23 +13,23 @@ export async function CallToActionBlockUI({
   const media = callToActionBlock.media as MediaCollection | undefined
 
   return (
-    <div className="relative min-h-[300px] flex items-center justify-center p-8 md:p-12 lg:p-16">
-      {media && media.url && (
-        <div className={`absolute inset-0 -z-10 overflow-hidden`}>
-          {/* @ts-expect-error there may be some mismatch between the expected types here */}
-          <MediaBlockUI
-            {...callToActionBlock}
-            className="w-full h-full object-cover"
-            pageContext={pageContext}
-          />
-        </div>
-      )}
+    <div className="overflow-hidden">
+      <div className="relative w-screen min-h-[300px] flex items-center justify-center -mx-[50vw] left-1/2 right-1/2 py-16 sm:py-24">
+        {media && media.url && (
+          <div className={`absolute inset-0 w-full h-full select-none`}>
+            {/* @ts-expect-error there may be some mismatch between the expected types here */}
+            <MediaBlockUI
+              {...callToActionBlock}
+              className="w-full h-full object-cover select-none pointer-events-none"
+              pageContext={pageContext}
+            />
+          </div>
+        )}
 
-      <div className="flex items-center justify-center w-full">
-        <div className="w-full max-w-2xl scale-75 sm:scale-90 md:scale-100">
+        <div className="relative z-20 p-4 max-w-4xl mx-auto w-full">
           <CardBlockUI {...callToActionBlock.card} pageContext={pageContext} />
         </div>
-      </div>
+      </div>{' '}
     </div>
   )
 }
