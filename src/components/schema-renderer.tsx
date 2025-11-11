@@ -1,48 +1,25 @@
 import Script from 'next/script'
-import {
-  blogSchema,
-  postListingSchema,
-  pageSchema,
-  websiteSchema,
-  organizationSchema,
-} from '@/lib/seo-schema'
+import { blogSchema, postListingSchema, pageSchema } from '@/lib/seo-schema'
 import { Post, Page } from '@/payload-types'
 import { PageContext } from '@/types/page-context'
 
 export async function SchemaRenderer({ pageContext }: { pageContext: PageContext }) {
   const { page, isItAPost, isPostListingPage, setting } = pageContext
-
-  const schemas = []
-
-  if (setting.enablePost) {
-    const websiteSchemaData = await websiteSchema(setting)
-    schemas.push(websiteSchemaData)
-  }
-
-  const organizationSchemaData = await organizationSchema(setting)
-  schemas.push(organizationSchemaData)
+  let schema = null
 
   if (isPostListingPage) {
-    const listingSchema = await postListingSchema(setting)
-    schemas.push(listingSchema)
+    schema = await postListingSchema(setting)
   } else if (isItAPost && page) {
-    const blogSchemaData = await blogSchema(page as Post, setting)
-    schemas.push(blogSchemaData)
+    schema = await blogSchema(page as Post, setting)
   } else if (page) {
-    const pageSchemaData = await pageSchema(page as Page, setting)
-    schemas.push(pageSchemaData)
+    schema = await pageSchema(page as Page, setting)
   }
 
-  if (schemas.length === 0) return null
-
-  const combinedSchema = {
-    '@context': 'https://schema.org',
-    '@graph': schemas,
-  }
+  if (!schema) return null
 
   return (
     <Script id="schema" type="application/ld+json" strategy="lazyOnload">
-      {JSON.stringify(combinedSchema)}
+      {JSON.stringify(schema)}
     </Script>
   )
 }
