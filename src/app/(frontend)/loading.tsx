@@ -8,7 +8,6 @@ import { getCachedGlobal } from '@/lib/get-globals'
 import { draftMode } from 'next/headers'
 import { SlugProps } from '@/types/slug-props'
 import { AdminBar } from '@/components/admin-bar'
-import { LivePreviewListener } from '@/components/live-preview-listener'
 import { Metadata } from 'next'
 
 export async function generateMetadata({ params }: SlugProps): Promise<Metadata> {
@@ -47,7 +46,6 @@ export default async function Loading({ params, searchParams }: Readonly<SlugPro
 
   return (
     <>
-      {draft && <LivePreviewListener />}
       <AdminBar pageContext={pageContext} />
       <NavigationBarUI pageContext={pageContext} />
       <main className="flex-1">

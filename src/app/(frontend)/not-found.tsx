@@ -10,7 +10,6 @@ import { CardHeader, CardTitle, CardDescription, CardContent, Card } from '@/com
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { AdminBar } from '@/components/admin-bar'
-import { LivePreviewListener } from '@/components/live-preview-listener'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 
@@ -35,7 +34,6 @@ export default async function NotFound({ params, searchParams }: Readonly<SlugPr
 
   return (
     <>
-      {draft && <LivePreviewListener />}
       <AdminBar pageContext={pageContext} />
       <NavigationBarUI pageContext={pageContext} />
       <main className="flex-1">

@@ -19,7 +19,6 @@ import { PageContext } from '@/types/page-context'
 import { Footer } from '@/components/footer'
 import { NavigationBarUI } from '@/components/navigation-bar'
 import { SlugProps } from '@/types/slug-props'
-import { LivePreviewListener } from '@/components/live-preview-listener'
 import { AdminBar } from '@/components/admin-bar'
 
 export async function generateStaticParams() {
@@ -167,7 +166,6 @@ export default async function PageRoute({ params, searchParams }: Readonly<SlugP
 
   return (
     <>
-      {draft && <LivePreviewListener />}
       <AdminBar pageContext={pageContext} />
       <NavigationBarUI pageContext={pageContext} />
       <main className="flex-1">

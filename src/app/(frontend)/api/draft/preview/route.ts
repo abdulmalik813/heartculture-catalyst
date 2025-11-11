@@ -44,5 +44,6 @@ export async function GET(req: NextRequest): Promise<Response> {
 
   draft.enable()
 
+  console.log(draft)
   redirect(`/${path}`)
 }

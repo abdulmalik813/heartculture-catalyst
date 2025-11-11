@@ -8,6 +8,7 @@ import { getCachedGlobal } from '@/lib/get-globals'
 import { Metadata } from 'next'
 import { getAppSettings } from '@/constants/app'
 import { isFontData } from '@/lib/is-font-data'
+import { LivePreviewListener } from '@/components/live-preview-listener'
 
 export async function generateMetadata(): Promise<Metadata> {
   const appData = await getAppSettings()
@@ -34,16 +35,15 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   const setting = (await getCachedGlobal('settings', 1, isEnabled)) as Setting
 
   const defaultFont = setting?.default
-  const fontData = defaultFont?.fontData && isFontData(defaultFont.fontData) 
-    ? defaultFont.fontData 
-    : null
-  
+  const fontData =
+    defaultFont?.fontData && isFontData(defaultFont.fontData) ? defaultFont.fontData : null
+
   const defaultFontFamily = fontData?.variable
     ? `'${fontData.family} Variable', sans-serif`
-    : fontData?.family 
-    ? `'${fontData.family}', sans-serif`
-    : 'sans-serif'
-  
+    : fontData?.family
+      ? `'${fontData.family}', sans-serif`
+      : 'sans-serif'
+
   const fontWeight = fontData?.weight || 400
   const fontStyle = fontData?.style || 'normal'
 
@@ -51,12 +51,13 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
     <html
       lang="en"
       suppressHydrationWarning
-      style={{ 
+      style={{
         fontFamily: defaultFontFamily,
         fontWeight: fontWeight,
-        fontStyle: fontStyle
+        fontStyle: fontStyle,
       }}
     >
+      {isEnabled && <LivePreviewListener />}
       <head>
         <link href={`${getServerSideURL()}/api/stylesheet`} rel="stylesheet" />
       </head>
