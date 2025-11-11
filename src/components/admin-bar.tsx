@@ -13,7 +13,7 @@ export async function AdminBar({ pageContext }: { pageContext: PageContext }) {
   const path = pageContext.slug === 'home' ? '/' : `/${pageContext.slug}`
 
   return (
-    <div className="hidden lg:block border-b">
+    <div className="hidden md:block border-b">
       <div className="flex h-12 items-center justify-between px-4">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm" className="gap-2" asChild>
@@ -24,7 +24,7 @@ export async function AdminBar({ pageContext }: { pageContext: PageContext }) {
           </Button>
 
           <Separator orientation="vertical" className="h-6" />
-          
+
           {pageContext.draft ? (
             <Button
               variant="ghost"
@@ -44,7 +44,7 @@ export async function AdminBar({ pageContext }: { pageContext: PageContext }) {
               className="gap-2 text-primary hover:text-primary/90"
               asChild
             >
-              <Link href="/api/draft/enable?path=${encodeURIComponent(path)}">
+              <Link href={`/api/draft/enable?path=${encodeURIComponent(path)}`}>
                 <Eye className="h-4 w-4" />
                 <span>Enable Preview</span>
               </Link>
