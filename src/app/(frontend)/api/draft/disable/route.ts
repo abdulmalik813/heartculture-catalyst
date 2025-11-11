@@ -10,7 +10,7 @@ export async function GET(request: NextRequest): Promise<Response> {
   const path = searchParams.get('path')
 
   if (path) {
-    redirect(`/${path === 'home' ? '' : path}`)
+    redirect(`/${path}`)
   }
 
   redirect('/')
