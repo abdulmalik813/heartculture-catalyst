@@ -253,7 +253,7 @@ export async function NavigationBarUI({ pageContext }: { pageContext: PageContex
                           {item.nav?.label}
                         </NavigationMenuTrigger>
                         <NavigationMenuContent className="left-0">
-                          <ul className="grid gap-1 p-2 w-[300px] grid-cols-1">
+                          <ul className={joinStyles(item?.nav?.styles, 'grid gap-1 p-2 grid-cols-1')}>
                             {item.nav?.items?.map((dropdownItem) => (
                               <li key={dropdownItem.id}>
                                 <div className="block rounded-lg p-2.5 hover:bg-accent transition-colors duration-200 group">
