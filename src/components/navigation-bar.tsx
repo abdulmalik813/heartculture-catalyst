@@ -68,11 +68,7 @@ function LogoLink({
   pageContext: PageContext
 }) {
   return (
-    <Link
-      href="/"
-      className="group flex items-center gap-2 shrink-0"
-      aria-label="Home"
-    >
+    <Link href="/" className="group flex items-center gap-2 shrink-0" aria-label="Home">
       <MediaBlockUI
         media={lightLogo}
         pageContext={pageContext}
@@ -83,7 +79,10 @@ function LogoLink({
         media={darkLogo}
         priority
         pageContext={pageContext}
-        className={joinStyles('hidden dark:block transition-transform group-hover:scale-105', logoStyles)}
+        className={joinStyles(
+          'hidden dark:block transition-transform group-hover:scale-105',
+          logoStyles,
+        )}
       />
       {useTitleWithLogo && appTitle && (
         <span className={joinStyles('text-lg font-semibold tracking-tight', titleStyles)}>
@@ -116,10 +115,7 @@ function MobileMenu({
           <span className="sr-only">Menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent
-        side="right"
-        className="w-full sm:max-w-md overflow-y-auto p-0 border-l"
-      >
+      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto p-0 border-l">
         <div className="px-6 py-6">
           <SheetHeader className="mb-6">
             <SheetTitle className="text-left text-lg font-semibold">
@@ -257,7 +253,7 @@ export async function NavigationBarUI({ pageContext }: { pageContext: PageContex
                           {item.nav?.label}
                         </NavigationMenuTrigger>
                         <NavigationMenuContent className="left-0">
-                          <ul className="grid gap-1 p-2 grid-cols-1">
+                          <ul className="grid gap-1 p-2 w-[300px] grid-cols-1">
                             {item.nav?.items?.map((dropdownItem) => (
                               <li key={dropdownItem.id}>
                                 <div className="block rounded-lg p-2.5 hover:bg-accent transition-colors duration-200 group">
