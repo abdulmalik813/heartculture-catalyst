@@ -42,7 +42,6 @@ export const Pages: CollectionConfig<'pages'> = {
     preview: async (data) => {
       return generatePreviewPath(`${data?.slug}`)
     },
-    listSearchableFields: ['title', 'slug', 'publishedAt', 'updatedAt'],
   },
   defaultPopulate: {
     title: true,

@@ -12,7 +12,6 @@ export const Testimonials: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'name',
-    listSearchableFields: ['name', 'company', 'publishedAt', 'updatedAt'],
   },
   fields: [
     {
