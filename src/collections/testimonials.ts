@@ -61,10 +61,6 @@ export const Testimonials: CollectionConfig = {
       type: 'number',
       min: 1,
       max: 5,
-    },
-    {
-      name: 'date',
-      type: 'date',
-    },
+    }
   ],
 }
