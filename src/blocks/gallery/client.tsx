@@ -20,13 +20,12 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
 
   const galleryItems = galleryBlock.gallery ?? []
 
-  const selectedItem = selectedMediaIndex !== null 
-    ? galleryItems[selectedMediaIndex]
-    : null
-  const selectedMedia = selectedItem?.image && typeof selectedItem.image === 'object' 
-    ? selectedItem.image as MediaType 
-    : null
-  
+  const selectedItem = selectedMediaIndex !== null ? galleryItems[selectedMediaIndex] : null
+  const selectedMedia =
+    selectedItem?.image && typeof selectedItem.image === 'object'
+      ? (selectedItem.image as MediaType)
+      : null
+
   if (galleryBlock.format === 'grid') {
     return (
       <section className="container mx-auto px-4 py-12 md:py-16 lg:py-20">
@@ -70,13 +69,15 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
             className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm p-4"
             onClick={() => setSelectedMediaIndex(null)}
           >
-            <button
-              className="absolute top-4 right-4 p-2 rounded-md text-foreground hover:bg-secondary transition-colors z-10"
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute top-4 right-4 h-9 w-9"
               onClick={() => setSelectedMediaIndex(null)}
               aria-label="Close"
             >
-              <X className="h-6 w-6" />
-            </button>
+              <X className="h-5 w-5" />
+            </Button>
 
             <div className="relative max-w-6xl w-full" onClick={(e) => e.stopPropagation()}>
               <Media
@@ -118,14 +119,14 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
               loop={false}
               playsInline={false}
             />
-            
+
             <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/20 pointer-events-none" />
           </div>
 
           <Button
             variant="outline"
             size="icon"
-            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 h-10 w-10 md:h-12 md:w-12 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background shadow-lg border-background/20"
+            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 h-10 w-10 md:h-12 md:w-12 bg-background/90 backdrop-blur-sm hover:bg-accent shadow-lg"
             onClick={handlePrevious}
             aria-label="Previous"
           >
@@ -135,7 +136,7 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
           <Button
             variant="outline"
             size="icon"
-            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 h-10 w-10 md:h-12 md:w-12 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background shadow-lg border-background/20"
+            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 h-10 w-10 md:h-12 md:w-12 bg-background/90 backdrop-blur-sm hover:bg-accent shadow-lg"
             onClick={handleNext}
             aria-label="Next"
           >
@@ -148,17 +149,17 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                 key={index}
                 onClick={() => setCarouselIndex(index)}
                 className={cn(
-                  "h-2 rounded-full transition-all duration-300",
-                  index === carouselIndex 
-                    ? "w-8 bg-foreground" 
-                    : "w-2 bg-foreground/40 hover:bg-foreground/60"
+                  'h-2 rounded-full transition-all duration-300',
+                  index === carouselIndex
+                    ? 'w-8 bg-primary'
+                    : 'w-2 bg-primary/40 hover:bg-primary/60',
                 )}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
           </div>
 
-          <div className="absolute top-4 right-4 md:top-6 md:right-6 px-3 py-1.5 rounded-full bg-background/80 backdrop-blur-sm text-xs md:text-sm font-medium shadow-lg">
+          <div className="absolute top-4 right-4 md:top-6 md:right-6 px-3 py-1.5 rounded-md bg-background/90 backdrop-blur-sm text-xs md:text-sm font-medium text-foreground shadow-lg border">
             {carouselIndex + 1} / {galleryItems.length}
           </div>
         </div>
@@ -169,9 +170,9 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
     )
   }
 
-  if (galleryBlock.format === "focus") {
+  if (galleryBlock.format === 'focus') {
     return <></>
   }
-  
+
   return null
 }
