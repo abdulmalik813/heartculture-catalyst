@@ -7,6 +7,11 @@ import { cn } from '@/lib/utils'
 import { Media } from '@/components/media'
 import { PageContext } from '@/types/page-context'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogClose,
+} from '@/components/ui/dialog'
 
 interface GalleryBlockClientProps {
   galleryBlock: GalleryBlock
@@ -38,15 +43,17 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
 
             return (
               <div key={index} className="break-inside-avoid">
-                <div
-                  className={cn('group relative overflow-hidden rounded-lg', {
-                    'cursor-pointer': !isVideo,
-                  })}
+                <button
+                  className={cn(
+                    'group relative overflow-hidden rounded-lg w-full block',
+                    !isVideo && 'cursor-pointer'
+                  )}
                   onClick={() => {
                     if (!isVideo) {
                       setSelectedMediaIndex(index)
                     }
                   }}
+                  disabled={isVideo ? true : false}
                 >
                   <Media
                     resource={resource}
@@ -58,38 +65,40 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                     loop={false}
                     playsInline={false}
                   />
-                  {!isVideo && <div className="absolute inset-0 group-hover:opacity-100" />}
-                </div>
+                  {!isVideo && (
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                  )}
+                </button>
               </div>
             )
           })}
         </div>
 
-        {selectedMedia && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm p-4"
-            onClick={() => setSelectedMediaIndex(null)}
-          >
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute top-4 right-4 h-10 w-10 rounded-full hover:bg-secondary z-10"
-              onClick={() => setSelectedMediaIndex(null)}
-              aria-label="Close"
-            >
-              <X className="h-6 w-6" />
-            </Button>
-
-            <div className="relative max-w-6xl w-full" onClick={(e) => e.stopPropagation()}>
-              <Media
-                resource={selectedMedia}
-                imgClassName="w-full h-auto max-h-[85vh] object-contain rounded-lg"
-                videoClassName="w-full h-auto max-h-[85vh] object-contain rounded-lg"
-                priority
-              />
-            </div>
-          </div>
-        )}
+        <Dialog open={selectedMediaIndex !== null} onOpenChange={(open) => !open && setSelectedMediaIndex(null)}>
+          <DialogContent className="max-w-7xl w-full p-0 border-0 bg-transparent">
+            <DialogClose className="absolute top-4 right-4 z-50">
+              <Button
+                variant="secondary"
+                size="icon"
+                className="h-10 w-10 rounded-full shadow-lg"
+              >
+                <X className="h-5 w-5" />
+                <span className="sr-only">Close</span>
+              </Button>
+            </DialogClose>
+            
+            {selectedMedia && (
+              <div className="flex items-center justify-center p-4">
+                <Media
+                  resource={selectedMedia}
+                  imgClassName="w-full h-auto max-h-[85vh] object-contain rounded-lg"
+                  videoClassName="w-full h-auto max-h-[85vh] object-contain rounded-lg"
+                  priority
+                />
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </section>
     )
   }
@@ -109,7 +118,7 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
     return (
       <section className="container mx-auto px-4 py-12 md:py-16 lg:py-20">
         <div className="relative max-w-6xl mx-auto">
-          <div className="relative aspect-[16/9] overflow-hidden rounded-xl bg-secondary">
+          <div className="relative aspect-[16/9] overflow-hidden rounded-xl bg-muted">
             <Media
               resource={resource}
               imgClassName="w-full h-full object-cover"
@@ -125,7 +134,7 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
           <Button
             variant="outline"
             size="icon"
-            className="absolute left-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background shadow-lg"
+            className="absolute left-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-background/90 backdrop-blur-sm hover:bg-background shadow-lg"
             onClick={handlePrevious}
             aria-label="Previous"
           >
@@ -135,14 +144,14 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
           <Button
             variant="outline"
             size="icon"
-            className="absolute right-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background shadow-lg"
+            className="absolute right-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-background/90 backdrop-blur-sm hover:bg-background shadow-lg"
             onClick={handleNext}
             aria-label="Next"
           >
             <ChevronRight className="h-6 w-6" />
           </Button>
 
-          <div className="text-center mt-6 text-sm text-muted-foreground">
+          <div className="text-center mt-6 text-sm text-muted-foreground font-medium">
             {carouselIndex + 1} / {galleryItems.length}
           </div>
         </div>
@@ -160,7 +169,7 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
       <section className="container mx-auto px-4 py-12 md:py-16 lg:py-20">
         <div className="max-w-5xl mx-auto">
           {/* Main focused media */}
-          <div className="relative aspect-video overflow-hidden rounded-xl bg-secondary mb-6">
+          <div className="relative aspect-video overflow-hidden rounded-xl bg-muted mb-6">
             <Media
               resource={focusedResource}
               imgClassName="w-full h-full object-contain"
@@ -181,14 +190,15 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                 resource && typeof resource === 'object' && resource.mimeType?.includes('video')
 
               return (
-                <button
+                <Button
                   key={index}
+                  variant="ghost"
                   onClick={() => setFocusIndex(index)}
                   className={cn(
-                    'relative flex-shrink-0 w-24 h-24 overflow-hidden rounded-lg border-2 transition-all group',
+                    'relative flex-shrink-0 w-24 h-24 p-0 overflow-hidden rounded-lg border-2 transition-all hover:opacity-100',
                     focusIndex === index
-                      ? 'border-primary ring-2 ring-primary/20'
-                      : 'border-muted hover:border-primary/50'
+                      ? 'border-primary ring-2 ring-primary/20 opacity-100'
+                      : 'border-border opacity-70 hover:border-primary/50'
                   )}
                 >
                   <Media
@@ -206,9 +216,9 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                   )}
 
                   {focusIndex === index && (
-                    <div className="absolute inset-0 border-2 border-primary rounded-lg" />
+                    <div className="absolute inset-0 border-2 border-primary rounded-lg pointer-events-none" />
                   )}
-                </button>
+                </Button>
               )
             })}
           </div>
