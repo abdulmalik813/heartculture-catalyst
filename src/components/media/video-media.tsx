@@ -38,7 +38,7 @@ export function VideoMedia(props: MediaProps) {
         muted={muted}
         playsInline={playsInline}
         onClick={onClick}
-        className={cn(videoClassName)}
+        className={cn('object-cover', videoClassName)}
       />
     )
   }
