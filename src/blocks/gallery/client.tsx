@@ -188,6 +188,11 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
               const resource = item.image
               const isVideo =
                 resource && typeof resource === 'object' && resource.mimeType?.includes('video')
+              
+              // Use video thumbnail for preview if available (from thumbnails collection)
+              const thumbnailResource = isVideo && typeof resource === 'object' && resource.videoThumbnail
+                ? resource.videoThumbnail
+                : resource
 
               return (
                 <Button
@@ -201,11 +206,13 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                       : 'border-border opacity-70 hover:border-primary/50'
                   )}
                 >
-                  <Media
-                    resource={resource}
-                    imgClassName="w-full h-full object-cover"
-                    videoClassName="w-full h-full object-cover"
-                  />
+                  <div className="w-full h-full">
+                    <Media
+                      resource={thumbnailResource}
+                      imgClassName="w-full h-full object-cover"
+                      videoClassName="w-full h-full object-cover"
+                    />
+                  </div>
                   
                   {isVideo && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
