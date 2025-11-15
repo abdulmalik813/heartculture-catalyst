@@ -12,7 +12,7 @@ export const icon = (): Field[] => {
       type: 'row',
       fields: [
         {
-          name: 'placement',
+          name: 'axis',
           type: 'select',
           defaultValue: 'before',
           options: [

@@ -19,22 +19,41 @@ export const Thumbnails: CollectionConfig = {
     },
   ],
   upload: {
+    adminThumbnail: 'thumbnail',
+    focalPoint: true,
     mimeTypes: ['image/*'],
     imageSizes: [
       {
         name: 'thumbnail',
         width: 300,
-        height: 169,
-        position: 'centre',
       },
       {
-        name: 'card',
-        width: 640,
-        height: 360,
-        position: 'centre',
+        name: 'square',
+        width: 500,
+        height: 500,
+      },
+      {
+        name: 'small',
+        width: 600,
+      },
+      {
+        name: 'medium',
+        width: 900,
+      },
+      {
+        name: 'large',
+        width: 1400,
+      },
+      {
+        name: 'xlarge',
+        width: 1920,
+      },
+      {
+        name: 'og',
+        width: 1200,
+        height: 630,
+        crop: 'center',
       },
     ],
-    adminThumbnail: 'thumbnail',
-    focalPoint: true,
   },
 }

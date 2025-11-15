@@ -160,7 +160,7 @@ export interface Page {
                 url?: string | null;
                 newTab?: boolean | null;
                 icon?: (number | null) | Icon;
-                placement?: ('before' | 'after') | null;
+                axis?: ('before' | 'after') | null;
                 iconStyles?: (number | Style)[] | null;
                 id?: string | null;
               }[]
@@ -169,7 +169,7 @@ export interface Page {
           buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
           styles?: (number | Style)[] | null;
           icon?: (number | null) | Icon;
-          placement?: ('before' | 'after') | null;
+          axis?: ('before' | 'after') | null;
           iconStyles?: (number | Style)[] | null;
         };
         id?: string | null;
@@ -363,7 +363,7 @@ export interface Post {
                 url?: string | null;
                 newTab?: boolean | null;
                 icon?: (number | null) | Icon;
-                placement?: ('before' | 'after') | null;
+                axis?: ('before' | 'after') | null;
                 iconStyles?: (number | Style)[] | null;
                 id?: string | null;
               }[]
@@ -372,7 +372,7 @@ export interface Post {
           buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
           styles?: (number | Style)[] | null;
           icon?: (number | null) | Icon;
-          placement?: ('before' | 'after') | null;
+          axis?: ('before' | 'after') | null;
           iconStyles?: (number | Style)[] | null;
         };
         id?: string | null;
@@ -650,7 +650,47 @@ export interface Thumbnail {
       filesize?: number | null;
       filename?: string | null;
     };
-    card?: {
+    square?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    small?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    medium?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    large?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    xlarge?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    og?: {
       url?: string | null;
       width?: number | null;
       height?: number | null;
@@ -758,7 +798,7 @@ export interface CallToActionBlock {
               url?: string | null;
               newTab?: boolean | null;
               icon?: (number | null) | Icon;
-              placement?: ('before' | 'after') | null;
+              axis?: ('before' | 'after') | null;
               iconStyles?: (number | Style)[] | null;
               id?: string | null;
             }[]
@@ -767,7 +807,7 @@ export interface CallToActionBlock {
         buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
         styles?: (number | Style)[] | null;
         icon?: (number | null) | Icon;
-        placement?: ('before' | 'after') | null;
+        axis?: ('before' | 'after') | null;
         iconStyles?: (number | Style)[] | null;
       };
       id?: string | null;
@@ -875,7 +915,7 @@ export interface CardBlock {
             url?: string | null;
             newTab?: boolean | null;
             icon?: (number | null) | Icon;
-            placement?: ('before' | 'after') | null;
+            axis?: ('before' | 'after') | null;
             iconStyles?: (number | Style)[] | null;
             id?: string | null;
           }[]
@@ -884,7 +924,7 @@ export interface CardBlock {
       buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
       styles?: (number | Style)[] | null;
       icon?: (number | null) | Icon;
-      placement?: ('before' | 'after') | null;
+      axis?: ('before' | 'after') | null;
       iconStyles?: (number | Style)[] | null;
     };
     id?: string | null;
@@ -1442,7 +1482,7 @@ export interface TestimonialBlock {
           url?: string | null;
           newTab?: boolean | null;
           icon?: (number | null) | Icon;
-          placement?: ('before' | 'after') | null;
+          axis?: ('before' | 'after') | null;
           iconStyles?: (number | Style)[] | null;
           id?: string | null;
         }[]
@@ -1451,7 +1491,7 @@ export interface TestimonialBlock {
     buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
     styles?: (number | Style)[] | null;
     icon?: (number | null) | Icon;
-    placement?: ('before' | 'after') | null;
+    axis?: ('before' | 'after') | null;
     iconStyles?: (number | Style)[] | null;
   };
   id?: string | null;
@@ -1479,6 +1519,52 @@ export interface Testimonial {
  * via the `definition` "GalleryBlock".
  */
 export interface GalleryBlock {
+  format: 'grid' | 'carousel' | 'focus';
+  nav?: {
+    label?: string | null;
+    appearance?: ('link' | 'button' | 'dropdown') | null;
+    link?: {
+      type?: ('reference' | 'postListingPage' | 'custom') | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+      newTab?: boolean | null;
+    };
+    items?:
+      | {
+          label: string;
+          type?: ('reference' | 'postListingPage' | 'custom') | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          newTab?: boolean | null;
+          icon?: (number | null) | Icon;
+          axis?: ('before' | 'after') | null;
+          iconStyles?: (number | Style)[] | null;
+          id?: string | null;
+        }[]
+      | null;
+    buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+    buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+    styles?: (number | Style)[] | null;
+    icon?: (number | null) | Icon;
+    axis?: ('before' | 'after') | null;
+    iconStyles?: (number | Style)[] | null;
+  };
   gallery?:
     | {
         image: number | Media;
@@ -1792,7 +1878,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 url?: T;
                                 newTab?: T;
                                 icon?: T;
-                                placement?: T;
+                                axis?: T;
                                 iconStyles?: T;
                                 id?: T;
                               };
@@ -1800,7 +1886,7 @@ export interface PagesSelect<T extends boolean = true> {
                           buttonSize?: T;
                           styles?: T;
                           icon?: T;
-                          placement?: T;
+                          axis?: T;
                           iconStyles?: T;
                         };
                     id?: T;
@@ -1937,7 +2023,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
                           url?: T;
                           newTab?: T;
                           icon?: T;
-                          placement?: T;
+                          axis?: T;
                           iconStyles?: T;
                           id?: T;
                         };
@@ -1945,7 +2031,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
                     buttonSize?: T;
                     styles?: T;
                     icon?: T;
-                    placement?: T;
+                    axis?: T;
                     iconStyles?: T;
                   };
               id?: T;
@@ -2013,7 +2099,7 @@ export interface CardBlockSelect<T extends boolean = true> {
                     url?: T;
                     newTab?: T;
                     icon?: T;
-                    placement?: T;
+                    axis?: T;
                     iconStyles?: T;
                     id?: T;
                   };
@@ -2021,7 +2107,7 @@ export interface CardBlockSelect<T extends boolean = true> {
               buttonSize?: T;
               styles?: T;
               icon?: T;
-              placement?: T;
+              axis?: T;
               iconStyles?: T;
             };
         id?: T;
@@ -2198,7 +2284,7 @@ export interface TestimonialBlockSelect<T extends boolean = true> {
               url?: T;
               newTab?: T;
               icon?: T;
-              placement?: T;
+              axis?: T;
               iconStyles?: T;
               id?: T;
             };
@@ -2206,7 +2292,7 @@ export interface TestimonialBlockSelect<T extends boolean = true> {
         buttonSize?: T;
         styles?: T;
         icon?: T;
-        placement?: T;
+        axis?: T;
         iconStyles?: T;
       };
   id?: T;
@@ -2217,6 +2303,40 @@ export interface TestimonialBlockSelect<T extends boolean = true> {
  * via the `definition` "GalleryBlock_select".
  */
 export interface GalleryBlockSelect<T extends boolean = true> {
+  format?: T;
+  nav?:
+    | T
+    | {
+        label?: T;
+        appearance?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              reference?: T;
+              url?: T;
+              newTab?: T;
+            };
+        items?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              reference?: T;
+              url?: T;
+              newTab?: T;
+              icon?: T;
+              axis?: T;
+              iconStyles?: T;
+              id?: T;
+            };
+        buttonType?: T;
+        buttonSize?: T;
+        styles?: T;
+        icon?: T;
+        axis?: T;
+        iconStyles?: T;
+      };
   gallery?:
     | T
     | {
@@ -2275,7 +2395,7 @@ export interface PostsSelect<T extends boolean = true> {
                                 url?: T;
                                 newTab?: T;
                                 icon?: T;
-                                placement?: T;
+                                axis?: T;
                                 iconStyles?: T;
                                 id?: T;
                               };
@@ -2283,7 +2403,7 @@ export interface PostsSelect<T extends boolean = true> {
                           buttonSize?: T;
                           styles?: T;
                           icon?: T;
-                          placement?: T;
+                          axis?: T;
                           iconStyles?: T;
                         };
                     id?: T;
@@ -2551,7 +2671,57 @@ export interface ThumbnailsSelect<T extends boolean = true> {
               filesize?: T;
               filename?: T;
             };
-        card?:
+        square?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        small?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        medium?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        large?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        xlarge?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        og?:
           | T
           | {
               url?: T;
@@ -2882,7 +3052,7 @@ export interface NavigationBar {
                 url?: string | null;
                 newTab?: boolean | null;
                 icon?: (number | null) | Icon;
-                placement?: ('before' | 'after') | null;
+                axis?: ('before' | 'after') | null;
                 iconStyles?: (number | Style)[] | null;
                 id?: string | null;
               }[]
@@ -2891,7 +3061,7 @@ export interface NavigationBar {
           buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
           styles?: (number | Style)[] | null;
           icon?: (number | null) | Icon;
-          placement?: ('before' | 'after') | null;
+          axis?: ('before' | 'after') | null;
           iconStyles?: (number | Style)[] | null;
         };
         id?: string | null;
@@ -2932,7 +3102,7 @@ export interface NavigationBar {
                 url?: string | null;
                 newTab?: boolean | null;
                 icon?: (number | null) | Icon;
-                placement?: ('before' | 'after') | null;
+                axis?: ('before' | 'after') | null;
                 iconStyles?: (number | Style)[] | null;
                 id?: string | null;
               }[]
@@ -2941,7 +3111,7 @@ export interface NavigationBar {
           buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
           styles?: (number | Style)[] | null;
           icon?: (number | null) | Icon;
-          placement?: ('before' | 'after') | null;
+          axis?: ('before' | 'after') | null;
           iconStyles?: (number | Style)[] | null;
         };
         id?: string | null;
@@ -3035,7 +3205,7 @@ export interface Footer {
                             url?: string | null;
                             newTab?: boolean | null;
                             icon?: (number | null) | Icon;
-                            placement?: ('before' | 'after') | null;
+                            axis?: ('before' | 'after') | null;
                             iconStyles?: (number | Style)[] | null;
                             id?: string | null;
                           }[]
@@ -3044,7 +3214,7 @@ export interface Footer {
                       buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
                       styles?: (number | Style)[] | null;
                       icon?: (number | null) | Icon;
-                      placement?: ('before' | 'after') | null;
+                      axis?: ('before' | 'after') | null;
                       iconStyles?: (number | Style)[] | null;
                     };
                     id?: string | null;
@@ -3182,7 +3352,7 @@ export interface NavigationBarSelect<T extends boolean = true> {
                     url?: T;
                     newTab?: T;
                     icon?: T;
-                    placement?: T;
+                    axis?: T;
                     iconStyles?: T;
                     id?: T;
                   };
@@ -3190,7 +3360,7 @@ export interface NavigationBarSelect<T extends boolean = true> {
               buttonSize?: T;
               styles?: T;
               icon?: T;
-              placement?: T;
+              axis?: T;
               iconStyles?: T;
             };
         id?: T;
@@ -3220,7 +3390,7 @@ export interface NavigationBarSelect<T extends boolean = true> {
                     url?: T;
                     newTab?: T;
                     icon?: T;
-                    placement?: T;
+                    axis?: T;
                     iconStyles?: T;
                     id?: T;
                   };
@@ -3228,7 +3398,7 @@ export interface NavigationBarSelect<T extends boolean = true> {
               buttonSize?: T;
               styles?: T;
               icon?: T;
-              placement?: T;
+              axis?: T;
               iconStyles?: T;
             };
         id?: T;
@@ -3287,7 +3457,7 @@ export interface FooterSelect<T extends boolean = true> {
                                 url?: T;
                                 newTab?: T;
                                 icon?: T;
-                                placement?: T;
+                                axis?: T;
                                 iconStyles?: T;
                                 id?: T;
                               };
@@ -3295,7 +3465,7 @@ export interface FooterSelect<T extends boolean = true> {
                           buttonSize?: T;
                           styles?: T;
                           icon?: T;
-                          placement?: T;
+                          axis?: T;
                           iconStyles?: T;
                         };
                     id?: T;
@@ -3441,7 +3611,7 @@ export interface NavigationBlock {
           url?: string | null;
           newTab?: boolean | null;
           icon?: (number | null) | Icon;
-          placement?: ('before' | 'after') | null;
+          axis?: ('before' | 'after') | null;
           iconStyles?: (number | Style)[] | null;
           id?: string | null;
         }[]
@@ -3450,7 +3620,7 @@ export interface NavigationBlock {
     buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
     styles?: (number | Style)[] | null;
     icon?: (number | null) | Icon;
-    placement?: ('before' | 'after') | null;
+    axis?: ('before' | 'after') | null;
     iconStyles?: (number | Style)[] | null;
   };
   id?: string | null;

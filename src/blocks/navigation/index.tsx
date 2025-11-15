@@ -15,7 +15,7 @@ import { PageContext } from '@/types/page-context'
 function getIconData(item: any) {
   const icon = typeof item?.icon === 'object' ? item?.icon : null
   const iconStyles = item?.iconStyles
-  const iconPlacement = item?.placement
+  const iconPlacement = item?.axis
   const hasIcon = icon?.name != '' && icon?.name != null
 
   const renderIcon = () => {
