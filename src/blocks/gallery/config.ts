@@ -27,7 +27,7 @@ export const GalleryBlock: Block = {
     navigation({
       overrides: {
         admin: {
-          condition: (_, siblingData) => siblingData.format === 'focus',
+          condition: (_, siblingData) => siblingData.format === 'carousel',
         },
       },
     }),
