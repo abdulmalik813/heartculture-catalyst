@@ -1,6 +1,7 @@
 'use client'
 
 import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { TestimonialBlock, Testimonial } from '@/payload-types'
 import { joinStyles } from '@/lib/make-styles'
 import { NavigationBlockUI } from '@/blocks/navigation'
@@ -37,7 +38,6 @@ function TestimonialCarousel({
 }) {
   const [active, setActive] = useState(0)
 
-  // Filter out any number IDs to ensure we only have Testimonial objects
   const validTestimonials = (testimonialBlock.testimonials || []).filter(
     (t): t is Testimonial => typeof t !== 'number',
   )
@@ -93,20 +93,20 @@ function TestimonialCarousel({
   }
 
   const getTitle = (testimonial: Testimonial) => {
-    if (testimonial.type === 'company') {
-      return testimonial.company || testimonial.name
+    if (testimonial.type === 'individual') {
+      return testimonial.name
     }
-    return testimonial.name
+    return testimonial.company || testimonial.name
   }
 
   const getSubtitle = (testimonial: Testimonial) => {
     if (testimonial.type === 'individual') {
-      const parts = []
-      if (testimonial.position) parts.push(testimonial.position)
-      if (testimonial.company) parts.push(testimonial.company)
-      return parts.join(' • ')
+      return null
     }
-    return testimonial.position || null
+    const parts = []
+    if (testimonial.position) parts.push(testimonial.position)
+    if (testimonial.name) parts.push(testimonial.name)
+    return parts.length > 0 ? parts.join(' - ') : null
   }
 
   const truncateContent = (content: string) => {
@@ -124,14 +124,20 @@ function TestimonialCarousel({
     >
       <div className="relative grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-20">
         <div>
-          <div className="relative h-80 w-full bg-muted rounded-3xl">
+          <div className="relative h-80 w-full rounded-3xl">
+            {' '}
+            {/* Removed bg-muted from here */}
             {validTestimonials.map((testimonial, index) => (
               <div
                 key={testimonial.id}
                 className="absolute inset-0 transition-all duration-700 ease-out"
                 style={getStyle(index)}
               >
-                <Card className="h-full w-full shadow-lg flex items-center justify-center border-0">
+                <Card
+                  className={`h-full w-full shadow-lg flex items-center justify-center border-0 ${!testimonial.avatar ? 'bg-muted' : ''}`}
+                >
+                  {' '}
+                  {/* Add bg-muted conditionally to Card */}
                   <CardContent className="p-0 h-full w-full">
                     {testimonial.avatar ? (
                       <div className="flex h-full w-full items-center justify-center p-8">
@@ -141,7 +147,7 @@ function TestimonialCarousel({
                         />
                       </div>
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center rounded-3xl bg-gradient-to-br from-muted to-muted/80">
+                      <div className="flex h-full w-full items-center justify-center rounded-3xl">
                         <div className="flex h-32 w-32 items-center justify-center rounded-full bg-background/50">
                           {testimonial.name ? (
                             <span className="text-6xl font-bold text-muted-foreground">
@@ -201,20 +207,24 @@ function TestimonialCarousel({
           </div>
 
           <div className="flex justify-center gap-4 md:justify-start">
-            <button
+            <Button
               onClick={handlePrev}
-              className="group flex h-12 w-12 items-center justify-center rounded-full bg-muted transition-colors hover:bg-muted/80"
+              variant="default"
+              size="icon"
+              className="group h-12 w-12"
               aria-label="Previous testimonial"
             >
-              <ChevronLeft className="h-6 w-6 text-foreground transition-transform duration-300 group-hover:rotate-12" />
-            </button>
-            <button
+              <ChevronLeft className="h-6 w-6 transition-transform duration-300 group-hover:rotate-12" />
+            </Button>
+            <Button
               onClick={handleNext}
-              className="group flex h-12 w-12 items-center justify-center rounded-full bg-muted transition-colors hover:bg-muted/80"
+              variant="default"
+              size="icon"
+              className="group h-12 w-12"
               aria-label="Next testimonial"
             >
-              <ChevronRight className="h-6 w-6 text-foreground transition-transform duration-300 group-hover:-rotate-12" />
-            </button>
+              <ChevronRight className="h-6 w-6 transition-transform duration-300 group-hover:-rotate-12" />
+            </Button>
           </div>
         </div>
       </div>
@@ -254,20 +264,22 @@ function TestimonialGrid({
 
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   const getTitle = (testimonial: Testimonial) => {
-    if (testimonial.type === 'company') {
-      return testimonial.company || testimonial.name
+    if (testimonial.type === 'individual') {
+      return testimonial.name
     }
-    return testimonial.name
+    // company type
+    return testimonial.company || testimonial.name
   }
 
   const getSubtitle = (testimonial: Testimonial) => {
     if (testimonial.type === 'individual') {
-      const parts = []
-      if (testimonial.position) parts.push(testimonial.position)
-      if (testimonial.company) parts.push(testimonial.company)
-      return parts.join(' • ')
+      return null
     }
-    return testimonial.position || null
+    // company type
+    const parts = []
+    if (testimonial.position) parts.push(testimonial.position)
+    if (testimonial.name) parts.push(testimonial.name)
+    return parts.length > 0 ? parts.join(' - ') : null
   }
 
   const getInitial = (name: string) => {
