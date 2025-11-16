@@ -137,27 +137,16 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
     )
   }
 
-if (galleryBlock.format === 'focus') {
-  return (
-    <section className="container mx-auto px-4 py-8 md:py-12 lg:py-16">
-      <div className="space-y-4 md:space-y-6">
-        {/* Main display area */}
-        <Card className="overflow-hidden">
-          <div className="flex items-center justify-center aspect-video md:aspect-[16/10] bg-muted p-2 md:p-4">
-            {selectedItem ? (
-              <Media
-                resource={selectedItem.image}
-                imgClassName="w-full h-full object-contain rounded"
-                videoClassName="w-full h-full object-contain rounded"
-                autoPlay={false}
-                controls={true}
-                muted={false}
-                loop={false}
-              />
-            ) : (
-              galleryBlock.gallery?.[0] && (
+  if (galleryBlock.format === 'focus') {
+    return (
+      <section className="container mx-auto px-4 py-8 md:py-12 lg:py-16">
+        <div className="space-y-4 md:space-y-6">
+          {/* Main display area */}
+          <Card className="overflow-hidden">
+            <div className="flex items-center justify-center aspect-video md:aspect-[16/10] bg-muted p-2 md:p-4">
+              {selectedItem ? (
                 <Media
-                  resource={galleryBlock.gallery[0].image}
+                  resource={selectedItem.image}
                   imgClassName="w-full h-full object-contain rounded"
                   videoClassName="w-full h-full object-contain rounded"
                   autoPlay={false}
@@ -165,54 +154,61 @@ if (galleryBlock.format === 'focus') {
                   muted={false}
                   loop={false}
                 />
-              )
-            )}
-          </div>
-        </Card>
-
-        {/* Thumbnails */}
-        <div className="relative">
-          <div className="flex gap-2 md:gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide">
-            {galleryBlock.gallery?.map((item, index) => {
-              const isSelected = selectedImage === index || (selectedImage === null && index === 0)
-              const resource = item.image
-              const isVideo =
-                resource && typeof resource === 'object' && resource.mimeType?.includes('video')
-
-              return (
-                <Card
-                  key={index}
-                  className={cn(
-                    'relative flex-shrink-0 w-20 h-20 md:w-24 md:h-24 overflow-hidden cursor-pointer transition-all snap-start',
-                    'hover:scale-105 active:scale-95',
-                    isSelected ? 'ring-2 ring-primary shadow-lg' : 'ring-1 ring-border opacity-70 hover:opacity-100',
-                  )}
-                  onClick={() => setSelectedImage(index)}
-                >
+              ) : (
+                galleryBlock.gallery?.[0] && (
                   <Media
-                    resource={
-                      isVideo && typeof resource === 'object' ? resource.videoThumbnail : resource
-                    }
-                    imgClassName="w-full h-full object-cover"
-                    videoClassName="w-full h-full object-cover"
+                    resource={galleryBlock.gallery[0].image}
+                    imgClassName="w-full h-full object-contain rounded"
+                    videoClassName="w-full h-full object-contain rounded"
+                    autoPlay={false}
+                    controls={true}
+                    muted={false}
+                    loop={false}
                   />
-                  {isSelected && (
-                    <div className="absolute inset-0 bg-primary/10 pointer-events-none" />
-                  )}
-                </Card>
-              )
-            })}
-          </div>
-        </div>
+                )
+              )}
+            </div>
+          </Card>
 
-        {/* Navigation if exists */}
-        {galleryBlock.navigation && (
-          <div className="flex justify-center pt-2">
-            <NavigationBlockUI {...galleryBlock} pageContext={pageContext} className="mx-auto" />
+          {/* Thumbnails */}
+          <div className="relative">
+            <div className="flex gap-2 md:gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide">
+              {galleryBlock.gallery?.map((item, index) => {
+                const isSelected =
+                  selectedImage === index || (selectedImage === null && index === 0)
+                const resource = item.image
+                const isVideo =
+                  resource && typeof resource === 'object' && resource.mimeType?.includes('video')
+
+                return (
+                  <Card
+                    key={index}
+                    className={cn(
+                      'relative flex-shrink-0 w-20 h-20 md:w-24 md:h-24 overflow-hidden cursor-pointer transition-all snap-start',
+                      'hover:scale-105 active:scale-95',
+                      isSelected
+                        ? 'ring-2 ring-primary shadow-lg'
+                        : 'ring-1 ring-border opacity-70 hover:opacity-100',
+                    )}
+                    onClick={() => setSelectedImage(index)}
+                  >
+                    <Media
+                      resource={
+                        isVideo && typeof resource === 'object' ? resource.videoThumbnail : resource
+                      }
+                      imgClassName="w-full h-full object-cover"
+                      videoClassName="w-full h-full object-cover"
+                    />
+                    {isSelected && (
+                      <div className="absolute inset-0 bg-primary/10 pointer-events-none" />
+                    )}
+                  </Card>
+                )
+              })}
+            </div>
           </div>
-        )}
-      </div>
-    </section>
-  )
-}
+          </div>
+      </section>
+    )
+  }
 }
