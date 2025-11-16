@@ -82,7 +82,7 @@ export function NavigationBlockUI({
   dropdownItem,
   className,
   ...navigationBlock
-}: Partial<NavigationBlock> & {
+}: Omit<Partial<NavigationBlock>, 'blockType'> & {
   className?: string
   dropdownItem?: DropdownItem
 } & { pageContext: PageContext }) {

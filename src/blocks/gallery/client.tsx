@@ -1,13 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import type { GalleryBlock, Media as MediaType } from '@/payload-types'
 import { cn } from '@/lib/utils'
 import { Media } from '@/components/media'
-import { Button } from '@/components/ui/button'
 import { PageContext } from '@/types/page-context'
 import { NavigationBlockUI } from '../navigation'
+import { Button } from '@/components/ui/button'
 
 interface GalleryBlockClientProps {
   galleryBlock: GalleryBlock
@@ -16,11 +16,9 @@ interface GalleryBlockClientProps {
 
 export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockClientProps) {
   const [selectedMediaIndex, setSelectedMediaIndex] = useState<number | null>(null)
-  const [carouselIndex, setCarouselIndex] = useState(0)
 
-  const galleryItems = galleryBlock.gallery ?? []
-
-  const selectedItem = selectedMediaIndex !== null ? galleryItems[selectedMediaIndex] : null
+  const selectedItem =
+    selectedMediaIndex !== null ? galleryBlock.gallery?.[selectedMediaIndex] : null
   const selectedMedia =
     selectedItem?.image && typeof selectedItem.image === 'object'
       ? (selectedItem.image as MediaType)
@@ -30,7 +28,7 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
     return (
       <section className="container mx-auto px-4 py-12 md:py-16 lg:py-20">
         <div className="columns-1 md:columns-2 lg:columns-3 gap-6 md:gap-8 space-y-6 md:space-y-8">
-          {galleryItems.map((item, index) => {
+          {(galleryBlock.gallery ?? []).map((item, index) => {
             const resource = item.image
             const isVideo =
               resource && typeof resource === 'object' && resource.mimeType?.includes('video')
@@ -69,15 +67,13 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
             className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm p-4"
             onClick={() => setSelectedMediaIndex(null)}
           >
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute top-4 right-4 h-9 w-9"
+            <button
+              className="absolute top-4 right-4 p-2 rounded-md text-foreground hover:bg-secondary transition-colors z-10"
               onClick={() => setSelectedMediaIndex(null)}
               aria-label="Close"
             >
-              <X className="h-5 w-5" />
-            </Button>
+              <X className="h-6 w-6" />
+            </button>
 
             <div className="relative max-w-6xl w-full" onClick={(e) => e.stopPropagation()}>
               <Media
@@ -93,79 +89,102 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
     )
   }
 
-  if (galleryBlock.format === 'carousel') {
-    const handlePrevious = () => {
-      setCarouselIndex((prev) => (prev === 0 ? galleryItems.length - 1 : prev - 1))
+if (galleryBlock.format === 'carousel') {
+    const [currentIndex, setCurrentIndex] = useState(0)
+    const gallery = galleryBlock.gallery ?? []
+    const count = gallery.length
+
+    const goToNext = () => {
+      setCurrentIndex((prev) => (prev + 1) % count)
     }
 
-    const handleNext = () => {
-      setCarouselIndex((prev) => (prev === galleryItems.length - 1 ? 0 : prev + 1))
+    const goToPrevious = () => {
+      setCurrentIndex((prev) => (prev - 1 + count) % count)
     }
 
-    const currentItem = galleryItems[carouselIndex]
-    const resource = currentItem?.image
+    const goToSlide = (index: number) => {
+      setCurrentIndex(index)
+    }
+
+    if (count === 0) return null
 
     return (
       <section className="w-full">
         <div className="relative w-full">
-          <div className="relative aspect-[21/9] md:aspect-[3/1] overflow-hidden bg-muted">
-            <Media
-              resource={resource}
-              imgClassName="w-full h-full object-cover"
-              videoClassName="w-full h-full object-cover"
-              autoPlay={false}
-              controls={true}
-              muted={false}
-              loop={false}
-              playsInline={false}
-            />
+          <div className="relative aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] lg:aspect-[3/1] overflow-hidden rounded-lg bg-muted">
+            {gallery.map((item, index) => {
+              const resource = item.image
+              return (
+                <div
+                  key={index}
+                  className={cn(
+                    'absolute inset-0 transition-opacity duration-500',
+                    index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                  )}
+                >
+                  <Media
+                    resource={resource}
+                    imgClassName="w-full h-full object-cover"
+                    videoClassName="w-full h-full object-cover"
+                    autoPlay={index === currentIndex}
+                    controls={false}
+                    muted={true}
+                    loop={true}
+                    playsInline={true}
+                  />
+                </div>
+              )
+            })}
 
-            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/20 pointer-events-none" />
-          </div>
+            {/* Previous Button */}
+            {count > 1 && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={goToPrevious}
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-background/80 hover:bg-background/95 backdrop-blur-sm"
+                aria-label="Previous slide"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </Button>
+            )}
 
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 h-10 w-10 md:h-12 md:w-12 bg-background/90 backdrop-blur-sm hover:bg-accent shadow-lg"
-            onClick={handlePrevious}
-            aria-label="Previous"
-          >
-            <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
-          </Button>
+            {/* Next Button */}
+            {count > 1 && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={goToNext}
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-background/80 hover:bg-background/95 backdrop-blur-sm"
+                aria-label="Next slide"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </Button>
+            )}
 
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 h-10 w-10 md:h-12 md:w-12 bg-background/90 backdrop-blur-sm hover:bg-accent shadow-lg"
-            onClick={handleNext}
-            aria-label="Next"
-          >
-            <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
-          </Button>
+            <div className="absolute left-1/2 -translate-x-1/2 bottom-[10%] text-center z-20">
+              <NavigationBlockUI {...galleryBlock} pageContext={pageContext} />
+            </div>
 
-          <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-            {galleryItems.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCarouselIndex(index)}
-                className={cn(
-                  'h-2 rounded-full transition-all duration-300',
-                  index === carouselIndex
-                    ? 'w-8 bg-primary'
-                    : 'w-2 bg-primary/40 hover:bg-primary/60',
-                )}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
-
-          <div className="absolute top-4 right-4 md:top-6 md:right-6 px-3 py-1.5 rounded-md bg-background/90 backdrop-blur-sm text-xs md:text-sm font-medium text-foreground shadow-lg border">
-            {carouselIndex + 1} / {galleryItems.length}
+            {count > 1 && (
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+                {gallery.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => goToSlide(index)}
+                    className={cn(
+                      'w-2 h-2 rounded-full transition-all',
+                      index === currentIndex
+                        ? 'bg-white w-8'
+                        : 'bg-white/50 hover:bg-white/75'
+                    )}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
-        
-        {/* @ts-expect-error there may be some mismatch between the expected types here */}
-        <NavigationBlockUI {...galleryBlock} pageContext={pageContext} />
       </section>
     )
   }

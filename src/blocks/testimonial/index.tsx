@@ -4,13 +4,9 @@ import { TestimonialBlockClient } from '@/blocks/testimonial/client'
 
 export async function TestimonialBlockUI({
   pageContext,
-  ...block
+  ...testimonialBlock
 }: Partial<TestimonialBlock> & { pageContext: PageContext }) {
-  const testimonials = (block.testimonials || []).filter(
-    (item): item is Testimonial => typeof item !== 'number',
-  )
-
   return (
-    <TestimonialBlockClient block={block} testimonials={testimonials} pageContext={pageContext} />
+    <TestimonialBlockClient {...testimonialBlock} pageContext={pageContext} />
   )
 }

@@ -9,71 +9,57 @@ import { Star, User, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { Media } from '@/components/media'
 
-interface TestimonialBlockClientProps {
-  block: Partial<TestimonialBlock>
-  testimonials: Testimonial[]
-  pageContext: PageContext
-}
-
 export function TestimonialBlockClient({
-  block,
-  testimonials,
   pageContext,
-}: TestimonialBlockClientProps) {
+  ...testimonialBlock
+}: Partial<TestimonialBlock> & { pageContext: PageContext }) {
   return (
     <div className="w-full">
-      {block.title && (
-        <h2 className={joinStyles(block.titleStyles)}>{block.title}</h2>
+      {testimonialBlock.title && (
+        <h2 className={joinStyles(testimonialBlock.titleStyles)}>{testimonialBlock.title}</h2>
       )}
-      
-      {block.type === 'carousel' ? (
-        <TestimonialCarousel 
-          testimonials={testimonials} 
-          testimonialStyles={block.testimonialStyles}
-          nav={block.nav}
-          pageContext={pageContext}
-        />
+
+      {testimonialBlock.type === 'carousel' ? (
+        <TestimonialCarousel testimonialBlock={testimonialBlock} pageContext={pageContext} />
       ) : (
-        <TestimonialGrid 
-          testimonials={testimonials} 
-          testimonialStyles={block.testimonialStyles}
-        />
+        <TestimonialGrid testimonialBlock={testimonialBlock} pageContext={pageContext} />
       )}
     </div>
   )
 }
 
-function TestimonialCarousel({ 
-  testimonials, 
-  testimonialStyles,
-  nav,
-  pageContext
-}: { 
-  testimonials: Testimonial[]
-  testimonialStyles?: TestimonialBlock['testimonialStyles']
-  nav?: TestimonialBlock['nav']
+function TestimonialCarousel({
+  testimonialBlock,
+  pageContext,
+}: {
+  testimonialBlock: Partial<TestimonialBlock>
   pageContext: PageContext
 }) {
   const [active, setActive] = useState(0)
 
+  // Filter out any number IDs to ensure we only have Testimonial objects
+  const validTestimonials = (testimonialBlock.testimonials || []).filter(
+    (t): t is Testimonial => typeof t !== 'number',
+  )
+
   const handleNext = () => {
-    setActive((prev) => (prev + 1) % testimonials.length)
+    setActive((prev) => (prev + 1) % validTestimonials.length)
   }
 
   const handlePrev = () => {
-    setActive((prev) => (prev - 1 + testimonials.length) % testimonials.length)
+    setActive((prev) => (prev - 1 + validTestimonials.length) % validTestimonials.length)
   }
 
   useEffect(() => {
-    if (testimonials.length === 0) return
+    if (validTestimonials.length === 0) return
     const interval = setInterval(handleNext, 7000)
     return () => clearInterval(interval)
-  }, [testimonials.length])
+  }, [validTestimonials.length])
 
-  if (testimonials.length === 0) return null
+  if (validTestimonials.length === 0) return null
 
   const getStyle = (index: number) => {
-    const offset = (index - active + testimonials.length) % testimonials.length
+    const offset = (index - active + validTestimonials.length) % validTestimonials.length
     if (offset === 0) {
       return {
         transform: 'rotate(0deg) scale(1) translateY(0) translateX(0)',
@@ -90,7 +76,7 @@ function TestimonialCarousel({
         filter: 'blur(0.5px)',
       }
     }
-    if (offset === testimonials.length - 1) {
+    if (offset === validTestimonials.length - 1) {
       return {
         transform: 'rotate(-3deg) scale(0.96) translateY(3%) translateX(-2%)',
         opacity: 0,
@@ -133,11 +119,13 @@ function TestimonialCarousel({
   }
 
   return (
-    <div className={`mx-auto max-w-sm px-4 py-12 md:max-w-4xl md:px-8 md:py-15 lg:px-12 ${joinStyles(testimonialStyles)}`}>
+    <div
+      className={`mx-auto max-w-sm px-4 py-12 md:max-w-4xl md:px-8 md:py-15 lg:px-12 ${joinStyles(testimonialBlock.testimonialStyles)}`}
+    >
       <div className="relative grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-20">
         <div>
           <div className="relative h-80 w-full bg-muted rounded-3xl">
-            {testimonials.map((testimonial, index) => (
+            {validTestimonials.map((testimonial, index) => (
               <div
                 key={testimonial.id}
                 className="absolute inset-0 transition-all duration-700 ease-out"
@@ -176,30 +164,37 @@ function TestimonialCarousel({
           <div className="min-h-[280px] md:min-h-[320px]">
             <div className="flex items-center gap-3 min-h-[32px]">
               <h3 className="text-2xl font-bold text-foreground">
-                {getTitle(testimonials[active])}
+                {getTitle(validTestimonials[active])}
               </h3>
-              {testimonials[active]?.rating !== null && testimonials[active]?.rating !== undefined && (
-                <div className="flex items-center gap-1">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className={i < (testimonials[active]?.rating || 0) ? "h-5 w-5 fill-primary text-primary" : "h-5 w-5 fill-muted text-muted-foreground"}
-                    />
-                  ))}
-                </div>
-              )}
+              {validTestimonials[active]?.rating !== null &&
+                validTestimonials[active]?.rating !== undefined && (
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className={
+                          i < (validTestimonials[active]?.rating || 0)
+                            ? 'h-5 w-5 fill-primary text-primary'
+                            : 'h-5 w-5 fill-muted text-muted-foreground'
+                        }
+                      />
+                    ))}
+                  </div>
+                )}
             </div>
 
             <div className="mt-1 min-h-[20px]">
-              {getSubtitle(testimonials[active]) && (
-                <p className="text-sm text-muted-foreground">{getSubtitle(testimonials[active])}</p>
+              {getSubtitle(validTestimonials[active]) && (
+                <p className="text-sm text-muted-foreground">
+                  {getSubtitle(validTestimonials[active])}
+                </p>
               )}
             </div>
 
             <div className="mt-8 min-h-[160px]">
-              {testimonials[active]?.content && (
+              {validTestimonials[active]?.content && (
                 <p className="text-lg text-foreground">
-                  {truncateContent(testimonials[active]?.content || '')}
+                  {truncateContent(validTestimonials[active]?.content || '')}
                 </p>
               )}
             </div>
@@ -224,25 +219,31 @@ function TestimonialCarousel({
         </div>
       </div>
 
-      {nav && (
-        <div className="flex justify-center mt-8">
-          <NavigationBlockUI {...nav} pageContext={pageContext} />
-        </div>
-      )}
+      <NavigationBlockUI
+        className="flex justify-center mt-8"
+        {...testimonialBlock.nav}
+        pageContext={pageContext}
+      />
     </div>
   )
 }
 
-function TestimonialGrid({ 
-  testimonials, 
-  testimonialStyles 
-}: { 
-  testimonials: Testimonial[]
-  testimonialStyles?: TestimonialBlock['testimonialStyles']
+function TestimonialGrid({
+  testimonialBlock,
+  pageContext,
+}: {
+  testimonialBlock: Partial<TestimonialBlock>
+  pageContext: PageContext
 }) {
+  const validTestimonials = (testimonialBlock.testimonials || []).filter(
+    (t): t is Testimonial => typeof t !== 'number',
+  )
+
   return (
-    <div className={`columns-1 md:columns-2 lg:columns-3 gap-6 mt-8 ${joinStyles(testimonialStyles)}`}>
-      {testimonials.map((testimonial) => (
+    <div
+      className={`columns-1 md:columns-2 lg:columns-3 gap-6 mt-8 ${joinStyles(testimonialBlock.testimonialStyles)}`}
+    >
+      {validTestimonials.map((testimonial) => (
         <div key={testimonial.id} className="mb-6 break-inside-avoid">
           <TestimonialCard testimonial={testimonial} />
         </div>
@@ -283,24 +284,18 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
                 resource={testimonial.avatar}
                 imgClassName="w-full h-full object-cover rounded-full"
               />
+            ) : testimonial.name ? (
+              <span className="text-2xl font-bold text-muted-foreground">
+                {getInitial(testimonial.name)}
+              </span>
             ) : (
-              testimonial.name ? (
-                <span className="text-2xl font-bold text-muted-foreground">
-                  {getInitial(testimonial.name)}
-                </span>
-              ) : (
-                <User className="text-muted-foreground" size={32} />
-              )
+              <User className="text-muted-foreground" size={32} />
             )}
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-lg text-foreground">
-              {getTitle(testimonial)}
-            </h3>
+            <h3 className="font-semibold text-lg text-foreground">{getTitle(testimonial)}</h3>
             {getSubtitle(testimonial) && (
-              <p className="text-sm text-muted-foreground">
-                {getSubtitle(testimonial)}
-              </p>
+              <p className="text-sm text-muted-foreground">{getSubtitle(testimonial)}</p>
             )}
           </div>
         </div>
@@ -310,14 +305,17 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
             {Array.from({ length: 5 }).map((_, i) => (
               <Star
                 key={i}
-                className={i < (testimonial.rating || 0) ? "h-5 w-5 fill-primary text-primary" : "h-5 w-5 fill-muted text-muted-foreground"}
+                className={
+                  i < (testimonial.rating || 0)
+                    ? 'h-5 w-5 fill-primary text-primary'
+                    : 'h-5 w-5 fill-muted text-muted-foreground'
+                }
               />
             ))}
           </div>
         )}
 
         <p className="text-foreground/80">{testimonial.content}</p>
-
       </CardContent>
     </Card>
   )
