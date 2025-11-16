@@ -145,17 +145,17 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
     const focusItem = galleryBlock.gallery?.[0]
     if (!focusItem) return null
 
-    const resource = focusItem.image
-    const isVideo = resource && typeof resource === 'object' && resource.mimeType?.includes('video')
+    const displayItem = selectedImage !== null ? galleryBlock.gallery?.[selectedImage] : focusItem
+    const resource = displayItem?.image
 
     return (
-      <section className="container mx-auto px-4 py-12 md:py-16 lg:py-20">
-        <div className="max-w-5xl mx-auto">
-          <div className="relative aspect-video rounded-xl overflow-hidden bg-muted shadow-2xl">
+      <section className="container mx-auto px-4 py-16 md:py-20 lg:py-24">
+        <div className="max-w-7xl mx-auto space-y-10">
+          <div className="relative aspect-[16/10] rounded-3xl overflow-hidden bg-gradient-to-br from-muted/30 to-muted shadow-2xl ring-1 ring-black/5">
             <Media
               resource={resource}
-              imgClassName="w-full h-full object-cover"
-              videoClassName="w-full h-full object-cover"
+              imgClassName="w-full h-full object-contain p-2"
+              videoClassName="w-full h-full object-contain"
               autoPlay={true}
               controls={true}
               muted={true}
@@ -164,9 +164,8 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
             />
           </div>
 
-          {/* Thumbnail Gallery */}
           {galleryBlock.gallery && galleryBlock.gallery.length > 1 && (
-            <div className="mt-8 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-4 md:gap-5 px-2">
               {galleryBlock.gallery.map((item, index) => {
                 const thumbResource = item.image
                 const isThumbVideo =
@@ -174,24 +173,29 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                   typeof thumbResource === 'object' &&
                   thumbResource.mimeType?.includes('video')
                 
-                const thumbnailUrl = isThumbVideo && 
-                  thumbResource.videoThumbnail &&
-                  typeof thumbResource.videoThumbnail === 'object'
-                  ? thumbResource.videoThumbnail
-                  : thumbResource
+                const displayThumb = 
+                  isThumbVideo && 
+                  thumbResource.videoThumbnail
+                    ? thumbResource.videoThumbnail
+                    : thumbResource
+
+                const isActive = selectedImage === index || (selectedImage === null && index === 0)
 
                 return (
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
                     className={cn(
-                      'relative aspect-video rounded-lg overflow-hidden bg-muted transition-all duration-300',
-                      'hover:ring-2 hover:ring-primary hover:scale-105',
-                      selectedImage === index ? 'ring-2 ring-primary scale-105' : 'opacity-70'
+                      'relative aspect-square rounded-xl overflow-hidden bg-muted/40',
+                      'transition-all duration-300 ease-out',
+                      'hover:ring-2 hover:ring-primary/60 hover:shadow-lg hover:scale-105',
+                      isActive
+                        ? 'ring-2 ring-primary shadow-xl scale-105 opacity-100'
+                        : 'opacity-50 hover:opacity-100 shadow-sm'
                     )}
                   >
                     <Media
-                      resource={thumbnailUrl}
+                      resource={displayThumb}
                       imgClassName="w-full h-full object-cover"
                       videoClassName="w-full h-full object-cover"
                       autoPlay={false}
@@ -200,10 +204,17 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                       loop={false}
                       playsInline={false}
                     />
+                    
                     {isThumbVideo && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                        <div className="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center">
-                          <div className="w-0 h-0 border-l-[8px] border-l-black border-t-[5px] border-t-transparent border-b-[5px] border-b-transparent ml-1" />
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div className="w-8 h-8 rounded-full bg-black/70 backdrop-blur-sm flex items-center justify-center shadow-lg ring-1 ring-white/20">
+                          <svg
+                            className="w-4 h-4 text-white ml-0.5"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
                         </div>
                       </div>
                     )}
@@ -213,7 +224,7 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
             </div>
           )}
 
-          <div className="flex justify-center mt-8">
+          <div className="flex justify-center pt-6">
             <NavigationBlockUI 
               {...galleryBlock} 
               pageContext={pageContext}
