@@ -221,7 +221,7 @@ function TestimonialCarousel({
 
       <NavigationBlockUI
         className="flex justify-center mt-8"
-        {...testimonialBlock.nav}
+        {...testimonialBlock}
         pageContext={pageContext}
       />
     </div>

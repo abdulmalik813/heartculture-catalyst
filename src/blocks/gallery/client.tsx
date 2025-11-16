@@ -8,6 +8,12 @@ import { Media } from '@/components/media'
 import { PageContext } from '@/types/page-context'
 import { NavigationBlockUI } from '../navigation'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogClose,
+} from '@/components/ui/dialog'
+import { Card } from '@/components/ui/card'
 
 interface GalleryBlockClientProps {
   galleryBlock: GalleryBlock
@@ -34,17 +40,21 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
               resource && typeof resource === 'object' && resource.mimeType?.includes('video')
 
             return (
-              <div key={index} className="break-inside-avoid">
-                <div
-                  className={cn('group relative overflow-hidden rounded-lg', {
+              <Card
+                key={index}
+                className={cn(
+                  'break-inside-avoid overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow',
+                  {
                     'cursor-pointer': !isVideo,
-                  })}
-                  onClick={() => {
-                    if (!isVideo) {
-                      setSelectedMediaIndex(index)
-                    }
-                  }}
-                >
+                  }
+                )}
+                onClick={() => {
+                  if (!isVideo) {
+                    setSelectedMediaIndex(index)
+                  }
+                }}
+              >
+                <div className="group relative overflow-hidden">
                   <Media
                     resource={resource}
                     imgClassName="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-300"
@@ -55,41 +65,38 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                     loop={false}
                     playsInline={false}
                   />
-                  {!isVideo && <div className="absolute inset-0 group-hover:opacity-100" />}
+                  {!isVideo && (
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                  )}
                 </div>
-              </div>
+              </Card>
             )
           })}
         </div>
 
-        {selectedMedia && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm p-4"
-            onClick={() => setSelectedMediaIndex(null)}
-          >
-            <button
-              className="absolute top-4 right-4 p-2 rounded-md text-foreground hover:bg-secondary transition-colors z-10"
-              onClick={() => setSelectedMediaIndex(null)}
-              aria-label="Close"
-            >
+        <Dialog open={selectedMedia !== null} onOpenChange={() => setSelectedMediaIndex(null)}>
+          <DialogContent className="max-w-7xl w-full p-0 border-0 bg-transparent">
+            <DialogClose className="absolute top-4 right-4 z-50 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground bg-background/80 backdrop-blur-sm p-2">
               <X className="h-6 w-6" />
-            </button>
-
-            <div className="relative max-w-6xl w-full" onClick={(e) => e.stopPropagation()}>
-              <Media
-                resource={selectedMedia}
-                imgClassName="w-full h-auto max-h-[85vh] object-contain rounded-lg"
-                videoClassName="w-full h-auto max-h-[85vh] object-contain rounded-lg"
-                priority
-              />
+              <span className="sr-only">Close</span>
+            </DialogClose>
+            <div className="relative w-full p-4">
+              {selectedMedia && (
+                <Media
+                  resource={selectedMedia}
+                  imgClassName="w-full h-auto max-h-[85vh] object-contain rounded-lg"
+                  videoClassName="w-full h-auto max-h-[85vh] object-contain rounded-lg"
+                  priority
+                />
+              )}
             </div>
-          </div>
-        )}
+          </DialogContent>
+        </Dialog>
       </section>
     )
   }
 
-if (galleryBlock.format === 'carousel') {
+  if (galleryBlock.format === 'carousel') {
     const [currentIndex, setCurrentIndex] = useState(0)
     const gallery = galleryBlock.gallery ?? []
     const count = gallery.length
@@ -110,8 +117,8 @@ if (galleryBlock.format === 'carousel') {
 
     return (
       <section className="w-full">
-        <div className="relative w-full">
-          <div className="relative aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] lg:aspect-[3/1] overflow-hidden rounded-lg bg-muted">
+        <Card className="relative w-full border-0 shadow-lg overflow-hidden">
+          <div className="relative aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] lg:aspect-[3/1] overflow-hidden bg-muted">
             {gallery.map((item, index) => {
               const resource = item.image
               return (
@@ -124,8 +131,8 @@ if (galleryBlock.format === 'carousel') {
                 >
                   <Media
                     resource={resource}
-                    imgClassName="w-full h-full object-cover"
-                    videoClassName="w-full h-full object-cover"
+                    imgClassName="w-full h-full object-contain"
+                    videoClassName="w-full h-full object-contain"
                     autoPlay={index === currentIndex}
                     controls={false}
                     muted={true}
@@ -136,26 +143,24 @@ if (galleryBlock.format === 'carousel') {
               )
             })}
 
-            {/* Previous Button */}
             {count > 1 && (
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={goToPrevious}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-background/80 hover:bg-background/95 backdrop-blur-sm"
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-background/80 hover:bg-background backdrop-blur-sm"
                 aria-label="Previous slide"
               >
                 <ChevronLeft className="h-6 w-6" />
               </Button>
             )}
 
-            {/* Next Button */}
             {count > 1 && (
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={goToNext}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-background/80 hover:bg-background/95 backdrop-blur-sm"
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-background/80 hover:bg-background backdrop-blur-sm"
                 aria-label="Next slide"
               >
                 <ChevronRight className="h-6 w-6" />
@@ -169,14 +174,16 @@ if (galleryBlock.format === 'carousel') {
             {count > 1 && (
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
                 {gallery.map((_, index) => (
-                  <button
+                  <Button
                     key={index}
+                    variant="ghost"
+                    size="icon"
                     onClick={() => goToSlide(index)}
                     className={cn(
-                      'w-2 h-2 rounded-full transition-all',
+                      'w-2 h-2 p-0 rounded-full transition-all hover:bg-foreground/75',
                       index === currentIndex
-                        ? 'bg-white w-8'
-                        : 'bg-white/50 hover:bg-white/75'
+                        ? 'bg-foreground w-8'
+                        : 'bg-foreground/50'
                     )}
                     aria-label={`Go to slide ${index + 1}`}
                   />
@@ -184,7 +191,7 @@ if (galleryBlock.format === 'carousel') {
               </div>
             )}
           </div>
-        </div>
+        </Card>
       </section>
     )
   }
