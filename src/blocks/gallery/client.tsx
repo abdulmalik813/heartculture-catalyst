@@ -141,22 +141,11 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
     return (
       <section className="container mx-auto px-4 py-8 md:py-12 lg:py-16">
         <div className="space-y-4 md:space-y-6">
-          <div className="w-full h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center overflow-hidden bg-muted rounded-lg">
-            {selectedItem ? (
-              <Media
-                resource={selectedItem.image}
-                imgClassName="w-full h-full object-contain"
-                videoClassName="w-full h-full object-contain"
-                htmlElement={null}
-                autoPlay={false}
-                controls={true}
-                muted={false}
-                loop={false}
-              />
-            ) : (
-              galleryBlock.gallery?.[0] && (
+          <Card className="overflow-hidden bg-muted p-0">
+            <div className="w-full h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center">
+              {selectedItem ? (
                 <Media
-                  resource={galleryBlock.gallery[0].image}
+                  resource={selectedItem.image}
                   imgClassName="w-full h-full object-contain"
                   videoClassName="w-full h-full object-contain"
                   htmlElement={null}
@@ -165,9 +154,22 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                   muted={false}
                   loop={false}
                 />
-              )
-            )}
-          </div>
+              ) : (
+                galleryBlock.gallery?.[0] && (
+                  <Media
+                    resource={galleryBlock.gallery[0].image}
+                    imgClassName="w-full h-full object-contain"
+                    videoClassName="w-full h-full object-contain"
+                    htmlElement={null}
+                    autoPlay={false}
+                    controls={true}
+                    muted={false}
+                    loop={false}
+                  />
+                )
+              )}
+            </div>
+          </Card>
 
           <div className="overflow-hidden px-2 md:px-4">
             <div className="flex gap-2 md:gap-3 overflow-x-auto pb-2 -mx-2 md:-mx-4 px-2 md:px-4">
