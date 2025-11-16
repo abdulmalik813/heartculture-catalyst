@@ -141,14 +141,14 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
     return (
       <section className="container mx-auto px-4 py-8 md:py-12 lg:py-16">
         <div className="space-y-4 md:space-y-6">
-          {/* Main display area */}
-          <Card className="overflow-hidden">
-            <div className="flex items-center justify-center aspect-video md:aspect-[16/10] bg-muted p-2 md:p-4">
+          <Card className="overflow-hidden bg-muted">
+            <div className="w-full h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center p-4">
               {selectedItem ? (
                 <Media
                   resource={selectedItem.image}
-                  imgClassName="w-full h-full object-contain rounded"
-                  videoClassName="w-full h-full object-contain rounded"
+                  imgClassName="max-w-full max-h-full w-auto h-auto object-contain"
+                  videoClassName="max-w-full max-h-full w-auto h-auto object-contain"
+                  htmlElement={null}
                   autoPlay={false}
                   controls={true}
                   muted={false}
@@ -158,8 +158,9 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                 galleryBlock.gallery?.[0] && (
                   <Media
                     resource={galleryBlock.gallery[0].image}
-                    imgClassName="w-full h-full object-contain rounded"
-                    videoClassName="w-full h-full object-contain rounded"
+                    imgClassName="max-w-full max-h-full w-auto h-auto object-contain"
+                    videoClassName="max-w-full max-h-full w-auto h-auto object-contain"
+                    htmlElement={null}
                     autoPlay={false}
                     controls={true}
                     muted={false}
@@ -170,9 +171,8 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
             </div>
           </Card>
 
-          {/* Thumbnails */}
-          <div className="relative">
-            <div className="flex gap-2 md:gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide">
+          <div className="overflow-hidden px-2 md:px-4">
+            <div className="flex gap-2 md:gap-3 overflow-x-auto pb-2 -mx-2 md:-mx-4 px-2 md:px-4">
               {galleryBlock.gallery?.map((item, index) => {
                 const isSelected =
                   selectedImage === index || (selectedImage === null && index === 0)
@@ -181,14 +181,14 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                   resource && typeof resource === 'object' && resource.mimeType?.includes('video')
 
                 return (
-                  <Card
+                  <div
                     key={index}
                     className={cn(
-                      'relative flex-shrink-0 w-20 h-20 md:w-24 md:h-24 overflow-hidden cursor-pointer transition-all snap-start',
+                      'relative flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden cursor-pointer transition-all border-2',
                       'hover:scale-105 active:scale-95',
                       isSelected
-                        ? 'ring-2 ring-primary shadow-lg'
-                        : 'ring-1 ring-border opacity-70 hover:opacity-100',
+                        ? 'border-primary shadow-lg'
+                        : 'border-border opacity-70 hover:opacity-100',
                     )}
                     onClick={() => setSelectedImage(index)}
                   >
@@ -196,18 +196,19 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                       resource={
                         isVideo && typeof resource === 'object' ? resource.videoThumbnail : resource
                       }
-                      imgClassName="w-full h-full object-cover"
-                      videoClassName="w-full h-full object-cover"
+                      imgClassName="w-full h-full object-cover scale-110"
+                      videoClassName="w-full h-full object-cover scale-110"
+                      htmlElement={null}
                     />
                     {isSelected && (
                       <div className="absolute inset-0 bg-primary/10 pointer-events-none" />
                     )}
-                  </Card>
+                  </div>
                 )
               })}
             </div>
           </div>
-          </div>
+        </div>
       </section>
     )
   }
