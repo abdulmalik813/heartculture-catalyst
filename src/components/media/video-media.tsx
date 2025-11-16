@@ -1,8 +1,5 @@
-'use client'
-
 import { cn } from '@/lib/utils'
 import React from 'react'
-import Video from 'next-video'
 
 import type { Props as MediaProps } from '@/components/media/types'
 import { getMediaUrl } from '@/lib/get-media-url'
@@ -29,7 +26,7 @@ export function VideoMedia(props: MediaProps) {
       : undefined
 
     return (
-      <Video
+      <video
         src={getMediaUrl(resource.url)}
         poster={thumbnailUrl}
         autoPlay={autoPlay}
@@ -38,7 +35,7 @@ export function VideoMedia(props: MediaProps) {
         muted={muted}
         playsInline={playsInline}
         onClick={onClick}
-        className={cn('object-cover', videoClassName)}
+        className={cn(videoClassName)}
       />
     )
   }

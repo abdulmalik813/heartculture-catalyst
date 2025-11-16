@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { X } from 'lucide-react'
-import type { GalleryBlock } from '@/payload-types'
+import type { GalleryBlock, Media as MediaType } from '@/payload-types'
 import { cn } from '@/lib/utils'
 import { Media } from '@/components/media'
 import { PageContext } from '@/types/page-context'
@@ -29,7 +29,7 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
       delay: 4000,
       stopOnInteraction: true,
       stopOnMouseEnter: true,
-    })
+    }),
   )
 
   const selectedItem = selectedImage !== null ? galleryBlock.gallery?.[selectedImage] : null
@@ -130,109 +130,89 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
             <CarouselNext className="hidden md:flex" />
           </Carousel>
           <div className="flex justify-center mt-6">
-            <NavigationBlockUI 
-              {...galleryBlock} 
-              pageContext={pageContext}
-              className="mx-auto"
-            />
+            <NavigationBlockUI {...galleryBlock} pageContext={pageContext} className="mx-auto" />
           </div>
         </div>
       </section>
     )
   }
 
-  if (galleryBlock.format === 'focus') {
-    const focusItem = galleryBlock.gallery?.[0]
-    if (!focusItem) return null
-
-    const displayItem = selectedImage !== null ? galleryBlock.gallery?.[selectedImage] : focusItem
-    const resource = displayItem?.image
-
-    return (
-      <section className="container mx-auto px-4 py-16 md:py-20 lg:py-24">
-        <div className="max-w-7xl mx-auto space-y-10">
-          <div className="relative aspect-[16/10] rounded-3xl overflow-hidden bg-gradient-to-br from-muted/30 to-muted shadow-2xl ring-1 ring-black/5">
-            <Media
-              resource={resource}
-              imgClassName="w-full h-full object-contain p-2"
-              videoClassName="w-full h-full object-contain"
-              autoPlay={true}
-              controls={true}
-              muted={true}
-              loop={true}
-              playsInline={true}
-            />
+if (galleryBlock.format === 'focus') {
+  return (
+    <section className="container mx-auto px-4 py-8 md:py-12 lg:py-16">
+      <div className="space-y-4 md:space-y-6">
+        {/* Main display area */}
+        <Card className="overflow-hidden">
+          <div className="flex items-center justify-center aspect-video md:aspect-[16/10] bg-muted p-2 md:p-4">
+            {selectedItem ? (
+              <Media
+                resource={selectedItem.image}
+                imgClassName="w-full h-full object-contain rounded"
+                videoClassName="w-full h-full object-contain rounded"
+                autoPlay={false}
+                controls={true}
+                muted={false}
+                loop={false}
+              />
+            ) : (
+              galleryBlock.gallery?.[0] && (
+                <Media
+                  resource={galleryBlock.gallery[0].image}
+                  imgClassName="w-full h-full object-contain rounded"
+                  videoClassName="w-full h-full object-contain rounded"
+                  autoPlay={false}
+                  controls={true}
+                  muted={false}
+                  loop={false}
+                />
+              )
+            )}
           </div>
+        </Card>
 
-          {galleryBlock.gallery && galleryBlock.gallery.length > 1 && (
-            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-4 md:gap-5 px-2">
-              {galleryBlock.gallery.map((item, index) => {
-                const thumbResource = item.image
-                const isThumbVideo =
-                  thumbResource &&
-                  typeof thumbResource === 'object' &&
-                  thumbResource.mimeType?.includes('video')
-                
-                const displayThumb = 
-                  isThumbVideo && 
-                  thumbResource.videoThumbnail
-                    ? thumbResource.videoThumbnail
-                    : thumbResource
+        {/* Thumbnails */}
+        <div className="relative">
+          <div className="flex gap-2 md:gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide">
+            {galleryBlock.gallery?.map((item, index) => {
+              const isSelected = selectedImage === index || (selectedImage === null && index === 0)
+              const resource = item.image
+              const isVideo =
+                resource && typeof resource === 'object' && resource.mimeType?.includes('video')
 
-                const isActive = selectedImage === index || (selectedImage === null && index === 0)
-
-                return (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImage(index)}
-                    className={cn(
-                      'relative aspect-square rounded-xl overflow-hidden bg-muted/40',
-                      'transition-all duration-300 ease-out',
-                      'hover:ring-2 hover:ring-primary/60 hover:shadow-lg hover:scale-105',
-                      isActive
-                        ? 'ring-2 ring-primary shadow-xl scale-105 opacity-100'
-                        : 'opacity-50 hover:opacity-100 shadow-sm'
-                    )}
-                  >
-                    <Media
-                      resource={displayThumb}
-                      imgClassName="w-full h-full object-cover"
-                      videoClassName="w-full h-full object-cover"
-                      autoPlay={false}
-                      controls={false}
-                      muted={true}
-                      loop={false}
-                      playsInline={false}
-                    />
-                    
-                    {isThumbVideo && (
-                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="w-8 h-8 rounded-full bg-black/70 backdrop-blur-sm flex items-center justify-center shadow-lg ring-1 ring-white/20">
-                          <svg
-                            className="w-4 h-4 text-white ml-0.5"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        </div>
-                      </div>
-                    )}
-                  </button>
-                )
-              })}
-            </div>
-          )}
-
-          <div className="flex justify-center pt-6">
-            <NavigationBlockUI 
-              {...galleryBlock} 
-              pageContext={pageContext}
-              className="mx-auto"
-            />
+              return (
+                <Card
+                  key={index}
+                  className={cn(
+                    'relative flex-shrink-0 w-20 h-20 md:w-24 md:h-24 overflow-hidden cursor-pointer transition-all snap-start',
+                    'hover:scale-105 active:scale-95',
+                    isSelected ? 'ring-2 ring-primary shadow-lg' : 'ring-1 ring-border opacity-70 hover:opacity-100',
+                  )}
+                  onClick={() => setSelectedImage(index)}
+                >
+                  <Media
+                    resource={
+                      isVideo && typeof resource === 'object' ? resource.videoThumbnail : resource
+                    }
+                    imgClassName="w-full h-full object-cover"
+                    videoClassName="w-full h-full object-cover"
+                  />
+                  {isSelected && (
+                    <div className="absolute inset-0 bg-primary/10 pointer-events-none" />
+                  )}
+                </Card>
+              )
+            })}
           </div>
         </div>
-      </section>
-    )
-  }
+
+        {/* Navigation if exists */}
+        {galleryBlock.navigation && (
+          <div className="flex justify-center pt-2">
+            <NavigationBlockUI {...galleryBlock} pageContext={pageContext} className="mx-auto" />
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
 }
