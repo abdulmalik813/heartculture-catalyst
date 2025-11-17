@@ -38,7 +38,7 @@ const faqSchema = async (page: Page | Post) => {
   }
 }
 
-const testimonialSchema = async (page: Page | Post) => {
+const testimonialSchema = async (page: Page | Post, setting: Setting) => {
   if (!checkBlock(page, 'testimonialBlock')) return []
   const testimonials = (await getCachedDocuments('testimonials')()) as Testimonial[]
 
@@ -46,38 +46,52 @@ const testimonialSchema = async (page: Page | Post) => {
     return []
   }
 
-  return testimonials.map((testimonial) => ({
-    '@context': 'https://schema.org',
-    '@type': 'Review',
-    author:
+  return testimonials.map((testimonial) => {
+    const author: any = 
       testimonial.type === 'company'
         ? {
             '@type': 'Organization',
-            name: testimonial.company || testimonial.name || undefined,
+            name: testimonial.company || testimonial.name,
           }
         : {
             '@type': 'Person',
-            name: testimonial.name || undefined,
-            jobTitle: testimonial.position || undefined,
-            worksFor: testimonial.company
-              ? {
-                  '@type': 'Organization',
-                  name: testimonial.company,
-                }
-              : undefined,
-          },
-    reviewBody: testimonial.content || undefined,
-    reviewRating: testimonial.rating
-      ? {
-          '@type': 'Rating',
-          ratingValue: testimonial.rating,
-          bestRating: 5,
-        }
-      : undefined,
-  }))
+            name: testimonial.name,
+            ...(testimonial.position && { jobTitle: testimonial.position }),
+            ...(testimonial.company && {
+              worksFor: {
+                '@type': 'Organization',
+                name: testimonial.company,
+              },
+            }),
+          }
+
+    const review: any = {
+      '@context': 'https://schema.org',
+      '@type': 'Review',
+      author,
+      itemReviewed: {
+        '@type': 'Organization',
+        name: setting.appTitle || "",
+      },
+    }
+
+    if (testimonial.content) {
+      review.reviewBody = testimonial.content
+    }
+
+    if (testimonial.rating) {
+      review.reviewRating = {
+        '@type': 'Rating',
+        ratingValue: testimonial.rating,
+        bestRating: 5,
+      }
+    }
+
+    return review
+  })
 }
 
-export const pageSchema = async (page: Page, settings: Setting) => {
+export const pageSchema = async (page: Page, setting: Setting) => {
   const social = (await getCachedGlobal('social')) as Social
   const medias = mediaExtractor(page)
 
@@ -91,7 +105,7 @@ export const pageSchema = async (page: Page, settings: Setting) => {
   ].filter((link) => link)
 
   const associatedMediaSchemas = await Promise.all(
-    medias.map((media) => mediaSchema(media as Media, settings)),
+    medias.map((media) => mediaSchema(media as Media, setting)),
   ).then((schemas) => schemas.filter(Boolean))
 
   const isHomePage = page.slug === 'home'
@@ -126,7 +140,7 @@ export const pageSchema = async (page: Page, settings: Setting) => {
   const modifyDate = page?.updatedAt
 
   const faqData = await faqSchema(page)
-  const testimonialData = await testimonialSchema(page)
+  const testimonialData = await testimonialSchema(page, setting)
 
   const pageUrl = isHomePage ? getServerSideURL() : `${getServerSideURL()}/${page?.slug}`
 
@@ -138,9 +152,9 @@ export const pageSchema = async (page: Page, settings: Setting) => {
     url: pageUrl,
     datePublished: publishDate ? new Date(publishDate).toISOString() : undefined,
     dateModified: modifyDate ? new Date(modifyDate).toISOString() : undefined,
-    image: await imageSchema(page.meta?.image as Media, settings),
+    image: await imageSchema(page.meta?.image as Media, setting),
     thumbnailUrl:
-      (page.meta?.image as Media)?.url || (settings.fallbackImage as Media)?.url || undefined,
+      (page.meta?.image as Media)?.url || (setting.fallbackImage as Media)?.url || undefined,
     associatedMedia: associatedMediaSchemas.length > 0 ? associatedMediaSchemas : undefined,
     author: page?.author
       ? {
@@ -151,8 +165,8 @@ export const pageSchema = async (page: Page, settings: Setting) => {
       : undefined,
     publisher: {
       '@type': 'Organization',
-      name: settings.appTitle || undefined,
-      logo: await imageSchema(settings.logo as Media, settings),
+      name: setting.appTitle || undefined,
+      logo: await imageSchema(setting.logo as Media, setting),
     },
     breadcrumb: {
       '@type': 'BreadcrumbList',
@@ -165,7 +179,7 @@ export const pageSchema = async (page: Page, settings: Setting) => {
   }
 }
 
-export const blogSchema = async (post: Post, settings: Setting) => {
+export const blogSchema = async (post: Post, setting: Setting) => {
   const social = (await getCachedGlobal('social')) as Social
   const medias = mediaExtractor(post)
 
@@ -179,14 +193,14 @@ export const blogSchema = async (post: Post, settings: Setting) => {
   ].filter((link) => link)
 
   const associatedMediaSchemas = await Promise.all(
-    medias.map((media) => mediaSchema(media as Media, settings)),
+    medias.map((media) => mediaSchema(media as Media, setting)),
   ).then((schemas) => schemas.filter(Boolean))
 
   const publishDate = post?.publishedAt || post?.createdAt
   const modifyDate = post?.updatedAt
 
   const faqData = await faqSchema(post)
-  const testimonialData = await testimonialSchema(post)
+  const testimonialData = await testimonialSchema(post, setting)
 
   return {
     '@context': 'https://schema.org',
@@ -195,9 +209,9 @@ export const blogSchema = async (post: Post, settings: Setting) => {
     description: post?.meta?.description || undefined,
     datePublished: publishDate ? new Date(publishDate).toISOString() : undefined,
     dateModified: modifyDate ? new Date(modifyDate).toISOString() : undefined,
-    image: await imageSchema(post.meta?.image as Media, settings),
+    image: await imageSchema(post.meta?.image as Media, setting),
     thumbnailUrl:
-      (post.meta?.image as Media)?.url || (settings.fallbackImage as Media)?.url || undefined,
+      (post.meta?.image as Media)?.url || (setting.fallbackImage as Media)?.url || undefined,
     associatedMedia: associatedMediaSchemas.length > 0 ? associatedMediaSchemas : undefined,
     author: {
       '@type': 'Person',
@@ -206,10 +220,10 @@ export const blogSchema = async (post: Post, settings: Setting) => {
     },
     publisher: {
       '@type': 'Organization',
-      name: settings.appTitle || undefined,
-      logo: await imageSchema(settings.logo as Media, settings),
+      name: setting.appTitle || undefined,
+      logo: await imageSchema(setting.logo as Media, setting),
     },
-    url: `${getServerSideURL()}/${settings.postSlug}/${post?.slug}`,
+    url: `${getServerSideURL()}/${setting.postSlug}/${post?.slug}`,
     breadcrumb: {
       '@type': 'BreadcrumbList',
       itemListElement: [
@@ -222,14 +236,14 @@ export const blogSchema = async (post: Post, settings: Setting) => {
         {
           '@type': 'ListItem',
           position: 2,
-          name: settings.postListingPageTitle || 'Blog',
-          item: `${getServerSideURL()}/${settings.postSlug}`,
+          name: setting.postListingPageTitle || 'Blog',
+          item: `${getServerSideURL()}/${setting.postSlug}`,
         },
         {
           '@type': 'ListItem',
           position: 3,
           name: post?.title || undefined,
-          item: `${getServerSideURL()}/${settings.postSlug}/${post?.slug}`,
+          item: `${getServerSideURL()}/${setting.postSlug}/${post?.slug}`,
         },
       ],
     },
@@ -240,10 +254,10 @@ export const blogSchema = async (post: Post, settings: Setting) => {
   }
 }
 
-export const imageSchema = async (image: Media | null | undefined, settings: Setting) => {
+export const imageSchema = async (image: Media | null | undefined, setting: Setting) => {
   let imageToUse = null
   if (!image || !image.url) {
-    imageToUse = settings.fallbackImage as Media
+    imageToUse = setting.fallbackImage as Media
   } else {
     imageToUse = image
   }
@@ -284,7 +298,7 @@ export const imageSchema = async (image: Media | null | undefined, settings: Set
   }
 }
 
-export const mediaSchema = async (media: Media | null | undefined, settings: Setting) => {
+export const mediaSchema = async (media: Media | null | undefined, setting: Setting) => {
   if (!media || !media.url) {
     return null
   }
@@ -320,7 +334,7 @@ export const mediaSchema = async (media: Media | null | undefined, settings: Set
 
   if (isVideo) {
     const videoThumbnail =
-      (media.videoThumbnail as Thumbnail) || (settings.fallbackImage as Media) || null
+      (media.videoThumbnail as Thumbnail) || (setting.fallbackImage as Media) || null
     return {
       ...baseSchema,
       '@type': 'VideoObject',
@@ -376,7 +390,7 @@ export const mediaSchema = async (media: Media | null | undefined, settings: Set
   }
 }
 
-export const postListingSchema = async (settings: Setting, social?: Social) => {
+export const postListingSchema = async (setting: Setting, social?: Social) => {
   const socialData = social || ((await getCachedGlobal('social')) as Social)
 
   const socialLinks = [
@@ -391,16 +405,16 @@ export const postListingSchema = async (settings: Setting, social?: Social) => {
   return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: settings.postListingPageTitle || 'Posts',
-    description: settings.postMetaDescription || undefined,
-    url: `${getServerSideURL()}/${settings.postSlug}`,
-    image: await imageSchema(settings.postMetaImage as Media, settings),
+    name: setting.postListingPageTitle || 'Posts',
+    description: setting.postMetaDescription || undefined,
+    url: `${getServerSideURL()}/${setting.postSlug}`,
+    image: await imageSchema(setting.postMetaImage as Media, setting),
     thumbnailUrl:
-      (settings.postMetaImage as Media)?.url || (settings.fallbackImage as Media)?.url || undefined,
+      (setting.postMetaImage as Media)?.url || (setting.fallbackImage as Media)?.url || undefined,
     publisher: {
       '@type': 'Organization',
-      name: settings.appTitle || undefined,
-      logo: await imageSchema(settings.logo as Media, settings),
+      name: setting.appTitle || undefined,
+      logo: await imageSchema(setting.logo as Media, setting),
       sameAs: socialLinks.length > 0 ? socialLinks : undefined,
     },
     breadcrumb: {
@@ -415,8 +429,8 @@ export const postListingSchema = async (settings: Setting, social?: Social) => {
         {
           '@type': 'ListItem',
           position: 2,
-          name: settings.postListingPageTitle || 'Posts',
-          item: `${getServerSideURL()}/${settings.postSlug}`,
+          name: setting.postListingPageTitle || 'Posts',
+          item: `${getServerSideURL()}/${setting.postSlug}`,
         },
       ],
     },

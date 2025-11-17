@@ -26,6 +26,5 @@ export const checkBlock = (page: Post | Page, blockName: string): boolean => {
 
     return false
   }
-
   return findBlockType(page.layout)
 }
