@@ -16,8 +16,7 @@ export async function TabBlockUI({
 
   return (
     <Tabs defaultValue={defaultTabValue} className={joinStyles(tabBlock.tabStyles)}>
-      <div className="flex justify-center">
-        <TabsList className={joinStyles(tabBlock.tabListStyles)}>
+        <TabsList className={joinStyles('text-center flex-wrap h-auto w-full', tabBlock.tabListStyles)}>
           {tabBlock.tabs.map((tab) => {
             if (!tab.title) return null
             return (
@@ -27,7 +26,6 @@ export async function TabBlockUI({
             )
           })}
         </TabsList>
-      </div>
       {tabBlock.tabs.map((tab) => {
         if (!tab.title || !tab.content) return null
         return (
