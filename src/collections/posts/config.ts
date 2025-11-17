@@ -131,6 +131,15 @@ export const Posts: CollectionConfig<'posts'> = {
       },
     },
     {
+      name: 'readingTime',
+      type: 'number',
+      defaultValue: 5,
+      required: true,
+      admin: {
+        position: 'sidebar',
+      },
+    },
+    {
       type: 'tabs',
       tabs: [
         {

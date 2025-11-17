@@ -16,6 +16,34 @@ import { mediaExtractor } from '@/lib/image-extractor'
 import { getCachedDocuments } from '@/lib/get-document'
 import { checkBlock } from '@/lib/check-block'
 
+const buildPersonSchema = (author: User, socialLinks: string[]) => {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: author.name || '',
+    sameAs: socialLinks.length > 0 ? socialLinks : undefined,
+  }
+}
+
+const buildWebSiteSchema = (setting: Setting) => {
+  const serverUrl = getServerSideURL()
+  
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: setting.appTitle || '',
+    url: serverUrl,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${serverUrl}/search?q={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  }
+}
+
 const buildLocalBusinessSchema = async (setting: Setting, social: Social, pageImage?: Media) => {
   const hasContactInfo = 
     (setting.emails && setting.emails.length > 0) ||
@@ -34,7 +62,7 @@ const buildLocalBusinessSchema = async (setting: Setting, social: Social, pageIm
     social.x,
     social.youtube,
     social.tiktok,
-  ].filter((link) => link)
+  ].filter((link) => link) as string[]
 
   const imageToUse = pageImage || (setting.fallbackImage as Media)
   const imageUrl = imageToUse?.url ? getMediaUrl(imageToUse.url) : undefined
@@ -97,7 +125,7 @@ const buildOrganizationSchema = async (setting: Setting, social: Social) => {
     social.x,
     social.youtube,
     social.tiktok,
-  ].filter((link) => link)
+  ].filter((link) => link) as string[]
 
   const schema: any = {
     '@context': 'https://schema.org',
@@ -249,7 +277,7 @@ export const pageSchema = async (page: Page, setting: Setting) => {
     social.x,
     social.youtube,
     social.tiktok,
-  ].filter((link) => link)
+  ].filter((link) => link) as string[]
 
   const associatedMediaSchemas = await Promise.all(
     medias.map((media) => mediaSchema(media as Media, setting)),
@@ -331,6 +359,11 @@ export const pageSchema = async (page: Page, setting: Setting) => {
 
   schemas.push(webPageSchema)
 
+  if (page?.author) {
+    const author = page.author as User
+    schemas.push(buildPersonSchema(author, socialLinks))
+  }
+
   if (faqData) {
     schemas.push(faqData)
   }
@@ -347,6 +380,9 @@ export const pageSchema = async (page: Page, setting: Setting) => {
     schemas.push(organizationSchema)
   }
 
+  const websiteSchema = buildWebSiteSchema(setting)
+  schemas.push(websiteSchema)
+
   return schemas.length === 1 ? schemas[0] : schemas
 }
 
@@ -361,7 +397,7 @@ export const blogSchema = async (post: Post, setting: Setting) => {
     social.x,
     social.youtube,
     social.tiktok,
-  ].filter((link) => link)
+  ].filter((link) => link) as string[]
 
   const associatedMediaSchemas = await Promise.all(
     medias.map((media) => mediaSchema(media as Media, setting)),
@@ -597,7 +633,7 @@ export const postListingSchema = async (setting: Setting, social?: Social) => {
     socialData.x,
     socialData.youtube,
     socialData.tiktok,
-  ].filter((link) => link)
+  ].filter((link) => link) as string[]
 
   const postMetaImage = setting.postMetaImage as Media
   const fallbackImage = setting.fallbackImage as Media
@@ -650,6 +686,9 @@ export const postListingSchema = async (setting: Setting, social?: Social) => {
     const organizationSchema = await buildOrganizationSchema(setting, socialData)
     schemas.push(organizationSchema)
   }
+
+  const websiteSchema = buildWebSiteSchema(setting)
+  schemas.push(websiteSchema)
 
   return schemas.length === 1 ? schemas[0] : schemas
 }

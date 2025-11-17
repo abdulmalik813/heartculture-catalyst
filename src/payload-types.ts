@@ -319,6 +319,7 @@ export interface Post {
   title: string;
   author?: (number | null) | User;
   categories?: (number | Category)[] | null;
+  readingTime: number;
   hero: {
     layout: 'fullscreen' | 'with-image' | 'text-only';
     heroTitle?: string | null;
@@ -2371,6 +2372,7 @@ export interface PostsSelect<T extends boolean = true> {
   title?: T;
   author?: T;
   categories?: T;
+  readingTime?: T;
   hero?:
     | T
     | {
@@ -3289,6 +3291,9 @@ export interface Setting {
   favIcon: number | Media;
   favIconSvg?: (number | null) | Media;
   favIconPng?: (number | null) | Media;
+  googleVerification?: string | null;
+  bingVerification?: string | null;
+  yandexVerification?: string | null;
   emails?:
     | {
         email: string;
@@ -3550,6 +3555,9 @@ export interface SettingsSelect<T extends boolean = true> {
   favIcon?: T;
   favIconSvg?: T;
   favIconPng?: T;
+  googleVerification?: T;
+  bingVerification?: T;
+  yandexVerification?: T;
   emails?:
     | T
     | {

@@ -73,6 +73,32 @@ export const Settings: GlobalConfig = {
           ],
         },
         {
+          label: 'SEO & Verification',
+          fields: [
+            {
+              type: 'collapsible',
+              label: 'Search Engine Verification',
+              fields: [
+                {
+                  name: 'googleVerification',
+                  type: 'text',
+                  label: 'Google Search Console Verification Code',
+                },
+                {
+                  name: 'bingVerification',
+                  type: 'text',
+                  label: 'Bing Webmaster Verification Code',
+                },
+                {
+                  name: 'yandexVerification',
+                  type: 'text',
+                  label: 'Yandex Verification Code',
+                },
+              ],
+            }
+          ],
+        },
+        {
           label: 'Location and Contact',
           fields: [
             {
@@ -137,7 +163,7 @@ export const Settings: GlobalConfig = {
                   label: 'Location (Text)',
                   admin: {
                     rows: 3,
-                    condition: (data: any) => data.addressType === 'partial',
+                    condition: (_, data) => data.addressType === 'partial',
                   },
                 },
                 {
@@ -145,7 +171,7 @@ export const Settings: GlobalConfig = {
                   type: 'group',
                   label: 'Full Address',
                   admin: {
-                    condition: (data: any) => data.addressType === 'full',
+                    condition: (_, data) => data.addressType === 'full',
                   },
                   fields: [
                     {

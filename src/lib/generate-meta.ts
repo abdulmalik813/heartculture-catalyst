@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
-import type { Media, Page, Post, Setting } from '@/payload-types'
+import type { Media, Page, Post, Setting, Social, User } from '@/payload-types'
 import { getServerSideURL } from '@/lib/get-url'
 import { getAppSettings } from '@/constants/app'
+import { getCachedGlobal } from '@/lib/get-globals'
+import { fa } from 'zod/v4/locales'
 
 const getImageURL = async (appData: any, image?: Media) => {
   const serverUrl = getServerSideURL()
@@ -45,6 +47,8 @@ export const generateMeta = async (
 ): Promise<Metadata> => {
   const appData = await getAppSettings()
   const serverUrl = getServerSideURL()
+  const social = (await getCachedGlobal('social')) as Social
+  
   const title = doc?.meta?.title ? doc?.meta?.title : appData.appTitle
   const description = doc?.meta?.description || appData.appDescription
   const ogImage = await getImageURL(appData, doc?.meta?.image as Media)
@@ -52,6 +56,46 @@ export const generateMeta = async (
   const url = `${serverUrl}/${post ? settings.postSlug + '/' : ''}${slug}`
 
   const contactMetadata = buildContactMetadata(settings)
+  
+  const verification: Record<string, string> = {}
+  if (settings.googleVerification) {
+    verification.google = settings.googleVerification
+  }
+
+  const author = post && (doc as Post)?.author ? (doc as Post).author as User : null
+  const categories = post && (doc as Post)?.categories ? (doc as Post).categories : undefined
+  const categoryNames = categories && Array.isArray(categories) 
+    ? categories.map((cat) => typeof cat === 'object' ? cat?.name : '').filter(Boolean).join(', ')
+    : undefined
+
+  const readingTime = post && (doc as Post)?.readingTime ? (doc as Post).readingTime : 0
+
+  const twitterHandle = social?.x ? social.x.replace('https://twitter.com/', '@').replace('https://x.com/', '@') : undefined
+
+  const publishedTime = post && (doc as Post)?.publishedAt ? new Date((doc as Post).publishedAt!).toISOString() : undefined
+  const modifiedTime = post && (doc as Post)?.updatedAt ? new Date((doc as Post).updatedAt!).toISOString() : undefined
+
+  const otherMetadata: Record<string, string> = {
+    ...(contactMetadata || {}),
+  }
+
+  if (settings.bingVerification) {
+    otherMetadata['msvalidate.01'] = settings.bingVerification
+  }
+  
+  if (settings.yandexVerification) {
+    otherMetadata['yandex-verification'] = settings.yandexVerification
+  }
+
+  if (post && readingTime > 0) {
+    otherMetadata['twitter:label1'] = 'Reading time'
+    otherMetadata['twitter:data1'] = `${readingTime} min read`
+  }
+
+  if (post && author) {
+    otherMetadata['twitter:label2'] = 'Written by'
+    otherMetadata['twitter:data2'] = author.name || ''
+  }
 
   const metadata: Metadata = {
     title,
@@ -59,10 +103,28 @@ export const generateMeta = async (
     alternates: {
       canonical: url,
     },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    authors: author ? [{ name: author.name || '' }] : undefined,
+    category: categoryNames,
     openGraph: await mergeOpenGraph({
       title,
       description,
       url,
+      type: post ? 'article' : 'website',
+      publishedTime,
+      modifiedTime,
+      authors: author ? [author.name || ''] : undefined,
+      section: categoryNames,
       images: ogImage
         ? [
             {
@@ -71,7 +133,16 @@ export const generateMeta = async (
           ]
         : undefined,
     }),
-    ...(contactMetadata && { other: contactMetadata }),
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ogImage ? [ogImage] : undefined,
+      creator: twitterHandle,
+      site: twitterHandle,
+    },
+    ...(Object.keys(verification).length > 0 && { verification }),
+    ...(Object.keys(otherMetadata).length > 0 && { other: otherMetadata }),
   }
 
   return metadata
@@ -81,6 +152,8 @@ export const generatePostsListingMeta = async (settings: Setting): Promise<Metad
   const { postMetaTitle, postMetaDescription, postMetaImage, postSlug } = settings
   const appData = await getAppSettings()
   const serverUrl = getServerSideURL()
+  const social = (await getCachedGlobal('social')) as Social
+  
   const ogImage = await getImageURL(appData, postMetaImage as Media)
   const title = postMetaTitle || appData.appTitle
   const description = postMetaDescription || appData.appDescription
@@ -89,11 +162,41 @@ export const generatePostsListingMeta = async (settings: Setting): Promise<Metad
 
   const contactMetadata = buildContactMetadata(settings)
 
+  const verification: Record<string, string> = {}
+  if (settings.googleVerification) {
+    verification.google = settings.googleVerification
+  }
+
+  const twitterHandle = social?.x ? social.x.replace('https://twitter.com/', '@').replace('https://x.com/', '@') : undefined
+
+  const otherMetadata: Record<string, string> = {
+    ...(contactMetadata || {}),
+  }
+
+  if (settings.bingVerification) {
+    otherMetadata['msvalidate.01'] = settings.bingVerification
+  }
+  
+  if (settings.yandexVerification) {
+    otherMetadata['yandex-verification'] = settings.yandexVerification
+  }
+
   const metadata: Metadata = {
     title,
     description,
     alternates: {
       canonical: url,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
     openGraph: await mergeOpenGraph({
       title,
@@ -107,7 +210,16 @@ export const generatePostsListingMeta = async (settings: Setting): Promise<Metad
           ]
         : undefined,
     }),
-    ...(contactMetadata && { other: contactMetadata }),
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ogImage ? [ogImage] : undefined,
+      creator: twitterHandle,
+      site: twitterHandle,
+    },
+    ...(Object.keys(verification).length > 0 && { verification }),
+    ...(Object.keys(otherMetadata).length > 0 && { other: otherMetadata }),
   }
 
   return metadata
