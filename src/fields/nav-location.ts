@@ -55,6 +55,6 @@ export const navLocation = (): Field[] => {
       defaultValue: 'https://',
       label: 'URL',
       required: true,
-    },
+    }
   ]
 }
