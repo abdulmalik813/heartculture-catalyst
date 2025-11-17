@@ -100,6 +100,7 @@ export const Posts: CollectionConfig<'posts'> = {
       const postSlug = setting?.postSlug || 'posts'
       return generatePreviewPath(`${postSlug}/${data?.slug}`)
     },
+    listSearchableFields: ['title', 'slug'],
   },
   defaultPopulate: {
     title: true,
@@ -167,7 +168,7 @@ export const Posts: CollectionConfig<'posts'> = {
                                 FormBlock,
                                 TableBlock,
                                 LastModifiedBlock,
-                                RecentPostsBlock
+                                RecentPostsBlock,
                               ],
                               required: false,
                             },

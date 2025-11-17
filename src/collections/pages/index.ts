@@ -42,12 +42,13 @@ export const Pages: CollectionConfig<'pages'> = {
     preview: async (data) => {
       return generatePreviewPath(`${data?.slug}`)
     },
+    listSearchableFields: ['title', 'slug'],
   },
   defaultPopulate: {
     title: true,
     slug: true,
+    publishedAt: true,
   },
-
   fields: [
     {
       name: 'title',
