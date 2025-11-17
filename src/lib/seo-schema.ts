@@ -116,6 +116,25 @@ const buildOrganizationSchema = async (setting: Setting, social: Social) => {
     schema.telephone = setting.phones.map((p: any) => p.number)
   }
 
+  if (setting.addressType == "full") {
+    if (setting.fullAddress && (
+      setting.fullAddress.streetAddress ||
+      setting.fullAddress.addressLocality ||
+      setting.fullAddress.postalCode
+    )) {
+      schema.address = {
+        '@type': 'PostalAddress',
+        ...(setting.fullAddress.streetAddress && { streetAddress: setting.fullAddress.streetAddress }),
+        ...(setting.fullAddress.addressLocality && { addressLocality: setting.fullAddress.addressLocality }),
+        ...(setting.fullAddress.addressRegion && { addressRegion: setting.fullAddress.addressRegion }),
+        ...(setting.fullAddress.postalCode && { postalCode: setting.fullAddress.postalCode }),
+        ...(setting.fullAddress.addressCountry && { addressCountry: setting.fullAddress.addressCountry }),
+      }
+    }
+  } else if (setting.locationText) {
+    schema.address = setting.locationText
+  }
+
   if (socialLinks.length > 0) {
     schema.sameAs = socialLinks
   }
