@@ -17,7 +17,7 @@ export function joinStyles(
                   .split(' ')
                   .map((cls) => cls.trim())
                   .filter((cls) => cls !== '')
-                  .map((cls) => `${sanitizeAlias(i.alias)}-${cls}`)
+                  .map((cls) => sanitizeAlias(i.alias, cls))
                   .join(' ')
               : i,
           )
@@ -34,9 +34,9 @@ export function joinStyles(
   return [trimmedStringClass, trimmedMapClass].filter(Boolean).join(' ')
 }
 
-function sanitizeAlias(alias: string): string {
-  if (alias.startsWith('font-')) return alias
-  
+function sanitizeAlias(alias: string, cls: string): string {
+  if (cls.startsWith('font-')) return cls
+
   const sanitized = alias
     .toLowerCase()
     .trim()
@@ -47,12 +47,12 @@ function sanitizeAlias(alias: string): string {
     .slice(0, 10);
   
   if (!sanitized) {
-    return 'item';
+    return `item-${cls}`;
   }
   
   if (/^[0-9-]/.test(sanitized)) {
-    return 'c' + sanitized.slice(0, 9);
+    return `c${sanitized.slice(0, 9)}-${cls}`;
   }
   
-  return sanitized;
+  return `${sanitized}-${cls}`;
 }
