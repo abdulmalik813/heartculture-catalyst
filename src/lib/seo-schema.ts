@@ -14,10 +14,10 @@ import type {
 import { getMediaUrl } from '@/lib/get-media-url'
 import { mediaExtractor } from '@/lib/image-extractor'
 import { getCachedDocuments } from '@/lib/get-document'
-import { checkPage } from '@/lib/check-block'
+import { checkBlock  } from '@/lib/check-block'
 
 const faqSchema = async (page: Page | Post) => {
-  if (!checkPage(page, 'faqBlock')) return []
+  if (!checkBlock(page, 'faqBlock')) return []
   const faqs = (await getCachedDocuments('faqs')()) as Faq[]
 
   if (!faqs || faqs.length === 0) {
@@ -39,7 +39,7 @@ const faqSchema = async (page: Page | Post) => {
 }
 
 const testimonialSchema = async (page: Page | Post) => {
-  if (!checkPage(page, 'testimonialBlock')) return []
+  if (!checkBlock(page, 'testimonialBlock')) return []
   const testimonials = (await getCachedDocuments('testimonials')()) as Testimonial[]
 
   if (!testimonials || testimonials.length === 0) {
