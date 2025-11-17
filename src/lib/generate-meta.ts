@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import type { Media, Page, Post, Setting } from '@/payload-types'
-import { mergeOpenGraph } from '@/lib/merge-open-graph'
 import { getServerSideURL } from '@/lib/get-url'
 import { getAppSettings } from '@/constants/app'
 
@@ -122,4 +121,27 @@ export const generatePostsListingMeta = async (settings: Setting): Promise<Metad
   }
 
   return metadata
+}
+
+const mergeOpenGraph = async (og?: Metadata['openGraph']): Promise<Metadata['openGraph']> => {
+  const appData = await getAppSettings()
+  const serverUrl = getServerSideURL()
+
+  const defaultOpenGraph: Metadata['openGraph'] = {
+    type: 'website',
+    description: appData.appDescription,
+    images: [
+      {
+        url: serverUrl + appData.fallbackImage,
+      },
+    ],
+    siteName: appData.appTitle,
+    title: appData.appTitle,
+  }
+
+  return {
+    ...defaultOpenGraph,
+    ...og,
+    images: og?.images ? og.images : defaultOpenGraph.images,
+  }
 }
