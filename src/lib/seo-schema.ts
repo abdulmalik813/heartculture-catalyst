@@ -1,163 +1,80 @@
 import { getCachedGlobal } from '@/lib/get-globals'
 import { getServerSideURL } from '@/lib/get-url'
-import type { Page, Media, User, Social, Setting, Post, Thumbnail, Faq, Testimonial } from '@/payload-types'
+import type {
+  Page,
+  Media,
+  User,
+  Social,
+  Setting,
+  Post,
+  Thumbnail,
+  Faq,
+  Testimonial,
+} from '@/payload-types'
 import { getMediaUrl } from '@/lib/get-media-url'
 import { mediaExtractor } from '@/lib/image-extractor'
 import { getCachedDocuments } from '@/lib/get-document'
+import { checkBlock } from '@/lib/check-block'
 
-const hasFaqsInContent = (content: Page | Post): boolean => {
-  const checkNode = (node: any): boolean => {
-    if (!node) return false
-    
-    if (node.blockType === 'faqBlock') {
-      return true
-    }
-    
-    if (node.type === 'block' && node.fields?.blockType === 'faqBlock') {
-      return true
-    }
-    
-    if (node.children && Array.isArray(node.children)) {
-      return node.children.some((child: any) => checkNode(child))
-    }
-    
-    if (node.root?.children && Array.isArray(node.root.children)) {
-      return node.root.children.some((child: any) => checkNode(child))
-    }
-    
-    if (node.fields) {
-      return checkNode(node.fields)
-    }
-    
-    return false
-  }
-  
-  if (content.layout && Array.isArray(content.layout)) {
-    if (content.layout.some((block: any) => checkNode(block))) {
-      return true
-    }
-  }
-  
-  const lexicalFields = ['richText', 'content', 'body', 'description']
-  for (const field of lexicalFields) {
-    const fieldValue = (content as any)[field]
-    if (fieldValue) {
-      if (checkNode(fieldValue)) {
-        return true
-      }
-    }
-  }
-  
-  return false
-}
+const faqSchema = async (page: Page | Post) => {
+  if (!checkBlock(page, 'faqBlock')) return []
+  const faqs = (await getCachedDocuments('faqs')()) as Faq[]
 
-const hasTestimonialsInContent = (content: Page | Post): boolean => {
-  const checkNode = (node: any): boolean => {
-    if (!node) return false
-    
-    if (node.blockType === 'testimonialBlock') {
-      return true
-    }
-    
-    if (node.type === 'block' && node.fields?.blockType === 'testimonialBlock') {
-      return true
-    }
-    
-    if (node.children && Array.isArray(node.children)) {
-      return node.children.some((child: any) => checkNode(child))
-    }
-    
-    if (node.root?.children && Array.isArray(node.root.children)) {
-      return node.root.children.some((child: any) => checkNode(child))
-    }
-    
-    if (node.fields) {
-      return checkNode(node.fields)
-    }
-    
-    return false
-  }
-  
-  if (content.layout && Array.isArray(content.layout)) {
-    if (content.layout.some((block: any) => checkNode(block))) {
-      return true
-    }
-  }
-  
-  const lexicalFields = ['richText', 'content', 'body', 'description']
-  for (const field of lexicalFields) {
-    const fieldValue = (content as any)[field]
-    if (fieldValue) {
-      if (checkNode(fieldValue)) {
-        return true
-      }
-    }
-  }
-  
-  return false
-}
-
-const faqSchema = async () => {
-  const faqs = await getCachedDocuments("faqs")() as Faq[]
-  
   if (!faqs || faqs.length === 0) {
-    return undefined
+    return []
   }
 
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     mainEntity: faqs.map((faq) => ({
-      '@type': 'Question' as const,
-      name: faq.question,
+      '@type': 'Question',
+      name: faq.question || undefined,
       acceptedAnswer: {
-        '@type': 'Answer' as const,
-        text: faq.answer,
+        '@type': 'Answer',
+        text: faq.answer || undefined,
       },
     })),
   }
 }
 
-const testimonialSchema = async (settings: Setting) => {
-  const testimonials = await getCachedDocuments("testimonials")() as Testimonial[]
-  
+const testimonialSchema = async (page: Page | Post) => {
+  if (!checkBlock(page, 'testimonialBlock')) return []
+  const testimonials = (await getCachedDocuments('testimonials')()) as Testimonial[]
+
   if (!testimonials || testimonials.length === 0) {
-    return undefined
+    return []
   }
 
-  return {
+  return testimonials.map((testimonial) => ({
     '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: settings.appTitle || undefined,
-    review: await Promise.all(
-      testimonials.map(async (testimonial) => ({
-        '@type': 'Review',
-        author: {
-          '@type': testimonial.type === 'company' ? 'Organization' : 'Person',
-          name: testimonial.name,
-          ...(testimonial.avatar && {
-            image: await imageSchema(testimonial.avatar as Media, settings),
-          }),
-        },
-        reviewBody: testimonial.content,
-        ...(testimonial.rating && {
-          reviewRating: {
-            '@type': 'Rating',
-            ratingValue: testimonial.rating,
-            bestRating: 5,
-          },
-        }),
-        datePublished: new Date(testimonial.createdAt).toISOString(),
-        ...(testimonial.position && { jobTitle: testimonial.position }),
-        ...(testimonial.company && { 
-          worksFor: {
+    '@type': 'Review',
+    author:
+      testimonial.type === 'company'
+        ? {
             '@type': 'Organization',
-            name: testimonial.company,
+            name: testimonial.company || testimonial.name || undefined,
+          }
+        : {
+            '@type': 'Person',
+            name: testimonial.name || undefined,
+            jobTitle: testimonial.position || undefined,
+            worksFor: testimonial.company
+              ? {
+                  '@type': 'Organization',
+                  name: testimonial.company,
+                }
+              : undefined,
           },
-        }),
-      })),
-    ),
-  }
+    reviewBody: testimonial.content || undefined,
+    reviewRating: testimonial.rating
+      ? {
+          '@type': 'Rating',
+          ratingValue: testimonial.rating,
+          bestRating: 5,
+        }
+      : undefined,
+  }))
 }
 
 export const pageSchema = async (page: Page, settings: Setting) => {
@@ -177,7 +94,7 @@ export const pageSchema = async (page: Page, settings: Setting) => {
     medias.map((media) => mediaSchema(media as Media, settings)),
   ).then((schemas) => schemas.filter(Boolean))
 
-  const isHomePage = !page?.slug || page.slug === 'home' || page.slug === ''
+  const isHomePage = !page?.slug || page.slug === 'home' || page.slug === '' || page.slug === '/'
   const slugParts = isHomePage ? [] : page.slug.split('/').filter(Boolean)
 
   const breadcrumbItems = [
@@ -207,16 +124,18 @@ export const pageSchema = async (page: Page, settings: Setting) => {
 
   const publishDate = page?.publishedAt || page?.createdAt
   const modifyDate = page?.updatedAt
-  
-  const hasFaqs = hasFaqsInContent(page)
-  const hasTestimonials = hasTestimonialsInContent(page)
 
-  const baseSchema = {
+  const faqData = await faqSchema(page)
+  const testimonialData = await testimonialSchema(page)
+
+  const pageUrl = isHomePage ? getServerSideURL() : `${getServerSideURL()}/${page?.slug}`
+
+  return {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     name: page?.meta?.title || page?.title || undefined,
     description: page?.meta?.description || undefined,
-    url: `${getServerSideURL()}/${page?.slug}`,
+    url: pageUrl,
     datePublished: publishDate ? new Date(publishDate).toISOString() : undefined,
     dateModified: modifyDate ? new Date(modifyDate).toISOString() : undefined,
     image: await imageSchema(page.meta?.image as Media, settings),
@@ -239,32 +158,11 @@ export const pageSchema = async (page: Page, settings: Setting) => {
       '@type': 'BreadcrumbList',
       itemListElement: breadcrumbItems,
     },
+    ...(Array.isArray(faqData) && faqData.length > 0 ? { mainEntity: faqData } : {}),
+    ...(Array.isArray(testimonialData) && testimonialData.length > 0
+      ? { review: testimonialData }
+      : {}),
   }
-
-  if (hasFaqs) {
-    const faqData = await faqSchema()
-    if (faqData) {
-      return [baseSchema, faqData]
-    }
-  }
-
-  if (hasTestimonials) {
-    const testimonialData = await testimonialSchema(settings)
-    if (testimonialData) {
-      return [baseSchema, testimonialData]
-    }
-  }
-
-  if (hasFaqs && hasTestimonials) {
-    const faqData = await faqSchema()
-    const testimonialData = await testimonialSchema(settings)
-    const additionalSchemas = [faqData, testimonialData].filter(Boolean)
-    if (additionalSchemas.length > 0) {
-      return [baseSchema, ...additionalSchemas]
-    }
-  }
-
-  return baseSchema
 }
 
 export const blogSchema = async (post: Post, settings: Setting) => {
@@ -286,11 +184,11 @@ export const blogSchema = async (post: Post, settings: Setting) => {
 
   const publishDate = post?.publishedAt || post?.createdAt
   const modifyDate = post?.updatedAt
-  
-  const hasFaqs = hasFaqsInContent(post)
-  const hasTestimonials = hasTestimonialsInContent(post)
 
-  const baseSchema = {
+  const faqData = await faqSchema(post)
+  const testimonialData = await testimonialSchema(post)
+
+  return {
     '@context': 'https://schema.org',
     '@type': ['BlogPosting', 'Article'],
     headline: post?.meta?.title || post?.title || undefined,
@@ -335,21 +233,11 @@ export const blogSchema = async (post: Post, settings: Setting) => {
         },
       ],
     },
+    ...(Array.isArray(faqData) && faqData.length > 0 ? { mainEntity: faqData } : {}),
+    ...(Array.isArray(testimonialData) && testimonialData.length > 0
+      ? { review: testimonialData }
+      : {}),
   }
-
-  const additionalSchemas = []
-  
-  if (hasFaqs) {
-    const faqData = await faqSchema()
-    if (faqData) additionalSchemas.push(faqData)
-  }
-
-  if (hasTestimonials) {
-    const testimonialData = await testimonialSchema(settings)
-    if (testimonialData) additionalSchemas.push(testimonialData)
-  }
-
-  return additionalSchemas.length > 0 ? [baseSchema, ...additionalSchemas] : baseSchema
 }
 
 export const imageSchema = async (image: Media | null | undefined, settings: Setting) => {
