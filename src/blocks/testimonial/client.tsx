@@ -119,7 +119,7 @@ function TestimonialCarousel({
   }
 
   return (
-    <div
+    <section
       className={`mx-auto max-w-sm px-4 py-12 md:max-w-4xl md:px-8 md:py-15 lg:px-12 ${joinStyles(testimonialBlock.testimonialStyles)}`}
     >
       <div className="relative grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-20">
@@ -234,7 +234,7 @@ function TestimonialCarousel({
         {...testimonialBlock}
         pageContext={pageContext}
       />
-    </div>
+    </section>
   )
 }
 
@@ -250,7 +250,7 @@ function TestimonialGrid({
   )
 
   return (
-    <div
+    <section
       className={`columns-1 md:columns-2 lg:columns-3 gap-6 mt-8 ${joinStyles(testimonialBlock.testimonialStyles)}`}
     >
       {validTestimonials.map((testimonial) => (
@@ -258,7 +258,7 @@ function TestimonialGrid({
           <TestimonialCard testimonial={testimonial} />
         </div>
       ))}
-    </div>
+    </section>
   )
 }
 
@@ -267,7 +267,6 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
     if (testimonial.type === 'individual') {
       return testimonial.name
     }
-    // company type
     return testimonial.company || testimonial.name
   }
 
@@ -275,7 +274,6 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
     if (testimonial.type === 'individual') {
       return null
     }
-    // company type
     const parts = []
     if (testimonial.position) parts.push(testimonial.position)
     if (testimonial.name) parts.push(testimonial.name)

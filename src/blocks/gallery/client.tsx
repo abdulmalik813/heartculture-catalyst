@@ -36,7 +36,7 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
 
   if (galleryBlock.format === 'grid') {
     return (
-      <section className="container mx-auto px-4 py-12 md:py-16 lg:py-20">
+      <section className='mt-8'>
         <div className="columns-1 md:columns-2 lg:columns-3 gap-6 md:gap-8 space-y-6 md:space-y-8">
           {(galleryBlock.gallery ?? []).map((item, index) => {
             const resource = item.image
@@ -101,7 +101,7 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
 
   if (galleryBlock.format === 'carousel') {
     return (
-      <section className="container mx-auto px-4 py-8 md:py-12">
+      <section>
         <div className="relative">
           <Carousel
             className="w-full"
@@ -139,8 +139,7 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
 
   if (galleryBlock.format === 'focus') {
     return (
-      <section className="container mx-auto px-4 py-8 md:py-12 lg:py-16">
-        <div className="space-y-4 md:space-y-6">
+      <section className='mt-8'>
           <Card className="overflow-hidden bg-muted p-0">
             <div className="w-full h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center">
               {selectedItem ? (
@@ -171,8 +170,8 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
             </div>
           </Card>
 
-          <div className="overflow-hidden px-2 md:px-4">
-            <div className="flex gap-2 md:gap-3 overflow-x-auto pb-2 -mx-2 md:-mx-4 px-2 md:px-4">
+          <div className="overflow-hidden pt-4">
+            <div className="flex gap-2 md:gap-3 overflow-x-auto">
               {galleryBlock.gallery?.map((item, index) => {
                 const isSelected =
                   selectedImage === index || (selectedImage === null && index === 0)
@@ -185,10 +184,9 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                     key={index}
                     className={cn(
                       'relative flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden cursor-pointer transition-all border-2',
-                      'hover:scale-105 active:scale-95',
                       isSelected
-                        ? 'border-primary shadow-lg'
-                        : 'border-border opacity-70 hover:opacity-100',
+                        ? 'border-primary'
+                        : 'border-0 opacity-70 hover:opacity-100',
                     )}
                     onClick={() => setSelectedImage(index)}
                   >
@@ -196,19 +194,15 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                       resource={
                         isVideo && typeof resource === 'object' ? resource.videoThumbnail : resource
                       }
-                      imgClassName="w-full h-full object-cover scale-110"
-                      videoClassName="w-full h-full object-cover scale-110"
+                      imgClassName="w-full h-full object-cover"
+                      videoClassName="w-full h-full object-cover"
                       htmlElement={null}
                     />
-                    {isSelected && (
-                      <div className="absolute inset-0 bg-primary/10 pointer-events-none" />
-                    )}
                   </div>
                 )
               })}
             </div>
           </div>
-        </div>
       </section>
     )
   }
