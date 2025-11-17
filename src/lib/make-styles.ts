@@ -35,6 +35,8 @@ export function joinStyles(
 }
 
 function sanitizeAlias(alias: string): string {
+  if (alias.startsWith('font-')) return alias
+  
   const sanitized = alias
     .toLowerCase()
     .trim()
