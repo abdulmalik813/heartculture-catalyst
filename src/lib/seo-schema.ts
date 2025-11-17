@@ -51,7 +51,7 @@ const buildLocalBusinessSchema = (setting: Setting, social: Social) => {
     schema.telephone = setting.phones.map((p: any) => p.number)
   }
 
-  if (setting.locationText) {
+  if (setting.addressType == "full") {
     if (setting.fullAddress && (
       setting.fullAddress.streetAddress ||
       setting.fullAddress.addressLocality ||
