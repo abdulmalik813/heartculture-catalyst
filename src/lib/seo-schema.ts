@@ -94,7 +94,7 @@ export const pageSchema = async (page: Page, settings: Setting) => {
     medias.map((media) => mediaSchema(media as Media, settings)),
   ).then((schemas) => schemas.filter(Boolean))
 
-  const isHomePage = !page?.slug || page.slug === 'home' || page.slug === '' || page.slug === '/'
+  const isHomePage = page.slug === 'home'
   const slugParts = isHomePage ? [] : page.slug.split('/').filter(Boolean)
 
   const breadcrumbItems = [
