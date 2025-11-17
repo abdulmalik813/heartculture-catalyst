@@ -73,29 +73,23 @@ export const Settings: GlobalConfig = {
           ],
         },
         {
-          label: 'SEO & Verification',
+          label: 'SEO',
           fields: [
             {
-              type: 'collapsible',
-              label: 'Search Engine Verification',
-              fields: [
-                {
-                  name: 'googleVerification',
-                  type: 'text',
-                  label: 'Google Search Console Verification Code',
-                },
-                {
-                  name: 'bingVerification',
-                  type: 'text',
-                  label: 'Bing Webmaster Verification Code',
-                },
-                {
-                  name: 'yandexVerification',
-                  type: 'text',
-                  label: 'Yandex Verification Code',
-                },
-              ],
-            }
+              name: 'googleVerification',
+              type: 'text',
+              label: 'Google Search Console Verification Code',
+            },
+            {
+              name: 'bingVerification',
+              type: 'text',
+              label: 'Bing Webmaster Verification Code',
+            },
+            {
+              name: 'yandexVerification',
+              type: 'text',
+              label: 'Yandex Verification Code',
+            },
           ],
         },
         {
