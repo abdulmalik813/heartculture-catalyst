@@ -5,16 +5,10 @@ export const FaqBlock: Block = {
   interfaceName: 'faqBlock',
   fields: [
     {
-      name: 'faqs',
-      type: 'array',
-      fields: [
-        {
-          name: 'faq',
-          type: 'relationship',
-          relationTo: 'faqs',
-          hasMany: true,
-        },
-      ],
+      name: 'faq',
+      type: 'relationship',
+      relationTo: 'faqs',
+      hasMany: true,
     },
   ],
   graphQL: {

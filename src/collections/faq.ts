@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { authenticated } from '@/access/authenticated'
 import { anyone } from '@/access/anyone'
+import { revalidateCollection } from '@/hooks/revalidate-collections'
 
 export const FAQs: CollectionConfig = {
   slug: 'faqs',
@@ -12,6 +13,10 @@ export const FAQs: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'question',
+  },
+  labels: {
+    singular: 'Frequently asked Question',
+    plural: 'Frequently asked Questions',
   },
   fields: [
     {
@@ -25,4 +30,7 @@ export const FAQs: CollectionConfig = {
       required: true,
     },
   ],
+  hooks: {
+    afterChange: [revalidateCollection]
+  }
 }

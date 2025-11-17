@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { authenticated } from '@/access/authenticated'
 import { anyone } from '@/access/anyone'
+import { revalidateCollection } from '@/hooks/revalidate-collections'
 
 export const Testimonials: CollectionConfig = {
   slug: 'testimonials',
@@ -66,4 +67,7 @@ export const Testimonials: CollectionConfig = {
       max: 5,
     },
   ],
+  hooks: {
+    afterChange: [revalidateCollection],
+  },
 }

@@ -1,8 +1,164 @@
 import { getCachedGlobal } from '@/lib/get-globals'
 import { getServerSideURL } from '@/lib/get-url'
-import type { Page, Media, User, Social, Setting, Post, Thumbnail } from '@/payload-types'
+import type { Page, Media, User, Social, Setting, Post, Thumbnail, Faq, Testimonial } from '@/payload-types'
 import { getMediaUrl } from '@/lib/get-media-url'
 import { mediaExtractor } from '@/lib/image-extractor'
+import { getCachedDocuments } from '@/lib/get-document'
+
+const hasFaqsInContent = (content: Page | Post): boolean => {
+  const checkNode = (node: any): boolean => {
+    if (!node) return false
+    
+    if (node.blockType === 'faqBlock') {
+      return true
+    }
+    
+    if (node.type === 'block' && node.fields?.blockType === 'faqBlock') {
+      return true
+    }
+    
+    if (node.children && Array.isArray(node.children)) {
+      return node.children.some((child: any) => checkNode(child))
+    }
+    
+    if (node.root?.children && Array.isArray(node.root.children)) {
+      return node.root.children.some((child: any) => checkNode(child))
+    }
+    
+    if (node.fields) {
+      return checkNode(node.fields)
+    }
+    
+    return false
+  }
+  
+  if (content.layout && Array.isArray(content.layout)) {
+    if (content.layout.some((block: any) => checkNode(block))) {
+      return true
+    }
+  }
+  
+  const lexicalFields = ['richText', 'content', 'body', 'description']
+  for (const field of lexicalFields) {
+    const fieldValue = (content as any)[field]
+    if (fieldValue) {
+      if (checkNode(fieldValue)) {
+        return true
+      }
+    }
+  }
+  
+  return false
+}
+
+const hasTestimonialsInContent = (content: Page | Post): boolean => {
+  const checkNode = (node: any): boolean => {
+    if (!node) return false
+    
+    if (node.blockType === 'testimonialBlock') {
+      return true
+    }
+    
+    if (node.type === 'block' && node.fields?.blockType === 'testimonialBlock') {
+      return true
+    }
+    
+    if (node.children && Array.isArray(node.children)) {
+      return node.children.some((child: any) => checkNode(child))
+    }
+    
+    if (node.root?.children && Array.isArray(node.root.children)) {
+      return node.root.children.some((child: any) => checkNode(child))
+    }
+    
+    if (node.fields) {
+      return checkNode(node.fields)
+    }
+    
+    return false
+  }
+  
+  if (content.layout && Array.isArray(content.layout)) {
+    if (content.layout.some((block: any) => checkNode(block))) {
+      return true
+    }
+  }
+  
+  const lexicalFields = ['richText', 'content', 'body', 'description']
+  for (const field of lexicalFields) {
+    const fieldValue = (content as any)[field]
+    if (fieldValue) {
+      if (checkNode(fieldValue)) {
+        return true
+      }
+    }
+  }
+  
+  return false
+}
+
+const faqSchema = async () => {
+  const faqs = await getCachedDocuments("faqs")() as Faq[]
+  
+  if (!faqs || faqs.length === 0) {
+    return undefined
+  }
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question' as const,
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: faq.answer,
+      },
+    })),
+  }
+}
+
+const testimonialSchema = async (settings: Setting) => {
+  const testimonials = await getCachedDocuments("testimonials")() as Testimonial[]
+  
+  if (!testimonials || testimonials.length === 0) {
+    return undefined
+  }
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: settings.appTitle || undefined,
+    review: await Promise.all(
+      testimonials.map(async (testimonial) => ({
+        '@type': 'Review',
+        author: {
+          '@type': testimonial.type === 'company' ? 'Organization' : 'Person',
+          name: testimonial.name,
+          ...(testimonial.avatar && {
+            image: await imageSchema(testimonial.avatar as Media, settings),
+          }),
+        },
+        reviewBody: testimonial.content,
+        ...(testimonial.rating && {
+          reviewRating: {
+            '@type': 'Rating',
+            ratingValue: testimonial.rating,
+            bestRating: 5,
+          },
+        }),
+        datePublished: new Date(testimonial.createdAt).toISOString(),
+        ...(testimonial.position && { jobTitle: testimonial.position }),
+        ...(testimonial.company && { 
+          worksFor: {
+            '@type': 'Organization',
+            name: testimonial.company,
+          },
+        }),
+      })),
+    ),
+  }
+}
 
 export const pageSchema = async (page: Page, settings: Setting) => {
   const social = (await getCachedGlobal('social')) as Social
@@ -51,8 +207,11 @@ export const pageSchema = async (page: Page, settings: Setting) => {
 
   const publishDate = page?.publishedAt || page?.createdAt
   const modifyDate = page?.updatedAt
+  
+  const hasFaqs = hasFaqsInContent(page)
+  const hasTestimonials = hasTestimonialsInContent(page)
 
-  return {
+  const baseSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     name: page?.meta?.title || page?.title || undefined,
@@ -81,6 +240,31 @@ export const pageSchema = async (page: Page, settings: Setting) => {
       itemListElement: breadcrumbItems,
     },
   }
+
+  if (hasFaqs) {
+    const faqData = await faqSchema()
+    if (faqData) {
+      return [baseSchema, faqData]
+    }
+  }
+
+  if (hasTestimonials) {
+    const testimonialData = await testimonialSchema(settings)
+    if (testimonialData) {
+      return [baseSchema, testimonialData]
+    }
+  }
+
+  if (hasFaqs && hasTestimonials) {
+    const faqData = await faqSchema()
+    const testimonialData = await testimonialSchema(settings)
+    const additionalSchemas = [faqData, testimonialData].filter(Boolean)
+    if (additionalSchemas.length > 0) {
+      return [baseSchema, ...additionalSchemas]
+    }
+  }
+
+  return baseSchema
 }
 
 export const blogSchema = async (post: Post, settings: Setting) => {
@@ -102,8 +286,11 @@ export const blogSchema = async (post: Post, settings: Setting) => {
 
   const publishDate = post?.publishedAt || post?.createdAt
   const modifyDate = post?.updatedAt
+  
+  const hasFaqs = hasFaqsInContent(post)
+  const hasTestimonials = hasTestimonialsInContent(post)
 
-  return {
+  const baseSchema = {
     '@context': 'https://schema.org',
     '@type': ['BlogPosting', 'Article'],
     headline: post?.meta?.title || post?.title || undefined,
@@ -149,6 +336,20 @@ export const blogSchema = async (post: Post, settings: Setting) => {
       ],
     },
   }
+
+  const additionalSchemas = []
+  
+  if (hasFaqs) {
+    const faqData = await faqSchema()
+    if (faqData) additionalSchemas.push(faqData)
+  }
+
+  if (hasTestimonials) {
+    const testimonialData = await testimonialSchema(settings)
+    if (testimonialData) additionalSchemas.push(testimonialData)
+  }
+
+  return additionalSchemas.length > 0 ? [baseSchema, ...additionalSchemas] : baseSchema
 }
 
 export const imageSchema = async (image: Media | null | undefined, settings: Setting) => {

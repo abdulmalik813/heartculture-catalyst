@@ -3659,12 +3659,7 @@ export interface NavigationBlock {
  * via the `definition` "faqBlock".
  */
 export interface FaqBlock {
-  faqs?:
-    | {
-        faq?: (number | Faq)[] | null;
-        id?: string | null;
-      }[]
-    | null;
+  faq?: (number | Faq)[] | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'faqBlock';
