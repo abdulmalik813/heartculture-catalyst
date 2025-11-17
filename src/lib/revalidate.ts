@@ -21,8 +21,6 @@ export async function revalidateAll() {
   revalidateTag('pages_sitemap')
   revalidateTag('posts_sitemap')
   revalidateTag('fonts_tag')
-  revalidateTag('stylesheet_published')
-  revalidateTag('inline_font_css')
 
   const pages = await payload.find({
     collection: 'pages',
