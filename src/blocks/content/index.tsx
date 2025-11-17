@@ -1,5 +1,5 @@
 import { AnimateWrapper } from '@/components/animate-wrapper'
-import { LexicalRenderer } from '@/components/lexical-renderer'
+import { LexicalRenderer } from '@/components/renderer/lexical-renderer'
 import { joinStyles } from '@/lib/make-styles'
 import { ContentBlock } from '@/payload-types'
 import { PageContext } from '@/types/page-context'

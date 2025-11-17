@@ -6,6 +6,7 @@ import { defaultLexicalValue } from '@/constants/default-lexical'
 import { AccordionBlock } from '@/blocks/accordion/config'
 import { TestimonialBlock } from '@/blocks/testimonial/config'
 import { GalleryBlock } from '@/blocks/gallery/config'
+import { FaqBlock } from '@/blocks/faq/config'
 
 export const TabBlock: Block = {
   slug: 'tabBlock',
@@ -44,7 +45,7 @@ export const TabBlock: Block = {
                           editor: defaultLexical({
                             features: {
                               blocks: {
-                                blocks: [MediaBlock, NavigationBlock, AccordionBlock, TestimonialBlock, GalleryBlock],
+                                blocks: [MediaBlock, NavigationBlock, AccordionBlock, TestimonialBlock, GalleryBlock, FaqBlock],
                                 inlineBlocks: [MediaBlock, NavigationBlock],
                               },
                             },

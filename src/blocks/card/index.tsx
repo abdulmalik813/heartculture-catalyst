@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/card'
 import { CardBlock } from '@/payload-types'
 import { joinStyles } from '@/lib/make-styles'
-import { LexicalRenderer } from '@/components/lexical-renderer'
+import { LexicalRenderer } from '@/components/renderer/lexical-renderer'
 import { NavigationBlockUI } from '@/blocks/navigation'
 import { AnimateWrapper } from '@/components/animate-wrapper'
 import { PageContext } from '@/types/page-context'

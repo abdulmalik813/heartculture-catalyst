@@ -6,7 +6,7 @@ import type { GalleryBlock, Media as MediaType } from '@/payload-types'
 import { cn } from '@/lib/utils'
 import { Media } from '@/components/media'
 import { PageContext } from '@/types/page-context'
-import { NavigationBlockUI } from '../navigation'
+import { NavigationBlockUI } from '@/blocks/navigation'
 import { Card } from '@/components/ui/card'
 import {
   Carousel,

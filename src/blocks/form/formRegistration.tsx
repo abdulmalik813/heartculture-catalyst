@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/form'
 import { Spinner } from '@/components/ui/spinner'
 import { UseFormReturn } from 'react-hook-form'
-import { LexicalRenderer } from '@/components/lexical-renderer'
+import { LexicalRenderer } from '@/components/renderer/lexical-renderer'
 import { FieldType } from '@/blocks/form/utils'
 import { PageContext } from '@/types/page-context'
 

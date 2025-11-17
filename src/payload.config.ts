@@ -20,6 +20,7 @@ import { Footer } from '@/globals/footer'
 import { Posts } from '@/collections/posts'
 import { Categories } from '@/collections/categories'
 import { Testimonials } from '@/collections/testimonials'
+import { FAQs } from '@/collections/faqs'
 import { Social } from '@/globals/social'
 import { Thumbnails } from '@/collections/thumbnails'
 
@@ -70,7 +71,7 @@ export default buildConfig({
     defaultFromName: EMAIL.FROM_NAME,
     apiKey: EMAIL.RESEND_API_KEY,
   }),
-  collections: [Pages, Posts, Categories, Users, Media, Thumbnails, Styles, Icons, Testimonials],
+  collections: [Pages, Posts, Categories, Users, Media, Thumbnails, Styles, Icons, Testimonials, FAQs],
   globals: [NavigationBar, Footer, Settings, Social],
   cors: [getServerSideURL()].filter(Boolean),
   editor: defaultLexical(),

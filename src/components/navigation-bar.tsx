@@ -27,7 +27,7 @@ import {
 import { MediaBlockUI } from '@/blocks/media'
 import { joinStyles } from '@/lib/make-styles'
 import { PageContext } from '@/types/page-context'
-import { LexicalRenderer } from '@/components/lexical-renderer'
+import { LexicalRenderer } from '@/components/renderer/lexical-renderer'
 import { NavigationBlockUI } from '@/blocks/navigation'
 import { Button } from '@/components/ui/button'
 

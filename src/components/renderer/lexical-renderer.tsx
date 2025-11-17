@@ -3,6 +3,7 @@ import type {
   AccordionBlock,
   CardBlock,
   DividerBlock,
+  FaqBlock,
   FormBlock,
   GalleryBlock,
   MediaBlock,
@@ -33,6 +34,7 @@ import { TableBlockUI } from '@/blocks/table'
 import { PageContext } from '@/types/page-context'
 import { TestimonialBlockUI } from '@/blocks/testimonial'
 import { GalleryBlockUI } from '@/blocks/gallery'
+import { FaqBlockUI } from '@/blocks/faq'
 
 interface LexicalRendererProps {
   content?: DefaultTypedEditorState | null
@@ -54,6 +56,7 @@ type NodeTypes =
       | TableBlock
       | TestimonialBlock
       | GalleryBlock
+      | FaqBlock
     >
 
 function jsxConverters(pageContext: PageContext): JSXConvertersFunction<NodeTypes> {
@@ -134,6 +137,7 @@ function jsxConverters(pageContext: PageContext): JSXConvertersFunction<NodeType
         tableBlock: ({ node }) => <TableBlockUI {...node.fields} pageContext={pageContext} />,
         testimonialBlock: ({ node }) => <TestimonialBlockUI {...node.fields} pageContext={pageContext} />,
         galleryBlock: ({ node }) => <GalleryBlockUI {...node.fields} pageContext={pageContext} />,
+        faqBlock: ({ node }) => <FaqBlockUI {...node.fields} pageContext={pageContext} />,
       },
     }
   }

@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { TabBlock } from '@/payload-types'
-import { LexicalRenderer } from '@/components/lexical-renderer'
+import { LexicalRenderer } from '@/components/renderer/lexical-renderer'
 import { joinStyles } from '@/lib/make-styles'
 import { PageContext } from '@/types/page-context'
 

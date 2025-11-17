@@ -8,7 +8,7 @@ import {
   DropdownMenu,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu'
-import { IconRender } from '@/components/icon-renderer'
+import { IconRender } from '@/components/renderer/icon-renderer'
 import { getHref } from '@/lib/get-href'
 import { PageContext } from '@/types/page-context'
 
