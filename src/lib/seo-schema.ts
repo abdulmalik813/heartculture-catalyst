@@ -351,13 +351,15 @@ export const pageSchema = async (page: Page, setting: Setting) => {
       name: setting.appTitle || undefined,
       logo: await imageSchema(setting.logo as Media, setting),
     },
-    breadcrumb: {
-      '@type': 'BreadcrumbList',
-      itemListElement: breadcrumbItems,
-    },
   }
 
   schemas.push(webPageSchema)
+
+  schemas.push({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbItems,
+  })
 
   if (page?.author) {
     const author = page.author as User
@@ -445,32 +447,6 @@ export const blogSchema = async (post: Post, setting: Setting) => {
       logo: await imageSchema(setting.logo as Media, setting),
     },
     url: postUrl,
-    breadcrumb: {
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        {
-          '@type': 'ListItem',
-          position: 1,
-          name: 'Home',
-          item: homeUrl,
-          '@id': homeUrl,
-        },
-        {
-          '@type': 'ListItem',
-          position: 2,
-          name: setting.postListingPageTitle || 'Blog',
-          item: blogUrl,
-          '@id': blogUrl,
-        },
-        {
-          '@type': 'ListItem',
-          position: 3,
-          name: post?.title || undefined,
-          item: postUrl,
-          '@id': postUrl,
-        },
-      ],
-    },
     ...(categoryNames.length > 0 && { 
       articleSection: categoryNames,
       keywords: categoryNames.join(', ')
@@ -478,6 +454,34 @@ export const blogSchema = async (post: Post, setting: Setting) => {
   }
 
   schemas.push(blogPostSchema)
+
+  schemas.push({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: homeUrl,
+        '@id': homeUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: setting.postListingPageTitle || 'Blog',
+        item: blogUrl,
+        '@id': blogUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: post?.title || undefined,
+        item: postUrl,
+        '@id': postUrl,
+      },
+    ],
+  })
 
   if (post?.author) {
     const author = post.author as User
@@ -677,25 +681,27 @@ export const postListingSchema = async (setting: Setting, social?: Social) => {
       logo: await imageSchema(setting.logo as Media, setting),
       sameAs: socialLinks.length > 0 ? socialLinks : undefined,
     },
-    breadcrumb: {
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        {
-          '@type': 'ListItem',
-          position: 1,
-          name: 'Home',
-          item: homeUrl,
-          '@id': homeUrl,
-        },
-        {
-          '@type': 'ListItem',
-          position: 2,
-          name: setting.postListingPageTitle || 'Posts',
-          item: postsUrl,
-          '@id': postsUrl,
-        },
-      ],
-    },
+  })
+
+  schemas.push({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: homeUrl,
+        '@id': homeUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: setting.postListingPageTitle || 'Posts',
+        item: postsUrl,
+        '@id': postsUrl,
+      },
+    ],
   })
 
   const localBusinessSchema = await buildLocalBusinessSchema(setting, socialData, postMetaImage)
