@@ -62,7 +62,7 @@ const buildLocalBusinessSchema = async (setting: Setting, social: Social, pageIm
     social.x,
     social.youtube,
     social.tiktok,
-  ].filter((link) => link) as string[]
+  ].filter((link) => link)
 
   const imageToUse = pageImage || (setting.fallbackImage as Media)
   const imageUrl = imageToUse?.url ? getMediaUrl(imageToUse.url) : undefined
@@ -125,7 +125,7 @@ const buildOrganizationSchema = async (setting: Setting, social: Social) => {
     social.x,
     social.youtube,
     social.tiktok,
-  ].filter((link) => link) as string[]
+  ].filter((link) => link)
 
   const schema: any = {
     '@context': 'https://schema.org',
@@ -397,7 +397,7 @@ export const blogSchema = async (post: Post, setting: Setting) => {
     social.x,
     social.youtube,
     social.tiktok,
-  ].filter((link) => link) as string[]
+  ].filter((link) => link)
 
   const associatedMediaSchemas = await Promise.all(
     medias.map((media) => mediaSchema(media as Media, setting)),
@@ -413,18 +413,13 @@ export const blogSchema = async (post: Post, setting: Setting) => {
   const fallbackImage = setting.fallbackImage as Media
   const imageUrl = postImage?.url || fallbackImage?.url
 
-  const categories = post.categories
-  const categoryNames = categories && Array.isArray(categories)
-    ? categories.map((cat: any) => (typeof cat === 'object' ? cat?.name : '')).filter(Boolean)
-    : []
-
   const schemas = []
 
   const homeUrl = getServerSideURL()
   const blogUrl = `${getServerSideURL()}/${setting.postSlug}`
   const postUrl = `${getServerSideURL()}/${setting.postSlug}/${post?.slug}`
 
-  const blogPostSchema: any = {
+  schemas.push({
     '@context': 'https://schema.org',
     '@type': ['BlogPosting', 'Article'],
     headline: post?.meta?.title || post?.title || undefined,
@@ -471,18 +466,7 @@ export const blogSchema = async (post: Post, setting: Setting) => {
         },
       ],
     },
-    ...(categoryNames.length > 0 && { 
-      articleSection: categoryNames,
-      keywords: categoryNames.join(', ')
-    }),
-  }
-
-  schemas.push(blogPostSchema)
-
-  if (post?.author) {
-    const author = post.author as User
-    schemas.push(buildPersonSchema(author, socialLinks))
-  }
+  })
 
   if (faqData) {
     schemas.push(faqData)
@@ -499,9 +483,6 @@ export const blogSchema = async (post: Post, setting: Setting) => {
     const organizationSchema = await buildOrganizationSchema(setting, social)
     schemas.push(organizationSchema)
   }
-
-  const websiteSchema = buildWebSiteSchema(setting)
-  schemas.push(websiteSchema)
 
   return schemas.length === 1 ? schemas[0] : schemas
 }
@@ -652,7 +633,7 @@ export const postListingSchema = async (setting: Setting, social?: Social) => {
     socialData.x,
     socialData.youtube,
     socialData.tiktok,
-  ].filter((link) => link) as string[]
+  ].filter((link) => link)
 
   const postMetaImage = setting.postMetaImage as Media
   const fallbackImage = setting.fallbackImage as Media
