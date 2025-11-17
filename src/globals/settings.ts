@@ -73,15 +73,12 @@ export const Settings: GlobalConfig = {
           ],
         },
         {
-          label: 'Contact & Location',
+          label: 'Location and Contact',
           fields: [
             {
               name: 'emails',
               type: 'array',
               label: 'Email Addresses',
-              admin: {
-                description: 'Add email addresses for your business (used in LocalBusiness schema)',
-              },
               fields: [
                 {
                   name: 'email',
@@ -89,57 +86,41 @@ export const Settings: GlobalConfig = {
                   label: 'Email',
                   required: true,
                 },
-                {
-                  name: 'label',
-                  type: 'text',
-                  label: 'Label',
-                  admin: {
-                    placeholder: 'e.g., General Inquiries, Support, Sales',
-                  },
-                },
               ],
             },
             {
               name: 'phones',
               type: 'array',
               label: 'Phone Numbers',
-              admin: {
-                description: 'Add phone numbers for your business (used in LocalBusiness schema)',
-              },
               fields: [
                 {
                   name: 'number',
                   type: 'text',
                   label: 'Phone Number',
                   required: true,
-                  admin: {
-                    placeholder: '+1-555-0100',
-                  },
-                },
-                {
-                  name: 'label',
-                  type: 'text',
-                  label: 'Label',
-                  admin: {
-                    placeholder: 'e.g., Main Office, Customer Service',
-                  },
                 },
               ],
             },
             {
               type: 'collapsible',
-              label: 'Physical Location',
+              label: 'Location',
               fields: [
                 {
-                  name: 'locationText',
-                  type: 'textarea',
-                  label: 'Location (Text)',
-                  admin: {
-                    description:
-                      'Enter location as text (e.g., "Montreal, Quebec H3B 1A1" or full address). This is used if Full Address below is not filled.',
-                    rows: 3,
-                    placeholder: 'Montreal, Quebec H3B 1A1',
-                  },
+                  name: 'addressType',
+                  type: 'radio',
+                  label: 'Address Type',
+                  required: true,
+                  defaultValue: 'partial',
+                  options: [
+                    {
+                      label: 'Partial',
+                      value: 'partial',
+                    },
+                    {
+                      label: 'Full',
+                      value: 'full',
+                    },
+                  ],
                 },
                 {
                   name: 'googleMapsId',
@@ -147,58 +128,50 @@ export const Settings: GlobalConfig = {
                   label: 'Google Maps Place ID',
                   admin: {
                     description:
-                      'Optional: Enter Google Maps Place ID for precise location. Find it at https://developers.google.com/maps/documentation/places/web-service/place-id',
-                    placeholder: 'ChIJuRqfRGIayUwRBwQHqBqSFQQ',
+                      'Find it at https://developers.google.com/maps/documentation/places/web-service/place-id',
+                  },
+                },
+                {
+                  name: 'locationText',
+                  type: 'textarea',
+                  label: 'Location (Text)',
+                  admin: {
+                    rows: 3,
+                    condition: (data: any) => data.addressType === 'partial',
                   },
                 },
                 {
                   name: 'fullAddress',
                   type: 'group',
-                  label: 'Full Address (Optional)',
+                  label: 'Full Address',
                   admin: {
-                    description:
-                      'Fill this for complete structured data. If filled, this takes priority over Location Text above.',
+                    condition: (data: any) => data.addressType === 'full',
                   },
                   fields: [
                     {
                       name: 'streetAddress',
                       type: 'text',
                       label: 'Street Address',
-                      admin: {
-                        placeholder: '123 Main Street',
-                      },
                     },
                     {
                       name: 'addressLocality',
                       type: 'text',
                       label: 'City/Locality',
-                      admin: {
-                        placeholder: 'Montreal',
-                      },
                     },
                     {
                       name: 'addressRegion',
                       type: 'text',
                       label: 'State/Province/Region',
-                      admin: {
-                        placeholder: 'Quebec',
-                      },
                     },
                     {
                       name: 'postalCode',
                       type: 'text',
-                      label: 'Postal Code',
-                      admin: {
-                        placeholder: 'H3B 1A1',
-                      },
+                      label: 'Postal Code / Zip Code',
                     },
                     {
                       name: 'addressCountry',
                       type: 'text',
                       label: 'Country',
-                      admin: {
-                        placeholder: 'Canada',
-                      },
                     },
                   ],
                 },

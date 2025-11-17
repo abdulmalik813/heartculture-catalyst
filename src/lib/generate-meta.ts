@@ -26,23 +26,13 @@ const buildContactMetadata = (settings: Setting) => {
     contactMeta['contact:phone_number'] = settings.phones.map((p: any) => p.number).join(',')
   }
 
-  if (settings.locationText) {
-    contactMeta['contact:locality'] = settings.locationText
-  }
-
-  if (settings.fullAddress) {
-    if (settings.fullAddress.addressLocality) {
-      contactMeta['contact:locality'] = settings.fullAddress.addressLocality
-    }
-    if (settings.fullAddress.addressRegion) {
-      contactMeta['contact:region'] = settings.fullAddress.addressRegion
-    }
-    if (settings.fullAddress.postalCode) {
-      contactMeta['contact:postal_code'] = settings.fullAddress.postalCode
-    }
-    if (settings.fullAddress.addressCountry) {
-      contactMeta['contact:country_name'] = settings.fullAddress.addressCountry
-    }
+  if (settings.addressType === 'partial') {
+    contactMeta['contact:locality'] = settings?.locationText || ''
+  } else {
+    contactMeta['contact:locality'] = settings?.fullAddress?.addressLocality || ''
+    contactMeta['contact:region'] = settings?.fullAddress?.addressRegion || ''
+    contactMeta['contact:postal_code'] = settings?.fullAddress?.postalCode || ''
+    contactMeta['contact:country_name'] = settings?.fullAddress?.addressCountry || ''
   }
 
   return Object.keys(contactMeta).length > 0 ? contactMeta : undefined

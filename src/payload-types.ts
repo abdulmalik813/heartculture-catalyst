@@ -3289,37 +3289,24 @@ export interface Setting {
   favIcon: number | Media;
   favIconSvg?: (number | null) | Media;
   favIconPng?: (number | null) | Media;
-  /**
-   * Add email addresses for your business (used in LocalBusiness schema)
-   */
   emails?:
     | {
         email: string;
-        label?: string | null;
         id?: string | null;
       }[]
     | null;
-  /**
-   * Add phone numbers for your business (used in LocalBusiness schema)
-   */
   phones?:
     | {
         number: string;
-        label?: string | null;
         id?: string | null;
       }[]
     | null;
+  addressType: 'partial' | 'full';
   /**
-   * Enter location as text (e.g., "Montreal, Quebec H3B 1A1" or full address). This is used if Full Address below is not filled.
-   */
-  locationText?: string | null;
-  /**
-   * Optional: Enter Google Maps Place ID for precise location. Find it at https://developers.google.com/maps/documentation/places/web-service/place-id
+   * Find it at https://developers.google.com/maps/documentation/places/web-service/place-id
    */
   googleMapsId?: string | null;
-  /**
-   * Fill this for complete structured data. If filled, this takes priority over Location Text above.
-   */
+  locationText?: string | null;
   fullAddress?: {
     streetAddress?: string | null;
     addressLocality?: string | null;
@@ -3567,18 +3554,17 @@ export interface SettingsSelect<T extends boolean = true> {
     | T
     | {
         email?: T;
-        label?: T;
         id?: T;
       };
   phones?:
     | T
     | {
         number?: T;
-        label?: T;
         id?: T;
       };
-  locationText?: T;
+  addressType?: T;
   googleMapsId?: T;
+  locationText?: T;
   fullAddress?:
     | T
     | {
