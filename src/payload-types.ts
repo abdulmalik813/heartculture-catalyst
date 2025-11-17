@@ -1447,8 +1447,6 @@ export interface RecentPostsBlock {
  * via the `definition` "testimonialBlock".
  */
 export interface TestimonialBlock {
-  title?: string | null;
-  titleStyles?: (number | Style)[] | null;
   type?: ('carousel' | 'grid') | null;
   testimonialStyles?: (number | Style)[] | null;
   testimonials: (number | Testimonial)[];
@@ -2275,8 +2273,6 @@ export interface LastModifiedBlockSelect<T extends boolean = true> {
  * via the `definition` "testimonialBlock_select".
  */
 export interface TestimonialBlockSelect<T extends boolean = true> {
-  title?: T;
-  titleStyles?: T;
   type?: T;
   testimonialStyles?: T;
   testimonials?: T;

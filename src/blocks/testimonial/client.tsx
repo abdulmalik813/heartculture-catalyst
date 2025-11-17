@@ -16,10 +16,6 @@ export function TestimonialBlockClient({
 }: Partial<TestimonialBlock> & { pageContext: PageContext }) {
   return (
     <div className="w-full">
-      {testimonialBlock.title && (
-        <h2 className={joinStyles(testimonialBlock.titleStyles)}>{testimonialBlock.title}</h2>
-      )}
-
       {testimonialBlock.type === 'carousel' ? (
         <TestimonialCarousel testimonialBlock={testimonialBlock} pageContext={pageContext} />
       ) : (
@@ -126,7 +122,6 @@ function TestimonialCarousel({
         <div>
           <div className="relative h-80 w-full rounded-3xl">
             {' '}
-            {/* Removed bg-muted from here */}
             {validTestimonials.map((testimonial, index) => (
               <div
                 key={testimonial.id}
@@ -137,7 +132,6 @@ function TestimonialCarousel({
                   className={`h-full w-full shadow-lg flex items-center justify-center border-0 ${!testimonial.avatar ? 'bg-muted' : ''}`}
                 >
                   {' '}
-                  {/* Add bg-muted conditionally to Card */}
                   <CardContent className="p-0 h-full w-full">
                     {testimonial.avatar ? (
                       <div className="flex h-full w-full items-center justify-center p-8">

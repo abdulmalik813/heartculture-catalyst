@@ -6,16 +6,6 @@ export const TestimonialBlock: Block = {
   interfaceName: 'testimonialBlock',
   fields: [
     {
-      name: 'title',
-      type: 'text',
-    },
-    {
-      name: 'titleStyles',
-      type: 'relationship',
-      relationTo: 'styles',
-      hasMany: true,
-    },
-    {
       name: 'type',
       type: 'select',
       defaultValue: 'carousel',
