@@ -1,48 +1,31 @@
 import { Post, Page } from "@/payload-types"
 
 export const checkBlock = (page: Post | Page, blockName: string): boolean => {
-  let blockFound = false
+  const findBlockType = (obj: any): boolean => {
+    if (!obj || typeof obj !== 'object') return false
 
-  const traverse = (obj: any): void => {
-    if (!obj || typeof obj !== 'object' || blockFound) return
-
-    if (
-      typeof obj === 'object' &&
-      'blockType' in obj &&
-      obj.blockType === blockName
-    ) {
-      blockFound = true
-      return
-    }
-
-    if (Array.isArray(obj)) {
-      obj.forEach(item => traverse(item))
-      return
-    }
-
-    if (obj.root && obj.root.children) {
-      traverse(obj.root.children)
+    if (obj.blockType === blockName) {
+      return true
     }
 
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
         const value = obj[key]
         
-        if (key === 'blocks' && Array.isArray(value)) {
-          traverse(value)
-        }
-        
-        if (key === 'layout' && Array.isArray(value)) {
-          traverse(value)
-        }
-        
-        if (typeof value === 'object' && value !== null) {
-          traverse(value)
+        if (Array.isArray(value)) {
+          if (value.some(item => findBlockType(item))) {
+            return true
+          }
+        } else if (typeof value === 'object' && value !== null) {
+          if (findBlockType(value)) {
+            return true
+          }
         }
       }
     }
+
+    return false
   }
 
-  traverse(page)
-  return blockFound
+  return findBlockType(page.layout)
 }
