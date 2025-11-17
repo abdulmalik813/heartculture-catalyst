@@ -54,4 +54,3 @@ jobs:
         run: |
           curl -X GET "${{ secrets.DOKPLOY_WEBHOOK }}" \
             -H "Authorization: Bearer ${{ secrets.DOKPLOY_TOKEN }}"
-            

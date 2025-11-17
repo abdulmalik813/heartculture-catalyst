@@ -213,3 +213,4 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
     )
   }
 }
+
