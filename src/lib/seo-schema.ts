@@ -41,6 +41,7 @@ const buildLocalBusinessSchema = (setting: Setting, social: Social) => {
     '@type': 'LocalBusiness',
     name: setting.appTitle || '',
     description: setting.appDescription || undefined,
+    priceRange: '$$',
   }
 
   if (setting.emails && setting.emails.length > 0) {
@@ -65,9 +66,9 @@ const buildLocalBusinessSchema = (setting: Setting, social: Social) => {
         ...(setting.fullAddress.postalCode && { postalCode: setting.fullAddress.postalCode }),
         ...(setting.fullAddress.addressCountry && { addressCountry: setting.fullAddress.addressCountry }),
       }
-    } else {
-      schema.address = setting.locationText
     }
+  } else if (setting.locationText) {
+    schema.address = setting.locationText
   }
 
   if (setting.googleMapsId) {
@@ -76,6 +77,45 @@ const buildLocalBusinessSchema = (setting: Setting, social: Social) => {
 
   if (socialLinks.length > 0) {
     schema.sameAs = socialLinks
+  }
+
+  return schema
+}
+
+const buildOrganizationSchema = async (setting: Setting, social: Social) => {
+  const socialLinks = [
+    social.facebook,
+    social.instagram,
+    social.linkedin,
+    social.x,
+    social.youtube,
+    social.tiktok,
+  ].filter((link) => link)
+
+  const schema: any = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: setting.appTitle || '',
+    description: setting.appDescription || undefined,
+    url: getServerSideURL(),
+    logo: await imageSchema(setting.logo as Media, setting),
+  }
+
+  if (setting.emails && setting.emails.length > 0) {
+    schema.email = setting.emails.map((e: any) => e.email)
+  }
+
+  if (setting.phones && setting.phones.length > 0) {
+    schema.telephone = setting.phones.map((p: any) => p.number)
+  }
+
+  if (socialLinks.length > 0) {
+    schema.sameAs = socialLinks
+  }
+
+  const fallbackImageUrl = (setting.fallbackImage as Media)?.url
+  if (fallbackImageUrl) {
+    schema.image = getMediaUrl(fallbackImageUrl)
   }
 
   return schema
@@ -225,6 +265,10 @@ export const pageSchema = async (page: Page, setting: Setting) => {
 
   const pageUrl = isHomePage ? getServerSideURL() : `${getServerSideURL()}/${page?.slug}`
 
+  const pageImage = page.meta?.image as Media
+  const fallbackImage = setting.fallbackImage as Media
+  const imageUrl = pageImage?.url || fallbackImage?.url
+
   const schemas = []
 
   const webPageSchema: any = {
@@ -235,9 +279,8 @@ export const pageSchema = async (page: Page, setting: Setting) => {
     url: pageUrl,
     datePublished: publishDate ? new Date(publishDate).toISOString() : undefined,
     dateModified: modifyDate ? new Date(modifyDate).toISOString() : undefined,
-    image: await imageSchema(page.meta?.image as Media, setting),
-    thumbnailUrl:
-      (page.meta?.image as Media)?.url || (setting.fallbackImage as Media)?.url || undefined,
+    image: await imageSchema(pageImage, setting),
+    thumbnailUrl: imageUrl ? getMediaUrl(imageUrl) : undefined,
     associatedMedia: associatedMediaSchemas.length > 0 ? associatedMediaSchemas : undefined,
     author: page?.author
       ? {
@@ -270,6 +313,9 @@ export const pageSchema = async (page: Page, setting: Setting) => {
   const localBusinessSchema = buildLocalBusinessSchema(setting, social)
   if (localBusinessSchema) {
     schemas.push(localBusinessSchema)
+  } else {
+    const organizationSchema = await buildOrganizationSchema(setting, social)
+    schemas.push(organizationSchema)
   }
 
   return schemas.length === 1 ? schemas[0] : schemas
@@ -298,6 +344,10 @@ export const blogSchema = async (post: Post, setting: Setting) => {
   const faqData = await faqSchema(post)
   const testimonialData = await testimonialSchema(post, setting)
 
+  const postImage = post.meta?.image as Media
+  const fallbackImage = setting.fallbackImage as Media
+  const imageUrl = postImage?.url || fallbackImage?.url
+
   const schemas = []
 
   schemas.push({
@@ -307,9 +357,8 @@ export const blogSchema = async (post: Post, setting: Setting) => {
     description: post?.meta?.description || undefined,
     datePublished: publishDate ? new Date(publishDate).toISOString() : undefined,
     dateModified: modifyDate ? new Date(modifyDate).toISOString() : undefined,
-    image: await imageSchema(post.meta?.image as Media, setting),
-    thumbnailUrl:
-      (post.meta?.image as Media)?.url || (setting.fallbackImage as Media)?.url || undefined,
+    image: await imageSchema(postImage, setting),
+    thumbnailUrl: imageUrl ? getMediaUrl(imageUrl) : undefined,
     associatedMedia: associatedMediaSchemas.length > 0 ? associatedMediaSchemas : undefined,
     author: {
       '@type': 'Person',
@@ -358,6 +407,9 @@ export const blogSchema = async (post: Post, setting: Setting) => {
   const localBusinessSchema = buildLocalBusinessSchema(setting, social)
   if (localBusinessSchema) {
     schemas.push(localBusinessSchema)
+  } else {
+    const organizationSchema = await buildOrganizationSchema(setting, social)
+    schemas.push(organizationSchema)
   }
 
   return schemas.length === 1 ? schemas[0] : schemas
@@ -511,15 +563,18 @@ export const postListingSchema = async (setting: Setting, social?: Social) => {
     socialData.tiktok,
   ].filter((link) => link)
 
+  const postMetaImage = setting.postMetaImage as Media
+  const fallbackImage = setting.fallbackImage as Media
+  const imageUrl = postMetaImage?.url || fallbackImage?.url
+
   return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: setting.postListingPageTitle || 'Posts',
     description: setting.postMetaDescription || undefined,
     url: `${getServerSideURL()}/${setting.postSlug}`,
-    image: await imageSchema(setting.postMetaImage as Media, setting),
-    thumbnailUrl:
-      (setting.postMetaImage as Media)?.url || (setting.fallbackImage as Media)?.url || undefined,
+    image: await imageSchema(postMetaImage, setting),
+    thumbnailUrl: imageUrl ? getMediaUrl(imageUrl) : undefined,
     publisher: {
       '@type': 'Organization',
       name: setting.appTitle || undefined,
