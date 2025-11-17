@@ -73,6 +73,140 @@ export const Settings: GlobalConfig = {
           ],
         },
         {
+          label: 'Contact & Location',
+          fields: [
+            {
+              name: 'emails',
+              type: 'array',
+              label: 'Email Addresses',
+              admin: {
+                description: 'Add email addresses for your business (used in LocalBusiness schema)',
+              },
+              fields: [
+                {
+                  name: 'email',
+                  type: 'email',
+                  label: 'Email',
+                  required: true,
+                },
+                {
+                  name: 'label',
+                  type: 'text',
+                  label: 'Label',
+                  admin: {
+                    placeholder: 'e.g., General Inquiries, Support, Sales',
+                  },
+                },
+              ],
+            },
+            {
+              name: 'phones',
+              type: 'array',
+              label: 'Phone Numbers',
+              admin: {
+                description: 'Add phone numbers for your business (used in LocalBusiness schema)',
+              },
+              fields: [
+                {
+                  name: 'number',
+                  type: 'text',
+                  label: 'Phone Number',
+                  required: true,
+                  admin: {
+                    placeholder: '+1-555-0100',
+                  },
+                },
+                {
+                  name: 'label',
+                  type: 'text',
+                  label: 'Label',
+                  admin: {
+                    placeholder: 'e.g., Main Office, Customer Service',
+                  },
+                },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Physical Location',
+              fields: [
+                {
+                  name: 'locationText',
+                  type: 'textarea',
+                  label: 'Location (Text)',
+                  admin: {
+                    description:
+                      'Enter location as text (e.g., "Montreal, Quebec H3B 1A1" or full address). This is used if Full Address below is not filled.',
+                    rows: 3,
+                    placeholder: 'Montreal, Quebec H3B 1A1',
+                  },
+                },
+                {
+                  name: 'googleMapsId',
+                  type: 'text',
+                  label: 'Google Maps Place ID',
+                  admin: {
+                    description:
+                      'Optional: Enter Google Maps Place ID for precise location. Find it at https://developers.google.com/maps/documentation/places/web-service/place-id',
+                    placeholder: 'ChIJuRqfRGIayUwRBwQHqBqSFQQ',
+                  },
+                },
+                {
+                  name: 'fullAddress',
+                  type: 'group',
+                  label: 'Full Address (Optional)',
+                  admin: {
+                    description:
+                      'Fill this for complete structured data. If filled, this takes priority over Location Text above.',
+                  },
+                  fields: [
+                    {
+                      name: 'streetAddress',
+                      type: 'text',
+                      label: 'Street Address',
+                      admin: {
+                        placeholder: '123 Main Street',
+                      },
+                    },
+                    {
+                      name: 'addressLocality',
+                      type: 'text',
+                      label: 'City/Locality',
+                      admin: {
+                        placeholder: 'Montreal',
+                      },
+                    },
+                    {
+                      name: 'addressRegion',
+                      type: 'text',
+                      label: 'State/Province/Region',
+                      admin: {
+                        placeholder: 'Quebec',
+                      },
+                    },
+                    {
+                      name: 'postalCode',
+                      type: 'text',
+                      label: 'Postal Code',
+                      admin: {
+                        placeholder: 'H3B 1A1',
+                      },
+                    },
+                    {
+                      name: 'addressCountry',
+                      type: 'text',
+                      label: 'Country',
+                      admin: {
+                        placeholder: 'Canada',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
           label: 'Post',
           fields: [
             {

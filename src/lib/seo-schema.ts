@@ -16,22 +16,91 @@ import { mediaExtractor } from '@/lib/image-extractor'
 import { getCachedDocuments } from '@/lib/get-document'
 import { checkBlock } from '@/lib/check-block'
 
+const buildLocalBusinessSchema = (setting: Setting, social: Social) => {
+  const hasContactInfo = 
+    (setting.emails && setting.emails.length > 0) ||
+    (setting.phones && setting.phones.length > 0) ||
+    setting.locationText ||
+    setting.fullAddress
+
+  if (!hasContactInfo) {
+    return null
+  }
+
+  const socialLinks = [
+    social.facebook,
+    social.instagram,
+    social.linkedin,
+    social.x,
+    social.youtube,
+    social.tiktok,
+  ].filter((link) => link)
+
+  const schema: any = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: setting.appTitle || '',
+    description: setting.appDescription || undefined,
+  }
+
+  if (setting.emails && setting.emails.length > 0) {
+    schema.email = setting.emails.map((e: any) => e.email)
+  }
+
+  if (setting.phones && setting.phones.length > 0) {
+    schema.telephone = setting.phones.map((p: any) => p.number)
+  }
+
+  if (setting.locationText) {
+    if (setting.fullAddress && (
+      setting.fullAddress.streetAddress ||
+      setting.fullAddress.addressLocality ||
+      setting.fullAddress.postalCode
+    )) {
+      schema.address = {
+        '@type': 'PostalAddress',
+        ...(setting.fullAddress.streetAddress && { streetAddress: setting.fullAddress.streetAddress }),
+        ...(setting.fullAddress.addressLocality && { addressLocality: setting.fullAddress.addressLocality }),
+        ...(setting.fullAddress.addressRegion && { addressRegion: setting.fullAddress.addressRegion }),
+        ...(setting.fullAddress.postalCode && { postalCode: setting.fullAddress.postalCode }),
+        ...(setting.fullAddress.addressCountry && { addressCountry: setting.fullAddress.addressCountry }),
+      }
+    } else {
+      schema.address = setting.locationText
+    }
+  }
+
+  if (setting.googleMapsId) {
+    schema.hasMap = `https://www.google.com/maps/place/?q=place_id:${setting.googleMapsId}`
+  }
+
+  if (socialLinks.length > 0) {
+    schema.sameAs = socialLinks
+  }
+
+  return schema
+}
+
 const faqSchema = async (page: Page | Post) => {
-  if (!checkBlock(page, 'faqBlock')) return []
+  if (!checkBlock(page, 'faqBlock')) return null
   const faqs = (await getCachedDocuments('faqs')()) as Faq[]
 
   if (!faqs || faqs.length === 0) {
-    return []
+    return null
   }
 
-  return faqs.map((faq) => ({
-    '@type': 'Question',
-    name: faq.question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: faq.answer,
-    },
-  }))
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  }
 }
 
 const testimonialSchema = async (page: Page | Post, setting: Setting) => {
@@ -87,6 +156,7 @@ const testimonialSchema = async (page: Page | Post, setting: Setting) => {
   })
 
   return {
+    '@context': 'https://schema.org',
     '@type': 'Organization',
     name: setting.appTitle || '',
     ...(averageRating && {
@@ -155,7 +225,9 @@ export const pageSchema = async (page: Page, setting: Setting) => {
 
   const pageUrl = isHomePage ? getServerSideURL() : `${getServerSideURL()}/${page?.slug}`
 
-  return {
+  const schemas = []
+
+  const webPageSchema: any = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     name: page?.meta?.title || page?.title || undefined,
@@ -183,9 +255,24 @@ export const pageSchema = async (page: Page, setting: Setting) => {
       '@type': 'BreadcrumbList',
       itemListElement: breadcrumbItems,
     },
-    ...(Array.isArray(faqData) && faqData.length > 0 ? { mainEntity: faqData } : {}),
-    ...(testimonialData ? { mentions: testimonialData } : {}),
   }
+
+  schemas.push(webPageSchema)
+
+  if (faqData) {
+    schemas.push(faqData)
+  }
+
+  if (testimonialData) {
+    schemas.push(testimonialData)
+  }
+
+  const localBusinessSchema = buildLocalBusinessSchema(setting, social)
+  if (localBusinessSchema) {
+    schemas.push(localBusinessSchema)
+  }
+
+  return schemas.length === 1 ? schemas[0] : schemas
 }
 
 export const blogSchema = async (post: Post, setting: Setting) => {
@@ -211,7 +298,9 @@ export const blogSchema = async (post: Post, setting: Setting) => {
   const faqData = await faqSchema(post)
   const testimonialData = await testimonialSchema(post, setting)
 
-  return {
+  const schemas = []
+
+  schemas.push({
     '@context': 'https://schema.org',
     '@type': ['BlogPosting', 'Article'],
     headline: post?.meta?.title || post?.title || undefined,
@@ -256,9 +345,22 @@ export const blogSchema = async (post: Post, setting: Setting) => {
         },
       ],
     },
-    ...(Array.isArray(faqData) && faqData.length > 0 ? { mainEntity: faqData } : {}),
-    ...(testimonialData ? { mentions: testimonialData } : {}),
+  })
+
+  if (faqData) {
+    schemas.push(faqData)
   }
+
+  if (testimonialData) {
+    schemas.push(testimonialData)
+  }
+
+  const localBusinessSchema = buildLocalBusinessSchema(setting, social)
+  if (localBusinessSchema) {
+    schemas.push(localBusinessSchema)
+  }
+
+  return schemas.length === 1 ? schemas[0] : schemas
 }
 
 export const imageSchema = async (image: Media | null | undefined, setting: Setting) => {
