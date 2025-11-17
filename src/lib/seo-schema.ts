@@ -14,7 +14,7 @@ import type {
 import { getMediaUrl } from '@/lib/get-media-url'
 import { mediaExtractor } from '@/lib/image-extractor'
 import { getCachedDocuments } from '@/lib/get-document'
-import { checkBlock  } from '@/lib/check-block'
+import { checkBlock } from '@/lib/check-block'
 
 const faqSchema = async (page: Page | Post) => {
   if (!checkBlock(page, 'faqBlock')) return []
@@ -24,55 +24,51 @@ const faqSchema = async (page: Page | Post) => {
     return []
   }
 
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map((faq) => ({
-      '@type': 'Question',
-      name: faq.question || undefined,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer || undefined,
-      },
-    })),
-  }
+  return faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    },
+  }))
 }
 
 const testimonialSchema = async (page: Page | Post, setting: Setting) => {
-  if (!checkBlock(page, 'testimonialBlock')) return []
+  if (!checkBlock(page, 'testimonialBlock')) return null
   const testimonials = (await getCachedDocuments('testimonials')()) as Testimonial[]
 
   if (!testimonials || testimonials.length === 0) {
-    return []
+    return null
   }
 
-  return testimonials.map((testimonial) => {
-    const author: any = 
+  const testimonialsWithRatings = testimonials.filter((t) => t.rating)
+  const ratingCount = testimonialsWithRatings.length
+  const ratingSum = testimonialsWithRatings.reduce((sum, t) => sum + (t.rating || 0), 0)
+  const averageRating = ratingCount > 0 ? ratingSum / ratingCount : null
+
+  const reviews = testimonials.map((testimonial) => {
+    const author =
       testimonial.type === 'company'
         ? {
-            '@type': 'Organization',
+            '@type': 'Organization' as const,
             name: testimonial.company || testimonial.name,
           }
         : {
-            '@type': 'Person',
+            '@type': 'Person' as const,
             name: testimonial.name,
             ...(testimonial.position && { jobTitle: testimonial.position }),
             ...(testimonial.company && {
               worksFor: {
-                '@type': 'Organization',
+                '@type': 'Organization' as const,
                 name: testimonial.company,
               },
             }),
           }
 
     const review: any = {
-      '@context': 'https://schema.org',
       '@type': 'Review',
       author,
-      itemReviewed: {
-        '@type': 'Organization',
-        name: setting.appTitle || "",
-      },
     }
 
     if (testimonial.content) {
@@ -89,6 +85,21 @@ const testimonialSchema = async (page: Page | Post, setting: Setting) => {
 
     return review
   })
+
+  return {
+    '@type': 'Organization',
+    name: setting.appTitle || '',
+    ...(averageRating && {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: averageRating.toFixed(1),
+        reviewCount: ratingCount,
+        bestRating: 5,
+        worstRating: 1,
+      },
+    }),
+    review: reviews,
+  }
 }
 
 export const pageSchema = async (page: Page, setting: Setting) => {
@@ -173,9 +184,7 @@ export const pageSchema = async (page: Page, setting: Setting) => {
       itemListElement: breadcrumbItems,
     },
     ...(Array.isArray(faqData) && faqData.length > 0 ? { mainEntity: faqData } : {}),
-    ...(Array.isArray(testimonialData) && testimonialData.length > 0
-      ? { review: testimonialData }
-      : {}),
+    ...(testimonialData ? { mentions: testimonialData } : {}),
   }
 }
 
@@ -248,9 +257,7 @@ export const blogSchema = async (post: Post, setting: Setting) => {
       ],
     },
     ...(Array.isArray(faqData) && faqData.length > 0 ? { mainEntity: faqData } : {}),
-    ...(Array.isArray(testimonialData) && testimonialData.length > 0
-      ? { review: testimonialData }
-      : {}),
+    ...(testimonialData ? { mentions: testimonialData } : {}),
   }
 }
 
