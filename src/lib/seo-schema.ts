@@ -16,7 +16,7 @@ import { mediaExtractor } from '@/lib/image-extractor'
 import { getCachedDocuments } from '@/lib/get-document'
 import { checkBlock } from '@/lib/check-block'
 
-const buildLocalBusinessSchema = (setting: Setting, social: Social) => {
+const buildLocalBusinessSchema = async (setting: Setting, social: Social, pageImage?: Media) => {
   const hasContactInfo = 
     (setting.emails && setting.emails.length > 0) ||
     (setting.phones && setting.phones.length > 0) ||
@@ -36,12 +36,19 @@ const buildLocalBusinessSchema = (setting: Setting, social: Social) => {
     social.tiktok,
   ].filter((link) => link)
 
+  const imageToUse = pageImage || (setting.fallbackImage as Media)
+  const imageUrl = imageToUse?.url ? getMediaUrl(imageToUse.url) : undefined
+
   const schema: any = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     name: setting.appTitle || '',
     description: setting.appDescription || undefined,
-    priceRange: '$$',
+    priceRange: '$',
+  }
+
+  if (imageUrl) {
+    schema.image = imageUrl
   }
 
   if (setting.emails && setting.emails.length > 0) {
@@ -238,6 +245,7 @@ export const pageSchema = async (page: Page, setting: Setting) => {
       position: 1,
       name: 'Home',
       item: getServerSideURL(),
+      '@id': getServerSideURL(),
     },
   ]
 
@@ -245,6 +253,7 @@ export const pageSchema = async (page: Page, setting: Setting) => {
     let currentPath = ''
     slugParts.forEach((part, index) => {
       currentPath += `/${part}`
+      const itemUrl = `${getServerSideURL()}${currentPath}`
       breadcrumbItems.push({
         '@type': 'ListItem',
         position: index + 2,
@@ -252,7 +261,8 @@ export const pageSchema = async (page: Page, setting: Setting) => {
           .split('-')
           .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
           .join(' '),
-        item: `${getServerSideURL()}${currentPath}`,
+        item: itemUrl,
+        '@id': itemUrl,
       })
     })
   }
@@ -310,7 +320,7 @@ export const pageSchema = async (page: Page, setting: Setting) => {
     schemas.push(testimonialData)
   }
 
-  const localBusinessSchema = buildLocalBusinessSchema(setting, social)
+  const localBusinessSchema = await buildLocalBusinessSchema(setting, social, pageImage)
   if (localBusinessSchema) {
     schemas.push(localBusinessSchema)
   } else {
@@ -350,6 +360,10 @@ export const blogSchema = async (post: Post, setting: Setting) => {
 
   const schemas = []
 
+  const homeUrl = getServerSideURL()
+  const blogUrl = `${getServerSideURL()}/${setting.postSlug}`
+  const postUrl = `${getServerSideURL()}/${setting.postSlug}/${post?.slug}`
+
   schemas.push({
     '@context': 'https://schema.org',
     '@type': ['BlogPosting', 'Article'],
@@ -370,7 +384,7 @@ export const blogSchema = async (post: Post, setting: Setting) => {
       name: setting.appTitle || undefined,
       logo: await imageSchema(setting.logo as Media, setting),
     },
-    url: `${getServerSideURL()}/${setting.postSlug}/${post?.slug}`,
+    url: postUrl,
     breadcrumb: {
       '@type': 'BreadcrumbList',
       itemListElement: [
@@ -378,19 +392,22 @@ export const blogSchema = async (post: Post, setting: Setting) => {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: getServerSideURL(),
+          item: homeUrl,
+          '@id': homeUrl,
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: setting.postListingPageTitle || 'Blog',
-          item: `${getServerSideURL()}/${setting.postSlug}`,
+          item: blogUrl,
+          '@id': blogUrl,
         },
         {
           '@type': 'ListItem',
           position: 3,
           name: post?.title || undefined,
-          item: `${getServerSideURL()}/${setting.postSlug}/${post?.slug}`,
+          item: postUrl,
+          '@id': postUrl,
         },
       ],
     },
@@ -404,7 +421,7 @@ export const blogSchema = async (post: Post, setting: Setting) => {
     schemas.push(testimonialData)
   }
 
-  const localBusinessSchema = buildLocalBusinessSchema(setting, social)
+  const localBusinessSchema = await buildLocalBusinessSchema(setting, social, postImage)
   if (localBusinessSchema) {
     schemas.push(localBusinessSchema)
   } else {
@@ -567,12 +584,17 @@ export const postListingSchema = async (setting: Setting, social?: Social) => {
   const fallbackImage = setting.fallbackImage as Media
   const imageUrl = postMetaImage?.url || fallbackImage?.url
 
-  return {
+  const homeUrl = getServerSideURL()
+  const postsUrl = `${getServerSideURL()}/${setting.postSlug}`
+
+  const schemas = []
+
+  schemas.push({
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: setting.postListingPageTitle || 'Posts',
     description: setting.postMetaDescription || undefined,
-    url: `${getServerSideURL()}/${setting.postSlug}`,
+    url: postsUrl,
     image: await imageSchema(postMetaImage, setting),
     thumbnailUrl: imageUrl ? getMediaUrl(imageUrl) : undefined,
     publisher: {
@@ -588,15 +610,27 @@ export const postListingSchema = async (setting: Setting, social?: Social) => {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: getServerSideURL(),
+          item: homeUrl,
+          '@id': homeUrl,
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: setting.postListingPageTitle || 'Posts',
-          item: `${getServerSideURL()}/${setting.postSlug}`,
+          item: postsUrl,
+          '@id': postsUrl,
         },
       ],
     },
+  })
+
+  const localBusinessSchema = await buildLocalBusinessSchema(setting, socialData, postMetaImage)
+  if (localBusinessSchema) {
+    schemas.push(localBusinessSchema)
+  } else {
+    const organizationSchema = await buildOrganizationSchema(setting, socialData)
+    schemas.push(organizationSchema)
   }
+
+  return schemas.length === 1 ? schemas[0] : schemas
 }
