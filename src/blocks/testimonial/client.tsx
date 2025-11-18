@@ -49,40 +49,6 @@ function TestimonialCarousel({
 
   if (validTestimonials.length === 0) return null
 
-  const getStyle = (index: number) => {
-    const offset = (index - active + validTestimonials.length) % validTestimonials.length
-    if (offset === 0) {
-      return {
-        transform: 'rotate(0deg) scale(1) translateY(0) translateX(0)',
-        opacity: 1,
-        zIndex: 30,
-        filter: 'blur(0px)',
-      }
-    }
-    if (offset === 1) {
-      return {
-        transform: 'rotate(3deg) scale(0.96) translateY(3%) translateX(2%)',
-        opacity: 0.7,
-        zIndex: 20,
-        filter: 'blur(0.5px)',
-      }
-    }
-    if (offset === validTestimonials.length - 1) {
-      return {
-        transform: 'rotate(-3deg) scale(0.96) translateY(3%) translateX(-2%)',
-        opacity: 0,
-        zIndex: 10,
-        filter: 'blur(1px)',
-      }
-    }
-    return {
-      transform: `rotate(${Math.min(offset * 2, 8)}deg) scale(${1 - Math.min(offset * 0.05, 0.15)}) translateY(${Math.min(offset * 3, 8)}%)`,
-      opacity: 0,
-      zIndex: 1,
-      filter: 'blur(2px)',
-    }
-  }
-
   const getTitle = (testimonial: Testimonial) => {
     if (testimonial.type === 'individual') {
       return testimonial.name
@@ -107,6 +73,21 @@ function TestimonialCarousel({
 
   const getInitial = (name: string) => {
     return name.charAt(0).toUpperCase()
+  }
+
+  const getCardClasses = (index: number) => {
+    const offset = (index - active + validTestimonials.length) % validTestimonials.length
+    
+    if (offset === 0) {
+      return 'scale-100 rotate-0 translate-y-0 translate-x-0 opacity-100 z-30 blur-0'
+    }
+    if (offset === 1) {
+      return 'scale-[0.96] rotate-[3deg] translate-y-[3%] translate-x-[2%] opacity-70 z-20 blur-[0.5px]'
+    }
+    if (offset === validTestimonials.length - 1) {
+      return 'scale-[0.96] -rotate-[3deg] translate-y-[3%] -translate-x-[2%] opacity-0 z-10 blur-[1px]'
+    }
+    return 'scale-[0.85] rotate-[8deg] translate-y-[8%] opacity-0 z-[1] blur-[2px]'
   }
 
   return (
@@ -188,8 +169,7 @@ function TestimonialCarousel({
             {validTestimonials.map((testimonial, index) => (
               <div
                 key={testimonial.id}
-                className="absolute inset-0 transition-all duration-700 ease-out"
-                style={getStyle(index)}
+                className={`absolute inset-0 transition-all duration-700 ease-out ${getCardClasses(index)}`}
               >
                 <Card
                   className={`h-full w-full shadow-lg flex items-center justify-center border-0 ${!testimonial.avatar ? 'bg-muted' : ''}`}
