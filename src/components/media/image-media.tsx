@@ -54,7 +54,7 @@ export function ImageMedia(props: MediaProps) {
         height={!fill ? height : undefined}
         priority={priority}
         quality={95}
-        fetchPriority={priority ? 'high' : 'auto'}
+        fetchPriority={'high'}
         loading={loading}
         sizes={sizes}
         src={src}
