@@ -24,6 +24,7 @@ import { LastModifiedBlock } from '@/blocks/last-modified/config'
 import { grid } from '@/fields/grid'
 import { TestimonialBlock } from '@/blocks/testimonial/config'
 import { GalleryBlock } from '@/blocks/gallery/config'
+import { HeadingBlock } from '@/blocks/heading/config'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
@@ -103,6 +104,7 @@ export const Pages: CollectionConfig<'pages'> = {
                                 LastModifiedBlock,
                                 TestimonialBlock,
                                 GalleryBlock,
+                                HeadingBlock
                               ],
                               required: false,
                             },

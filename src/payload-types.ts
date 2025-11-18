@@ -256,6 +256,7 @@ export interface Page {
                     | LastModifiedBlock
                     | TestimonialBlock
                     | GalleryBlock
+                    | HeadingBlock
                   )[]
                 | null;
               id?: string | null;
@@ -459,6 +460,7 @@ export interface Post {
                     | TableBlock
                     | LastModifiedBlock
                     | RecentPostsBlock
+                    | HeadingBlock
                   )[]
                 | null;
               id?: string | null;
@@ -1444,6 +1446,18 @@ export interface RecentPostsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeadingBlock".
+ */
+export interface HeadingBlock {
+  headingTag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  headingText: string;
+  headingStyles?: (number | Style)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'headingBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "testimonialBlock".
  */
 export interface TestimonialBlock {
@@ -1957,6 +1971,7 @@ export interface PagesSelect<T extends boolean = true> {
                     lastModifiedBlock?: T | LastModifiedBlockSelect<T>;
                     testimonialBlock?: T | TestimonialBlockSelect<T>;
                     galleryBlock?: T | GalleryBlockSelect<T>;
+                    headingBlock?: T | HeadingBlockSelect<T>;
                   };
               id?: T;
             };
@@ -2362,6 +2377,17 @@ export interface GalleryBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeadingBlock_select".
+ */
+export interface HeadingBlockSelect<T extends boolean = true> {
+  headingTag?: T;
+  headingText?: T;
+  headingStyles?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
@@ -2472,6 +2498,7 @@ export interface PostsSelect<T extends boolean = true> {
                     tableBlock?: T | TableBlockSelect<T>;
                     lastModifiedBlock?: T | LastModifiedBlockSelect<T>;
                     recentPostsBlock?: T | RecentPostsBlockSelect<T>;
+                    headingBlock?: T | HeadingBlockSelect<T>;
                   };
               id?: T;
             };

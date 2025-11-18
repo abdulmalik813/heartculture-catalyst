@@ -25,6 +25,7 @@ import { getCachedGlobal } from '@/lib/get-globals'
 import { Setting } from '@/payload-types'
 import { grid } from '@/fields/grid'
 import { RecentPostsBlock } from '@/blocks/recent-posts/config'
+import { HeadingBlock } from '@/blocks/heading/config'
 
 let cachedPostEnabled: boolean | null = null
 let cachedPostLabel: string = 'Posts'
@@ -178,6 +179,7 @@ export const Posts: CollectionConfig<'posts'> = {
                                 TableBlock,
                                 LastModifiedBlock,
                                 RecentPostsBlock,
+                                HeadingBlock
                               ],
                               required: false,
                             },
