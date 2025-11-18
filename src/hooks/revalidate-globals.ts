@@ -1,4 +1,4 @@
-import { revalidateAll, revalidateGlobal } from '@/lib/revalidate-api'
+import { revalidateAll, revalidateGlobal } from '@/lib/revalidate'
 import { Style } from '@/payload-types'
 import { GlobalAfterChangeHook } from 'payload'
 

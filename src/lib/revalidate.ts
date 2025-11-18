@@ -39,3 +39,7 @@ export async function revalidateAll() {
   posts.docs.forEach((post) => revalidatePath(`/${postSlug}/${post.slug}`))
   payload.logger.info('Site Revalidation Complete')
 }
+
+export function revalidateGlobal(slug: string) {
+  revalidateTag(`global_${slug}`)
+}
