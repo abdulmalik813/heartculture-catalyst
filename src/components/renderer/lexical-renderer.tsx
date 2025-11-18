@@ -2,6 +2,7 @@ import React from 'react'
 import type {
   AccordionBlock,
   CardBlock,
+  ContactCardBlock,
   DividerBlock,
   FaqBlock,
   FormBlock,
@@ -35,6 +36,7 @@ import { PageContext } from '@/types/page-context'
 import { TestimonialBlockUI } from '@/blocks/testimonial'
 import { GalleryBlockUI } from '@/blocks/gallery'
 import { FaqBlockUI } from '@/blocks/faq'
+import { ContactCardBlockUI } from '@/blocks/contact-card'
 
 interface LexicalRendererProps {
   content?: DefaultTypedEditorState | null
@@ -57,6 +59,7 @@ type NodeTypes =
       | TestimonialBlock
       | GalleryBlock
       | FaqBlock
+      | ContactCardBlock
     >
 
 function jsxConverters(pageContext: PageContext): JSXConvertersFunction<NodeTypes> {
@@ -138,6 +141,7 @@ function jsxConverters(pageContext: PageContext): JSXConvertersFunction<NodeType
         testimonialBlock: ({ node }) => <TestimonialBlockUI {...node.fields} pageContext={pageContext} />,
         galleryBlock: ({ node }) => <GalleryBlockUI {...node.fields} pageContext={pageContext} />,
         faqBlock: ({ node }) => <FaqBlockUI {...node.fields} pageContext={pageContext} />,
+        contactCardBlock: ({ node }) => <ContactCardBlockUI {...node.fields} pageContext={pageContext} />,
       },
     }
   }

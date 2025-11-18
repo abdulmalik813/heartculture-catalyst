@@ -1,0 +1,47 @@
+import { Block } from 'payload'
+
+export const ContactCardBlock: Block = {
+  slug: 'contactCardBlock',
+  interfaceName: 'ContactCardBlock',
+  fields: [
+    {
+      type: 'tabs',
+      tabs: [
+        {
+          label: 'Content',
+          fields: [
+            {
+              name: 'heading',
+              type: 'text',
+              required: true,
+            },
+            {
+              name: 'description',
+              type: 'text',
+            },
+          ],
+        },
+        {
+          label: 'Styles',
+          fields: [
+            {
+              name: 'headingStyles',
+              type: 'relationship',
+              relationTo: 'styles',
+              hasMany: true,
+            },
+            {
+              name: 'descriptionStyles',
+              type: 'relationship',
+              relationTo: 'styles',
+              hasMany: true,
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  graphQL: {
+    singularName: 'ContactCardBlock',
+  },
+}

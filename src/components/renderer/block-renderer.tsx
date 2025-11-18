@@ -14,6 +14,7 @@ import { PageContext } from '@/types/page-context'
 import { TestimonialBlockUI } from '@/blocks/testimonial'
 import { GalleryBlockUI } from '@/blocks/gallery'
 import { HeadingBlockUI } from '@/blocks/heading'
+import { ContactCardBlockUI } from '@/blocks/contact-card'
 
 const blockComponents = {
   contentBlock: ContentBlockUI,
@@ -28,7 +29,8 @@ const blockComponents = {
   recentPostsBlock: RecentPostsBlockUI,
   testimonialBlock: TestimonialBlockUI,
   galleryBlock: GalleryBlockUI,
-  headingBlock: HeadingBlockUI
+  headingBlock: HeadingBlockUI,
+  contactCardBlock: ContactCardBlockUI
 }
 
 type BlockRendererProps = {

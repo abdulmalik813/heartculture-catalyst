@@ -26,6 +26,7 @@ import { Setting } from '@/payload-types'
 import { grid } from '@/fields/grid'
 import { RecentPostsBlock } from '@/blocks/recent-posts/config'
 import { HeadingBlock } from '@/blocks/heading/config'
+import { ContactCardBlock } from '@/blocks/contact-card/config'
 
 let cachedPostEnabled: boolean | null = null
 let cachedPostLabel: string = 'Posts'
@@ -179,7 +180,8 @@ export const Posts: CollectionConfig<'posts'> = {
                                 TableBlock,
                                 LastModifiedBlock,
                                 RecentPostsBlock,
-                                HeadingBlock
+                                HeadingBlock,
+                                ContactCardBlock
                               ],
                               required: false,
                             },
