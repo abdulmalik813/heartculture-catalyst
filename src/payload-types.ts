@@ -1630,15 +1630,12 @@ export interface Faq {
  */
 export interface FontFile {
   id: number;
-  /**
-   * The font family ID (e.g., "nunito")
-   */
-  fontId: string;
+  fontId?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
   thumbnailURL?: string | null;
-  filename: string;
+  filename?: string | null;
   mimeType?: string | null;
   filesize?: number | null;
   width?: number | null;

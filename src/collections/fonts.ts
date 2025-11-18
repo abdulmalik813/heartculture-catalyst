@@ -19,19 +19,11 @@ export const FontFiles: CollectionConfig = {
     {
       name: 'fontId',
       type: 'text',
-      required: true,
-      index: true,
-      admin: {
-        description: 'The font family ID (e.g., "nunito")',
-      },
     },
     {
       name: 'filename',
       type: 'text',
-      required: true,
     },
   ],
-  upload: {
-    mimeTypes: ['font/woff2', 'font/woff', 'application/font-woff2', 'application/font-woff'],
-  },
+  upload: true,
 }
