@@ -305,49 +305,100 @@ export function FontFamilySearchField({ path }: { path: string }) {
         fontFileUrls.push(match[1])
       }
 
-      setDownloadStatus(`Uploading ${fontFileUrls.length} font files to S3...`)
+      setDownloadStatus(`Processing ${fontFileUrls.length} font files...`)
 
       const baseUrl = selectedFont.variable
         ? `https://cdn.jsdelivr.net/npm/@fontsource-variable/${selectedFont.id}@latest/`
         : `https://cdn.jsdelivr.net/npm/@fontsource/${selectedFont.id}@latest/`
 
-      const uploadedFontFiles: { filename: string; id: string; url: string }[] = []
+      const uploadedFontFiles: { filename: string; url: string }[] = []
       
       for (let i = 0; i < fontFileUrls.length; i++) {
         const fileUrl = fontFileUrls[i]
         const filename = fileUrl.split('/').pop()!
         
-        setDownloadStatus(`Uploading ${filename} (${i + 1}/${fontFileUrls.length})...`)
+        setDownloadStatus(`Checking ${filename} (${i + 1}/${fontFileUrls.length})...`)
         
-        const fullUrl = baseUrl + fileUrl.replace('./', '')
-        const response = await fetch(fullUrl)
+        const queryParams = new URLSearchParams({
+          'where[filename][equals]': filename,
+          'where[fontId][equals]': selectedFont.id,
+          'limit': '1',
+        })
         
-        if (!response.ok) throw new Error(`Failed to download ${filename}`)
-        
-        const blob = await response.blob()
-        
-        const formData = new FormData()
-        formData.append('file', blob, filename)
-        formData.append('fontId', selectedFont.id)
-        formData.append('filename', filename)
-        
-        const uploadResponse = await fetch('/api/font-files', {
-          method: 'POST',
-          body: formData,
+        const checkResponse = await fetch(`/api/font-files?${queryParams.toString()}`, {
+          method: 'GET',
           credentials: 'include',
         })
         
-        if (!uploadResponse.ok) {
-          const errorData = await uploadResponse.json()
-          throw new Error(`Failed to upload ${filename}: ${errorData.errors?.[0]?.message || 'Unknown error'}`)
-        }
+        let fileUrl_uploaded: string
         
-        const uploadResult = await uploadResponse.json()
+        if (checkResponse.ok) {
+          const checkResult = await checkResponse.json()
+          if (checkResult.docs && checkResult.docs.length > 0) {
+            setDownloadStatus(`Using existing ${filename} (${i + 1}/${fontFileUrls.length})...`)
+            fileUrl_uploaded = checkResult.docs[0].url
+          } else {
+            setDownloadStatus(`Uploading ${filename} (${i + 1}/${fontFileUrls.length})...`)
+            
+            const fullUrl = baseUrl + fileUrl.replace('./', '')
+            const response = await fetch(fullUrl)
+            
+            if (!response.ok) throw new Error(`Failed to download ${filename}`)
+            
+            const blob = await response.blob()
+            
+            const formData = new FormData()
+            formData.append('file', blob, filename)
+            formData.append('fontId', selectedFont.id)
+            formData.append('filename', filename)
+            
+            const uploadResponse = await fetch('/api/font-files', {
+              method: 'POST',
+              body: formData,
+              credentials: 'include',
+            })
+            
+            if (!uploadResponse.ok) {
+              const errorData = await uploadResponse.json()
+              throw new Error(`Failed to upload ${filename}: ${errorData.errors?.[0]?.message || 'Unknown error'}`)
+            }
+            
+            const uploadResult = await uploadResponse.json()
+            fileUrl_uploaded = uploadResult.doc.url
+          }
+        } else {
+          setDownloadStatus(`Uploading ${filename} (${i + 1}/${fontFileUrls.length})...`)
+          
+          const fullUrl = baseUrl + fileUrl.replace('./', '')
+          const response = await fetch(fullUrl)
+          
+          if (!response.ok) throw new Error(`Failed to download ${filename}`)
+          
+          const blob = await response.blob()
+          
+          const formData = new FormData()
+          formData.append('file', blob, filename)
+          formData.append('fontId', selectedFont.id)
+          formData.append('filename', filename)
+          
+          const uploadResponse = await fetch('/api/font-files', {
+            method: 'POST',
+            body: formData,
+            credentials: 'include',
+          })
+          
+          if (!uploadResponse.ok) {
+            const errorData = await uploadResponse.json()
+            throw new Error(`Failed to upload ${filename}: ${errorData.errors?.[0]?.message || 'Unknown error'}`)
+          }
+          
+          const uploadResult = await uploadResponse.json()
+          fileUrl_uploaded = uploadResult.doc.url
+        }
         
         uploadedFontFiles.push({
           filename: filename,
-          id: uploadResult.doc.id,
-          url: uploadResult.doc.url,
+          url: fileUrl_uploaded,
         })
         
         setDownloadProgress(20 + ((i + 1) / fontFileUrls.length) * 70)
@@ -374,7 +425,6 @@ export function FontFamilySearchField({ path }: { path: string }) {
         style: selectedStyle,
         subset: selectedSubset,
         fontCSS: fontCSS,
-        fontFileIds: uploadedFontFiles.map(f => f.id),
       })
       
       setDownloadProgress(100)

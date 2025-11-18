@@ -11,15 +11,11 @@ export const FontFiles: CollectionConfig = {
     read: anyone,
     update: authenticated,
   },
-//   admin: {
-//     hidden: true,
-//     group: 'System',
-//   },
+  admin: {
+    hidden: true,
+    group: 'System',
+  },
   fields: [
-    {
-      name: 'fontId',
-      type: 'text',
-    },
     {
       name: 'filename',
       type: 'text',
