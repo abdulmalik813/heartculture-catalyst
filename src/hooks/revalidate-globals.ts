@@ -5,7 +5,14 @@ import { GlobalAfterChangeHook } from 'payload'
 
 export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) => {
   const additionalFonts = doc.additionalFonts || []
-  const fontFileIds = []
+  const activeFontFileIds = new Set()
+
+  if (doc.defaultFont?.fontData?.fontFileIds) {
+    doc.defaultFont.fontData.fontFileIds.forEach((id: string) => {
+      activeFontFileIds.add(id)
+    })
+  }
+
   const existingStyles = await req.payload.find({
     collection: 'styles',
     where: {
@@ -19,10 +26,16 @@ export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) =>
   const currentFontIds = new Set(additionalFonts.map((font: any) => font.id))
 
   for (const font of additionalFonts) {
+    if (font?.fontData?.fontFileIds) {
+      font.fontData.fontFileIds.forEach((id: string) => {
+        activeFontFileIds.add(id)
+      })
+    }
+
     if (font?.title != null && font?.title?.trim() !== '') {
       const className = `font-${font.id}`
       const existingStyle = existingStyles.docs.find((style) => style.className === className)
-      font.push(...font.fontFileIds)
+
       if (!existingStyle) {
         await req.payload.create({
           collection: 'styles',
@@ -37,10 +50,21 @@ export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) =>
     }
   }
 
-  const fontFiles = await req.payload.find({
+  const allFontFiles = await req.payload.find({
     collection: 'font-files',
     limit: 1000,
   })
+
+  const orphanedFontFiles = allFontFiles.docs.filter((file) => {
+    return !activeFontFileIds.has(file.id)
+  })
+
+  for (const file of orphanedFontFiles) {
+    await req.payload.delete({
+      collection: 'font-files',
+      id: file.id,
+    })
+  }
 
   const fontStyles = existingStyles.docs.filter((style: Style) =>
     style.className.startsWith('font-'),
