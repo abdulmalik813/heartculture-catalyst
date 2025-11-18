@@ -35,7 +35,7 @@ function collectFontsCSS(setting: Setting): string {
     isFontData(setting.default.fontData) &&
     (setting.default.fontData as any)?.fontCSS
   ) {
-    css += (setting.default.fontData as any) + '\n\n'
+    css += (setting.default.fontData as any)?.fontCSS || '' + '\n\n'
   }
 
   if (setting.additionalFonts && Array.isArray(setting.additionalFonts)) {
