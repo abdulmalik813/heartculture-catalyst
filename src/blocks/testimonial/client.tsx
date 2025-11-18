@@ -111,7 +111,7 @@ function TestimonialCarousel({
 
   return (
     <section
-      className={`mx-auto max-w-sm px-4 py-12 md:max-w-4xl md:px-8 md:py-15 lg:px-12 ${joinStyles(testimonialBlock.testimonialStyles)}`}
+      className={`mx-auto max-w-sm md:max-w-4xl md:px-8 lg:px-12 ${joinStyles(testimonialBlock.testimonialStyles)}`}
     >
       <div className="relative grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-20">
         <div>

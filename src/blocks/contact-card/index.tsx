@@ -48,68 +48,64 @@ export function ContactCardBlockUI({
       </CardHeader>
 
       <CardContent className={joinStyles(contactCardBlock.contentStyles)}>
-        {pageContext.setting.emails && pageContext.setting.emails.length > 0 && (
-          <div className="space-y-2">
-            <div className="flex items-center gap-3 mb-2">
-              <Mail className="w-5 h-5 text-primary" />
-              <h2>
+        <div className="flex flex-wrap gap-6">
+          {pageContext.setting.emails && pageContext.setting.emails.length > 0 && (
+            <div className="flex-1 min-w-[200px]">
+              <div className="flex items-center gap-2 mb-2">
+                <Mail className="w-5 h-5 text-primary" />
                 Email
-              </h2>
+              </div>
+              <div className="flex flex-col gap-2">
+                {pageContext.setting.emails.map((email) => (
+                  <Link
+                    key={email.id}
+                    href={`mailto:${email.email}`}
+                    className={joinStyles(contactCardBlock.linkStyles, 'break-words')}
+                  >
+                    {email.email}
+                  </Link>
+                ))}
+              </div>
             </div>
-            <div className="flex flex-col gap-2">
-              {pageContext.setting.emails.map((email) => (
-                <Link
-                  key={email.id}
-                  href={`mailto:${email.email}`}
-                  className={joinStyles(contactCardBlock.linkStyles, 'break-words')}
-                >
-                  {email.email}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
+          )}
 
-        {pageContext.setting.phones && pageContext.setting.phones.length > 0 && (
-          <div className="space-y-2">
-            <div className="flex items-center gap-3 mb-2">
-              <Phone className="w-5 h-5 text-primary" />
-              <h2>
+          {pageContext.setting.phones && pageContext.setting.phones.length > 0 && (
+            <div className="flex-1 min-w-[200px]">
+              <div className="flex items-center gap-2 mb-2">
+                <Phone className="w-5 h-5 text-primary" />
                 Phone
-              </h2>
+              </div>
+              <div className="flex flex-col gap-2">
+                {pageContext.setting.phones.map((phone) => (
+                  <Link
+                    key={phone.id}
+                    href={`tel:${phone.number.replace(/\s/g, '')}`}
+                    className={joinStyles(contactCardBlock.linkStyles, 'break-words')}
+                  >
+                    {phone.number}
+                  </Link>
+                ))}
+              </div>
             </div>
-            <div className="flex flex-col gap-2">
-              {pageContext.setting.phones.map((phone) => (
-                <Link
-                  key={phone.id}
-                  href={`tel:${phone.number.replace(/\s/g, '')}`}
-                  className={joinStyles(contactCardBlock.linkStyles, 'break-words')}
-                >
-                  {phone.number}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
+          )}
 
-        {displayAddress && (
-          <div className="space-y-2">
-            <div className="flex items-center gap-3 mb-2">
-              <MapPin className="w-5 h-5 text-primary" />
-              <h2>
+          {displayAddress && (
+            <div className="flex-1 min-w-[200px]">
+              <div className="flex items-center gap-2 mb-2">
+                <MapPin className="w-5 h-5 text-primary" />
                 Location
-              </h2>
+              </div>
+              <Link
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(displayAddress)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={joinStyles(contactCardBlock.linkStyles, 'break-words')}
+              >
+                {displayAddress}
+              </Link>
             </div>
-            <Link
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(displayAddress)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={joinStyles(contactCardBlock.linkStyles, 'break-words')}
-            >
-              {displayAddress}
-            </Link>
-          </div>
-        )}
+          )}
+        </div>
       </CardContent>
 
       {mapUrl && (

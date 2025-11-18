@@ -1466,10 +1466,10 @@ export interface ContactCardBlock {
   heading: string;
   description?: string | null;
   cardStyles?: (number | Style)[] | null;
-  contentStyles?: (number | Style)[] | null;
-  linkStyles?: (number | Style)[] | null;
   headingStyles?: (number | Style)[] | null;
   descriptionStyles?: (number | Style)[] | null;
+  contentStyles?: (number | Style)[] | null;
+  linkStyles?: (number | Style)[] | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'contactCardBlock';
@@ -2413,10 +2413,10 @@ export interface ContactCardBlockSelect<T extends boolean = true> {
   heading?: T;
   description?: T;
   cardStyles?: T;
-  contentStyles?: T;
-  linkStyles?: T;
   headingStyles?: T;
   descriptionStyles?: T;
+  contentStyles?: T;
+  linkStyles?: T;
   id?: T;
   blockName?: T;
 }
