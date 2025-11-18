@@ -130,11 +130,6 @@ export const plugins: Plugin[] = [
       },
       'font-files': {
         prefix: 'font-files',
-        signedDownloads: {
-          shouldUseSignedURL: ({ filename }) => {
-            return filename.endsWith('.mp4')
-          },
-        },
       },
     },
     bucket: S3.BUCKET,
