@@ -21,10 +21,20 @@ export const TestimonialBlock: Block = {
       ],
     },
     {
-      name: 'testimonialStyles',
+      name: 'title',
+      type: 'text',
+      admin: {
+        condition: (_, data) => data.type == 'carousel',
+      },
+    },
+    {
+      name: 'titleStyles',
       type: 'relationship',
       relationTo: 'styles',
       hasMany: true,
+      admin: {
+        condition: (_, data) => data.type == 'carousel',
+      },
     },
     {
       name: 'testimonials',
@@ -37,9 +47,9 @@ export const TestimonialBlock: Block = {
     navigation({
       overrides: {
         admin: {
-          condition: (_, data) => data.type == "carousel"
-        }
-      }
+          condition: (_, data) => data.type == 'carousel',
+        },
+      },
     }),
   ],
   graphQL: {

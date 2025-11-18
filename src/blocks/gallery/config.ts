@@ -24,6 +24,22 @@ export const GalleryBlock: Block = {
         },
       ],
     },
+    {
+      name: 'title',
+      type: 'text',
+      admin: {
+        condition: (_, data) => data.format == 'carousel',
+      },
+    },
+    {
+      name: 'titleStyles',
+      type: 'relationship',
+      relationTo: 'styles',
+      hasMany: true,
+      admin: {
+        condition: (_, data) => data.format == 'carousel',
+      },
+    },
     navigation({
       overrides: {
         admin: {

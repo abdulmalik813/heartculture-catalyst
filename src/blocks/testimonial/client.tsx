@@ -109,10 +109,12 @@ function TestimonialCarousel({
     return name.charAt(0).toUpperCase()
   }
 
-return (
-    <section
-      className={`mx-auto max-w-sm md:max-w-4xl md:px-8 lg:px-12 ${joinStyles(testimonialBlock.testimonialStyles)}`}
-    >
+  return (
+    <section className="mx-auto max-w-sm md:max-w-4xl md:px-8 lg:px-12">
+      {testimonialBlock.title && (
+        <h2 className={joinStyles(testimonialBlock.titleStyles)}>{testimonialBlock.title}</h2>
+      )}
+
       <div className="relative grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-20">
         <div className="md:hidden">
           <div className="relative h-auto w-full">
@@ -124,9 +126,7 @@ return (
                 <Card className="w-full shadow-lg border-0 overflow-hidden">
                   <CardContent className="p-0">
                     <div className="bg-muted p-6 text-center">
-                      <h3 className="text-xl font-bold text-foreground">
-                        {getTitle(testimonial)}
-                      </h3>
+                      <h3 className="text-xl font-bold text-foreground">{getTitle(testimonial)}</h3>
                       {getSubtitle(testimonial) && (
                         <p className="text-sm text-muted-foreground mt-1">
                           {getSubtitle(testimonial)}
@@ -148,7 +148,6 @@ return (
                       )}
                     </div>
 
-                    {/* Middle Section - Logo/Avatar */}
                     <div className="bg-background p-8 flex items-center justify-center">
                       {testimonial.avatar ? (
                         <div className="w-32 h-32">
@@ -170,7 +169,6 @@ return (
                       )}
                     </div>
 
-                    {/* Bottom Section - Text */}
                     <div className="bg-muted/50 p-6">
                       {testimonial.content && (
                         <p className="text-base text-foreground text-center">
@@ -306,9 +304,7 @@ function TestimonialGrid({
   )
 
   return (
-    <section
-      className={`columns-1 md:columns-2 lg:columns-3 gap-6 mt-8 ${joinStyles(testimonialBlock.testimonialStyles)}`}
-    >
+    <section className="columns-1 md:columns-2 lg:columns-3 gap-6 mt-8">
       {validTestimonials.map((testimonial) => (
         <div key={testimonial.id} className="mb-6 break-inside-avoid">
           <TestimonialCard testimonial={testimonial} />

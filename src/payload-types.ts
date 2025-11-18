@@ -1480,7 +1480,8 @@ export interface ContactCardBlock {
  */
 export interface TestimonialBlock {
   type?: ('carousel' | 'grid') | null;
-  testimonialStyles?: (number | Style)[] | null;
+  title?: string | null;
+  titleStyles?: (number | Style)[] | null;
   testimonials: (number | Testimonial)[];
   nav?: {
     label?: string | null;
@@ -1553,6 +1554,8 @@ export interface Testimonial {
  */
 export interface GalleryBlock {
   format: 'grid' | 'carousel' | 'focus';
+  title?: string | null;
+  titleStyles?: (number | Style)[] | null;
   nav?: {
     label?: string | null;
     appearance?: ('link' | 'button' | 'dropdown') | null;
@@ -2308,7 +2311,8 @@ export interface LastModifiedBlockSelect<T extends boolean = true> {
  */
 export interface TestimonialBlockSelect<T extends boolean = true> {
   type?: T;
-  testimonialStyles?: T;
+  title?: T;
+  titleStyles?: T;
   testimonials?: T;
   nav?:
     | T
@@ -2352,6 +2356,8 @@ export interface TestimonialBlockSelect<T extends boolean = true> {
  */
 export interface GalleryBlockSelect<T extends boolean = true> {
   format?: T;
+  title?: T;
+  titleStyles?: T;
   nav?:
     | T
     | {

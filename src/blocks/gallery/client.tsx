@@ -16,6 +16,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import Autoplay from 'embla-carousel-autoplay'
+import { joinStyles } from '@/lib/make-styles'
 
 interface GalleryBlockClientProps {
   galleryBlock: GalleryBlock
@@ -102,6 +103,9 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
   if (galleryBlock.format === 'carousel') {
     return (
       <section>
+        {galleryBlock.title && (
+          <h2 className={joinStyles(galleryBlock.titleStyles)}>{galleryBlock.title}</h2>
+        )}
         <div className="relative">
           <Carousel
             className="w-full"
