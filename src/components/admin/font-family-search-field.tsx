@@ -220,7 +220,9 @@ export function FontFamilySearchField({ path }: { path: string }) {
   const [selectedWeight, setSelectedWeight] = useState<number | null>(null)
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null)
   const [selectedSubset, setSelectedSubset] = useState<string | null>(null)
-  const [fontsCache, setFontsCache] = useState<{ fonts: GoogleFont[], timestamp: number } | null>(null)
+  const [fontsCache, setFontsCache] = useState<{ fonts: GoogleFont[]; timestamp: number } | null>(
+    null,
+  )
   const [isSaving, setIsSaving] = useState(false)
   const [downloadProgress, setDownloadProgress] = useState(0)
   const [downloadStatus, setDownloadStatus] = useState('')
@@ -229,7 +231,7 @@ export function FontFamilySearchField({ path }: { path: string }) {
     const loadFonts = async () => {
       try {
         setIsLoadingFonts(true)
-        
+
         if (fontsCache && Date.now() - fontsCache.timestamp < 604800000) {
           setAllFonts(fontsCache.fonts)
           setIsLoadingFonts(false)
@@ -238,7 +240,7 @@ export function FontFamilySearchField({ path }: { path: string }) {
 
         const response = await fetch('https://api.fontsource.org/v1/fonts')
         if (!response.ok) throw new Error('Failed to fetch fonts')
-        
+
         const fonts = await response.json()
         setAllFonts(fonts)
         setFontsCache({ fonts, timestamp: Date.now() })
@@ -264,7 +266,7 @@ export function FontFamilySearchField({ path }: { path: string }) {
     const filtered = allFonts
       .filter((font) => font.family.toLowerCase().includes(searchTerm.toLowerCase()))
       .slice(0, 50)
-    
+
     setFilteredFonts(filtered)
     setShowResults(true)
   }, [searchTerm, allFonts])
@@ -273,7 +275,7 @@ export function FontFamilySearchField({ path }: { path: string }) {
     setSelectedFont(font)
     setSearchTerm('')
     setShowResults(false)
-    setSelectedWeight(font.variable ? 400 : (font.weights[0] || null))
+    setSelectedWeight(font.variable ? 400 : font.weights[0] || null)
     setSelectedStyle(font.styles[0] || null)
     setSelectedSubset(font.defSubset)
   }
@@ -289,15 +291,51 @@ export function FontFamilySearchField({ path }: { path: string }) {
     setDownloadStatus('Fetching font CSS...')
 
     try {
-      const cssUrl = selectedFont.variable
-        ? `https://cdn.jsdelivr.net/npm/@fontsource-variable/${selectedFont.id}@latest/index.css`
-        : `https://cdn.jsdelivr.net/npm/@fontsource/${selectedFont.id}@latest/index.css`
+      let cssUrl: string
+
+      if (selectedFont.variable) {
+        cssUrl = `https://cdn.jsdelivr.net/npm/@fontsource-variable/${selectedFont.id}@latest/index.css`
+      } else {
+        const stylePrefix = selectedStyle === 'italic' ? 'italic' : ''
+        cssUrl = stylePrefix
+          ? `https://cdn.jsdelivr.net/npm/@fontsource/${selectedFont.id}@latest/${selectedWeight}-${stylePrefix}.css`
+          : `https://cdn.jsdelivr.net/npm/@fontsource/${selectedFont.id}@latest/${selectedWeight}.css`
+      }
 
       const cssResponse = await fetch(cssUrl)
-      if (!cssResponse.ok) throw new Error('Failed to fetch font CSS')
-      
-      let fontCSS = await cssResponse.text()
+      if (!cssResponse.ok) {
+        cssUrl = selectedFont.variable
+          ? `https://cdn.jsdelivr.net/npm/@fontsource-variable/${selectedFont.id}@latest/index.css`
+          : `https://cdn.jsdelivr.net/npm/@fontsource/${selectedFont.id}@latest/index.css`
+
+        const fallbackResponse = await fetch(cssUrl)
+        if (!fallbackResponse.ok) throw new Error('Failed to fetch font CSS')
+        var fontCSS = await fallbackResponse.text()
+      } else {
+        var fontCSS = await cssResponse.text()
+      }
+
       setDownloadProgress(20)
+
+      const fontFaceRegex = /@font-face\s*{[^}]*}/g
+      const fontFaceRules = fontCSS.match(fontFaceRegex) || []
+
+      const filteredRules: string[] = []
+
+      for (const rule of fontFaceRules) {
+        const matchesWeight =
+          selectedFont.variable || rule.includes(`font-weight: ${selectedWeight}`)
+        const matchesStyle = rule.includes(`font-style: ${selectedStyle}`)
+        const matchesSubset = rule.includes(`unicode-range:`)
+          ? rule.toLowerCase().includes(selectedSubset.toLowerCase())
+          : true
+
+        if (matchesWeight && matchesStyle && matchesSubset) {
+          filteredRules.push(rule)
+        }
+      }
+
+      fontCSS = filteredRules.join('\n\n')
 
       const fontFileUrls: string[] = []
       const urlRegex = /url\((\.\/files\/[^)]+)\)/g
@@ -306,33 +344,33 @@ export function FontFamilySearchField({ path }: { path: string }) {
         fontFileUrls.push(match[1])
       }
 
-      setDownloadStatus(`Processing ${fontFileUrls.length} font files...`)
+      setDownloadStatus(`Processing ${fontFileUrls.length} font file(s)...`)
 
       const baseUrl = selectedFont.variable
         ? `https://cdn.jsdelivr.net/npm/@fontsource-variable/${selectedFont.id}@latest/`
         : `https://cdn.jsdelivr.net/npm/@fontsource/${selectedFont.id}@latest/`
 
       const uploadedFontFiles: { filename: string; url: string }[] = []
-      
+
       for (let i = 0; i < fontFileUrls.length; i++) {
         const fileUrl = fontFileUrls[i]
         const filename = fileUrl.split('/').pop()!
-        
+
         setDownloadStatus(`Checking ${filename} (${i + 1}/${fontFileUrls.length})...`)
-        
+
         const queryParams = new URLSearchParams({
           'where[filename][equals]': filename,
           'where[fontId][equals]': selectedFont.id,
-          'limit': '1',
+          limit: '1',
         })
-        
+
         const checkResponse = await fetch(`/api/font-files?${queryParams.toString()}`, {
           method: 'GET',
           credentials: 'include',
         })
-        
+
         let fileUrl_uploaded: string
-        
+
         if (checkResponse.ok) {
           const checkResult = await checkResponse.json()
           if (checkResult.docs && checkResult.docs.length > 0) {
@@ -340,68 +378,72 @@ export function FontFamilySearchField({ path }: { path: string }) {
             fileUrl_uploaded = checkResult.docs[0].url
           } else {
             setDownloadStatus(`Uploading ${filename} (${i + 1}/${fontFileUrls.length})...`)
-            
+
             const fullUrl = baseUrl + fileUrl.replace('./', '')
             const response = await fetch(fullUrl)
-            
+
             if (!response.ok) throw new Error(`Failed to download ${filename}`)
-            
+
             const blob = await response.blob()
-            
+
             const formData = new FormData()
             formData.append('file', blob, filename)
             formData.append('fontId', selectedFont.id)
             formData.append('filename', filename)
-            
+
             const uploadResponse = await fetch('/api/font-files', {
               method: 'POST',
               body: formData,
               credentials: 'include',
             })
-            
+
             if (!uploadResponse.ok) {
               const errorData = await uploadResponse.json()
-              throw new Error(`Failed to upload ${filename}: ${errorData.errors?.[0]?.message || 'Unknown error'}`)
+              throw new Error(
+                `Failed to upload ${filename}: ${errorData.errors?.[0]?.message || 'Unknown error'}`,
+              )
             }
-            
+
             const uploadResult = await uploadResponse.json()
             fileUrl_uploaded = uploadResult.doc.url
           }
         } else {
           setDownloadStatus(`Uploading ${filename} (${i + 1}/${fontFileUrls.length})...`)
-          
+
           const fullUrl = baseUrl + fileUrl.replace('./', '')
           const response = await fetch(fullUrl)
-          
+
           if (!response.ok) throw new Error(`Failed to download ${filename}`)
-          
+
           const blob = await response.blob()
-          
+
           const formData = new FormData()
           formData.append('file', blob, filename)
           formData.append('fontId', selectedFont.id)
           formData.append('filename', filename)
-          
+
           const uploadResponse = await fetch('/api/font-files', {
             method: 'POST',
             body: formData,
             credentials: 'include',
           })
-          
+
           if (!uploadResponse.ok) {
             const errorData = await uploadResponse.json()
-            throw new Error(`Failed to upload ${filename}: ${errorData.errors?.[0]?.message || 'Unknown error'}`)
+            throw new Error(
+              `Failed to upload ${filename}: ${errorData.errors?.[0]?.message || 'Unknown error'}`,
+            )
           }
-          
+
           const uploadResult = await uploadResponse.json()
           fileUrl_uploaded = uploadResult.doc.url
         }
-        
+
         uploadedFontFiles.push({
           filename: filename,
           url: fileUrl_uploaded,
         })
-        
+
         setDownloadProgress(20 + ((i + 1) / fontFileUrls.length) * 70)
       }
 
@@ -412,7 +454,7 @@ export function FontFamilySearchField({ path }: { path: string }) {
         const escapedFilename = filename.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
         fontCSS = fontCSS.replace(
           new RegExp(`url\\(\\.\/files\/${escapedFilename}\\)`, 'g'),
-          `url(${url.replaceAll(serverUrl, '')})`
+          `url(${url.replaceAll(serverUrl, '')})`,
         )
       })
 
@@ -427,10 +469,10 @@ export function FontFamilySearchField({ path }: { path: string }) {
         subset: selectedSubset,
         fontCSS: fontCSS,
       })
-      
+
       setDownloadProgress(100)
       setDownloadStatus('Complete!')
-      
+
       setTimeout(() => {
         setSelectedFont(null)
         setSelectedWeight(null)
@@ -440,7 +482,6 @@ export function FontFamilySearchField({ path }: { path: string }) {
         setDownloadProgress(0)
         setDownloadStatus('')
       }, 500)
-      
     } catch (error) {
       console.error('Error processing fonts:', error)
       alert(`Failed to process fonts: ${error instanceof Error ? error.message : 'Unknown error'}`)
@@ -473,7 +514,7 @@ export function FontFamilySearchField({ path }: { path: string }) {
             onFocus={() => searchTerm && setShowResults(true)}
             style={styles.input}
           />
-          
+
           {showResults && (
             <div style={styles.dropdown}>
               {isLoadingFonts ? (
@@ -484,12 +525,15 @@ export function FontFamilySearchField({ path }: { path: string }) {
                     key={font.id}
                     onClick={() => handleFontSelect(font)}
                     style={styles.dropdownItem}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--theme-elevation-50)'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.backgroundColor = 'var(--theme-elevation-50)')
+                    }
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
                   >
                     <div style={styles.dropdownTitle}>{font.family}</div>
                     <div style={styles.dropdownMeta}>
-                      {font.category} • {font.variable ? 'Variable' : 'Static'} • {font.weights.length} weights
+                      {font.category} • {font.variable ? 'Variable' : 'Static'} •{' '}
+                      {font.weights.length} weights
                     </div>
                   </div>
                 ))
@@ -509,7 +553,12 @@ export function FontFamilySearchField({ path }: { path: string }) {
               <span style={{ ...styles.badge, ...styles.badgeDefault }}>
                 {selectedFont.category}
               </span>
-              <span style={{ ...styles.badge, ...(selectedFont.variable ? styles.badgeSuccess : styles.badgeDefault) }}>
+              <span
+                style={{
+                  ...styles.badge,
+                  ...(selectedFont.variable ? styles.badgeSuccess : styles.badgeDefault),
+                }}
+              >
                 {selectedFont.variable ? 'Variable' : 'Static'}
               </span>
             </div>
@@ -630,9 +679,9 @@ export function FontFamilySearchField({ path }: { path: string }) {
           )}
 
           <div style={styles.actionBar}>
-            <button 
-              type="button" 
-              onClick={() => setSelectedFont(null)} 
+            <button
+              type="button"
+              onClick={() => setSelectedFont(null)}
               style={styles.buttonSecondary}
               disabled={isSaving}
             >
@@ -642,7 +691,11 @@ export function FontFamilySearchField({ path }: { path: string }) {
               type="button"
               onClick={handleSave}
               disabled={!selectedWeight || !selectedStyle || !selectedSubset || isSaving}
-              style={(!selectedWeight || !selectedStyle || !selectedSubset || isSaving) ? styles.buttonDisabled : styles.buttonPrimary}
+              style={
+                !selectedWeight || !selectedStyle || !selectedSubset || isSaving
+                  ? styles.buttonDisabled
+                  : styles.buttonPrimary
+              }
             >
               {isSaving ? 'Processing...' : 'Save Font'}
             </button>
