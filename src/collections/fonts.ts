@@ -11,10 +11,10 @@ export const FontFiles: CollectionConfig = {
     read: anyone,
     update: authenticated,
   },
-  admin: {
-    hidden: true,
-    group: 'System',
-  },
+//   admin: {
+//     hidden: true,
+//     group: 'System',
+//   },
   fields: [
     {
       name: 'fontId',
@@ -25,5 +25,8 @@ export const FontFiles: CollectionConfig = {
       type: 'text',
     },
   ],
-  upload: true,
+  upload: {
+    disableLocalStorage: true,
+    mimeTypes: ['font/woff2', 'font/woff', 'application/font-woff2', 'application/font-woff'],
+  },
 }
