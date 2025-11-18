@@ -1467,6 +1467,7 @@ export interface ContactCardBlock {
   description?: string | null;
   cardStyles?: (number | Style)[] | null;
   contentStyles?: (number | Style)[] | null;
+  linkStyles?: (number | Style)[] | null;
   headingStyles?: (number | Style)[] | null;
   descriptionStyles?: (number | Style)[] | null;
   id?: string | null;
@@ -2413,6 +2414,7 @@ export interface ContactCardBlockSelect<T extends boolean = true> {
   description?: T;
   cardStyles?: T;
   contentStyles?: T;
+  linkStyles?: T;
   headingStyles?: T;
   descriptionStyles?: T;
   id?: T;

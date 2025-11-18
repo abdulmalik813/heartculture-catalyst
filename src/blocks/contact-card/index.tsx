@@ -52,7 +52,7 @@ export function ContactCardBlockUI({
           <div className="space-y-2">
             <div className="flex items-center gap-3 mb-2">
               <Mail className="w-5 h-5 text-primary" />
-              <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+              <h2>
                 Email
               </h2>
             </div>
@@ -61,7 +61,7 @@ export function ContactCardBlockUI({
                 <Link
                   key={email.id}
                   href={`mailto:${email.email}`}
-                  className="hover:text-primary transition-colors inline-block break-words"
+                  className={joinStyles(contactCardBlock.linkStyles, 'break-words')}
                 >
                   {email.email}
                 </Link>
@@ -74,7 +74,7 @@ export function ContactCardBlockUI({
           <div className="space-y-2">
             <div className="flex items-center gap-3 mb-2">
               <Phone className="w-5 h-5 text-primary" />
-              <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+              <h2>
                 Phone
               </h2>
             </div>
@@ -83,7 +83,7 @@ export function ContactCardBlockUI({
                 <Link
                   key={phone.id}
                   href={`tel:${phone.number.replace(/\s/g, '')}`}
-                  className="hover:text-primary transition-colors inline-block"
+                  className={joinStyles(contactCardBlock.linkStyles, 'break-words')}
                 >
                   {phone.number}
                 </Link>
@@ -96,7 +96,7 @@ export function ContactCardBlockUI({
           <div className="space-y-2">
             <div className="flex items-center gap-3 mb-2">
               <MapPin className="w-5 h-5 text-primary" />
-              <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+              <h2>
                 Location
               </h2>
             </div>
@@ -104,7 +104,7 @@ export function ContactCardBlockUI({
               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(displayAddress)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-primary transition-colors inline-block leading-relaxed"
+              className={joinStyles(contactCardBlock.linkStyles, 'break-words')}
             >
               {displayAddress}
             </Link>
