@@ -82,10 +82,21 @@ export async function GET() {
 
   const css = draft ? await compileStylesheet(draft) : await getCompiledStylesheet()
 
+  const hash = await crypto.subtle.digest(
+    'SHA-256', 
+    new TextEncoder().encode(css)
+  )
+  const etag = Array.from(new Uint8Array(hash))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('')
+    .substring(0, 16)
+
   return new NextResponse(css, {
     headers: {
       'Content-Type': 'text/css',
-      'Cache-Control': 'no-store',
+      'Cache-Control': 'public, max-age=0, must-revalidate',
+      'ETag': `"${etag}"`,
+      'X-Content-Type-Options': 'nosniff',
     },
   })
 }
