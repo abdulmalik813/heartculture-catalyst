@@ -109,12 +109,83 @@ function TestimonialCarousel({
     return name.charAt(0).toUpperCase()
   }
 
-  return (
+return (
     <section
       className={`mx-auto max-w-sm md:max-w-4xl md:px-8 lg:px-12 ${joinStyles(testimonialBlock.testimonialStyles)}`}
     >
       <div className="relative grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-20">
-        <div>
+        <div className="md:hidden">
+          <div className="relative h-auto w-full">
+            {validTestimonials.map((testimonial, index) => (
+              <div
+                key={testimonial.id}
+                className={`transition-all duration-700 ease-out ${index === active ? 'block' : 'hidden'}`}
+              >
+                <Card className="w-full shadow-lg border-0 overflow-hidden">
+                  <CardContent className="p-0">
+                    <div className="bg-muted p-6 text-center">
+                      <h3 className="text-xl font-bold text-foreground">
+                        {getTitle(testimonial)}
+                      </h3>
+                      {getSubtitle(testimonial) && (
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {getSubtitle(testimonial)}
+                        </p>
+                      )}
+                      {testimonial.rating !== null && testimonial.rating !== undefined && (
+                        <div className="flex items-center justify-center gap-1 mt-3">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <Star
+                              key={i}
+                              className={
+                                i < (testimonial.rating || 0)
+                                  ? 'h-4 w-4 fill-primary text-primary'
+                                  : 'h-4 w-4 fill-muted text-muted-foreground'
+                              }
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Middle Section - Logo/Avatar */}
+                    <div className="bg-background p-8 flex items-center justify-center">
+                      {testimonial.avatar ? (
+                        <div className="w-32 h-32">
+                          <Media
+                            resource={testimonial.avatar}
+                            imgClassName="w-full h-full object-contain rounded-lg"
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex h-32 w-32 items-center justify-center rounded-full bg-muted">
+                          {testimonial.name ? (
+                            <span className="text-5xl font-bold text-muted-foreground">
+                              {getInitial(testimonial.name)}
+                            </span>
+                          ) : (
+                            <User className="h-16 w-16 text-muted-foreground" strokeWidth={1.5} />
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Bottom Section - Text */}
+                    <div className="bg-muted/50 p-6">
+                      {testimonial.content && (
+                        <p className="text-base text-foreground text-center">
+                          {truncateContent(testimonial.content)}
+                        </p>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="hidden md:block">
           <div className="relative h-80 w-full rounded-3xl">
             {validTestimonials.map((testimonial, index) => (
               <div
@@ -153,8 +224,8 @@ function TestimonialCarousel({
           </div>
         </div>
 
-        <div className="flex flex-col justify-between py-4">
-          <div className="min-h-[280px] md:min-h-[320px]">
+        <div className="flex flex-col justify-between">
+          <div className="min-h-[280px] md:min-h-[320px] hidden md:block">
             <div className="flex items-center gap-3 min-h-[32px]">
               <h3 className="text-2xl font-bold text-foreground">
                 {getTitle(validTestimonials[active])}
@@ -193,7 +264,7 @@ function TestimonialCarousel({
             </div>
           </div>
 
-          <div className="flex justify-center gap-4 md:justify-start">
+          <div className="hidden md:flex justify-center gap-4 md:justify-start">
             <Button
               onClick={handlePrev}
               variant="default"
@@ -216,7 +287,7 @@ function TestimonialCarousel({
         </div>
       </div>
 
-      <div className="flex justify-center mt-8">
+      <div className="flex justify-center md:mt-6">
         <NavigationBlockUI {...testimonialBlock} pageContext={pageContext} />
       </div>
     </section>
