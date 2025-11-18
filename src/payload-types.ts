@@ -1630,6 +1630,7 @@ export interface Faq {
  */
 export interface FontFile {
   id: number;
+  prefix?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -2891,6 +2892,7 @@ export interface FaqsSelect<T extends boolean = true> {
  * via the `definition` "font-files_select".
  */
 export interface FontFilesSelect<T extends boolean = true> {
+  prefix?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
