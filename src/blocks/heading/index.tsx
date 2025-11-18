@@ -3,6 +3,7 @@ import { joinStyles } from '@/lib/make-styles'
 import { HeadingBlock } from '@/payload-types'
 
 export function HeadingBlockUI({ ...headingBlock }: HeadingBlock) {
+  if (!headingBlock?.headingText) return null
   const { headingTag: Tag, headingText, headingStyles } = headingBlock
 
   return (
