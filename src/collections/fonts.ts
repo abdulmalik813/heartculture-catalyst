@@ -20,6 +20,10 @@ export const FontFiles: CollectionConfig = {
       name: 'fontId',
       type: 'text',
     },
+    {
+      name: 'filename',
+      type: 'text',
+    },
   ],
   upload: {
     mimeTypes: ['font/woff2', 'font/woff', 'application/font-woff2', 'application/font-woff'],
