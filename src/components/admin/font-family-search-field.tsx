@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useField } from '@payloadcms/ui'
+import { getServerSideURL } from '@/lib/get-url'
 
 interface GoogleFont {
   id: string
@@ -406,12 +407,12 @@ export function FontFamilySearchField({ path }: { path: string }) {
 
       setDownloadStatus('Finalizing...')
       setDownloadProgress(95)
-
+      const serverUrl = getServerSideURL()
       uploadedFontFiles.forEach(({ filename, url }) => {
         const escapedFilename = filename.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
         fontCSS = fontCSS.replace(
           new RegExp(`url\\(\\.\/files\/${escapedFilename}\\)`, 'g'),
-          `url(${url})`
+          `url(${url.replaceAll(serverUrl, '')})`
         )
       })
 
