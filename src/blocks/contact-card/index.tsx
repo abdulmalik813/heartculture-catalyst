@@ -35,16 +35,14 @@ export function ContactCardBlockUI({
   return (
     <div className="bg-card rounded-lg shadow-lg overflow-hidden border border-border">
       <div className="p-8 lg:p-12 border-b border-border">
-        <h1 className={joinStyles('text-4xl lg:text-5xl font-bold text-foreground mb-8 text-balance tracking-tight', contactCardBlock.headingStyles)}>
-          {contactCardBlock.heading}
-        </h1>
+        <h1 className={joinStyles(contactCardBlock.headingStyles)}>{contactCardBlock.heading}</h1>
 
         {contactCardBlock.description && (
-          <p className={joinStyles('text-lg text-muted-foreground mb-8', contactCardBlock.descriptionStyles)}>
+          <p className={joinStyles(contactCardBlock.descriptionStyles)}>
             {contactCardBlock.description}
           </p>
         )}
-        
+
         <div className="flex flex-col gap-6">
           {pageContext.setting.emails && pageContext.setting.emails.length > 0 && (
             <div className="space-y-2">
@@ -54,7 +52,7 @@ export function ContactCardBlockUI({
                   Email
                 </h2>
               </div>
-              <a 
+              <a
                 href={`mailto:${pageContext.setting.emails[0].email}`}
                 className="text-xl text-foreground hover:text-primary transition-colors inline-block"
               >
@@ -71,7 +69,7 @@ export function ContactCardBlockUI({
                   Phone
                 </h2>
               </div>
-              <a 
+              <a
                 href={`tel:${pageContext.setting.phones[0].number.replace(/\s/g, '')}`}
                 className="text-xl text-foreground hover:text-primary transition-colors inline-block"
               >
@@ -88,9 +86,7 @@ export function ContactCardBlockUI({
                   Location
                 </h2>
               </div>
-              <p className="text-xl text-foreground leading-relaxed">
-                {displayAddress}
-              </p>
+              <p className="text-xl text-foreground leading-relaxed">{displayAddress}</p>
             </div>
           )}
         </div>
