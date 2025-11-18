@@ -37,6 +37,12 @@ export const ContactCardBlock: Block = {
               hasMany: true,
             },
             {
+              name: 'linkStyles',
+              type: 'relationship',
+              relationTo: 'styles',
+              hasMany: true,
+            },
+            {
               name: 'headingStyles',
               type: 'relationship',
               relationTo: 'styles',

@@ -3,6 +3,7 @@ import { PageContext } from '@/types/page-context'
 import { Mail, Phone, MapPin } from 'lucide-react'
 import { joinStyles } from '@/lib/make-styles'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import Link from 'next/link'
 
 export function ContactCardBlockUI({
   pageContext,
@@ -55,12 +56,17 @@ export function ContactCardBlockUI({
                 Email
               </h2>
             </div>
-            <a
-              href={`mailto:${pageContext.setting.emails[0].email}`}
-              className="text-xl text-foreground hover:text-primary transition-colors inline-block"
-            >
-              {pageContext.setting.emails[0].email}
-            </a>
+            <div className="flex flex-col gap-2">
+              {pageContext.setting.emails.map((email) => (
+                <Link
+                  key={email.id}
+                  href={`mailto:${email.email}`}
+                  className="hover:text-primary transition-colors inline-block break-words"
+                >
+                  {email.email}
+                </Link>
+              ))}
+            </div>
           </div>
         )}
 
@@ -72,12 +78,17 @@ export function ContactCardBlockUI({
                 Phone
               </h2>
             </div>
-            <a
-              href={`tel:${pageContext.setting.phones[0].number.replace(/\s/g, '')}`}
-              className="text-xl text-foreground hover:text-primary transition-colors inline-block"
-            >
-              {pageContext.setting.phones[0].number}
-            </a>
+            <div className="flex flex-col gap-2">
+              {pageContext.setting.phones.map((phone) => (
+                <Link
+                  key={phone.id}
+                  href={`tel:${phone.number.replace(/\s/g, '')}`}
+                  className="hover:text-primary transition-colors inline-block"
+                >
+                  {phone.number}
+                </Link>
+              ))}
+            </div>
           </div>
         )}
 
@@ -89,7 +100,14 @@ export function ContactCardBlockUI({
                 Location
               </h2>
             </div>
-            <p className="text-xl text-foreground leading-relaxed">{displayAddress}</p>
+            <Link
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(displayAddress)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors inline-block leading-relaxed"
+            >
+              {displayAddress}
+            </Link>
           </div>
         )}
       </CardContent>
