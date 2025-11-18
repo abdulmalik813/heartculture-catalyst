@@ -5,7 +5,7 @@ import { GlobalAfterChangeHook } from 'payload'
 
 export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) => {
   const additionalFonts = doc.additionalFonts || []
-
+  const fontFileIds = []
   const existingStyles = await req.payload.find({
     collection: 'styles',
     where: {
@@ -22,7 +22,7 @@ export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) =>
     if (font?.title != null && font?.title?.trim() !== '') {
       const className = `font-${font.id}`
       const existingStyle = existingStyles.docs.find((style) => style.className === className)
-
+      font.push(...font.fontFileIds)
       if (!existingStyle) {
         await req.payload.create({
           collection: 'styles',
@@ -36,6 +36,11 @@ export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) =>
       }
     }
   }
+
+  const fontFiles = await req.payload.find({
+    collection: 'font-files',
+    limit: 1000,
+  })
 
   const fontStyles = existingStyles.docs.filter((style: Style) =>
     style.className.startsWith('font-'),
@@ -56,7 +61,7 @@ export const revalidateSettings: GlobalAfterChangeHook = async ({ doc, req }) =>
   if (doc._status === 'draft') {
     return doc
   }
-
+  
   await revalidateAll()
   return doc
 }

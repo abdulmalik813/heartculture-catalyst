@@ -30,6 +30,7 @@ export interface Config {
     icons: Icon;
     testimonials: Testimonial;
     faqs: Faq;
+    'font-files': FontFile;
     redirects: Redirect;
     search: Search;
     forms: Form;
@@ -51,6 +52,7 @@ export interface Config {
     icons: IconsSelect<false> | IconsSelect<true>;
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     faqs: FaqsSelect<false> | FaqsSelect<true>;
+    'font-files': FontFilesSelect<false> | FontFilesSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     search: SearchSelect<false> | SearchSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
@@ -1624,6 +1626,28 @@ export interface Faq {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "font-files".
+ */
+export interface FontFile {
+  id: number;
+  /**
+   * The font family ID (e.g., "nunito")
+   */
+  fontId: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename: string;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1818,6 +1842,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'faqs';
         value: number | Faq;
+      } | null)
+    | ({
+        relationTo: 'font-files';
+        value: number | FontFile;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -2861,6 +2889,24 @@ export interface FaqsSelect<T extends boolean = true> {
   answer?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "font-files_select".
+ */
+export interface FontFilesSelect<T extends boolean = true> {
+  fontId?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

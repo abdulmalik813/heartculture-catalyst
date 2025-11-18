@@ -189,6 +189,19 @@ const styles = {
     fontSize: '12px',
     color: 'var(--theme-elevation-600)',
   },
+  progressBar: {
+    width: '100%',
+    height: '4px',
+    backgroundColor: 'var(--theme-elevation-200)',
+    borderRadius: '2px',
+    overflow: 'hidden',
+    marginTop: '8px',
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: 'var(--theme-elevation-900)',
+    transition: 'width 0.3s ease',
+  },
 }
 
 export function FontFamilySearchField({ path }: { path: string }) {
@@ -208,6 +221,8 @@ export function FontFamilySearchField({ path }: { path: string }) {
   const [selectedSubset, setSelectedSubset] = useState<string | null>(null)
   const [fontsCache, setFontsCache] = useState<{ fonts: GoogleFont[], timestamp: number } | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+  const [downloadProgress, setDownloadProgress] = useState(0)
+  const [downloadStatus, setDownloadStatus] = useState('')
 
   useEffect(() => {
     const loadFonts = async () => {
@@ -269,6 +284,8 @@ export function FontFamilySearchField({ path }: { path: string }) {
     }
 
     setIsSaving(true)
+    setDownloadProgress(0)
+    setDownloadStatus('Fetching font CSS...')
 
     try {
       const cssUrl = selectedFont.variable
@@ -276,11 +293,76 @@ export function FontFamilySearchField({ path }: { path: string }) {
         : `https://cdn.jsdelivr.net/npm/@fontsource/${selectedFont.id}@latest/index.css`
 
       const cssResponse = await fetch(cssUrl)
-      if (!cssResponse.ok) {
-        throw new Error('Failed to fetch font CSS from jsDelivr')
-      }
+      if (!cssResponse.ok) throw new Error('Failed to fetch font CSS')
       
-      const fontCSS = await cssResponse.text()
+      let fontCSS = await cssResponse.text()
+      setDownloadProgress(20)
+
+      const fontFileUrls: string[] = []
+      const urlRegex = /url\((\.\/files\/[^)]+)\)/g
+      let match
+      while ((match = urlRegex.exec(fontCSS)) !== null) {
+        fontFileUrls.push(match[1])
+      }
+
+      setDownloadStatus(`Uploading ${fontFileUrls.length} font files to S3...`)
+
+      const baseUrl = selectedFont.variable
+        ? `https://cdn.jsdelivr.net/npm/@fontsource-variable/${selectedFont.id}@latest/`
+        : `https://cdn.jsdelivr.net/npm/@fontsource/${selectedFont.id}@latest/`
+
+      const uploadedFontFiles: { filename: string; id: string; url: string }[] = []
+      
+      for (let i = 0; i < fontFileUrls.length; i++) {
+        const fileUrl = fontFileUrls[i]
+        const filename = fileUrl.split('/').pop()!
+        
+        setDownloadStatus(`Uploading ${filename} (${i + 1}/${fontFileUrls.length})...`)
+        
+        const fullUrl = baseUrl + fileUrl.replace('./', '')
+        const response = await fetch(fullUrl)
+        
+        if (!response.ok) throw new Error(`Failed to download ${filename}`)
+        
+        const blob = await response.blob()
+        
+        const formData = new FormData()
+        formData.append('file', blob, filename)
+        formData.append('fontId', selectedFont.id)
+        formData.append('filename', filename)
+        
+        const uploadResponse = await fetch('/api/font-files', {
+          method: 'POST',
+          body: formData,
+          credentials: 'include',
+        })
+        
+        if (!uploadResponse.ok) {
+          const errorData = await uploadResponse.json()
+          throw new Error(`Failed to upload ${filename}: ${errorData.errors?.[0]?.message || 'Unknown error'}`)
+        }
+        
+        const uploadResult = await uploadResponse.json()
+        
+        uploadedFontFiles.push({
+          filename: filename,
+          id: uploadResult.doc.id,
+          url: uploadResult.doc.url,
+        })
+        
+        setDownloadProgress(20 + ((i + 1) / fontFileUrls.length) * 70)
+      }
+
+      setDownloadStatus('Finalizing...')
+      setDownloadProgress(95)
+
+      uploadedFontFiles.forEach(({ filename, url }) => {
+        const escapedFilename = filename.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        fontCSS = fontCSS.replace(
+          new RegExp(`url\\(\\.\/files\/${escapedFilename}\\)`, 'g'),
+          `url(${url})`
+        )
+      })
 
       setFamily(selectedFont.family)
       setFontData({
@@ -292,17 +374,28 @@ export function FontFamilySearchField({ path }: { path: string }) {
         style: selectedStyle,
         subset: selectedSubset,
         fontCSS: fontCSS,
+        fontFileIds: uploadedFontFiles.map(f => f.id),
       })
       
-      setSelectedFont(null)
-      setSelectedWeight(null)
-      setSelectedStyle(null)
-      setSelectedSubset(null)
-      setIsSaving(false)
+      setDownloadProgress(100)
+      setDownloadStatus('Complete!')
+      
+      setTimeout(() => {
+        setSelectedFont(null)
+        setSelectedWeight(null)
+        setSelectedStyle(null)
+        setSelectedSubset(null)
+        setIsSaving(false)
+        setDownloadProgress(0)
+        setDownloadStatus('')
+      }, 500)
+      
     } catch (error) {
-      console.error('Error fetching font CSS:', error)
-      alert('Failed to fetch font CSS. Please try again.')
+      console.error('Error processing fonts:', error)
+      alert(`Failed to process fonts: ${error instanceof Error ? error.message : 'Unknown error'}`)
       setIsSaving(false)
+      setDownloadProgress(0)
+      setDownloadStatus('')
     }
   }
 
@@ -477,7 +570,12 @@ export function FontFamilySearchField({ path }: { path: string }) {
           </div>
 
           {isSaving && (
-            <div style={styles.loadingText}>Fetching font CSS from jsDelivr...</div>
+            <div style={styles.section}>
+              <div style={styles.loadingText}>{downloadStatus}</div>
+              <div style={styles.progressBar}>
+                <div style={{ ...styles.progressFill, width: `${downloadProgress}%` }} />
+              </div>
+            </div>
           )}
 
           <div style={styles.actionBar}>
@@ -495,7 +593,7 @@ export function FontFamilySearchField({ path }: { path: string }) {
               disabled={!selectedWeight || !selectedStyle || !selectedSubset || isSaving}
               style={(!selectedWeight || !selectedStyle || !selectedSubset || isSaving) ? styles.buttonDisabled : styles.buttonPrimary}
             >
-              {isSaving ? 'Saving...' : 'Save Font'}
+              {isSaving ? 'Processing...' : 'Save Font'}
             </button>
           </div>
         </div>

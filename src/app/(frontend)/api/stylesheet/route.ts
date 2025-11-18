@@ -36,7 +36,7 @@ function collectFontsCSS(setting: Setting): string {
     isFontData(setting.default.fontData) &&
     (setting.default.fontData as any)?.fontCSS
   ) {
-    css += (setting.default.fontData as any)?.fontCSS || '' + '\n\n'
+    css += ((setting.default.fontData as any)?.fontCSS || '') + '\n\n'
   }
 
   if (setting.additionalFonts && Array.isArray(setting.additionalFonts)) {
@@ -74,7 +74,7 @@ const getCompiledStylesheet = unstable_cache(
   ['compiled-stylesheet'],
   {
     tags: ['compiled-stylesheet', 'collection_styles'],
-  }
+  },
 )
 
 export async function GET() {
@@ -85,7 +85,7 @@ export async function GET() {
   return new NextResponse(css, {
     headers: {
       'Content-Type': 'text/css',
-      'Cache-Control': 'no-store'
+      'Cache-Control': 'no-store',
     },
   })
 }

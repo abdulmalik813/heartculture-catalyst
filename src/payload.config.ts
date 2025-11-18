@@ -23,6 +23,7 @@ import { Testimonials } from '@/collections/testimonials'
 import { FAQs } from '@/collections/faq'
 import { Social } from '@/globals/social'
 import { Thumbnails } from '@/collections/thumbnails'
+import { FontFiles } from '@/collections/fonts'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -71,7 +72,7 @@ export default buildConfig({
     defaultFromName: EMAIL.FROM_NAME,
     apiKey: EMAIL.RESEND_API_KEY,
   }),
-  collections: [Pages, Posts, Categories, Users, Media, Thumbnails, Styles, Icons, Testimonials, FAQs],
+  collections: [Pages, Posts, Categories, Users, Media, Thumbnails, Styles, Icons, Testimonials, FAQs, FontFiles],
   globals: [NavigationBar, Footer, Settings, Social],
   cors: [getServerSideURL()].filter(Boolean),
   editor: defaultLexical(),
