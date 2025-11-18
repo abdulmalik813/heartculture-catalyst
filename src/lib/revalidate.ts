@@ -20,7 +20,7 @@ export async function revalidateAll() {
   revalidateTag('redirects')
   revalidateTag('pages_sitemap')
   revalidateTag('posts_sitemap')
-  revalidateTag('fonts_tag')
+  revalidateTag('compiled-stylesheet')
 
   const pages = await payload.find({
     collection: 'pages',

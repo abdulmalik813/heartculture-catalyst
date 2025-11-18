@@ -4,6 +4,7 @@ import { getCachedGlobal } from '@/lib/get-globals'
 import { Setting, Style } from '@/payload-types'
 import { getCachedDocuments } from '@/lib/get-document'
 import { isFontData } from '@/lib/is-font-data'
+import { unstable_cache } from 'next/cache'
 
 function generateFontClass(font: any): string | null {
   if (!font.id || !font.family || !font.fontData || !isFontData(font.fontData)) {
@@ -49,9 +50,7 @@ function collectFontsCSS(setting: Setting): string {
   return css
 }
 
-export async function GET() {
-  const { isEnabled: draft } = await draftMode()
-
+async function compileStylesheet(draft: boolean) {
   const setting = (await getCachedGlobal('settings', 1, draft)) as Setting
   const styles = (await getCachedDocuments('styles', draft, 10000)()) as Style[]
 
@@ -66,6 +65,22 @@ export async function GET() {
     .join('\n\n')
 
   const css = [fontsourceCSS, fontClasses, setting.theme, stylesCSS].filter(Boolean).join('\n\n')
+
+  return css
+}
+
+const getCompiledStylesheet = unstable_cache(
+  async () => compileStylesheet(false),
+  ['compiled-stylesheet'],
+  {
+    tags: ['compiled-stylesheet', 'collection_styles'],
+  }
+)
+
+export async function GET() {
+  const { isEnabled: draft } = await draftMode()
+
+  const css = draft ? await compileStylesheet(draft) : await getCompiledStylesheet()
 
   return new NextResponse(css, {
     headers: {

@@ -33,10 +33,10 @@ export const generateStylesheet: CollectionBeforeChangeHook<Style> = async ({
 export const revalidateCache: CollectionAfterChangeHook<Style> = async ({
   doc,
 }) => {
-  revalidateTag('styles-tag')
+  revalidateTag('collection_styles')
   return doc
 }
 
 export const revalidateDelete: CollectionAfterDeleteHook<Style> = async () => {
-  revalidateTag('styles-tag')
+  revalidateTag('collection_styles')
 }

@@ -6,10 +6,6 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 
 export async function POST(request: NextRequest) {
   const { searchParams } = new URL(request.url)
-  const tag = searchParams.get('tag')
-  const path = searchParams.get('path')
-  const collection = searchParams.get('collection')
-  const global = searchParams.get('global')
 
   try {
     const payload = await getPayload({ config })
@@ -40,17 +36,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (tag) {
-      revalidateTag(tag)
-    } else if (path) {
-      revalidatePath(path)
-    } else if (collection) {
-      revalidateTag(`collection_${collection}`)
-    } else if (global) {
-      revalidateTag(`global_${global}`)
-    } else {
-      await revalidateAll()
-    }
+    await revalidateAll()
 
     return NextResponse.json({
       revalidated: true,
