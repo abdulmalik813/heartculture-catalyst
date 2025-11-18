@@ -31,7 +31,7 @@ export async function CardBlockUI({
               <div className="flex-1">
                 {cardBlock.enableTitle && cardBlock.title && (
                   <CardTitle className={joinStyles(cardBlock.titleStyles)}>
-                    {cardBlock.title}
+                    <h1>{cardBlock.title}</h1>
                   </CardTitle>
                 )}
                 {cardBlock.enableDescription && cardBlock.description && (
