@@ -10,6 +10,7 @@ export function isFontData(data: unknown): data is FontData {
     'variable' in data &&
     'weight' in data &&
     'style' in data &&
-    'subset' in data
+    'subset' in data &&
+    'fontCSS' in data 
   )
 }

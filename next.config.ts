@@ -42,7 +42,7 @@ const nextConfig: NextConfig = {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    qualities: [100, 75, 50, 25],
+    qualities: [100, 95, 75, 50, 25],
   },
   compiler: {
     removeConsole: process.env.NODE_ENV !== 'development' ? { exclude: ['error', 'warn'] } : false,

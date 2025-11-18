@@ -53,7 +53,8 @@ export function ImageMedia(props: MediaProps) {
         fill={fill}
         height={!fill ? height : undefined}
         priority={priority}
-        quality={100}
+        quality={95}
+        fetchPriority={priority ? 'high' : 'auto'}
         loading={loading}
         sizes={sizes}
         src={src}

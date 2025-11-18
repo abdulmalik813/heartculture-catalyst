@@ -59,7 +59,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
     >
       {isEnabled && <LivePreviewListener />}
       <head>
-        <link href={`${getServerSideURL()}/api/stylesheet`} rel="stylesheet" />
+        <link href="/api/stylesheet" rel="stylesheet" />
       </head>
       <body className="flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>

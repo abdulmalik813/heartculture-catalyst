@@ -1,4 +1,3 @@
-// src/components/admin/font-family-search-field.tsx
 'use client'
 
 import React, { useState, useEffect } from 'react'
@@ -184,6 +183,12 @@ const styles = {
     textAlign: 'center' as const,
     color: 'var(--theme-elevation-600)',
   },
+  loadingText: {
+    padding: '8px',
+    textAlign: 'center' as const,
+    fontSize: '12px',
+    color: 'var(--theme-elevation-600)',
+  },
 }
 
 export function FontFamilySearchField({ path }: { path: string }) {
@@ -202,6 +207,7 @@ export function FontFamilySearchField({ path }: { path: string }) {
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null)
   const [selectedSubset, setSelectedSubset] = useState<string | null>(null)
   const [fontsCache, setFontsCache] = useState<{ fonts: GoogleFont[], timestamp: number } | null>(null)
+  const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
     const loadFonts = async () => {
@@ -256,27 +262,48 @@ export function FontFamilySearchField({ path }: { path: string }) {
     setSelectedSubset(font.defSubset)
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!selectedFont || !selectedWeight || !selectedStyle || !selectedSubset) {
       alert('Please select weight, style, and subset')
       return
     }
 
-    setFamily(selectedFont.family)
-    setFontData({
-      id: selectedFont.id,
-      family: selectedFont.family,
-      category: selectedFont.category,
-      variable: selectedFont.variable,
-      weight: selectedWeight,
-      style: selectedStyle,
-      subset: selectedSubset,
-    })
-    
-    setSelectedFont(null)
-    setSelectedWeight(null)
-    setSelectedStyle(null)
-    setSelectedSubset(null)
+    setIsSaving(true)
+
+    try {
+      const cssUrl = selectedFont.variable
+        ? `https://cdn.jsdelivr.net/npm/@fontsource-variable/${selectedFont.id}@latest/index.css`
+        : `https://cdn.jsdelivr.net/npm/@fontsource/${selectedFont.id}@latest/index.css`
+
+      const cssResponse = await fetch(cssUrl)
+      if (!cssResponse.ok) {
+        throw new Error('Failed to fetch font CSS from jsDelivr')
+      }
+      
+      const fontCSS = await cssResponse.text()
+
+      setFamily(selectedFont.family)
+      setFontData({
+        id: selectedFont.id,
+        family: selectedFont.family,
+        category: selectedFont.category,
+        variable: selectedFont.variable,
+        weight: selectedWeight,
+        style: selectedStyle,
+        subset: selectedSubset,
+        fontCSS: fontCSS,
+      })
+      
+      setSelectedFont(null)
+      setSelectedWeight(null)
+      setSelectedStyle(null)
+      setSelectedSubset(null)
+      setIsSaving(false)
+    } catch (error) {
+      console.error('Error fetching font CSS:', error)
+      alert('Failed to fetch font CSS. Please try again.')
+      setIsSaving(false)
+    }
   }
 
   const handleClear = () => {
@@ -351,6 +378,7 @@ export function FontFamilySearchField({ path }: { path: string }) {
             {selectedFont.variable ? (
               <input
                 type="number"
+                min="100"
                 max="900"
                 value={selectedWeight || 400}
                 onChange={(e) => {
@@ -448,17 +476,26 @@ export function FontFamilySearchField({ path }: { path: string }) {
             </div>
           </div>
 
+          {isSaving && (
+            <div style={styles.loadingText}>Fetching font CSS from jsDelivr...</div>
+          )}
+
           <div style={styles.actionBar}>
-            <button type="button" onClick={() => setSelectedFont(null)} style={styles.buttonSecondary}>
+            <button 
+              type="button" 
+              onClick={() => setSelectedFont(null)} 
+              style={styles.buttonSecondary}
+              disabled={isSaving}
+            >
               Cancel
             </button>
             <button
               type="button"
               onClick={handleSave}
-              disabled={!selectedWeight || !selectedStyle || !selectedSubset}
-              style={(!selectedWeight || !selectedStyle || !selectedSubset) ? styles.buttonDisabled : styles.buttonPrimary}
+              disabled={!selectedWeight || !selectedStyle || !selectedSubset || isSaving}
+              style={(!selectedWeight || !selectedStyle || !selectedSubset || isSaving) ? styles.buttonDisabled : styles.buttonPrimary}
             >
-              Save Font
+              {isSaving ? 'Saving...' : 'Save Font'}
             </button>
           </div>
         </div>

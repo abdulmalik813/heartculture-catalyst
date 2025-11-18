@@ -1,18 +1,9 @@
 import { NextResponse } from 'next/server'
 import { draftMode } from 'next/headers'
-import { unstable_cache } from 'next/cache'
 import { getCachedGlobal } from '@/lib/get-globals'
 import { Setting, Style } from '@/payload-types'
 import { getCachedDocuments } from '@/lib/get-document'
-import { FontData } from '@/types/font-data'
 import { isFontData } from '@/lib/is-font-data'
-
-function generateFontImport(font: FontData): string {
-  if (font.variable) {
-    return `@import url('https://cdn.jsdelivr.net/npm/@fontsource-variable/${font.id}@latest/index.css');`
-  }
-  return `@import url('https://cdn.jsdelivr.net/npm/@fontsource/${font.id}@latest/index.css');`
-}
 
 function generateFontClass(font: any): string | null {
   if (!font.id || !font.family || !font.fontData || !isFontData(font.fontData)) {
@@ -36,32 +27,27 @@ function generateFontClass(font: any): string | null {
 }`
 }
 
-function collectFonts(setting: Setting): FontData[] {
-  const fonts: FontData[] = []
+function collectFontsCSS(setting: Setting): string {
+  let css = ''
 
-  if (setting.default?.fontData && isFontData(setting.default.fontData)) {
-    fonts.push(setting.default.fontData)
+  if (
+    setting.default?.fontData &&
+    isFontData(setting.default.fontData) &&
+    (setting.default.fontData as any)?.fontCSS
+  ) {
+    css += (setting.default.fontData as any) + '\n\n'
   }
 
   if (setting.additionalFonts && Array.isArray(setting.additionalFonts)) {
     setting.additionalFonts.forEach((font: any) => {
-      if (font.fontData && isFontData(font.fontData)) {
-        fonts.push(font.fontData)
+      if (font.fontData && isFontData(font.fontData) && font.fontData.fontCSS) {
+        css += font.fontData.fontCSS + '\n\n'
       }
     })
   }
 
-  return fonts
+  return css
 }
-
-const getCachedFontCSS = unstable_cache(
-  async (fontsJson: string) => {
-    const fonts: FontData[] = JSON.parse(fontsJson)
-    return fonts.map(generateFontImport).join('\n')
-  },
-  ['fonts_tag'],
-  { tags: ['fonts_tag'] },
-)
 
 export async function GET() {
   const { isEnabled: draft } = await draftMode()
@@ -69,11 +55,7 @@ export async function GET() {
   const setting = (await getCachedGlobal('settings', 1, draft)) as Setting
   const styles = (await getCachedDocuments('styles', draft, 10000)()) as Style[]
 
-  const fonts = collectFonts(setting)
-
-  const fontsourceCSS = draft
-    ? fonts.map(generateFontImport).join('\n')
-    : await getCachedFontCSS(JSON.stringify(fonts))
+  const fontsourceCSS = collectFontsCSS(setting)
 
   const fontClasses =
     setting.additionalFonts?.map(generateFontClass).filter(Boolean).join('\n\n') || ''
@@ -88,7 +70,7 @@ export async function GET() {
   return new NextResponse(css, {
     headers: {
       'Content-Type': 'text/css',
-      'Cache-Control': 'no-store',
+      'Cache-Control': 'no-store'
     },
   })
 }

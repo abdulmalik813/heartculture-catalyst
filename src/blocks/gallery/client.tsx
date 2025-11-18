@@ -91,7 +91,6 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                 resource={selectedItem.image}
                 imgClassName="w-full h-auto max-h-[85vh] object-contain rounded-lg"
                 videoClassName="w-full h-auto max-h-[85vh] object-contain rounded-lg"
-                priority
               />
             </div>
           </div>

@@ -22,6 +22,7 @@ export async function CallToActionBlockUI({
               {...callToActionBlock}
               className="w-full h-full object-cover select-none pointer-events-none"
               pageContext={pageContext}
+              priority
             />
           </div>
         )}
