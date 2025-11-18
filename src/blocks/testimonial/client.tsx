@@ -116,12 +116,11 @@ function TestimonialCarousel({
 
   return (
     <section
-      className={`mx-auto max-w-sm px-4 py-12 md:max-w-4xl md:px-8 md:py-15 lg:px-12 ${joinStyles(testimonialBlock.testimonialStyles)}`}
+      className={joinStyles(testimonialBlock.testimonialStyles)}
     >
       <div className="relative grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-20">
         <div>
           <div className="relative h-80 w-full rounded-3xl">
-            {' '}
             {validTestimonials.map((testimonial, index) => (
               <div
                 key={testimonial.id}
@@ -131,7 +130,6 @@ function TestimonialCarousel({
                 <Card
                   className={`h-full w-full shadow-lg flex items-center justify-center border-0 ${!testimonial.avatar ? 'bg-muted' : ''}`}
                 >
-                  {' '}
                   <CardContent className="p-0 h-full w-full">
                     {testimonial.avatar ? (
                       <div className="flex h-full w-full items-center justify-center p-8">
