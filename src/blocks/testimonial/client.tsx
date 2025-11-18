@@ -14,15 +14,10 @@ export function TestimonialBlockClient({
   pageContext,
   ...testimonialBlock
 }: Partial<TestimonialBlock> & { pageContext: PageContext }) {
-  return (
-    <div className="w-full">
-      {testimonialBlock.type === 'carousel' ? (
-        <TestimonialCarousel testimonialBlock={testimonialBlock} pageContext={pageContext} />
-      ) : (
-        <TestimonialGrid testimonialBlock={testimonialBlock} pageContext={pageContext} />
-      )}
-    </div>
-  )
+  if (testimonialBlock.type === 'carousel')
+    return <TestimonialCarousel testimonialBlock={testimonialBlock} pageContext={pageContext} />
+
+  return <TestimonialGrid testimonialBlock={testimonialBlock} pageContext={pageContext} />
 }
 
 function TestimonialCarousel({
@@ -116,7 +111,7 @@ function TestimonialCarousel({
 
   return (
     <section
-      className={joinStyles(testimonialBlock.testimonialStyles)}
+      className={`mx-auto max-w-sm px-4 py-12 md:max-w-4xl md:px-8 md:py-15 lg:px-12 ${joinStyles(testimonialBlock.testimonialStyles)}`}
     >
       <div className="relative grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-20">
         <div>
@@ -221,11 +216,9 @@ function TestimonialCarousel({
         </div>
       </div>
 
-      <NavigationBlockUI
-        className="flex justify-center mt-8"
-        {...testimonialBlock}
-        pageContext={pageContext}
-      />
+      <div className="flex justify-center mt-8">
+        <NavigationBlockUI {...testimonialBlock} pageContext={pageContext} />
+      </div>
     </section>
   )
 }
