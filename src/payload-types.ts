@@ -1465,6 +1465,8 @@ export interface HeadingBlock {
 export interface ContactCardBlock {
   heading: string;
   description?: string | null;
+  cardStyles?: (number | Style)[] | null;
+  contentStyles?: (number | Style)[] | null;
   headingStyles?: (number | Style)[] | null;
   descriptionStyles?: (number | Style)[] | null;
   id?: string | null;
@@ -2409,6 +2411,8 @@ export interface HeadingBlockSelect<T extends boolean = true> {
 export interface ContactCardBlockSelect<T extends boolean = true> {
   heading?: T;
   description?: T;
+  cardStyles?: T;
+  contentStyles?: T;
   headingStyles?: T;
   descriptionStyles?: T;
   id?: T;

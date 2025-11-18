@@ -25,6 +25,18 @@ export const ContactCardBlock: Block = {
           label: 'Styles',
           fields: [
             {
+              name: 'cardStyles',
+              type: 'relationship',
+              relationTo: 'styles',
+              hasMany: true,
+            },
+            {
+              name: 'contentStyles',
+              type: 'relationship',
+              relationTo: 'styles',
+              hasMany: true,
+            },
+            {
               name: 'headingStyles',
               type: 'relationship',
               relationTo: 'styles',
