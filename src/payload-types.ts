@@ -228,6 +228,7 @@ export interface Page {
         viewportAmount?: number | null;
       };
     };
+    backgroundStyles?: (number | Style)[] | null;
     media?: (number | null) | Media;
     wrapperStyles?: (number | Style)[] | null;
     contentStyles?: (number | Style)[] | null;
@@ -434,6 +435,7 @@ export interface Post {
         viewportAmount?: number | null;
       };
     };
+    backgroundStyles?: (number | Style)[] | null;
     media?: (number | null) | Media;
     wrapperStyles?: (number | Style)[] | null;
     contentStyles?: (number | Style)[] | null;
@@ -1988,6 +1990,7 @@ export interface PagesSelect<T extends boolean = true> {
                     viewportAmount?: T;
                   };
             };
+        backgroundStyles?: T;
         media?: T;
         wrapperStyles?: T;
         contentStyles?: T;
@@ -2536,6 +2539,7 @@ export interface PostsSelect<T extends boolean = true> {
                     viewportAmount?: T;
                   };
             };
+        backgroundStyles?: T;
         media?: T;
         wrapperStyles?: T;
         contentStyles?: T;
