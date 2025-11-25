@@ -8,6 +8,7 @@ import { AccordionBlock } from '@/blocks/accordion/config'
 import { defaultLexicalValue } from '@/constants/default-lexical'
 import { animate } from '@/fields/animate'
 import { FormBlock } from '@/blocks/form/config'
+import { IconBlock } from '@/blocks/icon/config'
 
 export const card = (): Field[] => {
   return [
@@ -102,7 +103,7 @@ export const card = (): Field[] => {
                 features: {
                   blocks: {
                     blocks: [MediaBlock, NavigationBlock, TabBlock, AccordionBlock, FormBlock],
-                    inlineBlocks: [MediaBlock, NavigationBlock],
+                    inlineBlocks: [MediaBlock, NavigationBlock, IconBlock],
                   },
                 },
               }),

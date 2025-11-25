@@ -79,9 +79,11 @@ const gapClasses = {
 
 const colsSpanClasses = {
   full: 'col-span-4 lg:col-span-12',
+  'three-quarters': 'col-span-4 lg:col-span-9',
+  'two-thirds': 'col-span-4 lg:col-span-8',
   half: 'col-span-4 lg:col-span-6',
   'one-third': 'col-span-4 lg:col-span-4',
-  'two-thirds': 'col-span-4 lg:col-span-8',
+  'one-quarter': 'col-span-4 lg:col-span-3',
 }
 
 function isPostRoute(slugArray: string[] | undefined, postSlug: string): boolean {

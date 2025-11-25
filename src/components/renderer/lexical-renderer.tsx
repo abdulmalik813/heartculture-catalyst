@@ -13,6 +13,7 @@ import type {
   TabBlock,
   TableBlock,
   TestimonialBlock,
+  IconBlock,
 } from '@/payload-types'
 import {
   DefaultNodeTypes,
@@ -37,6 +38,7 @@ import { TestimonialBlockUI } from '@/blocks/testimonial'
 import { GalleryBlockUI } from '@/blocks/gallery'
 import { FaqBlockUI } from '@/blocks/faq'
 import { ContactCardBlockUI } from '@/blocks/contact-card'
+import { IconBlockUI } from '@/blocks/icon'
 
 interface LexicalRendererProps {
   content?: DefaultTypedEditorState | null
@@ -60,6 +62,7 @@ type NodeTypes =
       | GalleryBlock
       | FaqBlock
       | ContactCardBlock
+      | IconBlock
     >
 
 function jsxConverters(pageContext: PageContext): JSXConvertersFunction<NodeTypes> {
@@ -124,6 +127,8 @@ function jsxConverters(pageContext: PageContext): JSXConvertersFunction<NodeType
         navigationBlock: ({ node }) => (
           <NavigationBlockUI {...node.fields} pageContext={pageContext} />
         ),
+        // @ts-expect-error there may be some mismatch between the expected types here
+        iconBlock: ({ node }) => <IconBlockUI {...node.fields} pageContext={pageContext} />,
       },
       blocks: {
         mediaBlock: ({ node }) => <MediaBlockUI {...node.fields} pageContext={pageContext} />,
@@ -138,10 +143,14 @@ function jsxConverters(pageContext: PageContext): JSXConvertersFunction<NodeType
         cardBlock: ({ node }) => <CardBlockUI {...node.fields} pageContext={pageContext} />,
         formBlock: ({ node }) => <FormBlockUI {...node.fields} pageContext={pageContext} />,
         tableBlock: ({ node }) => <TableBlockUI {...node.fields} pageContext={pageContext} />,
-        testimonialBlock: ({ node }) => <TestimonialBlockUI {...node.fields} pageContext={pageContext} />,
+        testimonialBlock: ({ node }) => (
+          <TestimonialBlockUI {...node.fields} pageContext={pageContext} />
+        ),
         galleryBlock: ({ node }) => <GalleryBlockUI {...node.fields} pageContext={pageContext} />,
         faqBlock: ({ node }) => <FaqBlockUI {...node.fields} pageContext={pageContext} />,
-        contactCardBlock: ({ node }) => <ContactCardBlockUI {...node.fields} pageContext={pageContext} />,
+        contactCardBlock: ({ node }) => (
+          <ContactCardBlockUI {...node.fields} pageContext={pageContext} />
+        ),
       },
     }
   }

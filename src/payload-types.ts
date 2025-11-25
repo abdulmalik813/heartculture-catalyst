@@ -243,7 +243,7 @@ export interface Page {
     | {
         grid?:
           | {
-              gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
+              gridSize: 'full' | 'three-quarters' | 'two-thirds' | 'half' | 'one-third' | 'one-quarter';
               gridStyles?: (number | Style)[] | null;
               blocks?:
                 | (
@@ -449,7 +449,7 @@ export interface Post {
     | {
         grid?:
           | {
-              gridSize: 'full' | 'two-thirds' | 'half' | 'one-third';
+              gridSize: 'full' | 'three-quarters' | 'two-thirds' | 'half' | 'one-third' | 'one-quarter';
               gridStyles?: (number | Style)[] | null;
               blocks?:
                 | (
@@ -3827,6 +3827,18 @@ export interface FaqBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'faqBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IconBlock".
+ */
+export interface IconBlock {
+  icon?: (number | null) | Icon;
+  axis?: ('before' | 'after') | null;
+  iconStyles?: (number | Style)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'iconBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

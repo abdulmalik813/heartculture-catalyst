@@ -27,6 +27,10 @@ export const grid: GridType = ({ overrides = {} } = {}) => {
                 value: 'full',
               },
               {
+                label: 'Three Quarters (3/4)',
+                value: 'three-quarters',
+              },
+              {
                 label: 'Two Thirds (2/3)',
                 value: 'two-thirds',
               },
@@ -37,6 +41,10 @@ export const grid: GridType = ({ overrides = {} } = {}) => {
               {
                 label: 'One Third (1/3)',
                 value: 'one-third',
+              },
+              {
+                label: 'One Quarter (1/4)',
+                value: 'one-quarter',
               },
             ],
           },

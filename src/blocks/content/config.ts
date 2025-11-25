@@ -10,6 +10,7 @@ import { defaultLexicalValue } from '@/constants/default-lexical'
 import { FormBlock } from '@/blocks/form/config'
 import { TableBlock } from '@/blocks/table/config'
 import { animate } from '@/fields/animate'
+import { IconBlock } from '../icon/config'
 
 export const ContentBlock: Block = {
   slug: 'contentBlock',
@@ -40,6 +41,7 @@ export const ContentBlock: Block = {
                   DividerBlock,
                   FormBlock,
                   TableBlock,
+                  IconBlock
                 ],
                 inlineBlocks: [NavigationBlock],
               },
