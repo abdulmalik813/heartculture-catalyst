@@ -44,14 +44,13 @@ function sanitizeAlias(alias: string, cls: string): string {
     .replace(/[^a-z0-9-]/g, '')
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '')
-    .slice(0, 10);
   
   if (!sanitized) {
     return `item-${cls}`;
   }
   
   if (/^[0-9-]/.test(sanitized)) {
-    return `c${sanitized.slice(0, 9)}-${cls}`;
+    return `c${sanitized}-${cls}`;
   }
   
   return `${sanitized}-${cls}`;
