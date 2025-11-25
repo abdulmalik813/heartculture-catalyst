@@ -871,6 +871,7 @@ export interface CallToActionBlock {
       viewportAmount?: number | null;
     };
   };
+  backgroundStyles?: (number | Style)[] | null;
   media?: (number | null) | Media;
   wrapperStyles?: (number | Style)[] | null;
   contentStyles?: (number | Style)[] | null;
@@ -2134,6 +2135,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
               viewportAmount?: T;
             };
       };
+  backgroundStyles?: T;
   media?: T;
   wrapperStyles?: T;
   contentStyles?: T;

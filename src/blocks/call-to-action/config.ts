@@ -16,14 +16,20 @@ export const CallToActionBlock: Block = {
             {
               name: 'card',
               type: 'group',
-              fields: card()
-            }
+              fields: card(),
+            },
+            {
+              name: 'backgroundStyles',
+              type: 'relationship',
+              relationTo: 'styles',
+              hasMany: true,
+            },
           ],
         },
         {
           label: 'Media',
           fields: media,
-        }
+        },
       ],
     },
   ],
