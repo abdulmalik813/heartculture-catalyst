@@ -15,24 +15,22 @@ export async function CallToActionBlockUI({
 
   return (
     <div className="overflow-hidden">
-      <div className="relative w-screen flex items-center justify-center -mx-[50vw] left-1/2 right-1/2 py-16 sm:py-24">
-        <div className={joinStyles(callToActionBlock.backgroundStyles, "w-full")}>
-          {media && media.url && (
-            <div className={`absolute inset-0 w-full h-full select-none`}>
-              {/* @ts-expect-error there may be some mismatch between the expected types here */}
-              <MediaBlockUI
-                {...callToActionBlock}
-                className="w-full h-full object-cover select-none pointer-events-none"
-                pageContext={pageContext}
-                priority
-              />
-            </div>
-          )}
+      <div className={joinStyles("relative w-screen flex items-center justify-center -mx-[50vw] left-1/2 right-1/2 py-16 sm:py-24", callToActionBlock.backgroundStyles)}>
+        {media && media.url && (
+          <div className={`absolute inset-0 w-full h-full select-none`}>
+            {/* @ts-expect-error there may be some mismatch between the expected types here */}
+            <MediaBlockUI
+              {...callToActionBlock}
+              className="w-full h-full object-cover select-none pointer-events-none"
+              pageContext={pageContext}
+              priority
+            />
+          </div>
+        )}
 
-          <div className="relative z-20 flex justify-center p-4">
-            <div className="max-w-4xl w-full">
-              <CardBlockUI {...callToActionBlock.card} pageContext={pageContext} />
-            </div>
+        <div className="relative z-20 flex justify-center p-4 w-full">
+          <div className="max-w-4xl w-full">
+            <CardBlockUI {...callToActionBlock.card} pageContext={pageContext} />
           </div>
         </div>
       </div>
