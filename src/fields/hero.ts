@@ -53,7 +53,21 @@ export const hero: GroupField = {
                   return layout !== 'text-only'
                 },
               },
-              fields: card(),
+              fields: [
+                ...card(),
+                {
+                  name: 'backgroundStyles',
+                  type: 'relationship',
+                  relationTo: 'styles',
+                  hasMany: true,
+                  admin: {
+                    condition: (data, siblingData) => {
+                      const layout = siblingData?.layout || data?.hero?.layout
+                      return layout === 'with-image'
+                    },
+                  },
+                },
+              ],
             },
           ],
         },
