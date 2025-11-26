@@ -58,6 +58,9 @@ RUN apk add --no-cache curl ca-certificates
 # Update CA certificate store
 RUN update-ca-certificates
 
+# Tell Node.js to use system CA certificates
+ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
