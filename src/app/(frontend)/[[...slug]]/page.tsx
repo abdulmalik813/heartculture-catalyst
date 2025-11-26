@@ -116,6 +116,7 @@ export default async function PageRoute({ params, searchParams }: Readonly<SlugP
   let page: Post | Page | null = null
   let isPostListingPage = false
   let isItAPost = false
+
   if (isPostEnabled) {
     const postSlug = setting.postSlug || 'posts'
 

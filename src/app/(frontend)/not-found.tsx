@@ -14,10 +14,9 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 
 export default async function NotFound({ params, searchParams }: Readonly<SlugProps>) {
+
   const payload = await getPayload({ config: configPromise })
   const headersList = await headers()
-  const { user } = await payload.auth({ headers: headersList })
-  if (!user) return null
   const param = await params
   const page = null
   const { isEnabled: draft } = await draftMode()
