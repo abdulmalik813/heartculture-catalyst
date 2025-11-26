@@ -16,38 +16,32 @@ export const ContentBlock: Block = {
   interfaceName: 'ContentBlock',
   fields: [
     {
-      type: 'collapsible',
-      label: 'Content',
-      fields: [
-        {
-          name: 'contentStyles',
-          type: 'relationship',
-          relationTo: 'styles',
-          hasMany: true,
+      name: 'contentStyles',
+      type: 'relationship',
+      relationTo: 'styles',
+      hasMany: true,
+    },
+    {
+      name: 'content',
+      type: 'richText',
+      editor: defaultLexical({
+        features: {
+          blocks: {
+            blocks: [
+              MediaBlock,
+              NavigationBlock,
+              TabBlock,
+              CardBlock,
+              AccordionBlock,
+              DividerBlock,
+              FormBlock,
+              TableBlock,
+            ],
+            inlineBlocks: [NavigationBlock, IconBlock],
+          },
         },
-        {
-          name: 'content',
-          type: 'richText',
-          editor: defaultLexical({
-            features: {
-              blocks: {
-                blocks: [
-                  MediaBlock,
-                  NavigationBlock,
-                  TabBlock,
-                  CardBlock,
-                  AccordionBlock,
-                  DividerBlock,
-                  FormBlock,
-                  TableBlock,
-                ],
-                inlineBlocks: [NavigationBlock, IconBlock],
-              },
-            },
-          }),
-          defaultValue: defaultLexicalValue,
-        },
-      ],
+      }),
+      defaultValue: defaultLexicalValue,
     },
   ],
   graphQL: {
