@@ -15,6 +15,7 @@ import { TestimonialBlockUI } from '@/blocks/testimonial'
 import { GalleryBlockUI } from '@/blocks/gallery'
 import { HeadingBlockUI } from '@/blocks/heading'
 import { ContactCardBlockUI } from '@/blocks/contact-card'
+import { FaqBlockUI } from '@/blocks/faq'
 
 const blockComponents = {
   contentBlock: ContentBlockUI,
@@ -30,7 +31,8 @@ const blockComponents = {
   testimonialBlock: TestimonialBlockUI,
   galleryBlock: GalleryBlockUI,
   headingBlock: HeadingBlockUI,
-  contactCardBlock: ContactCardBlockUI
+  contactCardBlock: ContactCardBlockUI,
+  faqBlock: FaqBlockUI,
 }
 
 type BlockRendererProps = {
