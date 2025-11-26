@@ -44,7 +44,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Disable Next.js telemetry
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN pnpm run build
 
@@ -52,8 +52,11 @@ RUN pnpm run build
 FROM base AS runner
 WORKDIR /app
 
-# Install curl for health checks and cron jobs
-RUN apk add --no-cache curl
+# Install curl for health checks and CA certificates for HTTPS
+RUN apk add --no-cache curl ca-certificates
+
+# Update CA certificate store
+RUN update-ca-certificates
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
