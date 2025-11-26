@@ -63,6 +63,7 @@ export default buildConfig({
     components: {
       afterNavLinks: [
         '/components/admin/invalidate-cache#CacheInvalidationButton',
+        '/components/admin/refresh-styles#RefreshStylesButton',
         '/components/admin/theme-picker#ThemePicker',
       ],
     },
@@ -72,7 +73,19 @@ export default buildConfig({
     defaultFromName: EMAIL.FROM_NAME,
     apiKey: EMAIL.RESEND_API_KEY,
   }),
-  collections: [Pages, Posts, Categories, Users, Media, Thumbnails, Styles, Icons, Testimonials, FAQs, FontFiles],
+  collections: [
+    Pages,
+    Posts,
+    Categories,
+    Users,
+    Media,
+    Thumbnails,
+    Styles,
+    Icons,
+    Testimonials,
+    FAQs,
+    FontFiles,
+  ],
   globals: [NavigationBar, Footer, Settings, Social],
   cors: [getServerSideURL()].filter(Boolean),
   editor: defaultLexical(),

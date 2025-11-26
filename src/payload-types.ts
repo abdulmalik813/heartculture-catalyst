@@ -529,9 +529,6 @@ export interface Icon {
  */
 export interface Style {
   id: number;
-  /**
-   * This cannot be changed after creation
-   */
   alias: string;
   tailwind?: boolean | null;
   /**
