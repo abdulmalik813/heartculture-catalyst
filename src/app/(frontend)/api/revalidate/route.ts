@@ -2,10 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { revalidateAll } from '@/lib/revalidate'
-import { revalidatePath, revalidateTag } from 'next/cache'
 
 export async function POST(request: NextRequest) {
-  const { searchParams } = new URL(request.url)
 
   try {
     const payload = await getPayload({ config })
