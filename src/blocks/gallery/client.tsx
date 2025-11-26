@@ -62,6 +62,7 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                     videoClassName="w-full h-auto object-cover"
                     autoPlay={false}
                     controls={true}
+                    priority={true}
                     muted={false}
                     loop={false}
                     playsInline={false}
@@ -155,6 +156,7 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                 controls={true}
                 muted={false}
                 loop={false}
+                priority={true}
               />
             ) : (
               galleryBlock.gallery?.[0] && (
@@ -167,6 +169,7 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                   controls={true}
                   muted={false}
                   loop={false}
+                  priority={true}
                 />
               )
             )}
@@ -197,6 +200,7 @@ export function GalleryBlockClient({ galleryBlock, pageContext }: GalleryBlockCl
                     imgClassName="w-full h-full object-cover"
                     videoClassName="w-full h-full object-cover"
                     htmlElement={null}
+                    priority={true}
                   />
                 </div>
               )
