@@ -26,6 +26,7 @@ import { TestimonialBlock } from '@/blocks/testimonial/config'
 import { GalleryBlock } from '@/blocks/gallery/config'
 import { HeadingBlock } from '@/blocks/heading/config'
 import { ContactCardBlock } from '@/blocks/contact-card/config'
+import { FaqBlock } from '@/blocks/faq/config'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
@@ -106,7 +107,8 @@ export const Pages: CollectionConfig<'pages'> = {
                                 TestimonialBlock,
                                 GalleryBlock,
                                 HeadingBlock,
-                                ContactCardBlock
+                                ContactCardBlock,
+                                FaqBlock,
                               ],
                               required: false,
                             },

@@ -261,6 +261,7 @@ export interface Page {
                     | GalleryBlock
                     | HeadingBlock
                     | ContactCardBlock
+                    | FaqBlock
                   )[]
                 | null;
               id?: string | null;
@@ -467,6 +468,7 @@ export interface Post {
                     | RecentPostsBlock
                     | HeadingBlock
                     | ContactCardBlock
+                    | FaqBlock
                   )[]
                 | null;
               id?: string | null;
@@ -1478,6 +1480,31 @@ export interface ContactCardBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqBlock".
+ */
+export interface FaqBlock {
+  accordionStyles?: (number | Style)[] | null;
+  itemStyles?: (number | Style)[] | null;
+  questionStyles?: (number | Style)[] | null;
+  answerStyles?: (number | Style)[] | null;
+  faq?: (number | Faq)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faqBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqs".
+ */
+export interface Faq {
+  id: number;
+  question: string;
+  answer: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "testimonialBlock".
  */
 export interface TestimonialBlock {
@@ -1612,17 +1639,6 @@ export interface GalleryBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'galleryBlock';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "faqs".
- */
-export interface Faq {
-  id: number;
-  question: string;
-  answer: string;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2020,6 +2036,7 @@ export interface PagesSelect<T extends boolean = true> {
                     galleryBlock?: T | GalleryBlockSelect<T>;
                     headingBlock?: T | HeadingBlockSelect<T>;
                     contactCardBlock?: T | ContactCardBlockSelect<T>;
+                    faqBlock?: T | FaqBlockSelect<T>;
                   };
               id?: T;
             };
@@ -2455,6 +2472,19 @@ export interface ContactCardBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqBlock_select".
+ */
+export interface FaqBlockSelect<T extends boolean = true> {
+  accordionStyles?: T;
+  itemStyles?: T;
+  questionStyles?: T;
+  answerStyles?: T;
+  faq?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
@@ -2568,6 +2598,7 @@ export interface PostsSelect<T extends boolean = true> {
                     recentPostsBlock?: T | RecentPostsBlockSelect<T>;
                     headingBlock?: T | HeadingBlockSelect<T>;
                     contactCardBlock?: T | ContactCardBlockSelect<T>;
+                    faqBlock?: T | FaqBlockSelect<T>;
                   };
               id?: T;
             };
@@ -3820,20 +3851,6 @@ export interface NavigationBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'navigationBlock';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "faqBlock".
- */
-export interface FaqBlock {
-  accordionStyles?: (number | Style)[] | null;
-  itemStyles?: (number | Style)[] | null;
-  questionStyles?: (number | Style)[] | null;
-  answerStyles?: (number | Style)[] | null;
-  faq?: (number | Faq)[] | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'faqBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
