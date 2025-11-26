@@ -1,8 +1,10 @@
-FROM node:22-alpine AS base
+FROM node:22-slim AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libc6 && \
+    rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
 # Install pnpm
@@ -52,11 +54,10 @@ RUN pnpm run build
 FROM base AS runner
 WORKDIR /app
 
-# Install curl, wget, and CA certificates for HTTPS
-RUN apk add --no-cache curl ca-certificates wget
-
-# Download and add Cloudflare root certificate
-RUN wget -O /usr/local/share/ca-certificates/cloudflare.crt https://developers.cloudflare.com/ssl/static/origin_ca_rsa_root.pem && \
+# Install curl and CA certificates for HTTPS
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl ca-certificates && \
+    rm -rf /var/lib/apt/lists/* && \
     update-ca-certificates
 
 # Tell Node.js to use system CA certificates
@@ -84,15 +85,16 @@ ENV S3_ENDPOINT=$S3_ENDPOINT
 ENV S3_REGION=$S3_REGION
 ENV S3_SECRET_ACCESS_KEY=$S3_SECRET_ACCESS_KEY
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Create user and group (Debian uses different commands than Alpine)
+RUN groupadd --system --gid 1001 nodejs && \
+    useradd --system --uid 1001 --gid nodejs nextjs
 
 # Copy public folder if it exists
 COPY --from=builder /app/public ./public
 
 # Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
+RUN mkdir .next && \
+    chown nextjs:nodejs .next
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
