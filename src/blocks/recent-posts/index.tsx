@@ -12,7 +12,6 @@ import { RecentPostsBlock } from '@/payload-types'
 import Link from 'next/link'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { joinStyles } from '@/lib/make-styles'
-import { AnimateWrapper } from '@/components/animate-wrapper'
 import { Badge } from '@/components/ui/badge'
 import { PageContext } from '@/types/page-context'
 
@@ -35,47 +34,45 @@ export async function RecentPostsBlockUI({
   })
 
   return (
-    <AnimateWrapper animate={recentPostsBlock.animate}>
-      <Card className={joinStyles(recentPostsBlock.cardStyles)}>
-        {recentPostsBlock.enableTitle && recentPostsBlock.title && (
-          <CardHeader>
-            <CardTitle className={joinStyles(recentPostsBlock.titleStyles)}>
-              {recentPostsBlock.title}
-            </CardTitle>
-          </CardHeader>
-        )}
-        <CardContent className={joinStyles(recentPostsBlock.contentStyles)}>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{pageContext?.setting?.postListingPageTitle}</TableHead>
+    <Card className={joinStyles(recentPostsBlock.cardStyles)}>
+      {recentPostsBlock.enableTitle && recentPostsBlock.title && (
+        <CardHeader>
+          <CardTitle className={joinStyles(recentPostsBlock.titleStyles)}>
+            {recentPostsBlock.title}
+          </CardTitle>
+        </CardHeader>
+      )}
+      <CardContent className={joinStyles(recentPostsBlock.contentStyles)}>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>{pageContext?.setting?.postListingPageTitle}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {recentPosts.docs.map((post) => (
+              <TableRow key={post.id}>
+                <TableCell className="break-words">
+                  <Link
+                    className={joinStyles(recentPostsBlock.linkStyles)}
+                    href={`/${pageContext?.setting?.postSlug || ''}/${post.slug}`}
+                  >
+                    {post.title}
+                  </Link>
+                  <div className="flex gap-2 mt-2">
+                    {post.categories?.map(
+                      (category) =>
+                        typeof category === 'object' && (
+                          <Badge key={category.id}>{category.name}</Badge>
+                        ),
+                    )}
+                  </div>
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {recentPosts.docs.map((post) => (
-                <TableRow key={post.id}>
-                  <TableCell className="break-words">
-                    <Link
-                      className={joinStyles(recentPostsBlock.linkStyles)}
-                      href={`/${pageContext?.setting?.postSlug || ''}/${post.slug}`}
-                    >
-                      {post.title}
-                    </Link>
-                    <div className="flex gap-2 mt-2">
-                      {post.categories?.map(
-                        (category) =>
-                          typeof category === 'object' && (
-                            <Badge key={category.id}>{category.name}</Badge>
-                          ),
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </AnimateWrapper>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
   )
 }

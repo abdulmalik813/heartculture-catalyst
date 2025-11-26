@@ -1,5 +1,4 @@
 import { Block } from 'payload'
-import { animate } from '@/fields/animate'
 
 export const RecentPostsBlock: Block = {
   slug: 'recentPostsBlock',
@@ -67,11 +66,7 @@ export const RecentPostsBlock: Block = {
               hasMany: true,
             },
           ],
-        },
-        {
-          label: 'Animation',
-          fields: [animate()],
-        },
+        }
       ],
     },
   ],

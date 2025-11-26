@@ -20,7 +20,6 @@ import { FormRegistration } from '@/blocks/form/formRegistration'
 import { getClientSideURL } from '@/lib/get-url'
 import { PageContext } from '@/types/page-context'
 import { joinStyles } from '@/lib/make-styles'
-import { AnimateWrapper } from '@/components/animate-wrapper'
 
 export function FormBlockClient({
   pageContext,
@@ -88,43 +87,41 @@ export function FormBlockClient({
   }
 
   return (
-    <AnimateWrapper animate={formBlock.animate}>
-      <Card className={joinStyles(formBlock.cardStyles)}>
-        <CardHeader>
-          <CardTitle className={joinStyles(formBlock.titleStyles)}>{payloadForm?.title}</CardTitle>
-          {formBlock?.enableDescription && (
-            <CardDescription className={joinStyles(formBlock.descriptionStyles)}>
-              {renderedDescription}
-            </CardDescription>
-          )}
-        </CardHeader>
-        <CardContent>
-          <FormRegistration
-            fields={fields}
-            form={form}
-            pageContext={pageContext}
-            onSubmit={onSubmit}
-            isSubmitting={isSubmitting}
-            submitButtonLabel={payloadForm.submitButtonLabel || 'Submit'}
-          />
-        </CardContent>
-        {(hasSubmitted || error) && (
-          <CardFooter>
-            {hasSubmitted && payloadForm.confirmationType === 'message' && (
-              <Alert>
-                <AlertDescription className="text-foreground">
-                  {renderedConfirmation}
-                </AlertDescription>
-              </Alert>
-            )}
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription className="text-foreground">{`${error.status || '500'}: ${error.message || ''}`}</AlertDescription>
-              </Alert>
-            )}
-          </CardFooter>
+    <Card className={joinStyles(formBlock.cardStyles)}>
+      <CardHeader>
+        <CardTitle className={joinStyles(formBlock.titleStyles)}>{payloadForm?.title}</CardTitle>
+        {formBlock?.enableDescription && (
+          <CardDescription className={joinStyles(formBlock.descriptionStyles)}>
+            {renderedDescription}
+          </CardDescription>
         )}
-      </Card>
-    </AnimateWrapper>
+      </CardHeader>
+      <CardContent>
+        <FormRegistration
+          fields={fields}
+          form={form}
+          pageContext={pageContext}
+          onSubmit={onSubmit}
+          isSubmitting={isSubmitting}
+          submitButtonLabel={payloadForm.submitButtonLabel || 'Submit'}
+        />
+      </CardContent>
+      {(hasSubmitted || error) && (
+        <CardFooter>
+          {hasSubmitted && payloadForm.confirmationType === 'message' && (
+            <Alert>
+              <AlertDescription className="text-foreground">
+                {renderedConfirmation}
+              </AlertDescription>
+            </Alert>
+          )}
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription className="text-foreground">{`${error.status || '500'}: ${error.message || ''}`}</AlertDescription>
+            </Alert>
+          )}
+        </CardFooter>
+      )}
+    </Card>
   )
 }

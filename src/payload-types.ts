@@ -201,32 +201,6 @@ export interface Page {
       descriptionStyles?: (number | Style)[] | null;
       cardContentStyles?: (number | Style)[] | null;
       footerStyles?: (number | Style)[] | null;
-      animate?: {
-        /**
-         * Choose an animation effect
-         */
-        type?: ('none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight') | null;
-        /**
-         * Animation duration
-         */
-        duration?: number | null;
-        /**
-         * Delay before animation starts
-         */
-        delay?: number | null;
-        /**
-         * Trigger when element enters viewport
-         */
-        animateOnScroll?: boolean | null;
-        /**
-         * Only animate first time (uncheck to re-animate)
-         */
-        animateOnce?: boolean | null;
-        /**
-         * How much of element must be visible to trigger (0-1)
-         */
-        viewportAmount?: number | null;
-      };
     };
     backgroundStyles?: (number | Style)[] | null;
     media?: (number | null) | Media;
@@ -409,32 +383,6 @@ export interface Post {
       descriptionStyles?: (number | Style)[] | null;
       cardContentStyles?: (number | Style)[] | null;
       footerStyles?: (number | Style)[] | null;
-      animate?: {
-        /**
-         * Choose an animation effect
-         */
-        type?: ('none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight') | null;
-        /**
-         * Animation duration
-         */
-        duration?: number | null;
-        /**
-         * Delay before animation starts
-         */
-        delay?: number | null;
-        /**
-         * Trigger when element enters viewport
-         */
-        animateOnScroll?: boolean | null;
-        /**
-         * Only animate first time (uncheck to re-animate)
-         */
-        animateOnce?: boolean | null;
-        /**
-         * How much of element must be visible to trigger (0-1)
-         */
-        viewportAmount?: number | null;
-      };
     };
     backgroundStyles?: (number | Style)[] | null;
     media?: (number | null) | Media;
@@ -731,32 +679,6 @@ export interface ContentBlock {
     };
     [k: string]: unknown;
   } | null;
-  animate?: {
-    /**
-     * Choose an animation effect
-     */
-    type?: ('none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight') | null;
-    /**
-     * Animation duration
-     */
-    duration?: number | null;
-    /**
-     * Delay before animation starts
-     */
-    delay?: number | null;
-    /**
-     * Trigger when element enters viewport
-     */
-    animateOnScroll?: boolean | null;
-    /**
-     * Only animate first time (uncheck to re-animate)
-     */
-    animateOnce?: boolean | null;
-    /**
-     * How much of element must be visible to trigger (0-1)
-     */
-    viewportAmount?: number | null;
-  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'contentBlock';
@@ -845,32 +767,6 @@ export interface CallToActionBlock {
     descriptionStyles?: (number | Style)[] | null;
     cardContentStyles?: (number | Style)[] | null;
     footerStyles?: (number | Style)[] | null;
-    animate?: {
-      /**
-       * Choose an animation effect
-       */
-      type?: ('none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight') | null;
-      /**
-       * Animation duration
-       */
-      duration?: number | null;
-      /**
-       * Delay before animation starts
-       */
-      delay?: number | null;
-      /**
-       * Trigger when element enters viewport
-       */
-      animateOnScroll?: boolean | null;
-      /**
-       * Only animate first time (uncheck to re-animate)
-       */
-      animateOnce?: boolean | null;
-      /**
-       * How much of element must be visible to trigger (0-1)
-       */
-      viewportAmount?: number | null;
-    };
   };
   backgroundStyles?: (number | Style)[] | null;
   media?: (number | null) | Media;
@@ -963,32 +859,6 @@ export interface CardBlock {
   descriptionStyles?: (number | Style)[] | null;
   cardContentStyles?: (number | Style)[] | null;
   footerStyles?: (number | Style)[] | null;
-  animate?: {
-    /**
-     * Choose an animation effect
-     */
-    type?: ('none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight') | null;
-    /**
-     * Animation duration
-     */
-    duration?: number | null;
-    /**
-     * Delay before animation starts
-     */
-    delay?: number | null;
-    /**
-     * Trigger when element enters viewport
-     */
-    animateOnScroll?: boolean | null;
-    /**
-     * Only animate first time (uncheck to re-animate)
-     */
-    animateOnce?: boolean | null;
-    /**
-     * How much of element must be visible to trigger (0-1)
-     */
-    viewportAmount?: number | null;
-  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'cardBlock';
@@ -1118,32 +988,6 @@ export interface FormBlock {
   cardStyles?: (number | Style)[] | null;
   titleStyles?: (number | Style)[] | null;
   descriptionStyles?: (number | Style)[] | null;
-  animate?: {
-    /**
-     * Choose an animation effect
-     */
-    type?: ('none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight') | null;
-    /**
-     * Animation duration
-     */
-    duration?: number | null;
-    /**
-     * Delay before animation starts
-     */
-    delay?: number | null;
-    /**
-     * Trigger when element enters viewport
-     */
-    animateOnScroll?: boolean | null;
-    /**
-     * Only animate first time (uncheck to re-animate)
-     */
-    animateOnce?: boolean | null;
-    /**
-     * How much of element must be visible to trigger (0-1)
-     */
-    viewportAmount?: number | null;
-  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'formBlock';
@@ -1420,32 +1264,6 @@ export interface RecentPostsBlock {
   titleStyles?: (number | Style)[] | null;
   contentStyles?: (number | Style)[] | null;
   linkStyles?: (number | Style)[] | null;
-  animate?: {
-    /**
-     * Choose an animation effect
-     */
-    type?: ('none' | 'fadeIn' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight') | null;
-    /**
-     * Animation duration
-     */
-    duration?: number | null;
-    /**
-     * Delay before animation starts
-     */
-    delay?: number | null;
-    /**
-     * Trigger when element enters viewport
-     */
-    animateOnScroll?: boolean | null;
-    /**
-     * Only animate first time (uncheck to re-animate)
-     */
-    animateOnce?: boolean | null;
-    /**
-     * How much of element must be visible to trigger (0-1)
-     */
-    viewportAmount?: number | null;
-  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'recentPostsBlock';
@@ -1992,16 +1810,6 @@ export interface PagesSelect<T extends boolean = true> {
               descriptionStyles?: T;
               cardContentStyles?: T;
               footerStyles?: T;
-              animate?:
-                | T
-                | {
-                    type?: T;
-                    duration?: T;
-                    delay?: T;
-                    animateOnScroll?: T;
-                    animateOnce?: T;
-                    viewportAmount?: T;
-                  };
             };
         backgroundStyles?: T;
         media?: T;
@@ -2066,16 +1874,6 @@ export interface PagesSelect<T extends boolean = true> {
 export interface ContentBlockSelect<T extends boolean = true> {
   contentStyles?: T;
   content?: T;
-  animate?:
-    | T
-    | {
-        type?: T;
-        duration?: T;
-        delay?: T;
-        animateOnScroll?: T;
-        animateOnce?: T;
-        viewportAmount?: T;
-      };
   id?: T;
   blockName?: T;
 }
@@ -2141,16 +1939,6 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
         descriptionStyles?: T;
         cardContentStyles?: T;
         footerStyles?: T;
-        animate?:
-          | T
-          | {
-              type?: T;
-              duration?: T;
-              delay?: T;
-              animateOnScroll?: T;
-              animateOnce?: T;
-              viewportAmount?: T;
-            };
       };
   backgroundStyles?: T;
   media?: T;
@@ -2218,16 +2006,6 @@ export interface CardBlockSelect<T extends boolean = true> {
   descriptionStyles?: T;
   cardContentStyles?: T;
   footerStyles?: T;
-  animate?:
-    | T
-    | {
-        type?: T;
-        duration?: T;
-        delay?: T;
-        animateOnScroll?: T;
-        animateOnce?: T;
-        viewportAmount?: T;
-      };
   id?: T;
   blockName?: T;
 }
@@ -2293,16 +2071,6 @@ export interface FormBlockSelect<T extends boolean = true> {
   cardStyles?: T;
   titleStyles?: T;
   descriptionStyles?: T;
-  animate?:
-    | T
-    | {
-        type?: T;
-        duration?: T;
-        delay?: T;
-        animateOnScroll?: T;
-        animateOnce?: T;
-        viewportAmount?: T;
-      };
   id?: T;
   blockName?: T;
 }
@@ -2555,16 +2323,6 @@ export interface PostsSelect<T extends boolean = true> {
               descriptionStyles?: T;
               cardContentStyles?: T;
               footerStyles?: T;
-              animate?:
-                | T
-                | {
-                    type?: T;
-                    duration?: T;
-                    delay?: T;
-                    animateOnScroll?: T;
-                    animateOnce?: T;
-                    viewportAmount?: T;
-                  };
             };
         backgroundStyles?: T;
         media?: T;
@@ -2633,16 +2391,6 @@ export interface RecentPostsBlockSelect<T extends boolean = true> {
   titleStyles?: T;
   contentStyles?: T;
   linkStyles?: T;
-  animate?:
-    | T
-    | {
-        type?: T;
-        duration?: T;
-        delay?: T;
-        animateOnScroll?: T;
-        animateOnce?: T;
-        viewportAmount?: T;
-      };
   id?: T;
   blockName?: T;
 }

@@ -1,4 +1,3 @@
-import { animate } from '@/fields/animate'
 import { defaultLexical } from '@/fields/lexical-field'
 import type { Block } from 'payload'
 
@@ -60,11 +59,7 @@ export const FormBlock: Block = {
               },
             },
           ],
-        },
-        {
-          label: 'Animation',
-          fields: [animate()],
-        },
+        }
       ],
     },
   ],

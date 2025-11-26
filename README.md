@@ -9,8 +9,8 @@ To get started with this project, follow these steps:
 1.  **Clone the repository:**
 
     ```bash
-    git clone https://github.com/NightTech-Services/base-app.git
-    cd base-app
+    git clone https://github.com/NightTech-Services/healthculture-catalyst.git
+    cd healthculture-catalyst
     ```
 
 2.  **Install dependencies:**
