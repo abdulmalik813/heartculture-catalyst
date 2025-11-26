@@ -54,6 +54,15 @@ RUN pnpm run build
 FROM base AS runner
 WORKDIR /app
 
+# Install curl and CA certificates for HTTPS
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl ca-certificates && \
+    rm -rf /var/lib/apt/lists/* && \
+    update-ca-certificates
+
+# Tell Node.js to use system CA certificates
+ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
