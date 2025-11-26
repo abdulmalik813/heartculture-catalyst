@@ -40,9 +40,8 @@ export const ContentBlock: Block = {
                   DividerBlock,
                   FormBlock,
                   TableBlock,
-                  IconBlock
                 ],
-                inlineBlocks: [NavigationBlock],
+                inlineBlocks: [NavigationBlock, IconBlock],
               },
             },
           }),
