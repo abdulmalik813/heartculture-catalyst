@@ -6,6 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
+import { joinStyles } from '@/lib/make-styles'
 
 export async function FaqBlockUI({
   pageContext,
@@ -16,13 +17,19 @@ export async function FaqBlockUI({
   }
 
   return (
-    <Accordion type="single" collapsible className="w-full">
+    <Accordion type="single" collapsible className={joinStyles(faqBlock.accordionStyles)}>
       {faqBlock?.faq?.map((faq) => {
         if (typeof faq !== 'object') return null
         return (
-          <AccordionItem value={`${faq.id}`} key={faq.id}>
-            <AccordionTrigger>{faq.question}</AccordionTrigger>
-            <AccordionContent>
+          <AccordionItem 
+            value={`${faq.id}`} 
+            key={faq.id}
+            className={joinStyles(faqBlock.itemStyles)}
+          >
+            <AccordionTrigger className={joinStyles(faqBlock.questionStyles)}>
+              {faq.question}
+            </AccordionTrigger>
+            <AccordionContent className={joinStyles(faqBlock.answerStyles)}>
               {faq.answer}
             </AccordionContent>
           </AccordionItem>

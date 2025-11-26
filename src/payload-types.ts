@@ -3826,6 +3826,10 @@ export interface NavigationBlock {
  * via the `definition` "faqBlock".
  */
 export interface FaqBlock {
+  accordionStyles?: (number | Style)[] | null;
+  itemStyles?: (number | Style)[] | null;
+  questionStyles?: (number | Style)[] | null;
+  answerStyles?: (number | Style)[] | null;
   faq?: (number | Faq)[] | null;
   id?: string | null;
   blockName?: string | null;
