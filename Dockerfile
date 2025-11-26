@@ -52,11 +52,12 @@ RUN pnpm run build
 FROM base AS runner
 WORKDIR /app
 
-# Install curl for health checks and CA certificates for HTTPS
-RUN apk add --no-cache curl ca-certificates
+# Install curl, wget, and CA certificates for HTTPS
+RUN apk add --no-cache curl ca-certificates wget
 
-# Update CA certificate store
-RUN update-ca-certificates
+# Download and add Cloudflare root certificate
+RUN wget -O /usr/local/share/ca-certificates/cloudflare.crt https://developers.cloudflare.com/ssl/static/origin_ca_rsa_root.pem && \
+    update-ca-certificates
 
 # Tell Node.js to use system CA certificates
 ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
