@@ -6,7 +6,7 @@ export const schedulePublish = {
     retries: 1,
     handler: async ({ job, req }: TaskHandlerArgs<'schedulePublish'>) => {
         const { type, doc } = job.input as TaskInput<'schedulePublish'>;
-        if (!doc || doc.relationTo != 'pages') {
+        if (!doc || (doc.relationTo !== 'pages' && doc.relationTo !== 'posts')) {
             return { output: { success: true, skipped: true } }
         }
         try {
