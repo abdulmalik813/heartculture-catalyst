@@ -9,18 +9,18 @@ export async function revalidateAll() {
 
   const collections = payload.config.collections
   for (const collection of collections) {
-    revalidateTag(`collection_${collection.slug}`)
+    revalidateTag(`collection_${collection.slug}`, 'max')
   }
 
   const globals = payload.config.globals
   for (const global of globals) {
-    revalidateTag(`global_${global.slug}`)
+    revalidateTag(`global_${global.slug}`, 'max')
   }
-  
-  revalidateTag('redirects')
-  revalidateTag('pages_sitemap')
-  revalidateTag('posts_sitemap')
-  revalidateTag('compiled-stylesheet')
+
+  revalidateTag('redirects', 'max')
+  revalidateTag('pages_sitemap', 'max')
+  revalidateTag('posts_sitemap', 'max')
+  revalidateTag('compiled-stylesheet', 'max')
 
   const pages = await payload.find({
     collection: 'pages',
@@ -41,5 +41,5 @@ export async function revalidateAll() {
 }
 
 export function revalidateGlobal(slug: string) {
-  revalidateTag(`global_${slug}`)
+  revalidateTag(`global_${slug}`, 'max')
 }

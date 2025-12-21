@@ -29,9 +29,6 @@ const getImageRemotePatterns = () => {
 
 const nextConfig: NextConfig = {
   output: 'standalone',
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   images: {
     remotePatterns: getImageRemotePatterns(),
     localPatterns: [

@@ -1,13 +1,15 @@
-import { CollectionBeforeChangeHook, CollectionAfterChangeHook, CollectionAfterDeleteHook } from "payload"
+import {
+  CollectionBeforeChangeHook,
+  CollectionAfterChangeHook,
+  CollectionAfterDeleteHook,
+} from 'payload'
 import type { Style } from '@/payload-types'
 import FormData from 'form-data'
 import axios from 'axios'
-import { revalidateTag } from "next/cache"
+import { revalidateTag } from 'next/cache'
 import { globalCSS } from '@/constants/global-css'
 
-export const generateStylesheet: CollectionBeforeChangeHook<Style> = async ({
-  data,
-}) => {
+export const generateStylesheet: CollectionBeforeChangeHook<Style> = async ({ data }) => {
   if (data.tailwind !== false) {
     const endpoint = process.env.TAILWIND_GENERATOR!
     const className = data.className
@@ -30,13 +32,11 @@ export const generateStylesheet: CollectionBeforeChangeHook<Style> = async ({
   return data
 }
 
-export const revalidateCache: CollectionAfterChangeHook<Style> = async ({
-  doc,
-}) => {
-  revalidateTag('collection_styles')
+export const revalidateCache: CollectionAfterChangeHook<Style> = async ({ doc }) => {
+  revalidateTag('collection_styles', 'max')
   return doc
 }
 
 export const revalidateDelete: CollectionAfterDeleteHook<Style> = async () => {
-  revalidateTag('collection_styles')
+  revalidateTag('collection_styles', 'max')
 }
