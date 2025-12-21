@@ -1,8 +1,9 @@
 import { Block } from 'payload'
 
-export const HeadingBlock: Block = {
+export const HeadingBlock = (dbPrefix: string = ''): Block => ({
   slug: 'headingBlock',
   interfaceName: 'HeadingBlock',
+  dbName: `${dbPrefix}heading`,
   fields: [
     {
       name: 'headingTag',
@@ -35,4 +36,4 @@ export const HeadingBlock: Block = {
   graphQL: {
     singularName: 'HeadingBlock',
   },
-}
+})

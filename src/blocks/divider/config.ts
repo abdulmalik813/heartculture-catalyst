@@ -1,9 +1,9 @@
 import { Block } from 'payload'
 
-export const DividerBlock: Block = {
+export const DividerBlock = (dbPrefix: string = ''): Block => ({
   slug: 'dividerBlock',
   interfaceName: 'DividerBlock',
-  dbName: 'divider',
+  dbName: `${dbPrefix}divider`,
   fields: [
     {
       name: 'type',
@@ -60,7 +60,7 @@ export const DividerBlock: Block = {
       label: 'Flip Vertically',
       defaultValue: false,
       admin: {
-        condition: (_, siblingData) => 
+        condition: (_, siblingData) =>
           ['wave', 'curve', 'angle', 'triangle', 'arrow'].includes(siblingData?.type),
         description: 'Flip the divider upside down',
       },
@@ -76,4 +76,4 @@ export const DividerBlock: Block = {
   graphQL: {
     singularName: 'DividerBlock',
   },
-}
+})

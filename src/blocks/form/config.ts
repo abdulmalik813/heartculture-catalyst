@@ -1,9 +1,10 @@
 import { defaultLexical } from '@/fields/lexical-field'
 import type { Block } from 'payload'
 
-export const FormBlock: Block = {
+export const FormBlock = (dbPrefix: string = ''): Block => ({
   slug: 'formBlock',
   interfaceName: 'FormBlock',
+  dbName: `${dbPrefix}form`,
   fields: [
     {
       type: 'tabs',
@@ -59,7 +60,7 @@ export const FormBlock: Block = {
               },
             },
           ],
-        }
+        },
       ],
     },
   ],
@@ -70,4 +71,4 @@ export const FormBlock: Block = {
     plural: 'Form Blocks',
     singular: 'Form Block',
   },
-}
+})

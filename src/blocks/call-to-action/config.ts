@@ -2,10 +2,10 @@ import { Block } from 'payload'
 import { media } from '@/fields/media'
 import { card } from '@/fields/card'
 
-export const CallToActionBlock: Block = {
+export const CallToActionBlock = (dbPrefix: string = ''): Block => ({
   slug: 'callToActionBlock',
   interfaceName: 'CallToActionBlock',
-  dbName: 'cta',
+  dbName: `${dbPrefix}cta`,
   fields: [
     {
       type: 'tabs',
@@ -36,4 +36,4 @@ export const CallToActionBlock: Block = {
   graphQL: {
     singularName: 'CallToActionBlock',
   },
-}
+})

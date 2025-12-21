@@ -8,10 +8,10 @@ import { TestimonialBlock } from '@/blocks/testimonial/config'
 import { GalleryBlock } from '@/blocks/gallery/config'
 import { FaqBlock } from '@/blocks/faq/config'
 
-export const TabBlock: Block = {
+export const TabBlock = (dbPrefix: string = ''): Block => ({
   slug: 'tabBlock',
   interfaceName: 'TabBlock',
-  dbName: 'tab',
+  dbName: `${dbPrefix}tab`,
   fields: [
     {
       type: 'tabs',
@@ -45,8 +45,15 @@ export const TabBlock: Block = {
                           editor: defaultLexical({
                             features: {
                               blocks: {
-                                blocks: [MediaBlock, NavigationBlock, AccordionBlock, TestimonialBlock, GalleryBlock, FaqBlock],
-                                inlineBlocks: [MediaBlock, NavigationBlock],
+                                blocks: [
+                                  MediaBlock("tab"),
+                                  NavigationBlock("tab"),
+                                  AccordionBlock("tab"),
+                                  TestimonialBlock("tab"),
+                                  GalleryBlock("tab"),
+                                  FaqBlock("tab"),
+                                ],
+                                inlineBlocks: [MediaBlock("tabI"), NavigationBlock("tabI")],
                               },
                             },
                           }),
@@ -103,4 +110,4 @@ export const TabBlock: Block = {
   graphQL: {
     singularName: 'TabBlock',
   },
-}
+})

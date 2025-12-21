@@ -4,10 +4,10 @@ import { MediaBlock } from '@/blocks/media/config'
 import { NavigationBlock } from '@/blocks/navigation/config'
 import { defaultLexicalValue } from '@/constants/default-lexical'
 
-export const TableBlock: Block = {
+export const TableBlock = (dbPrefix: string = ''): Block => ({
   slug: 'tableBlock',
   interfaceName: 'TableBlock',
-  dbName: 'table',
+  dbName: `${dbPrefix}table`,
   fields: [
     {
       type: 'tabs',
@@ -47,8 +47,8 @@ export const TableBlock: Block = {
                   editor: defaultLexical({
                     features: {
                       blocks: {
-                        blocks: [MediaBlock, NavigationBlock],
-                        inlineBlocks: [MediaBlock, NavigationBlock],
+                        blocks: [MediaBlock("tb"), NavigationBlock("tb")],
+                        inlineBlocks: [MediaBlock("tbI"), NavigationBlock("tbI")],
                       },
                     },
                   }),
@@ -84,8 +84,8 @@ export const TableBlock: Block = {
                               editor: defaultLexical({
                                 features: {
                                   blocks: {
-                                    blocks: [MediaBlock, NavigationBlock],
-                                    inlineBlocks: [MediaBlock, NavigationBlock],
+                                    blocks: [MediaBlock("tb"), NavigationBlock("tb")],
+                                    inlineBlocks: [MediaBlock("tbI"), NavigationBlock("tbI")],
                                   },
                                 },
                               }),
@@ -171,4 +171,4 @@ export const TableBlock: Block = {
   graphQL: {
     singularName: 'TableBlockTableBlock',
   },
-}
+})

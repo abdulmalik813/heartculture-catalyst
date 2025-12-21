@@ -61,7 +61,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
       <head>
         <link href="/api/stylesheet" rel="stylesheet" />
       </head>
-      <body className="flex flex-col">
+      <body className="flex flex-col" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>

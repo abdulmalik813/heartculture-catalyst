@@ -1,9 +1,10 @@
 import { navigation } from '@/fields/navigation'
 import { Block } from 'payload'
 
-export const GalleryBlock: Block = {
+export const GalleryBlock = (dbPrefix: string = ''): Block => ({
   slug: 'galleryBlock',
   interfaceName: 'GalleryBlock',
+  dbName: `${dbPrefix}gallery`,
   fields: [
     {
       name: 'format',
@@ -63,4 +64,4 @@ export const GalleryBlock: Block = {
   graphQL: {
     singularName: 'GalleryBlock',
   },
-}
+})

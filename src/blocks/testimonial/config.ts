@@ -1,9 +1,10 @@
 import { navigation } from '@/fields/navigation'
 import { Block } from 'payload'
 
-export const TestimonialBlock: Block = {
+export const TestimonialBlock = (dbPrefix: string = ''): Block => ({
   slug: 'testimonialBlock',
   interfaceName: 'testimonialBlock',
+  dbName: `${dbPrefix}testimonial`,
   fields: [
     {
       name: 'type',
@@ -55,4 +56,4 @@ export const TestimonialBlock: Block = {
   graphQL: {
     singularName: 'TestimonialBlock',
   },
-}
+})

@@ -1,8 +1,9 @@
 import { Block } from 'payload'
 
-export const ContactCardBlock: Block = {
+export const ContactCardBlock = (dbPrefix: string = ''): Block => ({
   slug: 'contactCardBlock',
   interfaceName: 'ContactCardBlock',
+  dbName: `${dbPrefix}contact_card`,
   fields: [
     {
       type: 'tabs',
@@ -62,4 +63,4 @@ export const ContactCardBlock: Block = {
   graphQL: {
     singularName: 'ContactCardBlock',
   },
-}
+})

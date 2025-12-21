@@ -4,10 +4,10 @@ import { MediaBlock } from '@/blocks/media/config'
 import { NavigationBlock } from '@/blocks/navigation/config'
 import { defaultLexicalValue } from '@/constants/default-lexical'
 
-export const AccordionBlock: Block = {
+export const AccordionBlock = (dbPrefix: string = ''): Block => ({
   slug: 'accordionBlock',
   interfaceName: 'AccordionBlock',
-  dbName: 'accordion',
+  dbName: `${dbPrefix}accordion`,
   fields: [
     {
       type: 'tabs',
@@ -41,8 +41,8 @@ export const AccordionBlock: Block = {
                           editor: defaultLexical({
                             features: {
                               blocks: {
-                                blocks: [MediaBlock, NavigationBlock],
-                                inlineBlocks: [MediaBlock, NavigationBlock],
+                                blocks: [MediaBlock("acn"), NavigationBlock("acn")],
+                                inlineBlocks: [MediaBlock("acnI"), NavigationBlock("acnI")],
                               },
                             },
                           }),
@@ -107,4 +107,4 @@ export const AccordionBlock: Block = {
   graphQL: {
     singularName: 'AccordionBlockAccordionBlock',
   },
-}
+})

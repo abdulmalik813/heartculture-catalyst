@@ -1,9 +1,9 @@
 import { Block } from 'payload'
 
-export const RecentPostsBlock: Block = {
+export const RecentPostsBlock = (dbPrefix: string = ''): Block => ({
   slug: 'recentPostsBlock',
   interfaceName: 'RecentPostsBlock',
-  dbName: 'recent_posts',
+  dbName: `${dbPrefix}recent_posts`,
   fields: [
     {
       type: 'tabs',
@@ -66,11 +66,11 @@ export const RecentPostsBlock: Block = {
               hasMany: true,
             },
           ],
-        }
+        },
       ],
     },
   ],
   graphQL: {
     singularName: 'RecentPostsBlock',
   },
-}
+})

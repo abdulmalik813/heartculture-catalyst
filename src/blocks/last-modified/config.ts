@@ -1,8 +1,9 @@
 import { Block } from 'payload'
 
-export const LastModifiedBlock: Block = {
+export const LastModifiedBlock = (dbPrefix: string = ''): Block => ({
   slug: 'lastModifiedBlock',
   interfaceName: 'LastModifiedBlock',
+  dbName: `${dbPrefix}last_modified`,
   fields: [
     {
       name: 'cardStyles',
@@ -20,4 +21,4 @@ export const LastModifiedBlock: Block = {
   graphQL: {
     singularName: 'LastModifiedBlock',
   },
-}
+})

@@ -12,21 +12,8 @@ import {
 } from '@payloadcms/plugin-seo/fields'
 import { generatePreviewPath } from '@/lib/generate-preview-path'
 import { hero } from '@/fields/hero'
-import { ContentBlock } from '@/blocks/content/config'
-import { CallToActionBlock } from '@/blocks/call-to-action/config'
-import { CardBlock } from '@/blocks/card/config'
-import { TabBlock } from '@/blocks/tab/config'
-import { AccordionBlock } from '@/blocks/accordion/config'
-import { DividerBlock } from '@/blocks/divider/config'
-import { FormBlock } from '@/blocks/form/config'
-import { TableBlock } from '@/blocks/table/config'
-import { LastModifiedBlock } from '@/blocks/last-modified/config'
+import { Blocks } from '@/blocks/block'
 import { grid } from '@/fields/grid'
-import { TestimonialBlock } from '@/blocks/testimonial/config'
-import { GalleryBlock } from '@/blocks/gallery/config'
-import { HeadingBlock } from '@/blocks/heading/config'
-import { ContactCardBlock } from '@/blocks/contact-card/config'
-import { FaqBlock } from '@/blocks/faq/config'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
@@ -94,22 +81,7 @@ export const Pages: CollectionConfig<'pages'> = {
                             {
                               name: 'blocks',
                               type: 'blocks',
-                              blocks: [
-                                ContentBlock,
-                                CallToActionBlock,
-                                CardBlock,
-                                TabBlock,
-                                AccordionBlock,
-                                DividerBlock,
-                                FormBlock,
-                                TableBlock,
-                                LastModifiedBlock,
-                                TestimonialBlock,
-                                GalleryBlock,
-                                HeadingBlock,
-                                ContactCardBlock,
-                                FaqBlock,
-                              ],
+                              blocks: Blocks({ exclude: ['recent-posts'] }),
                               required: false,
                             },
                           ],

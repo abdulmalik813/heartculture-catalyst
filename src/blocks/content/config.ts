@@ -11,9 +11,10 @@ import { FormBlock } from '@/blocks/form/config'
 import { TableBlock } from '@/blocks/table/config'
 import { IconBlock } from '../icon/config'
 
-export const ContentBlock: Block = {
+export const ContentBlock = (dbPrefix: string = ''): Block => ({
   slug: 'contentBlock',
   interfaceName: 'ContentBlock',
+  dbName: `${dbPrefix}content`,
   fields: [
     {
       name: 'contentStyles',
@@ -28,16 +29,16 @@ export const ContentBlock: Block = {
         features: {
           blocks: {
             blocks: [
-              MediaBlock,
-              NavigationBlock,
-              TabBlock,
-              CardBlock,
-              AccordionBlock,
-              DividerBlock,
-              FormBlock,
-              TableBlock,
+              MediaBlock("cnt"),
+              NavigationBlock("cnt"),
+              TabBlock("cnt"),
+              CardBlock("cnt"),
+              AccordionBlock("cnt"),
+              DividerBlock("cnt"),
+              FormBlock("cnt"),
+              TableBlock("cnt"),
             ],
-            inlineBlocks: [NavigationBlock, IconBlock],
+            inlineBlocks: [NavigationBlock("cntI"), IconBlock("cntI")],
           },
         },
       }),
@@ -47,4 +48,4 @@ export const ContentBlock: Block = {
   graphQL: {
     singularName: 'ContentBlock',
   },
-}
+})

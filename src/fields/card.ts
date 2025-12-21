@@ -101,8 +101,8 @@ export const card = (): Field[] => {
               editor: defaultLexical({
                 features: {
                   blocks: {
-                    blocks: [MediaBlock, NavigationBlock, TabBlock, AccordionBlock, FormBlock],
-                    inlineBlocks: [MediaBlock, NavigationBlock, IconBlock],
+                    blocks: [MediaBlock("cd"), NavigationBlock("cd"), TabBlock("cd"), AccordionBlock("cd"), FormBlock("cd")],
+                    inlineBlocks: [MediaBlock("cdI"), NavigationBlock("cdI"), IconBlock("cdI")],
                   },
                 },
               }),

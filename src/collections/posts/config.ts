@@ -12,22 +12,10 @@ import {
 } from '@payloadcms/plugin-seo/fields'
 import { generatePreviewPath } from '@/lib/generate-preview-path'
 import { hero } from '@/fields/hero'
-import { ContentBlock } from '@/blocks/content/config'
-import { CallToActionBlock } from '@/blocks/call-to-action/config'
-import { CardBlock } from '@/blocks/card/config'
-import { TabBlock } from '@/blocks/tab/config'
-import { AccordionBlock } from '@/blocks/accordion/config'
-import { DividerBlock } from '@/blocks/divider/config'
-import { FormBlock } from '@/blocks/form/config'
-import { TableBlock } from '@/blocks/table/config'
-import { LastModifiedBlock } from '@/blocks/last-modified/config'
+import { Blocks } from '@/blocks/block'
 import { getCachedGlobal } from '@/lib/get-globals'
 import { Setting } from '@/payload-types'
 import { grid } from '@/fields/grid'
-import { RecentPostsBlock } from '@/blocks/recent-posts/config'
-import { HeadingBlock } from '@/blocks/heading/config'
-import { ContactCardBlock } from '@/blocks/contact-card/config'
-import { FaqBlock } from '@/blocks/faq/config'
 
 let cachedPostEnabled: boolean | null = null
 let cachedPostLabel: string = 'Posts'
@@ -170,21 +158,9 @@ export const Posts: CollectionConfig<'posts'> = {
                             {
                               name: 'blocks',
                               type: 'blocks',
-                              blocks: [
-                                ContentBlock,
-                                CallToActionBlock,
-                                CardBlock,
-                                TabBlock,
-                                AccordionBlock,
-                                DividerBlock,
-                                FormBlock,
-                                TableBlock,
-                                LastModifiedBlock,
-                                RecentPostsBlock,
-                                HeadingBlock,
-                                ContactCardBlock,
-                                FaqBlock, 
-                              ],
+                              blocks: Blocks({
+                                dbPrefix: 'pst',
+                              }),
                               required: false,
                             },
                           ],

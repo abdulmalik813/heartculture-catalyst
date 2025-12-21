@@ -1,14 +1,12 @@
 import { navigation } from '@/fields/navigation'
 import { Block } from 'payload'
 
-export const NavigationBlock: Block = {
+export const NavigationBlock = (dbPrefix: string = ''): Block => ({
   slug: 'navigationBlock',
   interfaceName: 'navigationBlock',
-  dbName: 'nav',
-  fields: [
-    navigation()
-  ],
+  dbName: `${dbPrefix}nav`,
+  fields: [navigation()],
   graphQL: {
     singularName: 'NavigationBlock',
   },
-}
+})
