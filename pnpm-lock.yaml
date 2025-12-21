@@ -24,7 +24,7 @@ importers:
       '@payloadcms/db-postgres':
         specifier: ^3.69.0
         version: 3.69.0(@opentelemetry/api@1.9.0)(payload@3.69.0(graphql@16.12.0)(typescript@5.9.3))
-      '@payloadcms/email-resend':
+      '@payloadcms/email-nodemailer':
         specifier: ^3.69.0
         version: 3.69.0(payload@3.69.0(graphql@16.12.0)(typescript@5.9.3))
       '@payloadcms/live-preview-react':
@@ -219,6 +219,9 @@ importers:
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      nodemailer:
+        specifier: ^6.9.0
+        version: 6.10.1
       payload:
         specifier: ^3.69.0
         version: 3.69.0(graphql@16.12.0)(typescript@5.9.3)
@@ -1791,12 +1794,6 @@ packages:
 
   '@payloadcms/email-nodemailer@3.69.0':
     resolution: {integrity: sha512-e5Zx1ybL7YuX2NByaUk+JkzDu+0HdAXaCEwkQ8z2XaWlUInWFrZ5NbEXYIx9IGWgo9Ua0JA+MGzdh9ZdhUSUoA==}
-    engines: {node: ^18.20.2 || >=20.9.0}
-    peerDependencies:
-      payload: 3.69.0
-
-  '@payloadcms/email-resend@3.69.0':
-    resolution: {integrity: sha512-9zlfxjNXJeQa+hMtNd+px+lQJikbWw5njke8bd60hGdH4vKLMO4Yy/Mc9Y+ssKrcJOi72+hG2wA+w02Xk/2UyA==}
     engines: {node: ^18.20.2 || >=20.9.0}
     peerDependencies:
       payload: 3.69.0
@@ -4834,6 +4831,10 @@ packages:
   node-releases@2.0.27:
     resolution: {integrity: sha512-nmh3lCkYZ3grZvqcCH+fjmQ7X+H0OeZgP40OierEaAptX4XofMh5kwNbWh7lBduUzCcV/8kZ+NDLCwm2iorIlA==}
 
+  nodemailer@6.10.1:
+    resolution: {integrity: sha512-Z+iLaBGVaSjbIzQ4pX6XV41HrooLsQ10ZWPUehGmuantvzWoDVBnmsdUcOIDM1t+yPor5pDhVlDESgOMEGxhHA==}
+    engines: {node: '>=6.0.0'}
+
   nodemailer@7.0.9:
     resolution: {integrity: sha512-9/Qm0qXIByEP8lEV2qOqcAW7bRpL8CR9jcTwk3NBnHJNmP9fIJ86g2fgmIXqHY+nj55ZEMwWqYAT2QTDpRUYiQ==}
     engines: {node: '>=6.0.0'}
@@ -7867,10 +7868,6 @@ snapshots:
   '@payloadcms/email-nodemailer@3.69.0(payload@3.69.0(graphql@16.12.0)(typescript@5.9.3))':
     dependencies:
       nodemailer: 7.0.9
-      payload: 3.69.0(graphql@16.12.0)(typescript@5.9.3)
-
-  '@payloadcms/email-resend@3.69.0(payload@3.69.0(graphql@16.12.0)(typescript@5.9.3))':
-    dependencies:
       payload: 3.69.0(graphql@16.12.0)(typescript@5.9.3)
 
   '@payloadcms/graphql@3.69.0(graphql@16.12.0)(payload@3.69.0(graphql@16.12.0)(typescript@5.9.3))(typescript@5.9.3)':
@@ -11443,6 +11440,8 @@ snapshots:
       whatwg-url: 5.0.0
 
   node-releases@2.0.27: {}
+
+  nodemailer@6.10.1: {}
 
   nodemailer@7.0.9: {}
 

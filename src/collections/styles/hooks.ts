@@ -8,10 +8,11 @@ import FormData from 'form-data'
 import axios from 'axios'
 import { revalidateTag } from 'next/cache'
 import { globalCSS } from '@/constants/global-css'
+import { TAILWIND_GENERATOR } from '@/constants/init'
 
 export const generateStylesheet: CollectionBeforeChangeHook<Style> = async ({ data }) => {
   if (data.tailwind !== false) {
-    const endpoint = process.env.TAILWIND_GENERATOR!
+    const endpoint = TAILWIND_GENERATOR
     const className = data.className
     const title = data.alias
     const formData = new FormData()

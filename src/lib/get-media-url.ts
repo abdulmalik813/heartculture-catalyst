@@ -1,3 +1,4 @@
+import { ENVRIONMMENT } from '@/constants/init'
 import { getClientSideURL } from '@/lib/get-url'
 
 export const getMediaUrl = (url: string | null | undefined, cacheTag?: string | null): string => {
@@ -11,7 +12,7 @@ export const getMediaUrl = (url: string | null | undefined, cacheTag?: string | 
     return cacheTag ? `${url}?${cacheTag}` : url
   }
 
-  if (process.env.NODE_ENV === 'development') {
+  if (ENVRIONMMENT === 'development') {
     return cacheTag ? `${url}?${cacheTag}` : url
   }
 

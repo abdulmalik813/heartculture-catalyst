@@ -69,27 +69,32 @@ A powerful web application by [NightTech Services](https://github.com/NightTech-
 ## Technology Stack
 
 ### Core
+
 - **Framework**: Next.js 15.5.6 with App Router
 - **React**: 19.2.0
 - **CMS**: Payload CMS 3.61.1
 - **Language**: TypeScript 5.9
 
 ### Database & Storage
+
 - **Database**: PostgreSQL with Drizzle ORM
 - **Storage**: AWS S3 / S3-compatible (MinIO for development)
 
 ### Styling & UI
+
 - **CSS Framework**: Tailwind CSS 4.x
 - **Components**: Shadcn UI + Radix UI primitives
 - **Fonts**: Geist (Inter alternative)
 
 ### Animations & Interactions
+
 - **Animation Library**: GSAP 3.13, Framer Motion 12
 - **Smooth Scroll**: Lenis 1.3
 - **Carousel**: Embla Carousel
 
 ### Plugins & Integrations
-- **Email**: Resend adapter
+
+- **Email**: Nodemailer adapter
 - **SEO**: Payload SEO plugin
 - **Forms**: Form Builder plugin
 - **Search**: Full-text search plugin

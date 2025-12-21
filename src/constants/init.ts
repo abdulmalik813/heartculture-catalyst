@@ -16,12 +16,22 @@ export const PAYLOAD = {
   PREVIEW: process.env.PREVIEW_SECRET!,
 }
 
+// Tailwind Generator
+export const TAILWIND_GENERATOR = process.env.TAILWIND_GENERATOR!
+
+// Environment
+export const ENVRIONMMENT = process.env.NODE_ENV
 
 // Email
 export const EMAIL = {
   FROM_ADDRESS: 'noreply@nighttechservices.com',
   FROM_NAME: 'No Reply',
-  RESEND_API_KEY: process.env.RESEND_API_KEY!,
+  // SMTP
+  SMTP_HOST: process.env.SMTP_HOST!,
+  SMTP_PORT: Number(process.env.SMTP_PORT || 587),
+  SMTP_USER: process.env.SMTP_USER!,
+  SMTP_PASS: process.env.SMTP_PASS!,
+  SMTP_SECURE: process.env.SMTP_SECURE === 'true',
 }
 
 // Cron

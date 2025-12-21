@@ -9,7 +9,6 @@ import { Pages } from '@/collections/pages/config'
 import { Styles } from '@/collections/styles/config'
 import { getServerSideURL } from '@/lib/get-url'
 import { schedulePublish } from '@/jobs/schedule-publish'
-import { resendAdapter } from '@payloadcms/email-resend'
 import { plugins } from '@/plugins'
 import { defaultLexical } from '@/fields/lexical-field'
 import { Icons } from '@/collections/icons'
@@ -24,6 +23,7 @@ import { FAQs } from '@/collections/faq'
 import { Social } from '@/globals/social'
 import { Thumbnails } from '@/collections/thumbnails'
 import { FontFiles } from '@/collections/fonts'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -68,10 +68,18 @@ export default buildConfig({
       ],
     },
   },
-  email: resendAdapter({
+  email: nodemailerAdapter({
     defaultFromAddress: EMAIL.FROM_ADDRESS,
     defaultFromName: EMAIL.FROM_NAME,
-    apiKey: EMAIL.RESEND_API_KEY,
+    transportOptions: {
+      host: EMAIL.SMTP_HOST,
+      port: EMAIL.SMTP_PORT,
+      secure: EMAIL.SMTP_SECURE,
+      auth: {
+        user: EMAIL.SMTP_USER,
+        pass: EMAIL.SMTP_PASS,
+      },
+    },
   }),
   collections: [
     Pages,
