@@ -44,5 +44,9 @@ export async function GET(req: NextRequest): Promise<Response> {
 
   draft.enable()
 
+  if (path.startsWith('/')) {
+    redirect(path)
+  }
+
   redirect(`/${path}`)
 }

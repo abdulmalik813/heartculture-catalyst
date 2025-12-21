@@ -7,5 +7,13 @@ export async function GET(req: NextRequest) {
   const path = searchParams.get('path')
   const draft = await draftMode()
   draft.disable()
+  if (!path) {
+    redirect('/')
+  }
+
+  if (path.startsWith('/')) {
+    redirect(path)
+  }
+
   redirect(`/${path}`)
 }
