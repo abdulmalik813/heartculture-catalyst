@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
 
     const styles = await payload.find({
       collection: 'styles',
-      limit: 1000,
+      limit: 10000,
     })
 
     for (const style of styles.docs) {
