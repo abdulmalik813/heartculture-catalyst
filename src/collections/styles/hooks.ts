@@ -19,10 +19,10 @@ export const generateStylesheet: CollectionBeforeChangeHook<Style> = async ({ da
     formData.append('file', globalCSS)
     formData.append('title', title)
     try {
-      const response = await [axios.post](http://axios.post)(endpoint, formData, {
+      const response = await axios.post(endpoint, formData, {
         headers: formData.getHeaders(),
       })
-      data.stylesheet = [response.data](http://response.data)
+      data.stylesheet = response.data
     } catch (error) {
       console.error('Error generating Tailwind CSS:', error)
     }
