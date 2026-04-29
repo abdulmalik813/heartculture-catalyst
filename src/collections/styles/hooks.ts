@@ -4,35 +4,35 @@ import {
   CollectionAfterDeleteHook,
 } from 'payload'
 import type { Style } from '@/payload-types'
+import FormData from 'form-data'
+import axios from 'axios'
 import { revalidateTag } from 'next/cache'
 import { globalCSS } from '@/constants/global-css'
 import { TAILWIND_GENERATOR } from '@/constants/init'
-
 export const generateStylesheet: CollectionBeforeChangeHook<Style> = async ({ data }) => {
   if (data.tailwind !== false) {
+    const endpoint = TAILWIND_GENERATOR
+    const className = data.className
+    const title = data.alias
+    const formData = new FormData()
+    formData.append('className', className)
+    formData.append('file', globalCSS)
+    formData.append('title', title)
     try {
-      const response = await fetch(TAILWIND_GENERATOR, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          className: data.className,
-          inputCss: globalCSS,
-          title: data.alias,
-        }),
+      const response = await [axios.post](http://axios.post)(endpoint, formData, {
+        headers: formData.getHeaders(),
       })
-      data.stylesheet = await response.text()
+      data.stylesheet = [response.data](http://response.data)
     } catch (error) {
       console.error('Error generating Tailwind CSS:', error)
     }
   }
   return data
 }
-
 export const revalidateCache: CollectionAfterChangeHook<Style> = async ({ doc }) => {
   revalidateTag('collection_styles', 'max')
   return doc
 }
-
 export const revalidateDelete: CollectionAfterDeleteHook<Style> = async () => {
   revalidateTag('collection_styles', 'max')
 }
