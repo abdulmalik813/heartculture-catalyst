@@ -26,11 +26,11 @@ export const ENVRIONMMENT = process.env.NODE_ENV
 export const EMAIL = {
   FROM_ADDRESS: 'noreply@nighttechservices.com',
   FROM_NAME: 'No Reply',
-  // SMTP
-  SMTP_HOST: process.env.SMTP_HOST!,
+  RESEND_API_KEY: process.env.RESEND_API_KEY,
+  SMTP_HOST: process.env.SMTP_HOST || '',
   SMTP_PORT: Number(process.env.SMTP_PORT || 587),
-  SMTP_USER: process.env.SMTP_USER!,
-  SMTP_PASS: process.env.SMTP_PASS!,
+  SMTP_USER: process.env.SMTP_USER || '',
+  SMTP_PASS: process.env.SMTP_PASS || '',
   SMTP_SECURE: process.env.SMTP_SECURE === 'true',
 }
 
