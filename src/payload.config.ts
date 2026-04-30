@@ -96,7 +96,7 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: DATABASE_URI,
-      max: 1, 
+      max: 10, 
     },
   }),
   sharp,
