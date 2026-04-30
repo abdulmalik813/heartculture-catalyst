@@ -24,6 +24,7 @@ import { Social } from '@/globals/social'
 import { Thumbnails } from '@/collections/thumbnails'
 import { FontFiles } from '@/collections/fonts'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
+import { resendAdapter } from '@payloadcms/email-resend'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -40,24 +41,9 @@ export default buildConfig({
     user: Users.slug,
     livePreview: {
       breakpoints: [
-        {
-          label: 'Mobile',
-          name: 'mobile',
-          width: 375,
-          height: 667,
-        },
-        {
-          label: 'Tablet',
-          name: 'tablet',
-          width: 768,
-          height: 1024,
-        },
-        {
-          label: 'Desktop',
-          name: 'desktop',
-          width: 1440,
-          height: 900,
-        },
+        { label: 'Mobile', name: 'mobile', width: 375, height: 667 },
+        { label: 'Tablet', name: 'tablet', width: 768, height: 1024 },
+        { label: 'Desktop', name: 'desktop', width: 1440, height: 900 },
       ],
     },
     components: {
@@ -68,19 +54,25 @@ export default buildConfig({
       ],
     },
   },
-  email: nodemailerAdapter({
-    defaultFromAddress: EMAIL.FROM_ADDRESS,
-    defaultFromName: EMAIL.FROM_NAME,
-    transportOptions: {
-      host: EMAIL.SMTP_HOST,
-      port: EMAIL.SMTP_PORT,
-      secure: EMAIL.SMTP_SECURE,
-      auth: {
-        user: EMAIL.SMTP_USER,
-        pass: EMAIL.SMTP_PASS,
-      },
-    },
-  }),
+  email: EMAIL.RESEND_API_KEY 
+    ? resendAdapter({
+        defaultFromAddress: EMAIL.FROM_ADDRESS,
+        defaultFromName: EMAIL.FROM_NAME,
+        apiKey: EMAIL.RESEND_API_KEY,
+      })
+    : nodemailerAdapter({
+        defaultFromAddress: EMAIL.FROM_ADDRESS,
+        defaultFromName: EMAIL.FROM_NAME,
+        transportOptions: {
+          host: EMAIL.SMTP_HOST,
+          port: EMAIL.SMTP_PORT,
+          secure: EMAIL.SMTP_SECURE,
+          auth: {
+            user: EMAIL.SMTP_USER,
+            pass: EMAIL.SMTP_PASS,
+          },
+        },
+      }),
   collections: [
     Pages,
     Posts,
@@ -104,6 +96,7 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: DATABASE_URI,
+      max: 1, 
     },
   }),
   sharp,
