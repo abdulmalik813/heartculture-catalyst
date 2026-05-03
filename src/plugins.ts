@@ -114,6 +114,9 @@ export const plugins: Plugin[] = [
     collections: {
       media: {
         prefix: 'app',
+        generateFileURL: ({ filename }) => {
+          return `/api/media/file/${filename}`
+        },
         signedDownloads: {
           shouldUseSignedURL: ({ filename }) => {
             return filename.endsWith('.mp4')
@@ -122,6 +125,9 @@ export const plugins: Plugin[] = [
       },
       thumbnails: {
         prefix: 'thumbnails',
+        generateFileURL: ({ filename }) => {
+          return `/api/media/file/${filename}`
+        },
         signedDownloads: {
           shouldUseSignedURL: ({ filename }) => {
             return filename.endsWith('.mp4')
@@ -130,6 +136,9 @@ export const plugins: Plugin[] = [
       },
       'font-files': {
         prefix: 'font-files',
+        generateFileURL: ({ filename }) => {
+          return `/api/media/file/${filename}`
+        },
       },
     },
     bucket: S3.BUCKET,

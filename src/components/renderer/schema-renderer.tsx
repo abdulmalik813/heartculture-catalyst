@@ -1,4 +1,3 @@
-import Script from 'next/script'
 import { blogSchema, postListingSchema, pageSchema } from '@/lib/seo-schema'
 import { Post, Page } from '@/payload-types'
 import { PageContext } from '@/types/page-context'
@@ -18,8 +17,9 @@ export async function SchemaRenderer({ pageContext }: { pageContext: PageContext
   if (!schema) return null
 
   return (
-    <Script id="schema" type="application/ld+json" strategy="lazyOnload">
-      {JSON.stringify(schema)}
-    </Script>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
   )
 }
