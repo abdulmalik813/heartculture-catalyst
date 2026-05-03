@@ -73,7 +73,7 @@ const getCompiledStylesheet = unstable_cache(
   async () => compileStylesheet(false),
   ['compiled-stylesheet'],
   {
-    tags: ['compiled-stylesheet', 'collection_styles'],
+    tags: ['compiled-stylesheet', 'collection-styles'],
   },
 )
 

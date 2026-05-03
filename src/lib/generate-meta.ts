@@ -3,7 +3,6 @@ import type { Media, Page, Post, Setting, Social, User } from '@/payload-types'
 import { getServerSideURL } from '@/lib/get-url'
 import { getAppSettings } from '@/constants/app'
 import { getCachedGlobal } from '@/lib/get-globals'
-import { fa } from 'zod/v4/locales'
 
 const getImageURL = async (appData: any, image?: Media) => {
   const serverUrl = getServerSideURL()
@@ -57,10 +56,7 @@ export const generateMeta = async (
 
   const contactMetadata = buildContactMetadata(settings)
   
-  const verification: Record<string, string> = {}
-  if (settings.googleVerification) {
-    verification.google = settings.googleVerification
-  }
+
 
   const author = post && (doc as Post)?.author ? (doc as Post).author as User : null
   const categories = post && (doc as Post)?.categories ? (doc as Post).categories : undefined
@@ -79,13 +75,7 @@ export const generateMeta = async (
     ...(contactMetadata || {}),
   }
 
-  if (settings.bingVerification) {
-    otherMetadata['msvalidate.01'] = settings.bingVerification
-  }
-  
-  if (settings.yandexVerification) {
-    otherMetadata['yandex-verification'] = settings.yandexVerification
-  }
+
 
   if (post && readingTime > 0) {
     otherMetadata['twitter:label1'] = 'Reading time'
@@ -141,7 +131,7 @@ export const generateMeta = async (
       creator: twitterHandle,
       site: twitterHandle,
     },
-    ...(Object.keys(verification).length > 0 && { verification }),
+
     ...(Object.keys(otherMetadata).length > 0 && { other: otherMetadata }),
   }
 
@@ -162,10 +152,7 @@ export const generatePostsListingMeta = async (settings: Setting): Promise<Metad
 
   const contactMetadata = buildContactMetadata(settings)
 
-  const verification: Record<string, string> = {}
-  if (settings.googleVerification) {
-    verification.google = settings.googleVerification
-  }
+
 
   const twitterHandle = social?.x ? social.x.replace('https://twitter.com/', '@').replace('https://x.com/', '@') : undefined
 
@@ -173,13 +160,7 @@ export const generatePostsListingMeta = async (settings: Setting): Promise<Metad
     ...(contactMetadata || {}),
   }
 
-  if (settings.bingVerification) {
-    otherMetadata['msvalidate.01'] = settings.bingVerification
-  }
-  
-  if (settings.yandexVerification) {
-    otherMetadata['yandex-verification'] = settings.yandexVerification
-  }
+
 
   const metadata: Metadata = {
     title,
@@ -218,7 +199,7 @@ export const generatePostsListingMeta = async (settings: Setting): Promise<Metad
       creator: twitterHandle,
       site: twitterHandle,
     },
-    ...(Object.keys(verification).length > 0 && { verification }),
+
     ...(Object.keys(otherMetadata).length > 0 && { other: otherMetadata }),
   }
 

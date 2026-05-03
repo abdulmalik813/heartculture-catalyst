@@ -1,6 +1,6 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import path from 'path'
-import { buildConfig, PayloadRequest, TaskConfig } from 'payload'
+import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 import { Users } from '@/collections/users'
@@ -8,7 +8,6 @@ import { Media } from '@/collections/media'
 import { Pages } from '@/collections/pages/config'
 import { Styles } from '@/collections/styles/config'
 import { getServerSideURL } from '@/lib/get-url'
-import { schedulePublish } from '@/jobs/schedule-publish'
 import { plugins } from '@/plugins'
 import { defaultLexical } from '@/fields/lexical-field'
 import { Icons } from '@/collections/icons'
@@ -50,7 +49,6 @@ export default buildConfig({
       afterNavLinks: [
         '/components/admin/invalidate-cache#CacheInvalidationButton',
         '/components/admin/refresh-styles#RefreshStylesButton',
-        '/components/admin/theme-picker#ThemePicker',
       ],
     },
   },
@@ -110,6 +108,5 @@ export default buildConfig({
         return authHeader === `Bearer ${CRON_SECRET}`
       },
     },
-    tasks: [schedulePublish as TaskConfig<'schedulePublish'>],
   },
 })

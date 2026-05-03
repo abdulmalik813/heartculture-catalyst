@@ -59,7 +59,7 @@ const getPostsSitemap = unstable_cache(
   },
   ['posts-sitemap'],
   {
-    tags: ['posts-sitemap'],
+    tags: ['posts-sitemap', 'global-settings'],
   },
 )
 

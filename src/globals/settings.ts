@@ -81,9 +81,19 @@ export const Settings: GlobalConfig = {
               label: 'Google Search Console Verification Code',
             },
             {
+              name: 'googleAnalyticsId',
+              type: 'text',
+              label: 'Google Analytics ID (G-XXXXXXXXXX)',
+            },
+            {
               name: 'bingVerification',
               type: 'text',
               label: 'Bing Webmaster Verification Code',
+            },
+            {
+              name: 'microsoftClarityId',
+              type: 'text',
+              label: 'Microsoft Clarity ID',
             },
             {
               name: 'yandexVerification',

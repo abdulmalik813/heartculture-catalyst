@@ -29,6 +29,6 @@ export const getCachedGlobal = (
   return draft
     ? getGlobal(slug, depth, draft)
     : unstable_cache(async () => getGlobal(slug, depth, draft), [slug], {
-        tags: [`global_${slug}`],
+        tags: [`global-${slug}`],
       })()
 }

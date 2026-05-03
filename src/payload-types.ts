@@ -3211,7 +3211,9 @@ export interface Setting {
   favIconSvg?: (number | null) | Media;
   favIconPng?: (number | null) | Media;
   googleVerification?: string | null;
+  googleAnalyticsId?: string | null;
   bingVerification?: string | null;
+  microsoftClarityId?: string | null;
   yandexVerification?: string | null;
   emails?:
     | {
@@ -3475,7 +3477,9 @@ export interface SettingsSelect<T extends boolean = true> {
   favIconSvg?: T;
   favIconPng?: T;
   googleVerification?: T;
+  googleAnalyticsId?: T;
   bingVerification?: T;
+  microsoftClarityId?: T;
   yandexVerification?: T;
   emails?:
     | T

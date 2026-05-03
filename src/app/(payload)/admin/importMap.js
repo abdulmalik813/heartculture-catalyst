@@ -31,7 +31,6 @@ import { ReindexButton as ReindexButton_aead06e4cbf6b2620c5c51c9ab283634 } from 
 import { FontFamilySearchField as FontFamilySearchField_b93bb65ddcd1360d2c1e3b555c2ad8db } from '@/components/admin/font-family-search-field'
 import { CacheInvalidationButton as CacheInvalidationButton_8c3b7f1316f50f9b2286876ff88d4965 } from '../../../components/admin/invalidate-cache'
 import { RefreshStylesButton as RefreshStylesButton_b1659ed1113b7dce88e3eeb7ca8dd413 } from '../../../components/admin/refresh-styles'
-import { ThemePicker as ThemePicker_1ba3fcc90bee83ab827c967f220dc76f } from '../../../components/admin/theme-picker'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
@@ -70,7 +69,6 @@ export const importMap = {
   "@/components/admin/font-family-search-field#FontFamilySearchField": FontFamilySearchField_b93bb65ddcd1360d2c1e3b555c2ad8db,
   "/components/admin/invalidate-cache#CacheInvalidationButton": CacheInvalidationButton_8c3b7f1316f50f9b2286876ff88d4965,
   "/components/admin/refresh-styles#RefreshStylesButton": RefreshStylesButton_b1659ed1113b7dce88e3eeb7ca8dd413,
-  "/components/admin/theme-picker#ThemePicker": ThemePicker_1ba3fcc90bee83ab827c967f220dc76f,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

@@ -9,6 +9,9 @@ import { Metadata } from 'next'
 import { getAppSettings } from '@/constants/app'
 import { isFontData } from '@/lib/is-font-data'
 import { LivePreviewListener } from '@/components/live-preview-listener'
+import { Analytics } from '@vercel/analytics/next'
+import { GoogleAnalytics } from '@next/third-parties/google'
+import Script from 'next/script'
 
 export async function generateMetadata(): Promise<Metadata> {
   const appData = await getAppSettings()
@@ -25,6 +28,19 @@ export async function generateMetadata(): Promise<Metadata> {
           : []),
       ],
     },
+    ...((appData.googleVerification || appData.bingVerification || appData.yandexVerification) && {
+      verification: {
+        ...(appData.googleVerification && { google: appData.googleVerification }),
+        ...((appData.bingVerification || appData.yandexVerification) && {
+          other: {
+            ...(appData.bingVerification && { 'msvalidate.01': [appData.bingVerification] }),
+            ...(appData.yandexVerification && {
+              'yandex-verification': [appData.yandexVerification],
+            }),
+          },
+        }),
+      },
+    }),
   }
 }
 
@@ -65,6 +81,19 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>
+        {setting.googleAnalyticsId && <GoogleAnalytics gaId={setting.googleAnalyticsId} />}
+        {setting.microsoftClarityId && (
+          <Script id="microsoft-clarity" strategy="afterInteractive">
+            {`
+              (function(c,l,a,r,i,t,y){
+                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+              })(window, document, "clarity", "script", "${setting.microsoftClarityId}");
+            `}
+          </Script>
+        )}
+        <Analytics />
       </body>
     </html>
   )
