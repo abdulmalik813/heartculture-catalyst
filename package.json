@@ -9,7 +9,6 @@
     "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
     "export-css": "node scripts/export-css.js",
     "postinstall": "pnpm run export-css",
-    "postbuild": "next-sitemap --config next-sitemap.config.cjs",
     "dev": "pnpm run export-css && cross-env NODE_OPTIONS='--no-deprecation --max-old-space-size=32768' next dev --turbopack",
     "dev:prod": "cross-env NODE_OPTIONS=--no-deprecation rm -rf .next && pnpm build && pnpm start",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",

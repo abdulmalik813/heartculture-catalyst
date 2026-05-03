@@ -66,7 +66,9 @@ const getPostsSitemap = unstable_cache(
 export async function GET() {
   try {
     const sitemap = await getPostsSitemap()
-    return getServerSideSitemap(sitemap)
+    return getServerSideSitemap(sitemap, {
+      'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=3600',
+    })
   } catch (error) {
     console.error('Error in posts sitemap GET handler:', error)
 

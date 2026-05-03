@@ -93,14 +93,16 @@ const getPagesSitemap = unstable_cache(
 export async function GET() {
   try {
     const sitemap = await getPagesSitemap()
-    return getServerSideSitemap(sitemap)
+    return getServerSideSitemap(sitemap, {
+      'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=3600',
+    })
   } catch (error) {
     console.error('Error in sitemap GET handler:', error)
 
     const SITE_URL = getServerSideURL()
     return getServerSideSitemap([
       {
-        loc: SITE_URL,
+        loc: `${SITE_URL}/`,
         lastmod: new Date().toISOString(),
       },
     ])
