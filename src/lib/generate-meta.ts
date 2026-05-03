@@ -56,8 +56,6 @@ export const generateMeta = async (
 
   const contactMetadata = buildContactMetadata(settings)
   
-
-
   const author = post && (doc as Post)?.author ? (doc as Post).author as User : null
   const categories = post && (doc as Post)?.categories ? (doc as Post).categories : undefined
   const categoryNames = categories && Array.isArray(categories) 
@@ -74,8 +72,6 @@ export const generateMeta = async (
   const otherMetadata: Record<string, string> = {
     ...(contactMetadata || {}),
   }
-
-
 
   if (post && readingTime > 0) {
     otherMetadata['twitter:label1'] = 'Reading time'
