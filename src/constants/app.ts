@@ -24,6 +24,6 @@ export async function getAppSettings() {
     yandexVerification: setting.yandexVerification,
     googleAnalyticsId: setting.googleAnalyticsId,
     microsoftClarityId: setting.microsoftClarityId,
-    locale: setting.locale || 'en_US',
+    locale: setting.locale || 'en_CA',
   }
 }
