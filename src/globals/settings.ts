@@ -70,6 +70,13 @@ export const Settings: GlobalConfig = {
               relationTo: 'media',
               label: 'Favicon (PNG)',
             },
+            {
+              name: 'locale',
+              type: 'text',
+              label: 'Site Locale (e.g., en_CA)',
+              defaultValue: 'en_CA',
+              required: true,
+            },
           ],
         },
         {

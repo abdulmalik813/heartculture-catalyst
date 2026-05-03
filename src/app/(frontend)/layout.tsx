@@ -19,6 +19,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     description: appData.appDescription,
     title: appData.appTitle,
+    openGraph: {
+      locale: appData.locale,
+      siteName: appData.appTitle,
+    },
     icons: {
       icon: [
         ...(appData.favIcon ? [{ url: appData.favIcon, type: 'image/x-icon' as const }] : []),

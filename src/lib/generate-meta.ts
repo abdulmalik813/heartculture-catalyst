@@ -148,15 +148,11 @@ export const generatePostsListingMeta = async (settings: Setting): Promise<Metad
 
   const contactMetadata = buildContactMetadata(settings)
 
-
-
   const twitterHandle = social?.x ? social.x.replace('https://twitter.com/', '@').replace('https://x.com/', '@') : undefined
 
   const otherMetadata: Record<string, string> = {
     ...(contactMetadata || {}),
   }
-
-
 
   const metadata: Metadata = {
     title,
@@ -216,6 +212,7 @@ const mergeOpenGraph = async (og?: Metadata['openGraph']): Promise<Metadata['ope
     ],
     siteName: appData.appTitle,
     title: appData.appTitle,
+    locale: appData.locale,
   }
 
   return {

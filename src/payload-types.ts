@@ -3210,6 +3210,7 @@ export interface Setting {
   favIcon: number | Media;
   favIconSvg?: (number | null) | Media;
   favIconPng?: (number | null) | Media;
+  locale: string;
   googleVerification?: string | null;
   googleAnalyticsId?: string | null;
   bingVerification?: string | null;
@@ -3476,6 +3477,7 @@ export interface SettingsSelect<T extends boolean = true> {
   favIcon?: T;
   favIconSvg?: T;
   favIconPng?: T;
+  locale?: T;
   googleVerification?: T;
   googleAnalyticsId?: T;
   bingVerification?: T;
