@@ -5,7 +5,6 @@ import { ThemeProvider } from '@/components/theme/theme-provider'
 import { getServerSideURL } from '@/lib/get-url'
 import { Setting } from '@/payload-types'
 import { getCachedGlobal } from '@/lib/get-globals'
-import { PreloadResources } from '@/app/(frontend)/preload-resources'
 import { Metadata } from 'next'
 import { getAppSettings } from '@/constants/app'
 import { isFontData } from '@/lib/is-font-data'
@@ -13,6 +12,7 @@ import { LivePreviewListener } from '@/components/live-preview-listener'
 import { Analytics } from '@vercel/analytics/next'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import Script from 'next/script'
+import { generateStylesheet } from '@/lib/generate-stylesheet'
 
 export async function generateMetadata(): Promise<Metadata> {
   const appData = await getAppSettings()
@@ -54,6 +54,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   const { children } = props
 
   const setting = (await getCachedGlobal('settings', 1, isEnabled)) as Setting
+  const css = await generateStylesheet(setting, isEnabled)
 
   const defaultFont = setting?.default
   const fontData =
@@ -80,8 +81,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
     >
       {isEnabled && <LivePreviewListener />}
       <body className="flex flex-col" suppressHydrationWarning>
-        <PreloadResources />
-        <link href="/api/stylesheet" rel="stylesheet" precedence="default" />
+        <style dangerouslySetInnerHTML={{ __html: css }} />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>
