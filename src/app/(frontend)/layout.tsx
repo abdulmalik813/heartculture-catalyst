@@ -79,6 +79,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
     >
       {isEnabled && <LivePreviewListener />}
       <body className="flex flex-col" suppressHydrationWarning>
+        <link href="/api/stylesheet" rel="stylesheet" precedence="default" />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>
