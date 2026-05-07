@@ -126,7 +126,7 @@ export const plugins: Plugin[] = [
       thumbnails: {
         prefix: 'thumbnails',
         generateFileURL: ({ filename }) => {
-          return `/api/media/file/${filename}`
+          return `/api/thumbnails/file/${filename}`
         },
         signedDownloads: {
           shouldUseSignedURL: ({ filename }) => {
@@ -137,7 +137,7 @@ export const plugins: Plugin[] = [
       'font-files': {
         prefix: 'font-files',
         generateFileURL: ({ filename }) => {
-          return `/api/media/file/${filename}`
+          return `/api/font-files/file/${filename}`
         },
       },
     },
