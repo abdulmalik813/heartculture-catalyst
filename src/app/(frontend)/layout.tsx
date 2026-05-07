@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/theme/theme-provider'
 import { getServerSideURL } from '@/lib/get-url'
 import { Setting } from '@/payload-types'
 import { getCachedGlobal } from '@/lib/get-globals'
+import { PreloadResources } from '@/app/(frontend)/preload-resources'
 import { Metadata } from 'next'
 import { getAppSettings } from '@/constants/app'
 import { isFontData } from '@/lib/is-font-data'
@@ -79,6 +80,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
     >
       {isEnabled && <LivePreviewListener />}
       <body className="flex flex-col" suppressHydrationWarning>
+        <PreloadResources />
         <link href="/api/stylesheet" rel="stylesheet" precedence="default" />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
