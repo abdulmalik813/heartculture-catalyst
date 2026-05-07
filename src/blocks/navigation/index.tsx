@@ -146,7 +146,7 @@ export function NavigationBlockUI({
           {iconPlacement === 'after' && renderIcon()}
         </DropdownMenuTrigger>
       </Button>
-      <DropdownMenuContent>
+      <DropdownMenuContent className={joinStyles(navigationBlock.nav?.listStyle)}>
         {navigationBlock.nav?.items?.map((item) => {
           const href = getHref(item, pageContext.setting)
           if (!href) return null
