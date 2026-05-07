@@ -1,7 +1,7 @@
 import { Loader2 } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Footer } from '@/components/footer'
-import { NavigationBarUI } from '@/components/navigation-bar'
+import { NavigationBarUI } from '@/components/nav-menu/navigation-bar'
 import { PageContext } from '@/types/page-context'
 import { Setting } from '@/payload-types'
 import { getCachedGlobal } from '@/lib/get-globals'

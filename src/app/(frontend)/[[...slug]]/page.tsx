@@ -17,7 +17,7 @@ import { redirectCheck } from '@/lib/redirect'
 import { SchemaRenderer } from '@/components/renderer/schema-renderer'
 import { PageContext } from '@/types/page-context'
 import { Footer } from '@/components/footer'
-import { NavigationBarUI } from '@/components/navigation-bar'
+import { NavigationBarUI } from '@/components/nav-menu/navigation-bar'
 import { SlugProps } from '@/types/slug-props'
 import { AdminBar } from '@/components/admin-bar'
 import { AlertCircle, Home } from 'lucide-react'
@@ -168,67 +168,65 @@ export default async function PageRoute({ params, searchParams }: Readonly<SlugP
             <>
               <PostListingPage pageContext={pageContext} />
             </>
-          ) : (
-            page ? (
-              <>
-                <Hero hero={page.hero} pageContext={pageContext} />
-                {page.layout?.map((layout, i) => (
+          ) : page ? (
+            <>
+              <Hero hero={page.hero} pageContext={pageContext} />
+              {page.layout?.map((layout, i) => (
+                <div
+                  key={i}
+                  className={joinStyles(
+                    cn(layout.container && 'container mx-auto px-4'),
+                    layout.styles,
+                  )}
+                >
                   <div
-                    key={i}
-                    className={joinStyles(
-                      cn(layout.container && 'container mx-auto px-4'),
-                      layout.styles,
+                    className={cn(
+                      'grid grid-cols-4 lg:grid-cols-12',
+                      gapClasses[layout.gapSize || 'medium'],
                     )}
                   >
-                    <div
-                      className={cn(
-                        'grid grid-cols-4 lg:grid-cols-12',
-                        gapClasses[layout.gapSize || 'medium'],
-                      )}
-                    >
-                      {layout.grid?.map((grid, index) => (
-                        <div
-                          key={index}
-                          className={joinStyles(
-                            colsSpanClasses[grid.gridSize],
-                            grid.gridStyles,
-                            cn({ 'md:col-span-2': grid.gridSize !== 'full' }),
-                          )}
-                        >
-                          {grid.blocks?.map((block, index) => (
-                            <BlockRenderer key={index} block={block} pageContext={pageContext} />
-                          ))}
-                        </div>
-                      ))}
+                    {layout.grid?.map((grid, index) => (
+                      <div
+                        key={index}
+                        className={joinStyles(
+                          colsSpanClasses[grid.gridSize],
+                          grid.gridStyles,
+                          cn({ 'md:col-span-2': grid.gridSize !== 'full' }),
+                        )}
+                      >
+                        {grid.blocks?.map((block, index) => (
+                          <BlockRenderer key={index} block={block} pageContext={pageContext} />
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </>
+          ) : (
+            <article className="min-h-[70vh] flex items-center justify-center px-4">
+              <Card className="w-full max-w-md">
+                <CardHeader className="text-center">
+                  <div className="flex justify-center mb-4">
+                    <div className="rounded-full bg-destructive/10 p-3">
+                      <AlertCircle className="h-10 w-10 text-destructive" />
                     </div>
                   </div>
-                ))}
-              </>
-            ) : (
-              <article className="min-h-[70vh] flex items-center justify-center px-4">
-                <Card className="w-full max-w-md">
-                  <CardHeader className="text-center">
-                    <div className="flex justify-center mb-4">
-                      <div className="rounded-full bg-destructive/10 p-3">
-                        <AlertCircle className="h-10 w-10 text-destructive" />
-                      </div>
-                    </div>
-                    <CardTitle className="text-3xl font-bold">404 - Page Not Found</CardTitle>
-                    <CardDescription className="text-base mt-2">
-                      The page you&apos;re looking for doesn&apos;t exist or has been moved.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex flex-col gap-3">
-                    <Button asChild className="w-full">
-                      <Link href="/">
-                        <Home className="mr-2 h-4 w-4" />
-                        Go to Homepage
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              </article>
-            )
+                  <CardTitle className="text-3xl font-bold">404 - Page Not Found</CardTitle>
+                  <CardDescription className="text-base mt-2">
+                    The page you&apos;re looking for doesn&apos;t exist or has been moved.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-3">
+                  <Button asChild className="w-full">
+                    <Link href="/">
+                      <Home className="mr-2 h-4 w-4" />
+                      Go to Homepage
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            </article>
           )}
           <SchemaRenderer pageContext={pageContext} />
         </article>

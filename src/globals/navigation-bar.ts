@@ -113,6 +113,10 @@ export const NavigationBar: GlobalConfig = {
                 condition: (_, data) => data?.useTitleWithLogo === true,
               },
             },
+            {
+              name: 'hideWhenIdle',
+              type: 'checkbox',
+            },
           ],
         },
       ],
