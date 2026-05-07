@@ -3089,6 +3089,7 @@ export interface NavigationBar {
   useTitleWithLogo?: boolean | null;
   titleStyles?: (number | Style)[] | null;
   hideWhenIdle?: boolean | null;
+  idleTimeout?: number | null;
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -3395,6 +3396,7 @@ export interface NavigationBarSelect<T extends boolean = true> {
   useTitleWithLogo?: T;
   titleStyles?: T;
   hideWhenIdle?: T;
+  idleTimeout?: T;
   _status?: T;
   updatedAt?: T;
   createdAt?: T;

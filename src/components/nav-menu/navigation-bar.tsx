@@ -213,7 +213,7 @@ export async function NavigationBarUI({ pageContext }: { pageContext: PageContex
   if (typeof lightLogo !== 'object' || typeof darkLogo !== 'object') return null
 
   return (
-    <NavigationBarWrapper hideWhenIdle={navBarData.hideWhenIdle}>
+    <NavigationBarWrapper hideWhenIdle={navBarData.hideWhenIdle} idleTimeout={navBarData.idleTimeout}>
       <Banner {...navBarData.banner} pageContext={pageContext} />
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" role="navigation">
         <div className="flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 mx-auto py-4">

@@ -6,13 +6,13 @@ import { useEffect, useState } from 'react'
 interface NavigationBarWrapperProps {
   children: React.ReactNode
   hideWhenIdle: boolean | null | undefined
-  idleTimeout?: number
+  idleTimeout: number | null | undefined
 }
 
 export function NavigationBarWrapper({
   children,
   hideWhenIdle,
-  idleTimeout = 3000,
+  idleTimeout = 0,
 }: NavigationBarWrapperProps) {
   const [isVisible, setIsVisible] = useState(true)
   const [isAtTop, setIsAtTop] = useState(true)
@@ -24,7 +24,6 @@ export function NavigationBarWrapper({
       return
     }
 
-    // Set transition once on mount
     const header = document.querySelector('header[role="navigation"]') as HTMLElement
     if (header) {
       header.style.transition = 'opacity 0.3s ease'
@@ -40,7 +39,6 @@ export function NavigationBarWrapper({
 
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current)
 
-      // Only hide if not at top
       if (!isAtTop) {
         idleTimerRef.current = setTimeout(() => {
           setIsVisible(false)
