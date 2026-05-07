@@ -47,7 +47,7 @@ export function NavigationBarWrapper({
             header.style.opacity = '0'
             header.style.pointerEvents = 'none'
           }
-        }, idleTimeout)
+        }, typeof idleTimeout === 'number' ? idleTimeout : 0)
       }
     }
 
