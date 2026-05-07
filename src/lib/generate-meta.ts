@@ -47,7 +47,7 @@ export const generateMeta = async (
   const appData = await getAppSettings()
   const serverUrl = getServerSideURL()
   const social = (await getCachedGlobal('social')) as Social
-
+  
   const title = doc?.meta?.title ? doc?.meta?.title : appData.appTitle
   const description = doc?.meta?.description || appData.appDescription
   const ogImage = await getImageURL(appData, doc?.meta?.image as Media)
@@ -55,29 +55,19 @@ export const generateMeta = async (
   const url = `${serverUrl}/${post ? settings.postSlug + '/' : ''}${slug}`
 
   const contactMetadata = buildContactMetadata(settings)
-
-  const author = post && (doc as Post)?.author ? ((doc as Post).author as User) : null
+  
+  const author = post && (doc as Post)?.author ? (doc as Post).author as User : null
   const categories = post && (doc as Post)?.categories ? (doc as Post).categories : undefined
-  const categoryNames =
-    categories && Array.isArray(categories)
-      ? categories
-          .map((cat) => (typeof cat === 'object' ? cat?.name : ''))
-          .filter(Boolean)
-          .join(', ')
-      : undefined
+  const categoryNames = categories && Array.isArray(categories) 
+    ? categories.map((cat) => typeof cat === 'object' ? cat?.name : '').filter(Boolean).join(', ')
+    : undefined
 
   const readingTime = post && (doc as Post)?.readingTime ? (doc as Post).readingTime : 0
 
-  const twitterHandle = social?.x
-    ? social.x.replace('https://twitter.com/', '@').replace('https://x.com/', '@')
-    : undefined
+  const twitterHandle = social?.x ? social.x.replace('https://twitter.com/', '@').replace('https://x.com/', '@') : undefined
 
-  const publishedTime =
-    post && (doc as Post)?.publishedAt
-      ? new Date((doc as Post).publishedAt!).toISOString()
-      : undefined
-  const modifiedTime =
-    post && (doc as Post)?.updatedAt ? new Date((doc as Post).updatedAt!).toISOString() : undefined
+  const publishedTime = post && (doc as Post)?.publishedAt ? new Date((doc as Post).publishedAt!).toISOString() : undefined
+  const modifiedTime = post && (doc as Post)?.updatedAt ? new Date((doc as Post).updatedAt!).toISOString() : undefined
 
   const otherMetadata: Record<string, string> = {
     ...(contactMetadata || {}),
@@ -149,7 +139,7 @@ export const generatePostsListingMeta = async (settings: Setting): Promise<Metad
   const appData = await getAppSettings()
   const serverUrl = getServerSideURL()
   const social = (await getCachedGlobal('social')) as Social
-
+  
   const ogImage = await getImageURL(appData, postMetaImage as Media)
   const title = postMetaTitle || appData.appTitle
   const description = postMetaDescription || appData.appDescription
@@ -158,9 +148,7 @@ export const generatePostsListingMeta = async (settings: Setting): Promise<Metad
 
   const contactMetadata = buildContactMetadata(settings)
 
-  const twitterHandle = social?.x
-    ? social.x.replace('https://twitter.com/', '@').replace('https://x.com/', '@')
-    : undefined
+  const twitterHandle = social?.x ? social.x.replace('https://twitter.com/', '@').replace('https://x.com/', '@') : undefined
 
   const otherMetadata: Record<string, string> = {
     ...(contactMetadata || {}),
