@@ -11,10 +11,9 @@ interface NavigationBarWrapperProps {
 export function NavigationBarWrapper({
   children,
   hideWhenIdle,
-  idleTimeout = 3000,
+  idleTimeout = 1000,
 }: NavigationBarWrapperProps) {
   const [isVisible, setIsVisible] = useState(true)
-  const [idleTimer, setIdleTimer] = useState<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     if (!hideWhenIdle) {
@@ -22,43 +21,37 @@ export function NavigationBarWrapper({
       return
     }
 
-    const handleActivity = () => {
-      setIsVisible(true)
-      if (idleTimer) clearTimeout(idleTimer)
+    let idleTimer: NodeJS.Timeout | null = null
 
-      const timer = setTimeout(() => {
+    const resetTimer = () => {
+      if (idleTimer) clearTimeout(idleTimer)
+      setIsVisible(true)
+
+      idleTimer = setTimeout(() => {
         setIsVisible(false)
       }, idleTimeout)
-
-      setIdleTimer(timer)
     }
 
-    window.addEventListener('mousemove', handleActivity)
-    window.addEventListener('keydown', handleActivity)
-    window.addEventListener('touchstart', handleActivity)
-    window.addEventListener('touchmove', handleActivity)
-    window.addEventListener('click', handleActivity)
+    resetTimer()
 
-    const initialTimer = setTimeout(() => {
-      setIsVisible(false)
-    }, idleTimeout)
-    setIdleTimer(initialTimer)
+    const events = ['mousemove', 'keydown', 'touchstart', 'touchmove', 'click', 'scroll', 'wheel']
+
+    events.forEach((event) => {
+      window.addEventListener(event, resetTimer)
+    })
 
     return () => {
-      window.removeEventListener('mousemove', handleActivity)
-      window.removeEventListener('keydown', handleActivity)
-      window.removeEventListener('touchstart', handleActivity)
-      window.removeEventListener('touchmove', handleActivity)
-      window.removeEventListener('click', handleActivity)
+      events.forEach((event) => {
+        window.removeEventListener(event, resetTimer)
+      })
       if (idleTimer) clearTimeout(idleTimer)
-      if (initialTimer) clearTimeout(initialTimer)
     }
-  }, [hideWhenIdle, idleTimeout, idleTimer])
+  }, [hideWhenIdle, idleTimeout])
 
   return (
     <div
-      className={`transition-opacity duration-300 ${
-        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      className={`transition-all duration-300 ${
+        isVisible ? 'visible' : 'invisible h-0'
       }`}
     >
       {children}
