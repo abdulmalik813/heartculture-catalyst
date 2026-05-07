@@ -145,6 +145,16 @@ export const navigation: NavType = ({ overrides = {} } = {}) =>
                             { label: 'Icon', value: 'icon' },
                           ],
                         },
+                        {
+                          name: 'listStyle',
+                          type: 'relationship',
+                          relationTo: 'styles',
+                          hasMany: true,
+                          label: 'List Style',
+                          admin: {
+                            condition: (_, siblingData) => siblingData?.appearance === 'dropdown',
+                          },
+                        },
                       ],
                     },
                   ],

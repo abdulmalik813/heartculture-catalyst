@@ -175,6 +175,7 @@ export interface Page {
             | null;
           buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
           buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+          listStyle?: (number | Style)[] | null;
           styles?: (number | Style)[] | null;
           icon?: (number | null) | Icon;
           axis?: ('before' | 'after') | null;
@@ -358,6 +359,7 @@ export interface Post {
             | null;
           buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
           buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+          listStyle?: (number | Style)[] | null;
           styles?: (number | Style)[] | null;
           icon?: (number | null) | Icon;
           axis?: ('before' | 'after') | null;
@@ -744,6 +746,7 @@ export interface CallToActionBlock {
           | null;
         buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
         buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+        listStyle?: (number | Style)[] | null;
         styles?: (number | Style)[] | null;
         icon?: (number | null) | Icon;
         axis?: ('before' | 'after') | null;
@@ -836,6 +839,7 @@ export interface CardBlock {
         | null;
       buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
       buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+      listStyle?: (number | Style)[] | null;
       styles?: (number | Style)[] | null;
       icon?: (number | null) | Icon;
       axis?: ('before' | 'after') | null;
@@ -1308,6 +1312,7 @@ export interface TestimonialBlock {
       | null;
     buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
     buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+    listStyle?: (number | Style)[] | null;
     styles?: (number | Style)[] | null;
     icon?: (number | null) | Icon;
     axis?: ('before' | 'after') | null;
@@ -1381,6 +1386,7 @@ export interface GalleryBlock {
       | null;
     buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
     buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+    listStyle?: (number | Style)[] | null;
     styles?: (number | Style)[] | null;
     icon?: (number | null) | Icon;
     axis?: ('before' | 'after') | null;
@@ -1814,6 +1820,7 @@ export interface PagesSelect<T extends boolean = true> {
                               };
                           buttonType?: T;
                           buttonSize?: T;
+                          listStyle?: T;
                           styles?: T;
                           icon?: T;
                           axis?: T;
@@ -1943,6 +1950,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
                         };
                     buttonType?: T;
                     buttonSize?: T;
+                    listStyle?: T;
                     styles?: T;
                     icon?: T;
                     axis?: T;
@@ -2010,6 +2018,7 @@ export interface CardBlockSelect<T extends boolean = true> {
                   };
               buttonType?: T;
               buttonSize?: T;
+              listStyle?: T;
               styles?: T;
               icon?: T;
               axis?: T;
@@ -2174,6 +2183,7 @@ export interface TestimonialBlockSelect<T extends boolean = true> {
             };
         buttonType?: T;
         buttonSize?: T;
+        listStyle?: T;
         styles?: T;
         icon?: T;
         axis?: T;
@@ -2218,6 +2228,7 @@ export interface GalleryBlockSelect<T extends boolean = true> {
             };
         buttonType?: T;
         buttonSize?: T;
+        listStyle?: T;
         styles?: T;
         icon?: T;
         axis?: T;
@@ -2327,6 +2338,7 @@ export interface PostsSelect<T extends boolean = true> {
                               };
                           buttonType?: T;
                           buttonSize?: T;
+                          listStyle?: T;
                           styles?: T;
                           icon?: T;
                           axis?: T;
@@ -3007,6 +3019,7 @@ export interface NavigationBar {
             | null;
           buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
           buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+          listStyle?: (number | Style)[] | null;
           styles?: (number | Style)[] | null;
           icon?: (number | null) | Icon;
           axis?: ('before' | 'after') | null;
@@ -3057,6 +3070,7 @@ export interface NavigationBar {
             | null;
           buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
           buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+          listStyle?: (number | Style)[] | null;
           styles?: (number | Style)[] | null;
           icon?: (number | null) | Icon;
           axis?: ('before' | 'after') | null;
@@ -3162,6 +3176,7 @@ export interface Footer {
                         | null;
                       buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
                       buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+                      listStyle?: (number | Style)[] | null;
                       styles?: (number | Style)[] | null;
                       icon?: (number | null) | Icon;
                       axis?: ('before' | 'after') | null;
@@ -3339,6 +3354,7 @@ export interface NavigationBarSelect<T extends boolean = true> {
                   };
               buttonType?: T;
               buttonSize?: T;
+              listStyle?: T;
               styles?: T;
               icon?: T;
               axis?: T;
@@ -3377,6 +3393,7 @@ export interface NavigationBarSelect<T extends boolean = true> {
                   };
               buttonType?: T;
               buttonSize?: T;
+              listStyle?: T;
               styles?: T;
               icon?: T;
               axis?: T;
@@ -3446,6 +3463,7 @@ export interface FooterSelect<T extends boolean = true> {
                               };
                           buttonType?: T;
                           buttonSize?: T;
+                          listStyle?: T;
                           styles?: T;
                           icon?: T;
                           axis?: T;
@@ -3641,6 +3659,7 @@ export interface NavigationBlock {
       | null;
     buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
     buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+    listStyle?: (number | Style)[] | null;
     styles?: (number | Style)[] | null;
     icon?: (number | null) | Icon;
     axis?: ('before' | 'after') | null;
