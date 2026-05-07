@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { useEffect, useState } from 'react'
 
 interface NavigationBarWrapperProps {
@@ -11,9 +12,11 @@ interface NavigationBarWrapperProps {
 export function NavigationBarWrapper({
   children,
   hideWhenIdle,
-  idleTimeout = 1000,
+  idleTimeout = 3000,
 }: NavigationBarWrapperProps) {
   const [isVisible, setIsVisible] = useState(true)
+  const [isAtTop, setIsAtTop] = useState(true)
+  const idleTimerRef = React.useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     if (!hideWhenIdle) {
@@ -21,40 +24,67 @@ export function NavigationBarWrapper({
       return
     }
 
-    let idleTimer: NodeJS.Timeout | null = null
-
-    const resetTimer = () => {
-      if (idleTimer) clearTimeout(idleTimer)
-      setIsVisible(true)
-
-      idleTimer = setTimeout(() => {
-        setIsVisible(false)
-      }, idleTimeout)
+    // Set transition once on mount
+    const header = document.querySelector('header[role="navigation"]') as HTMLElement
+    if (header) {
+      header.style.transition = 'opacity 0.3s ease'
     }
 
-    resetTimer()
+    const handleActivity = () => {
+      setIsVisible(true)
+      const header = document.querySelector('header[role="navigation"]') as HTMLElement
+      if (header) {
+        header.style.opacity = '1'
+        header.style.pointerEvents = 'auto'
+      }
 
-    const events = ['mousemove', 'keydown', 'touchstart', 'touchmove', 'click', 'scroll', 'wheel']
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current)
+
+      // Only hide if not at top
+      if (!isAtTop) {
+        idleTimerRef.current = setTimeout(() => {
+          setIsVisible(false)
+          const header = document.querySelector('header[role="navigation"]') as HTMLElement
+          if (header) {
+            header.style.opacity = '0'
+            header.style.pointerEvents = 'none'
+          }
+        }, idleTimeout)
+      }
+    }
+
+    const handleScroll = () => {
+      const atTop = window.scrollY < 50
+      setIsAtTop(atTop)
+      
+      if (atTop) {
+        setIsVisible(true)
+        const header = document.querySelector('header[role="navigation"]') as HTMLElement
+        if (header) {
+          header.style.opacity = '1'
+          header.style.pointerEvents = 'auto'
+        }
+      }
+    }
+
+    handleActivity()
+
+    const events = ['mousemove', 'keydown', 'touchstart', 'touchmove', 'click', 'wheel']
 
     events.forEach((event) => {
-      window.addEventListener(event, resetTimer)
+      window.addEventListener(event, handleActivity)
     })
+
+    window.addEventListener('scroll', handleScroll)
 
     return () => {
       events.forEach((event) => {
-        window.removeEventListener(event, resetTimer)
+        window.removeEventListener(event, handleActivity)
       })
-      if (idleTimer) clearTimeout(idleTimer)
+      window.removeEventListener('scroll', handleScroll)
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current)
     }
-  }, [hideWhenIdle, idleTimeout])
+  }, [hideWhenIdle, idleTimeout, isAtTop])
 
-  return (
-    <div
-      className={`transition-all duration-300 ${
-        isVisible ? 'visible' : 'invisible h-0'
-      }`}
-    >
-      {children}
-    </div>
-  )
+  return <>{children}</>
 }

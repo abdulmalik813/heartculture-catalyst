@@ -215,7 +215,7 @@ export async function NavigationBarUI({ pageContext }: { pageContext: PageContex
   return (
     <NavigationBarWrapper hideWhenIdle={navBarData.hideWhenIdle}>
       <Banner {...navBarData.banner} pageContext={pageContext} />
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" role="navigation">
         <div className="flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 mx-auto py-4">
           <div className="flex items-center min-w-0 flex-shrink-0">
             <LogoLink
