@@ -13,6 +13,7 @@ import { LivePreviewListener } from '@/components/live-preview-listener'
 import { Analytics } from '@vercel/analytics/next'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import Script from 'next/script'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 export async function generateMetadata(): Promise<Metadata> {
   const appData = await getAppSettings()
@@ -98,6 +99,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
           </Script>
         )}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
