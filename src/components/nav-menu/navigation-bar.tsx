@@ -213,9 +213,15 @@ export async function NavigationBarUI({ pageContext }: { pageContext: PageContex
   if (typeof lightLogo !== 'object' || typeof darkLogo !== 'object') return null
 
   return (
-    <NavigationBarWrapper hideWhenIdle={navBarData.hideWhenIdle} idleTimeout={navBarData.idleTimeout}>
+    <NavigationBarWrapper
+      hideWhenIdle={navBarData.hideWhenIdle}
+      idleTimeout={navBarData.idleTimeout}
+    >
       <Banner {...navBarData.banner} pageContext={pageContext} />
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" role="navigation">
+      <header
+        className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+        role="navigation"
+      >
         <div className="flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 mx-auto py-4">
           <div className="flex items-center min-w-0 flex-shrink-0">
             <LogoLink
@@ -255,17 +261,18 @@ export async function NavigationBarUI({ pageContext }: { pageContext: PageContex
                         </NavigationMenuTrigger>
                         <NavigationMenuContent className="left-0">
                           <ul
-                            className={joinStyles('grid gap-1 p-2  grid-cols-1', item.nav?.listStyle)}
+                            className={joinStyles(
+                              'grid gap-1 p-2  grid-cols-1',
+                              item.nav?.listStyle,
+                            )}
                           >
                             {item.nav?.items?.map((dropdownItem) => (
                               <li key={dropdownItem.id}>
-                                <div className="block rounded-lg p-2.5 hover:bg-accent transition-colors duration-200 group">
-                                  <NavigationBlockUI
-                                    dropdownItem={dropdownItem}
-                                    pageContext={pageContext}
-                                    className="font-medium text-sm group-hover:text-primary transition-colors duration-200"
-                                  />
-                                </div>
+                                <NavigationBlockUI
+                                  dropdownItem={dropdownItem}
+                                  pageContext={pageContext}
+                                  className="block rounded-lg p-2.5 hover:bg-accent transition-colors duration-200 font-medium text-sm hover:text-primary select-none"
+                                />
                               </li>
                             ))}
                           </ul>

@@ -107,7 +107,7 @@ export const NavigationBar: GlobalConfig = {
             {
               name: 'titleStyles',
               type: 'relationship',
-              relationTo: 'styles',
+              relationTo: 'styles',w
               hasMany: true,
               admin: {
                 condition: (_, data) => data?.useTitleWithLogo === true,
