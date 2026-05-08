@@ -271,7 +271,7 @@ export async function NavigationBarUI({ pageContext }: { pageContext: PageContex
                                 <NavigationBlockUI
                                   dropdownItem={dropdownItem}
                                   pageContext={pageContext}
-                                  className="block rounded-lg p-2.5 hover:bg-accent transition-colors duration-200 font-medium text-sm hover:text-primary select-none"
+                                  className="block rounded-lg p-2.5 hover:bg-accent transition-colors duration-200 font-medium text-sm hover:text-primary"
                                 />
                               </li>
                             ))}
