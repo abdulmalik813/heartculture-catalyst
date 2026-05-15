@@ -218,6 +218,96 @@ export interface Page {
     containerStyles?: (number | Style)[] | null;
     heroTitleStyles?: (number | Style)[] | null;
     heroDescriptionStyles?: (number | Style)[] | null;
+    enableCarousel?: boolean | null;
+    slides?:
+      | {
+          card: {
+            enableTitle?: boolean | null;
+            enableAction?: boolean | null;
+            enableDescription?: boolean | null;
+            enableContent?: boolean | null;
+            enableFooter?: boolean | null;
+            title?: string | null;
+            actionPlacement?: ('header' | 'footer') | null;
+            action: {
+              nav?: {
+                label?: string | null;
+                appearance?: ('link' | 'button' | 'dropdown') | null;
+                link?: {
+                  type?: ('reference' | 'postListingPage' | 'custom') | null;
+                  reference?:
+                    | ({
+                        relationTo: 'pages';
+                        value: number | Page;
+                      } | null)
+                    | ({
+                        relationTo: 'posts';
+                        value: number | Post;
+                      } | null);
+                  url?: string | null;
+                  newTab?: boolean | null;
+                };
+                items?:
+                  | {
+                      label: string;
+                      type?: ('reference' | 'postListingPage' | 'custom') | null;
+                      reference?:
+                        | ({
+                            relationTo: 'pages';
+                            value: number | Page;
+                          } | null)
+                        | ({
+                            relationTo: 'posts';
+                            value: number | Post;
+                          } | null);
+                      url?: string | null;
+                      newTab?: boolean | null;
+                      icon?: (number | null) | Icon;
+                      axis?: ('before' | 'after') | null;
+                      iconStyles?: (number | Style)[] | null;
+                      id?: string | null;
+                    }[]
+                  | null;
+                buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+                buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+                listStyle?: (number | Style)[] | null;
+                styles?: (number | Style)[] | null;
+                icon?: (number | null) | Icon;
+                axis?: ('before' | 'after') | null;
+                iconStyles?: (number | Style)[] | null;
+              };
+              id?: string | null;
+            }[];
+            description?: string | null;
+            content?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            footer?: string | null;
+            cardStyles?: (number | Style)[] | null;
+            titleStyles?: (number | Style)[] | null;
+            actionStyles?: (number | Style)[] | null;
+            descriptionStyles?: (number | Style)[] | null;
+            cardContentStyles?: (number | Style)[] | null;
+            footerStyles?: (number | Style)[] | null;
+          };
+          media?: (number | null) | Media;
+          wrapperStyles?: (number | Style)[] | null;
+          contentStyles?: (number | Style)[] | null;
+          id?: string | null;
+        }[]
+      | null;
   };
   layout?:
     | {
@@ -402,6 +492,96 @@ export interface Post {
     containerStyles?: (number | Style)[] | null;
     heroTitleStyles?: (number | Style)[] | null;
     heroDescriptionStyles?: (number | Style)[] | null;
+    enableCarousel?: boolean | null;
+    slides?:
+      | {
+          card: {
+            enableTitle?: boolean | null;
+            enableAction?: boolean | null;
+            enableDescription?: boolean | null;
+            enableContent?: boolean | null;
+            enableFooter?: boolean | null;
+            title?: string | null;
+            actionPlacement?: ('header' | 'footer') | null;
+            action: {
+              nav?: {
+                label?: string | null;
+                appearance?: ('link' | 'button' | 'dropdown') | null;
+                link?: {
+                  type?: ('reference' | 'postListingPage' | 'custom') | null;
+                  reference?:
+                    | ({
+                        relationTo: 'pages';
+                        value: number | Page;
+                      } | null)
+                    | ({
+                        relationTo: 'posts';
+                        value: number | Post;
+                      } | null);
+                  url?: string | null;
+                  newTab?: boolean | null;
+                };
+                items?:
+                  | {
+                      label: string;
+                      type?: ('reference' | 'postListingPage' | 'custom') | null;
+                      reference?:
+                        | ({
+                            relationTo: 'pages';
+                            value: number | Page;
+                          } | null)
+                        | ({
+                            relationTo: 'posts';
+                            value: number | Post;
+                          } | null);
+                      url?: string | null;
+                      newTab?: boolean | null;
+                      icon?: (number | null) | Icon;
+                      axis?: ('before' | 'after') | null;
+                      iconStyles?: (number | Style)[] | null;
+                      id?: string | null;
+                    }[]
+                  | null;
+                buttonType?: ('default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+                buttonSize?: ('sm' | 'default' | 'lg' | 'icon') | null;
+                listStyle?: (number | Style)[] | null;
+                styles?: (number | Style)[] | null;
+                icon?: (number | null) | Icon;
+                axis?: ('before' | 'after') | null;
+                iconStyles?: (number | Style)[] | null;
+              };
+              id?: string | null;
+            }[];
+            description?: string | null;
+            content?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            footer?: string | null;
+            cardStyles?: (number | Style)[] | null;
+            titleStyles?: (number | Style)[] | null;
+            actionStyles?: (number | Style)[] | null;
+            descriptionStyles?: (number | Style)[] | null;
+            cardContentStyles?: (number | Style)[] | null;
+            footerStyles?: (number | Style)[] | null;
+          };
+          media?: (number | null) | Media;
+          wrapperStyles?: (number | Style)[] | null;
+          contentStyles?: (number | Style)[] | null;
+          id?: string | null;
+        }[]
+      | null;
   };
   layout?:
     | {
@@ -1846,6 +2026,74 @@ export interface PagesSelect<T extends boolean = true> {
         containerStyles?: T;
         heroTitleStyles?: T;
         heroDescriptionStyles?: T;
+        enableCarousel?: T;
+        slides?:
+          | T
+          | {
+              card?:
+                | T
+                | {
+                    enableTitle?: T;
+                    enableAction?: T;
+                    enableDescription?: T;
+                    enableContent?: T;
+                    enableFooter?: T;
+                    title?: T;
+                    actionPlacement?: T;
+                    action?:
+                      | T
+                      | {
+                          nav?:
+                            | T
+                            | {
+                                label?: T;
+                                appearance?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      reference?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      type?: T;
+                                      reference?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                      icon?: T;
+                                      axis?: T;
+                                      iconStyles?: T;
+                                      id?: T;
+                                    };
+                                buttonType?: T;
+                                buttonSize?: T;
+                                listStyle?: T;
+                                styles?: T;
+                                icon?: T;
+                                axis?: T;
+                                iconStyles?: T;
+                              };
+                          id?: T;
+                        };
+                    description?: T;
+                    content?: T;
+                    footer?: T;
+                    cardStyles?: T;
+                    titleStyles?: T;
+                    actionStyles?: T;
+                    descriptionStyles?: T;
+                    cardContentStyles?: T;
+                    footerStyles?: T;
+                  };
+              media?: T;
+              wrapperStyles?: T;
+              contentStyles?: T;
+              id?: T;
+            };
       };
   layout?:
     | T
@@ -2364,6 +2612,74 @@ export interface PostsSelect<T extends boolean = true> {
         containerStyles?: T;
         heroTitleStyles?: T;
         heroDescriptionStyles?: T;
+        enableCarousel?: T;
+        slides?:
+          | T
+          | {
+              card?:
+                | T
+                | {
+                    enableTitle?: T;
+                    enableAction?: T;
+                    enableDescription?: T;
+                    enableContent?: T;
+                    enableFooter?: T;
+                    title?: T;
+                    actionPlacement?: T;
+                    action?:
+                      | T
+                      | {
+                          nav?:
+                            | T
+                            | {
+                                label?: T;
+                                appearance?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      reference?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      type?: T;
+                                      reference?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                      icon?: T;
+                                      axis?: T;
+                                      iconStyles?: T;
+                                      id?: T;
+                                    };
+                                buttonType?: T;
+                                buttonSize?: T;
+                                listStyle?: T;
+                                styles?: T;
+                                icon?: T;
+                                axis?: T;
+                                iconStyles?: T;
+                              };
+                          id?: T;
+                        };
+                    description?: T;
+                    content?: T;
+                    footer?: T;
+                    cardStyles?: T;
+                    titleStyles?: T;
+                    actionStyles?: T;
+                    descriptionStyles?: T;
+                    cardContentStyles?: T;
+                    footerStyles?: T;
+                  };
+              media?: T;
+              wrapperStyles?: T;
+              contentStyles?: T;
+              id?: T;
+            };
       };
   layout?:
     | T

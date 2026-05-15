@@ -13,7 +13,6 @@ import { LivePreviewListener } from '@/components/live-preview-listener'
 import { Analytics } from '@vercel/analytics/next'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import Script from 'next/script'
-import { SpeedInsights } from '@vercel/speed-insights/next'
 
 export async function generateMetadata(): Promise<Metadata> {
   const appData = await getAppSettings()
@@ -79,10 +78,10 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
         fontStyle: fontStyle,
       }}
     >
+      {isEnabled && <LivePreviewListener />}
       <body className="flex flex-col" suppressHydrationWarning>
         <PreloadResources />
         <link href="/api/stylesheet" rel="stylesheet" precedence="default" />
-        {isEnabled && <LivePreviewListener />}
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>
@@ -99,7 +98,6 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
           </Script>
         )}
         <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   )

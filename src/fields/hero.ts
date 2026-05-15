@@ -137,6 +137,41 @@ export const hero: GroupField = {
             },
           ],
         },
+        {
+          label: 'Carousel',
+          admin: {
+            condition: (data, siblingData) => {
+              const layout = siblingData?.layout || data?.hero?.layout
+              return layout === 'fullscreen'
+            },
+          },
+          fields: [
+            {
+              name: 'enableCarousel',
+              type: 'checkbox',
+              label: 'Enable Carousel',
+              defaultValue: false,
+            },
+            {
+              name: 'slides',
+              type: 'array',
+              label: 'Carousel Slides',
+              admin: {
+                condition: (data, siblingData) => {
+                  return siblingData?.enableCarousel
+                },
+              },
+              fields: [
+                {
+                  type: 'group',
+                  name: 'card',
+                  fields: card(),
+                },
+                ...media,
+              ],
+            },
+          ],
+        },
       ],
     },
   ],
