@@ -1,4 +1,3 @@
-import { media } from '@/fields/media'
 import { Block } from 'payload'
 
 export const ImageCarouselBlock = (dbPrefix: string = ''): Block => ({
@@ -8,8 +7,9 @@ export const ImageCarouselBlock = (dbPrefix: string = ''): Block => ({
   fields: [
     {
       name: 'medias',
-      type: 'array',
-      fields: media,
+      type: 'relationship',
+      relationTo: 'media',
+      hasMany: true,
     },
   ],
   graphQL: {

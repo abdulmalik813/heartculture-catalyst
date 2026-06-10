@@ -211,7 +211,6 @@ export interface Page {
     media?: (number | null) | Media;
     wrapperStyles?: (number | Style)[] | null;
     contentStyles?: (number | Style)[] | null;
-    id?: string | null;
     fullscreenStyles?: (number | Style)[] | null;
     /**
      * Styles applied to the entire hero section
@@ -487,7 +486,6 @@ export interface Post {
     media?: (number | null) | Media;
     wrapperStyles?: (number | Style)[] | null;
     contentStyles?: (number | Style)[] | null;
-    id?: string | null;
     fullscreenStyles?: (number | Style)[] | null;
     /**
      * Styles applied to the entire hero section
@@ -1452,14 +1450,7 @@ export interface LastModifiedBlock {
  * via the `definition` "imageCarouselBlock".
  */
 export interface ImageCarouselBlock {
-  medias?:
-    | {
-        media?: (number | null) | Media;
-        wrapperStyles?: (number | Style)[] | null;
-        contentStyles?: (number | Style)[] | null;
-        id?: string | null;
-      }[]
-    | null;
+  medias?: (number | Media)[] | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'imageCarouselBlock';
@@ -2043,7 +2034,6 @@ export interface PagesSelect<T extends boolean = true> {
         media?: T;
         wrapperStyles?: T;
         contentStyles?: T;
-        id?: T;
         fullscreenStyles?: T;
         containerStyles?: T;
         heroTitleStyles?: T;
@@ -2422,14 +2412,7 @@ export interface LastModifiedBlockSelect<T extends boolean = true> {
  * via the `definition` "imageCarouselBlock_select".
  */
 export interface ImageCarouselBlockSelect<T extends boolean = true> {
-  medias?:
-    | T
-    | {
-        media?: T;
-        wrapperStyles?: T;
-        contentStyles?: T;
-        id?: T;
-      };
+  medias?: T;
   id?: T;
   blockName?: T;
 }
@@ -2647,7 +2630,6 @@ export interface PostsSelect<T extends boolean = true> {
         media?: T;
         wrapperStyles?: T;
         contentStyles?: T;
-        id?: T;
         fullscreenStyles?: T;
         containerStyles?: T;
         heroTitleStyles?: T;
