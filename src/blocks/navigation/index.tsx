@@ -143,7 +143,7 @@ export function NavigationBlockUI({
       >
         <DropdownMenuTrigger className={hasIcon ? 'flex items-center gap-2' : ''}>
           {iconPlacement !== 'after' && renderIcon()}
-          <span className={joinStyles('break-words', 'whitespace-normal')}>{navigationBlock.nav?.label}</span>
+          <span className="wrap-break-word whitespace-normal">{navigationBlock.nav?.label}</span>
           {iconPlacement === 'after' && renderIcon()}
         </DropdownMenuTrigger>
       </Button>
