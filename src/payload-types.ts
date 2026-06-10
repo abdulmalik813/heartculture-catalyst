@@ -211,6 +211,7 @@ export interface Page {
     media?: (number | null) | Media;
     wrapperStyles?: (number | Style)[] | null;
     contentStyles?: (number | Style)[] | null;
+    id?: string | null;
     fullscreenStyles?: (number | Style)[] | null;
     /**
      * Styles applied to the entire hero section
@@ -326,6 +327,7 @@ export interface Page {
                     | FormBlock
                     | TableBlock
                     | LastModifiedBlock
+                    | ImageCarouselBlock
                     | TestimonialBlock
                     | GalleryBlock
                     | HeadingBlock
@@ -485,6 +487,7 @@ export interface Post {
     media?: (number | null) | Media;
     wrapperStyles?: (number | Style)[] | null;
     contentStyles?: (number | Style)[] | null;
+    id?: string | null;
     fullscreenStyles?: (number | Style)[] | null;
     /**
      * Styles applied to the entire hero section
@@ -600,6 +603,7 @@ export interface Post {
                     | FormBlock
                     | TableBlock
                     | LastModifiedBlock
+                    | ImageCarouselBlock
                     | TestimonialBlock
                     | GalleryBlock
                     | HeadingBlock
@@ -1445,6 +1449,23 @@ export interface LastModifiedBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "imageCarouselBlock".
+ */
+export interface ImageCarouselBlock {
+  medias?:
+    | {
+        media?: (number | null) | Media;
+        wrapperStyles?: (number | Style)[] | null;
+        contentStyles?: (number | Style)[] | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'imageCarouselBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "testimonialBlock".
  */
 export interface TestimonialBlock {
@@ -2022,6 +2043,7 @@ export interface PagesSelect<T extends boolean = true> {
         media?: T;
         wrapperStyles?: T;
         contentStyles?: T;
+        id?: T;
         fullscreenStyles?: T;
         containerStyles?: T;
         heroTitleStyles?: T;
@@ -2115,6 +2137,7 @@ export interface PagesSelect<T extends boolean = true> {
                     formBlock?: T | FormBlockSelect<T>;
                     tableBlock?: T | TableBlockSelect<T>;
                     lastModifiedBlock?: T | LastModifiedBlockSelect<T>;
+                    imageCarouselBlock?: T | ImageCarouselBlockSelect<T>;
                     testimonialBlock?: T | TestimonialBlockSelect<T>;
                     galleryBlock?: T | GalleryBlockSelect<T>;
                     headingBlock?: T | HeadingBlockSelect<T>;
@@ -2396,6 +2419,22 @@ export interface LastModifiedBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "imageCarouselBlock_select".
+ */
+export interface ImageCarouselBlockSelect<T extends boolean = true> {
+  medias?:
+    | T
+    | {
+        media?: T;
+        wrapperStyles?: T;
+        contentStyles?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "testimonialBlock_select".
  */
 export interface TestimonialBlockSelect<T extends boolean = true> {
@@ -2608,6 +2647,7 @@ export interface PostsSelect<T extends boolean = true> {
         media?: T;
         wrapperStyles?: T;
         contentStyles?: T;
+        id?: T;
         fullscreenStyles?: T;
         containerStyles?: T;
         heroTitleStyles?: T;
@@ -2701,6 +2741,7 @@ export interface PostsSelect<T extends boolean = true> {
                     formBlock?: T | FormBlockSelect<T>;
                     tableBlock?: T | TableBlockSelect<T>;
                     lastModifiedBlock?: T | LastModifiedBlockSelect<T>;
+                    imageCarouselBlock?: T | ImageCarouselBlockSelect<T>;
                     testimonialBlock?: T | TestimonialBlockSelect<T>;
                     galleryBlock?: T | GalleryBlockSelect<T>;
                     headingBlock?: T | HeadingBlockSelect<T>;

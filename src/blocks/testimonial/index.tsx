@@ -1,4 +1,4 @@
-import { TestimonialBlock, Testimonial } from '@/payload-types'
+import { TestimonialBlock } from '@/payload-types'
 import { PageContext } from '@/types/page-context'
 import { TestimonialBlockClient } from '@/blocks/testimonial/client'
 

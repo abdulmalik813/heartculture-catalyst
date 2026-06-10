@@ -16,6 +16,7 @@ import { GalleryBlockUI } from '@/blocks/gallery'
 import { HeadingBlockUI } from '@/blocks/heading'
 import { ContactCardBlockUI } from '@/blocks/contact-card'
 import { FaqBlockUI } from '@/blocks/faq'
+import { ImageCarouselBlockUI } from '@/blocks/image-carousel'
 
 const blockComponents = {
   contentBlock: ContentBlockUI,
@@ -28,6 +29,7 @@ const blockComponents = {
   tableBlock: TableBlockUI,
   lastModifiedBlock: LastModifiedBlockUI,
   recentPostsBlock: RecentPostsBlockUI,
+  imageCarouselBlock: ImageCarouselBlockUI,
   testimonialBlock: TestimonialBlockUI,
   galleryBlock: GalleryBlockUI,
   headingBlock: HeadingBlockUI,
@@ -42,7 +44,7 @@ type BlockRendererProps = {
   pageContext: PageContext
 }
 
-export function BlockRenderer({ block, pageContext }: BlockRendererProps) {
+export function BlockRenderer({ block, pageContext }: Readonly<BlockRendererProps>) {
   const blockType = block.blockType as keyof typeof blockComponents
   const Block = blockComponents[blockType]
 

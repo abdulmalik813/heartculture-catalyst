@@ -14,6 +14,7 @@ import { HeadingBlock } from '@/blocks/heading/config'
 import { ContactCardBlock } from '@/blocks/contact-card/config'
 import { FaqBlock } from '@/blocks/faq/config'
 import { RecentPostsBlock } from '@/blocks/recent-posts/config'
+import { ImageCarouselBlock } from '@/blocks/image-carousel/config'
 
 export type BlockSlug =
   | 'content'
@@ -31,7 +32,7 @@ export type BlockSlug =
   | 'contact-card'
   | 'faq'
   | 'recent-posts'
-
+  | 'image-carousel'
 interface GetBlocksOptions {
   dbPrefix?: string
   exclude?: BlockSlug[]
@@ -50,6 +51,7 @@ export function Blocks(options: GetBlocksOptions = {}): Block[] {
     { slug: 'form', block: FormBlock },
     { slug: 'table', block: TableBlock },
     { slug: 'last-modified', block: LastModifiedBlock },
+    { slug: 'image-carousel', block: ImageCarouselBlock },
     { slug: 'testimonial', block: TestimonialBlock },
     { slug: 'gallery', block: GalleryBlock },
     { slug: 'heading', block: HeadingBlock },

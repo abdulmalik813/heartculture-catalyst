@@ -45,13 +45,13 @@ function LinkWithIcon({
   label,
   className = '',
   dropdownItem = false,
-}: {
+}: Readonly<{
   href: string
   item: LinkItem
   label: string
   className?: string
   dropdownItem?: boolean
-}) {
+}>) {
   const isExternal = item?.link?.type === 'custom'
   const relProps = item?.link?.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {}
   const { hasIcon, iconPlacement, renderIcon } = getIconData(item)
@@ -62,16 +62,17 @@ function LinkWithIcon({
       {...relProps}
       className={joinStyles(
         className,
+        'min-w-0',
         hasIcon
-          ? !dropdownItem
-            ? 'flex items-center gap-2'
-            : 'flex flex-row items-center gap-2'
+          ? dropdownItem
+            ? 'flex flex-row items-center gap-2'
+            : 'flex items-center gap-2'
           : '',
       )}
       prefetch={!isExternal}
     >
       {iconPlacement !== 'after' && renderIcon()}
-      {label}
+      <span className={joinStyles('wrap-break-word', 'whitespace-normal')}>{label}</span>
       {iconPlacement === 'after' && renderIcon()}
     </Link>
   )
@@ -142,7 +143,7 @@ export function NavigationBlockUI({
       >
         <DropdownMenuTrigger className={hasIcon ? 'flex items-center gap-2' : ''}>
           {iconPlacement !== 'after' && renderIcon()}
-          {navigationBlock.nav?.label}
+          <span className={joinStyles('break-words', 'whitespace-normal')}>{navigationBlock.nav?.label}</span>
           {iconPlacement === 'after' && renderIcon()}
         </DropdownMenuTrigger>
       </Button>
